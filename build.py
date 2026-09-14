@@ -62,6 +62,7 @@ for f in sorted(glob.glob(os.path.join(ROOT, "cards", "*.json"))):
         c["sc"] = SCENARIO_ALIAS[c["scenario"]]
         c["scenario"] = SCENARIOS[c["sc"] - 1]["en"]
         c.setdefault("source", "community")
+        c["ai"] = c["source"] == "claude"
         # 원본 정답 위치가 B·C 에 몰려 있어 id 로 고정된 순서로 보기를 섞는다
         order = sorted(range(n), key=lambda i: hashlib.md5(f"{cid}:{i}".encode()).hexdigest())
         c["options"] = [c["options"][i] for i in order]
@@ -149,9 +150,10 @@ open(os.path.join(ROOT, "dist", "index.html"), "w", encoding="utf-8").write(out)
 by_sc = {s["no"]: sum(1 for c in cards if c["sc"] == s["no"]) for s in SCENARIOS}
 by_src = {k: sum(1 for c in cards if c["source"] == k) for k in SRC_ORDER}
 multi = sum(1 for c in cards if c.get("select", 1) > 1)
+ai_n = sum(1 for c in cards if c["ai"])
 doubts = [c["id"] for c in cards if c.get("check") == "doubt"]
 by_wg = {g: sum(1 for w in wordlist if w["group"] == g) for g in ("card", "phrase", "guide")}
-print(f"카드 {len(cards)}장 (시나리오별 {by_sc}, 출처 {by_src}, 복수 선택 {multi}) · 단어 {len(wordlist)}개 {by_wg} · 공부 자료 {len(guide)}편 · 정답 확인 필요 {doubts or '없음'}")
+print(f"카드 {len(cards)}장 (시나리오별 {by_sc}, 출처 {by_src}, 복수 선택 {multi}, AI 문제 {ai_n}) · 단어 {len(wordlist)}개 {by_wg} · 공부 자료 {len(guide)}편 · 정답 확인 필요 {doubts or '없음'}")
 for w in warn:
     print("경고:", w)
 sys.exit(1 if warn else 0)

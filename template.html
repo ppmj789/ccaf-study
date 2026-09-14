@@ -190,6 +190,11 @@ td .ex button { border: 0; background: none; padding: 0; color: var(--sel-line);
 .note-item .nq { margin: 0; font-size: 14.5px; }
 .note-item .na { margin: 0; font-size: 14px; }
 .note-item .row { display: flex; flex-wrap: wrap; gap: 8px; }
+.review-box { border: 1px solid var(--flag); background: #FFF8EC; padding: 10px 12px; display: grid; gap: 6px; }
+.review-box p { margin: 0; font-size: 13.5px; color: var(--muted); }
+.review-box .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.review-box textarea { width: 100%; resize: vertical; font-size: 14px; padding: 6px 8px; border: 1px solid #9AA3AF; }
+.btn.primary.bad { background: var(--no); border-color: var(--no); }
 .prev-note { margin: 0 0 12px; padding: 6px 10px; background: var(--panel); border: 1px solid var(--line); font-size: 14px; }
 .sync-pill { font-size: 12.5px; border: 1px solid rgba(255,255,255,.45); padding: 1px 8px; white-space: nowrap; }
 .select-note { font-weight: 700; color: var(--bar); }
@@ -276,7 +281,7 @@ const letters = p => arr(p).map(i => L[i]).join(", ");
 const need = c => c.select || 1;
 const complete = (c, p) => arr(p).length === need(c);
 
-let state = { answers: {}, words: {}, wordsAt: {}, tries: {}, exams: [], wrongs: {}, notes: {} };
+let state = { answers: {}, words: {}, wordsAt: {}, tries: {}, exams: [], wrongs: {}, notes: {}, reviews: {} };
 let ui = { screen: "home", ko: false, wordsOn: true, filter: "todo", domain: "all", scen: "all", study: 1, vmode: "list", vfilter: "all", vsort: "freq", fi: 0, flip: false, session: null };
 try { Object.assign(state, JSON.parse(localStorage.getItem(LS)) || {}); } catch (e) {}
 try { Object.assign(ui, JSON.parse(localStorage.getItem(LS + "-ui")) || {}, { flip: false }); } catch (e) {}
@@ -299,6 +304,10 @@ function recordAnswer(id, pick) {
   else if (w) state.wrongs[id] = { ...w, fixedAt: now };
   return { answers: { [id]: state.answers[id] }, tries: { [id]: n }, ...(state.wrongs[id] ? { wrongs: { [id]: state.wrongs[id] } } : {}) };
 }
+// AI 문제는 사용자가 '괜찮아요' 한 것만 일반 연습·모의고사에 들어간다
+const reviewOf = id => (state.reviews || {})[id];
+const inMain = c => !c.ai || reviewOf(c.id)?.v === "ok";
+const mainCards = () => cards.filter(inMain);
 const isUnfixed = id => state.wrongs[id] && !state.answers[id]?.ok;
 let dbRef = null;
 
@@ -373,15 +382,17 @@ const rate = x => x.done ? `<span class="${x.ok / x.done >= PASS ? "pass-ok" : "
 /* ---------- 처음 화면 ---------- */
 function renderHome() {
   const pick = c => state.answers[c.id]?.pick;
-  const per = domainStats(cards, pick);
-  const perSc = groupStats(cards, c => c.sc, DATA.scenarios.map(s => s.no), pick);
+  const pool = mainCards();
+  const per = domainStats(pool, pick);
+  const perSc = groupStats(pool, c => c.sc, DATA.scenarios.map(s => s.no), pick);
+  const aiAll = cards.filter(c => c.ai), aiTodo = aiAll.filter(c => !reviewOf(c.id)), aiBad = aiAll.filter(c => reviewOf(c.id)?.v === "bad");
   const w = weighted(per);
   const done = per.reduce((a, x) => a + x.done, 0), ok = per.reduce((a, x) => a + x.ok, 0);
-  const wrong = cards.filter(c => state.answers[c.id] && !state.answers[c.id].ok).length;
+  const wrong = pool.filter(c => state.answers[c.id] && !state.answers[c.id].ok).length;
   const s = ui.session;
   $("#app").innerHTML = `
     <h1 class="title">CCAF 연습 시험</h1>
-    <p class="lead">문제 ${cards.length}개 · 풀어 본 문제 ${done}개 · 맞힌 문제 ${ok}개 · 틀린 문제 ${wrong}개${w != null ? ` · 환산 점수 <b>${scaled(w)}</b> / 1000 (합격 720)` : ""}</p>
+    <p class="lead">문제 ${pool.length}개 · 풀어 본 문제 ${done}개 · 맞힌 문제 ${ok}개 · 틀린 문제 ${wrong}개${w != null ? ` · 환산 점수 <b>${scaled(w)}</b> / 1000 (합격 720)` : ""}</p>
     ${s && !s.submitted && s.mode !== "single" ? `<p><button class="btn primary" data-resume>이어서 풀기 — ${s.mode === "exam" ? "모의고사" : "연습"} ${s.i + 1}번 문항</button></p>` : ""}
     <div class="modes">
       <section class="mode">
@@ -405,6 +416,11 @@ function renderHome() {
           <select id="f-domain"><option value="all">전체</option>${DATA.domains.map(d => `<option value="${d.id}" ${String(ui.domain) === String(d.id) ? "selected" : ""}>D${d.id} ${esc(d.ko)}</option>`).join("")}</select>
         </div>
         <div class="row"><button class="btn primary" data-start="practice">연습 시작</button></div>
+      </section>
+      <section class="mode">
+        <h3>AI 문제 검수</h3>
+        <p>Claude가 공식 가이드를 근거로 만든 문제 ${aiAll.length}개 · 검수 전 <b>${aiTodo.length}개</b>${aiBad.length ? ` · 이상해요 ${aiBad.length}개` : ""}. 풀어 보고 '괜찮아요'를 누른 문제만 일반 연습·모의고사에 들어가요.</p>
+        <div class="row"><button class="btn primary" data-screen="ai">AI 문제 열기</button></div>
       </section>
       <section class="mode">
         <h3>오답노트</h3>
@@ -464,13 +480,14 @@ function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { co
 
 // 모의고사: 영역 비중대로 60문항을 뽑고, 모자란 영역은 다른 문항으로 채운다
 function examIds() {
-  const n = Math.min(EXAM_Q, cards.length);
+  const base = mainCards();
+  const n = Math.min(EXAM_Q, base.length);
   const picked = [];
   DATA.domains.forEach(d => {
     const want = Math.round(n * d.weight / 100);
-    picked.push(...shuffle(cards.filter(c => c.domain === d.id)).slice(0, want).map(c => c.id));
+    picked.push(...shuffle(base.filter(c => c.domain === d.id)).slice(0, want).map(c => c.id));
   });
-  const rest = shuffle(cards.filter(c => !picked.includes(c.id))).map(c => c.id);
+  const rest = shuffle(base.filter(c => !picked.includes(c.id))).map(c => c.id);
   while (picked.length < n && rest.length) picked.push(rest.pop());
   return shuffle(picked.slice(0, n));
 }
@@ -483,7 +500,7 @@ function start(mode) {
   let ids;
   if (mode === "exam") ids = examIds();
   else {
-    ids = cards
+    ids = mainCards()
       .filter(c => ui.domain === "all" || String(c.domain) === String(ui.domain))
       .filter(c => ui.scen === "all" || String(c.sc) === String(ui.scen))
       .filter(c => {
@@ -511,7 +528,7 @@ function renderQuestion() {
   const multi = need(c) > 1;
   const d = dom(c.domain);
   $("#subbar").innerHTML = `
-    <span class="where"><b>문항 ${s.i + 1} / ${s.ids.length}</b> · 시나리오 ${c.sc}: ${esc(c.scenario)} · D${d.id} ${esc(d.ko)} · <span class="srcchip ${c.source}">${SRC[c.source] || c.source}</span></span>
+    <span class="where">${c.ai ? `<span class="srcchip claude">AI 문제 · ${reviewOf(c.id) ? (reviewOf(c.id).v === "ok" ? "괜찮아요" : "이상해요") : "검수 전"}</span> ` : ""}<b>문항 ${s.i + 1} / ${s.ids.length}</b> · 시나리오 ${c.sc}: ${esc(c.scenario)} · D${d.id} ${esc(d.ko)} · <span class="srcchip ${c.source}">${SRC[c.source] || c.source}</span></span>
     <label><input type="checkbox" id="t-ko" ${ui.ko ? "checked" : ""}> 한국어 해석</label>
     <label><input type="checkbox" id="t-words" ${ui.wordsOn ? "checked" : ""}> 단어 뜻</label>
     ${ui.wordsOn ? `<span class="wkey"><span><i class="k-learn"></i>외울 단어</span><span><i class="k-known"></i>외운 단어</span></span>` : ""}`;
@@ -540,6 +557,7 @@ function renderQuestion() {
         <div><h4>지문 단서</h4><dl class="clues">${c.clues.map(x => `<div><dt><mark>${fmt(x.en)}</mark></dt><dd>${esc(x.ko)}</dd></div>`).join("")}</dl></div>
         ${c.guide_en ? `<div class="gq"><h4>공식 가이드 근거${c.ts ? ` (Task Statement ${esc(c.ts.join(", "))})` : ""}</h4><p class="en">${fmt(c.guide_en)}</p></div>` : ""}
         ${c.check === "doubt" && c.checkNote ? `<p class="note"><b>정답 확인 필요:</b> ${fmt(c.checkNote)}</p>` : ""}
+        ${c.ai ? reviewBox(c.id) : ""}
         ${!ok || state.wrongs[c.id] ? memoBox(c.id) : ""}
         <div class="discuss"><h4>토론 거리</h4><p>${esc(c.discuss_ko)}</p>
           <textarea id="discuss-text" rows="2" readonly>${esc(discussText)}</textarea>
@@ -585,11 +603,45 @@ function scenarioBox(c) {
     <div class="scbody">${g.description.map(x => `<p>${fmt(x.en)}${ui.ko ? `<span class="ko">${fmt(x.ko)}</span>` : ""}</p>`).join("")}</div>
   </details>`;
 }
+function reviewBox(id) {
+  const r = reviewOf(id);
+  return `<div class="review-box"><h4>이 AI 문제 검수</h4>
+    <p>문제·정답·해설이 말이 되나요? 괜찮으면 일반 연습·모의고사에 넣고, 이상하면 이유를 적어 주세요. Claude가 고쳐요.</p>
+    <div class="row"><button class="btn ${r?.v === "ok" ? "primary" : ""}" data-review="ok" data-rid="${id}">괜찮아요</button><button class="btn ${r?.v === "bad" ? "primary bad" : ""}" data-review="bad" data-rid="${id}">이상해요</button>${r ? `<span class="memo-state">${r.v === "ok" ? "일반 문제에 들어갔어요" : "고칠 목록에 올렸어요"}</span>` : ""}</div>
+    ${r?.v === "bad" ? `<textarea id="review-${id}" data-reviewnote="${id}" rows="2" placeholder="어디가 이상한지 적어 주세요. 예: B도 정답 같아요 / 지문에 없는 기능이 나와요">${esc(r.reason || "")}</textarea><span class="memo-state" id="review-state-${id}"></span>` : ""}
+  </div>`;
+}
 function memoBox(id) {
   const w = state.wrongs[id], nt = state.notes[id];
   return `<div class="memo"><h4>오답 메모${w ? ` · 틀린 횟수 ${w.n}회${w.fixedAt && state.answers[id]?.ok ? " · 다시 맞힘" : ""}` : ""}</h4>
     <textarea id="memo-${id}" data-memo="${id}" rows="2" placeholder="왜 틀렸는지 한 줄로 적어 두세요. 예: 확률적 방법(프롬프트)과 확정적 방법(hook)을 헷갈림">${esc(nt?.text || "")}</textarea>
     <span class="memo-state" id="memo-state-${id}">${nt?.at ? "저장됨" : ""}</span></div>`;
+}
+
+/* ---------- AI 문제 ---------- */
+function renderAi() {
+  const f = ui.afilter || "todo";
+  const all = cards.filter(c => c.ai);
+  const cnt = { todo: all.filter(c => !reviewOf(c.id)).length, ok: all.filter(c => reviewOf(c.id)?.v === "ok").length, bad: all.filter(c => reviewOf(c.id)?.v === "bad").length };
+  const list = all.filter(c => f === "all" ? true : f === "todo" ? !reviewOf(c.id) : reviewOf(c.id)?.v === f)
+    .filter(c => !ui.ascen || ui.ascen === "all" || String(c.sc) === String(ui.ascen));
+  $("#subbar").innerHTML = `<span class="where"><b>AI 문제 검수</b> · 전체 ${all.length} · 검수 전 ${cnt.todo} · 괜찮아요 ${cnt.ok} · 이상해요 ${cnt.bad}</span>
+    <label for="a-scen">시나리오 <select id="a-scen"><option value="all">전체</option>${DATA.scenarios.map(x => `<option value="${x.no}" ${String(ui.ascen) === String(x.no) ? "selected" : ""}>${x.no}. ${esc(x.ko)}</option>`).join("")}</select></label>`;
+  $("#app").innerHTML = `
+    <h1 class="title">AI 문제 검수</h1>
+    <p class="lead">Claude가 공식 시험 가이드의 Task Statement를 근거로 만든 문제예요. 실제 시험 문항이 아니고, 쓴 에이전트와 다른 에이전트가 한 번 더 풀어 검증했어요. 풀어 보고 <b>괜찮아요</b>를 누른 문제만 일반 연습·모의고사에 들어가요. <b>이상해요</b>에 이유를 적으면 Claude가 고쳐요.</p>
+    <div class="vtools"><div class="seg-row" role="group" aria-label="검수 상태">${[["todo", `검수 전 ${cnt.todo}`], ["ok", `괜찮아요 ${cnt.ok}`], ["bad", `이상해요 ${cnt.bad}`], ["all", "전체"]].map(([k, l]) => `<button class="btn ${f === k ? "primary" : ""}" data-afilter="${k}">${l}</button>`).join("")}</div></div>
+    ${list.length ? `<div class="tbl-wrap"><table>
+      <thead><tr><th>문항</th><th>시나리오 · 근거</th><th>지문 첫 문장</th><th>내 결과</th><th>검수</th></tr></thead>
+      <tbody>${list.map(c => { const a = state.answers[c.id], r = reviewOf(c.id); const first = c.q_en.replace(/`/g, "").split(/(?<=[.?!])\s/)[0]; return `<tr>
+        <td><button class="lnk" data-card="${c.id}">${c.id}</button>${need(c) > 1 ? "<br><small>복수 선택</small>" : ""}</td>
+        <td>${c.sc}. ${esc(scen(c.sc).ko)}<br><small>TS ${esc((c.ts || []).join(", "))}</small></td>
+        <td>${esc(first.length > 110 ? first.slice(0, 107) + "…" : first)}</td>
+        <td>${a ? (a.ok ? `<span class="pass-ok">정답</span>` : `<span class="pass-no">오답</span>`) : "안 풂"}</td>
+        <td>${r ? (r.v === "ok" ? `<span class="pass-ok">괜찮아요</span>` : `<span class="pass-no">이상해요</span>${r.reason ? `<br><small>${esc(r.reason)}</small>` : ""}`) : "검수 전"}</td></tr>`; }).join("")}</tbody>
+    </table></div>` : `<p class="lead">해당하는 문제가 없어요.</p>`}`;
+  const todoIds = all.filter(c => !reviewOf(c.id)).filter(c => !ui.ascen || ui.ascen === "all" || String(c.sc) === String(ui.ascen)).map(c => c.id);
+  $("#bottombar").innerHTML = `<button class="btn" data-home>◀ 처음 화면</button><span class="mid"></span><button class="btn primary" data-aistart ${todoIds.length ? "" : "disabled"}>검수 전 문제 풀기 (${todoIds.length})</button>`;
 }
 
 /* ---------- 오답노트 ---------- */
@@ -693,7 +745,7 @@ function renderStudy() {
   const g = guideOf(ui.study) || DATA.guide[0];
   if (!g) { $("#app").innerHTML = `<p class="lead">공부 자료를 준비 중이에요.</p>`; return; }
   const sc = scen(g.no);
-  const list = cards.filter(c => c.sc === g.no);
+  const list = mainCards().filter(c => c.sc === g.no);
   const official = list.filter(c => c.source === "official");
   $("#subbar").innerHTML = `<span class="where"><b>시나리오 공부</b> · ${g.no} / 6 · 이 시나리오 문제 ${list.length}개</span>
     <label for="s-pick">바로 가기 <select id="s-pick">${DATA.guide.map(x => `<option value="${x.no}" ${x.no === g.no ? "selected" : ""}>${x.no}. ${esc(x.name_en)}</option>`).join("")}</select></label>`;
@@ -818,13 +870,13 @@ function renderWords() {
         <td><input type="checkbox" id="k-${esc(w.word).replace(/\s/g, "_")}" data-know="${esc(w.word)}" ${state.words[w.word] === "known" ? "checked" : ""} aria-label="${esc(w.word)} 외움"></td>
         <td class="word">${esc(w.word)}<small>${esc(w.pos)}</small><span class="wgroup">${WGROUP[w.group || "card"]}</span></td>
         <td>${esc(w.ko)}${exHtml(w, true)}${w.tip ? `<div class="tip">${esc(w.tip)}</div>` : ""}</td>
-        <td class="num">${w.freq}회</td></tr>`).join("")}</tbody>
+        <td class="num">${w.freq ? w.freq + "회" : "—"}</td></tr>`).join("")}</tbody>
     </table></div>`;
   } else {
     ui.fi = Math.min(ui.fi, ws.length - 1);
     const w = ws[ui.fi];
     body = `<div class="flash">
-      <div class="fp">${ui.fi + 1} / ${ws.length} · ${WGROUP[w.group || "card"]} · 빈출 ${w.freq}회</div>
+      <div class="fp">${ui.fi + 1} / ${ws.length} · ${WGROUP[w.group || "card"]}${w.freq ? ` · 빈출 ${w.freq}회` : ""}</div>
       <div class="fw">${esc(w.word)}</div><div class="fp">${esc(w.pos)}</div>
       ${ui.flip ? `<div class="fk">${esc(w.ko)}</div>${exHtml(w, false)}${w.tip ? `<div class="tip">${esc(w.tip)}</div>` : ""}` : `<button class="btn primary big" data-flip>뜻 보기</button>`}
     </div>`;
@@ -860,6 +912,8 @@ function mergeInto(d, preferIncomingWords) {
     const base = last(w) > last(cur) ? w : cur;
     state.wrongs[id] = { ...base, n: Math.max(cur.n || 0, w.n || 0), first: [cur.first, w.first].filter(Boolean).sort()[0] };
   });
+  state.reviews = state.reviews || {};
+  Object.entries(d.reviews || {}).forEach(([id, r]) => { const cur = state.reviews[id]; if (!cur || (r.at || "") > (cur.at || "")) state.reviews[id] = r; });
   Object.entries(d.notes || {}).forEach(([id, nt]) => { const cur = state.notes[id]; if (!cur || (nt.at || "") > (cur.at || "")) state.notes[id] = nt; });
   backfillWrongs();
   const seen = new Set(state.exams.map(x => x.at));
@@ -968,6 +1022,7 @@ function render() {
   else if (ui.screen === "result") renderResult();
   else if (ui.screen === "study") renderStudy();
   else if (ui.screen === "note") renderNote();
+  else if (ui.screen === "ai") renderAi();
   else renderWords();
   tick();
 }
@@ -1076,6 +1131,22 @@ document.addEventListener("click", e => {
     persist(recordAnswer(id, pick));
     return render();
   }
+  if (d.afilter) { ui.afilter = d.afilter; saveLocal(); return render(); }
+  if ("aistart" in d) {
+    const ids = cards.filter(c => c.ai && !reviewOf(c.id)).filter(c => !ui.ascen || ui.ascen === "all" || String(c.sc) === String(ui.ascen)).map(c => c.id);
+    if (!ids.length) return;
+    ui.session = newSession("practice", ids); return go("q");
+  }
+  if (d.review) {
+    state.reviews = state.reviews || {};
+    const prevR = state.reviews[d.rid];
+    state.reviews[d.rid] = { v: d.review, reason: d.review === "bad" ? (prevR?.reason || "") : "", at: new Date().toISOString() };
+    persist({ reviews: { [d.rid]: state.reviews[d.rid] } });
+    toast(d.review === "ok" ? "괜찮아요로 표시했어요. 일반 연습·모의고사에 들어가요" : "이상해요로 표시했어요. 이유를 적어 주면 고칠 때 참고할게요");
+    render();
+    if (d.review === "bad") $("#review-" + d.rid)?.focus();
+    return;
+  }
   if (d.nfilter) { ui.nfilter = d.nfilter; saveLocal(); return render(); }
   if (d.noteretry) return openSingle(d.noteretry);
   if (d.noteview) { openSingle(d.noteview); const ss = ui.session, pr = state.answers[d.noteview]; if (pr) { ss.picks[d.noteview] = pr.pick; ss.checked[d.noteview] = true; saveLocal(); render(); } return; }
@@ -1125,6 +1196,7 @@ document.addEventListener("change", e => {
   if (t.id === "f-filter") { ui.filter = t.value; return saveLocal(); }
   if (t.id === "f-domain") { ui.domain = t.value; return saveLocal(); }
   if (t.id === "f-scen") { ui.scen = t.value; return saveLocal(); }
+  if (t.id === "a-scen") { ui.ascen = t.value; saveLocal(); return render(); }
   if (t.id === "n-scen") { ui.nscen = t.value; saveLocal(); return render(); }
   if (t.id === "s-pick") { ui.study = +t.value; return go("study"); }
   if (t.id === "v-mode") { ui.vmode = t.value; ui.fi = 0; ui.flip = false; saveLocal(); return render(); }
@@ -1136,6 +1208,16 @@ document.addEventListener("change", e => {
 
 let memoTimer = {};
 document.addEventListener("input", e => {
+  const rid = e.target.dataset?.reviewnote;
+  if (rid) {
+    clearTimeout(memoTimer["r" + rid]);
+    memoTimer["r" + rid] = setTimeout(() => {
+      state.reviews[rid] = { ...(state.reviews[rid] || { v: "bad" }), reason: e.target.value, at: new Date().toISOString() };
+      persist({ reviews: { [rid]: state.reviews[rid] } });
+      const st = $("#review-state-" + rid); if (st) st.textContent = "저장됨";
+    }, 700);
+    return;
+  }
   const id = e.target.dataset?.memo;
   if (!id) return;
   const st = $("#memo-state-" + id); if (st) st.textContent = "저장 중…";
@@ -1191,6 +1273,7 @@ if (CLOUD_OK && syncHash) {
         exams: (d.exams && d.exams.length >= state.exams.length) ? d.exams : state.exams,
         wrongs: Object.assign({}, state.wrongs, d.wrongs),
         notes: Object.assign({}, state.notes, d.notes),
+        reviews: Object.assign({}, state.reviews, d.reviews),
       };
       backfillWrongs();
     } else {
