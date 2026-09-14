@@ -1,0 +1,1191 @@
+[
+ {
+  "id": "A5-01",
+  "domain": 5,
+  "scenario": "Customer Support Resolution Agent",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "5.1"
+  ],
+  "guide_en": "Extracting and persisting structured issue data (order IDs, amounts, statuses) into a separate context layer for multi-issue sessions",
+  "q_en": "A customer opens one support session about three problems: a missing item from order #48213 ($62.40), a duplicate charge of $119.00 on order #48877, and a return for order #49102 that is still awaiting pickup. The agent uses progressive summarization every 10 turns to stay within its context budget. By turn 26, logs show it issued the $62.40 refund against order #48877 and told the customer the return was already processed. The summaries mention \"several order issues\" but not which amount or status belongs to which order. What's the most effective fix?",
+  "q_ko": "한 고객이 상담 한 번에 세 가지 문제를 꺼낸다. 주문 #48213 의 누락 상품($62.40), 주문 #48877 의 $119.00 이중 청구, 아직 수거를 기다리는 주문 #49102 의 반품이다. 에이전트는 context 예산을 지키려고 10턴마다 progressive summarization 을 한다. 26번째 턴에서 로그를 보니 $62.40 환불을 주문 #48877 에 처리했고, 반품이 이미 처리됐다고 고객에게 말했다. 요약에는 \"여러 주문 문제\"라고만 있고 어느 금액·상태가 어느 주문의 것인지는 없다. 가장 효과적인 해결책은?",
+  "options": [
+   {
+    "en": "Summarize more often, every 5 turns, so that each summary covers fewer turns and is less likely to blend details from different orders.",
+    "ko": "요약을 5턴마다로 더 자주 해서, 요약 한 번이 다루는 턴을 줄이고 서로 다른 주문의 세부 사항이 섞일 가능성을 낮춘다.",
+    "why": "압축 횟수만 늘어나 금액·주문번호 같은 사실이 흐려질 기회가 더 많아진다."
+   },
+   {
+    "en": "Add a system prompt instruction telling the agent to double-check which order number an amount belongs to before it calls `process_refund`.",
+    "ko": "`process_refund` 를 호출하기 전에 금액이 어느 주문번호의 것인지 다시 확인하라는 지시를 system prompt 에 넣는다.",
+    "why": "짝이 이미 요약에서 사라졌으니 확인할 재료가 없다. 프롬프트만 강화하는 함정이다."
+   },
+   {
+    "en": "Extract each issue's order ID, amount, and status into a structured issue list kept in a separate context layer that is included in every prompt and never summarized.",
+    "ko": "이슈마다 order ID·금액·상태를 구조화된 이슈 목록으로 뽑아 별도 context 층에 두고, 매 프롬프트에 넣되 요약 대상에서는 뺀다.",
+    "why": "이슈별 사실이 요약 밖에서 그대로 유지되어 금액과 주문이 섞이지 않는다. 정답."
+   },
+   {
+    "en": "Split the session so that each issue is handled in a new conversation, asking the customer to contact support again separately for each remaining order.",
+    "ko": "이슈마다 새 대화에서 처리하도록 세션을 나누고, 남은 주문은 고객에게 따로 다시 문의하라고 안내한다.",
+    "why": "섞임은 줄지만 부담을 고객에게 넘기고 첫 상담 해결률을 떨어뜨린다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "여러 이슈 세션 = 주문별 사실을 요약 밖 별도 층에",
+  "explain_ko": [
+   "**three problems** 는 주문번호·금액·상태가 세 벌 있다는 뜻이다. 요약이 이것을 **several order issues** 로 뭉개면서 금액과 주문의 짝이 끊어졌다.",
+   "그래서 {C} 처럼 이슈마다 order ID·금액·상태를 구조화해 **요약되지 않는 별도 층**에 두고 매 프롬프트에 넣는다.",
+   "{A} 는 요약을 더 자주 해 압축만 늘리고, {B} 는 이미 사라진 정보를 확인하라는 지시라 효과가 없다."
+  ],
+  "clues": [
+   {
+    "en": "three problems",
+    "ko": "이슈가 여러 개인 세션"
+   },
+   {
+    "en": "uses progressive summarization every 10 turns",
+    "ko": "주기적 압축 = 사실이 흐려질 위험"
+   },
+   {
+    "en": "but not which amount or status belongs to which order",
+    "ko": "이슈별 짝이 사라짐"
+   }
+  ],
+  "discuss_ko": "{D} 처럼 이슈마다 대화를 따로 열면 섞일 일은 없는데, 고객 경험과 첫 상담 해결률 면에서는 무엇을 잃을까?",
+  "words": [
+   {
+    "word": "duplicate charge",
+    "pos": "phr.",
+    "ko": "이중 청구",
+    "example": "a duplicate charge of $119.00"
+   },
+   {
+    "word": "awaiting",
+    "pos": "adj.",
+    "ko": "기다리는, 대기 중인",
+    "example": "still awaiting pickup"
+   },
+   {
+    "word": "progressive",
+    "pos": "adj.",
+    "ko": "점진적인, 단계적으로 쌓이는",
+    "example": "uses progressive summarization every 10 turns"
+   },
+   {
+    "word": "blend",
+    "pos": "v.",
+    "ko": "섞다, 뒤섞다",
+    "example": "less likely to blend details from different orders"
+   },
+   {
+    "word": "double-check",
+    "pos": "v.",
+    "ko": "재확인하다",
+    "example": "to double-check which order number an amount belongs to"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A5-02",
+  "domain": 5,
+  "scenario": "Structured Data Extraction",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "5.1"
+  ],
+  "guide_en": "The importance of passing complete conversation history in subsequent API requests to maintain conversational coherence",
+  "q_en": "Your extraction system lets analysts ask follow-up questions about a contract after Claude extracts its fields. Each follow-up is sent as a new Messages API request containing only the system prompt, the contract text, and the latest question. Analysts report that 30% of follow-ups get confusing answers: asked \"Does that clause also apply to the renewal term?\", Claude asks which clause is meant, and it sometimes contradicts an answer it gave two questions earlier. Token costs are acceptable. What's the most effective fix?",
+  "q_ko": "추출 시스템에서 분석가는 Claude 가 계약서 필드를 뽑은 뒤 그 계약서에 대해 후속 질문을 할 수 있다. 후속 질문은 매번 system prompt, 계약서 본문, 가장 최근 질문만 담은 새 Messages API 요청으로 보낸다. 분석가들은 후속 질문의 30% 에서 답이 헷갈린다고 한다. \"그 조항이 갱신 기간에도 적용되나요?\"라고 물으면 Claude 가 어느 조항이냐고 되묻고, 두 질문 전에 한 답과 반대로 말하기도 한다. 토큰 비용은 감당할 수 있다. 가장 효과적인 해결책은?",
+  "options": [
+   {
+    "en": "Include the complete conversation history, meaning every earlier analyst question and Claude response, in the messages of each subsequent request along with the contract text.",
+    "ko": "이후 요청마다 계약서 본문과 함께, 앞선 분석가 질문과 Claude 답변을 모두 포함한 전체 대화 기록을 messages 에 넣는다.",
+    "why": "API 는 앞 요청을 기억하지 않으니 대화 전체를 다시 보내야 '그 조항'과 앞 답을 알 수 있다. 정답."
+   },
+   {
+    "en": "Increase `max_tokens` on each follow-up request so Claude has enough room to restate the context of earlier questions before it answers.",
+    "ko": "후속 요청마다 `max_tokens` 를 늘려, Claude 가 답하기 전에 앞 질문의 맥락을 다시 정리할 여유를 준다.",
+    "why": "`max_tokens` 는 출력 길이 상한이다. 받지 못한 앞 대화를 다시 정리할 수는 없다."
+   },
+   {
+    "en": "Add a system prompt instruction telling Claude to stay consistent with its previous answers and to infer which clause the analyst is referring to.",
+    "ko": "앞선 답과 일관되게 답하고, 분석가가 말하는 조항이 무엇인지 추론하라는 지시를 system prompt 에 넣는다.",
+    "why": "앞선 답이 입력에 없으니 일관성을 지킬 방법이 없다. 프롬프트만 강화하는 함정이다."
+   },
+   {
+    "en": "Send the follow-up questions through the Message Batches API with a `custom_id` for each analyst so responses can be correlated to the right session.",
+    "ko": "후속 질문을 Message Batches API 로 보내고 분석가마다 `custom_id` 를 달아 응답을 올바른 세션과 연결한다.",
+    "why": "`custom_id` 는 요청과 응답을 짝지을 뿐 대화 기록을 넘기지 않고, 대기 시간까지 생긴다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "이어지는 질문 = 이전 대화 전체를 매 요청에",
+  "explain_ko": [
+   "Messages API 는 이전 요청을 기억하지 않는다. **only the system prompt, the contract text, and the latest question** 만 보내면 Claude 에게는 매번 첫 질문이다.",
+   "그래서 **that clause** 가 무엇인지 모르고(**asks which clause is meant**), 두 질문 전 답도 볼 수 없어 말이 엇갈린다.",
+   "{A} 처럼 앞 질문과 답을 모두 messages 에 넣어 보내야 대화가 이어진다. **Token costs are acceptable** 이 비용 걱정을 지워 준다."
+  ],
+  "clues": [
+   {
+    "en": "containing only the system prompt, the contract text, and the latest question",
+    "ko": "앞 대화가 요청에 없음"
+   },
+   {
+    "en": "Claude asks which clause is meant",
+    "ko": "'그것'이 무엇인지 모름"
+   },
+   {
+    "en": "contradicts an answer it gave two questions earlier",
+    "ko": "앞 답을 볼 수 없음"
+   },
+   {
+    "en": "Token costs are acceptable",
+    "ko": "기록을 다 보내도 됨"
+   }
+  ],
+  "discuss_ko": "{C} 처럼 system prompt 로 '앞 답과 일관되게' 라고 지시하는 것이 왜 소용없는지, 모델이 실제로 받는 입력을 기준으로 설명해 볼 수 있을까?",
+  "words": [
+   {
+    "word": "follow-up",
+    "pos": "n.",
+    "ko": "후속 질문, 후속 조치",
+    "example": "ask follow-up questions about a contract"
+   },
+   {
+    "word": "contradict",
+    "pos": "v.",
+    "ko": "모순되다, 반대로 말하다",
+    "example": "it sometimes contradicts an answer it gave two questions earlier"
+   },
+   {
+    "word": "restate",
+    "pos": "v.",
+    "ko": "다시 말하다, 재진술하다",
+    "example": "restate the context of earlier questions"
+   },
+   {
+    "word": "infer",
+    "pos": "v.",
+    "ko": "추론하다, 짐작하다",
+    "example": "infer which clause the analyst is referring to"
+   },
+   {
+    "word": "correlate",
+    "pos": "v.",
+    "ko": "서로 연결 짓다, 대응시키다",
+    "example": "can be correlated to the right session"
+   },
+   {
+    "word": "subsequent",
+    "pos": "adj.",
+    "ko": "그 다음의, 이후의",
+    "example": "each subsequent request"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A5-03",
+  "domain": 5,
+  "scenario": "Customer Support Resolution Agent",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "5.2"
+  ],
+  "guide_en": "Acknowledging frustration while offering resolution when the issue is within the agent's capability, escalating only if the customer reiterates their preference",
+  "q_en": "A customer writes: \"This is the second time my order arrived late. Your service is a joke and I'm honestly tired of dealing with bots.\" The order qualifies for a standard late-delivery credit that the agent can issue with `process_refund`, and the customer has not explicitly asked for a human. Your current rule escalates every message containing strong negative language; 35% of escalations last month were cases like this one, and first-contact resolution sits at 66%. How should the agent handle this message?",
+  "q_ko": "고객이 이렇게 쓴다. \"주문이 늦게 온 게 벌써 두 번째예요. 서비스가 엉망이고 솔직히 봇 상대하는 것도 지쳤어요.\" 이 주문은 에이전트가 `process_refund` 로 줄 수 있는 표준 배송 지연 크레딧 대상이고, 고객은 사람 상담원을 명시적으로 요청하지 않았다. 지금 규칙은 강한 부정 표현이 담긴 메시지를 모두 에스컬레이션하는데, 지난달 에스컬레이션의 35% 가 이런 건이었고 첫 상담 해결률은 66% 에 머물러 있다. 에이전트는 이 메시지를 어떻게 처리해야 하나?",
+  "options": [
+   {
+    "en": "Escalate to a human immediately, because strong negative language combined with a complaint about bots should be treated the same as an explicit request.",
+    "ko": "강한 부정 표현에 봇에 대한 불만까지 더해졌으니 명시적 요청과 똑같이 보고 즉시 사람에게 넘긴다.",
+    "why": "감정 표현은 명시적 요청이 아니다. 에이전트가 해결할 수 있는 건을 넘겨 해결률만 깎는다."
+   },
+   {
+    "en": "Issue the late-delivery credit without commenting on the frustration, and keep handling the case autonomously even if the customer later asks for a person.",
+    "ko": "불만에는 대꾸하지 않고 배송 지연 크레딧을 처리하며, 고객이 나중에 사람을 요청해도 계속 에이전트가 처리한다.",
+    "why": "나중에 나오는 명시적 요청까지 무시하게 된다. 그런 요청은 바로 들어줘야 한다."
+   },
+   {
+    "en": "Look up the customer's full order history first, then escalate only if a sentiment score calculated across all of their past messages stays negative.",
+    "ko": "먼저 고객의 전체 주문 이력을 조회한 뒤, 과거 메시지 전체로 계산한 감정 점수가 계속 부정적일 때만 넘긴다.",
+    "why": "감정 점수는 사건 난도를 재는 믿을 만한 지표가 아니고, 해결을 괜히 늦춘다."
+   },
+   {
+    "en": "Acknowledge the frustration, offer to apply the late-delivery credit right away, and escalate to a human only if the customer repeats that they want one.",
+    "ko": "불만에 공감을 표하고 배송 지연 크레딧을 바로 적용하겠다고 제안하며, 고객이 그래도 사람을 원한다고 다시 말할 때만 넘긴다.",
+    "why": "해결 가능한 건은 공감과 함께 해결을 제안하고, 선호를 다시 밝히면 그때 넘긴다. 정답."
+   }
+  ],
+  "answer": 3,
+  "point_ko": "화남 ≠ 사람 요청 → 공감 + 해결 제안, 다시 원하면 넘김",
+  "explain_ko": [
+   "**Your service is a joke** 는 감정 표현이지 요청이 아니다. 지문도 **has not explicitly asked for a human** 이라고 못 박았다.",
+   "**a standard late-delivery credit that the agent can issue** — 에이전트가 풀 수 있는 일이다. 그래서 공감하고 바로 해결을 제안하는 {D} 가 맞다.",
+   "고객이 그래도 사람을 원한다고 **다시 말하면** 그때는 바로 넘긴다. 감정만으로 넘기는 {A} 는 해결률을 깎고, {B} 는 뒤에 나올 명시 요청을 무시한다."
+  ],
+  "clues": [
+   {
+    "en": "has not explicitly asked for a human",
+    "ko": "명시적 요청 아님"
+   },
+   {
+    "en": "a standard late-delivery credit that the agent can issue",
+    "ko": "에이전트 능력 안의 일"
+   },
+   {
+    "en": "escalates every message containing strong negative language",
+    "ko": "감정 기준 에스컬레이션"
+   },
+   {
+    "en": "35% of escalations",
+    "ko": "불필요한 이관이 많음"
+   }
+  ],
+  "discuss_ko": "**tired of dealing with bots** 는 사람을 원한다는 뜻으로도 읽히는데, 이걸 명시적 요청으로 보지 않고 먼저 해결을 제안해도 되는 이유는 무엇일까?",
+  "words": [
+   {
+    "word": "qualify for",
+    "pos": "phr.",
+    "ko": "~의 자격이 되다, ~에 해당하다",
+    "example": "The order qualifies for a standard late-delivery credit"
+   },
+   {
+    "word": "credit",
+    "pos": "n.",
+    "ko": "보상 크레딧, 적립금",
+    "example": "a standard late-delivery credit"
+   },
+   {
+    "word": "sit at",
+    "pos": "phr.",
+    "ko": "(수치가) ~에 머물다",
+    "example": "first-contact resolution sits at 66%"
+   },
+   {
+    "word": "combined with",
+    "pos": "phr.",
+    "ko": "~와 합쳐진",
+    "example": "strong negative language combined with a complaint about bots"
+   },
+   {
+    "word": "autonomously",
+    "pos": "adv.",
+    "ko": "자율적으로, 스스로",
+    "example": "keep handling the case autonomously"
+   },
+   {
+    "word": "acknowledge",
+    "pos": "v.",
+    "ko": "인정하다, 공감을 표하다",
+    "example": "Acknowledge the frustration"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A5-04",
+  "domain": 5,
+  "scenario": "Customer Support Resolution Agent",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "5.2"
+  ],
+  "guide_en": "Escalating when policy is ambiguous or silent on the customer's specific request (e.g., competitor price matching when policy only addresses own-site adjustments)",
+  "q_en": "Your refund policy covers defective items and orders delivered more than five days late, and the agent's system prompt includes the policy in full. It says nothing about annual subscription renewals that customers forgot to cancel. An audit of 140 such requests found the agent refunded 61, denied 52, and offered partial credits to the rest, citing a different policy section each time; finance flagged $18,400 in refunds that nobody had approved. None of these customers asked for a human. What's the most effective change?",
+  "q_ko": "환불 정책은 결함 상품과 5일 넘게 늦게 배송된 주문을 다루고, 에이전트의 system prompt 에 정책 전문이 들어 있다. 고객이 해지를 잊은 연간 구독 자동 갱신에 대해서는 아무 말이 없다. 이런 요청 140건을 감사해 보니 에이전트는 61건을 환불하고 52건을 거절했으며 나머지에는 부분 크레딧을 줬고, 매번 다른 정책 조항을 근거로 들었다. 재무팀은 아무도 승인하지 않은 환불 $18,400 를 문제로 지적했다. 이 고객들 중 사람을 요청한 사람은 없다. 가장 효과적인 변경은?",
+  "options": [
+   {
+    "en": "Tell the agent to apply whichever existing policy section is most similar to the request and to explain its reasoning in the case notes.",
+    "ko": "요청과 가장 비슷한 기존 정책 조항을 골라 적용하고, 판단 이유를 상담 메모에 적으라고 에이전트에게 지시한다.",
+    "why": "정책에 없는 일을 여전히 에이전트가 추측으로 정한다. 이유를 적어도 결과는 제각각이다."
+   },
+   {
+    "en": "Instruct the agent, with few-shot examples such as forgotten subscription renewals, to escalate requests the policy is silent or ambiguous about instead of deciding them itself.",
+    "ko": "해지를 잊은 구독 갱신 같은 few-shot 예시와 함께, 정책이 말하지 않거나 애매한 요청은 스스로 정하지 말고 에스컬레이션하라고 지시한다.",
+    "why": "정책 공백은 에스컬레이션 조건이다. 에이전트가 규칙을 지어내는 원인을 직접 막는다. 정답."
+   },
+   {
+    "en": "Instruct the agent to deny every request that the policy does not explicitly cover, so that no unapproved refunds are issued in the future.",
+    "ko": "정책이 명시적으로 다루지 않는 요청은 모두 거절하라고 지시해, 앞으로 승인 안 된 환불이 나가지 않게 한다.",
+    "why": "거절도 정책 결정이다. 사람이 판단해야 할 공백을 에이전트가 일괄 거절로 대신 정해 버린다."
+   },
+   {
+    "en": "Have the agent self-report a confidence score for each refund decision and escalate only the renewal requests where its confidence falls below 0.6.",
+    "ko": "환불 판단마다 에이전트가 확신도를 스스로 매기게 하고, 그 확신도가 0.6 아래인 갱신 요청만 넘긴다.",
+    "why": "자기 보고 확신도는 실제 난도와 맞지 않는다. 에이전트는 매번 조항을 들며 자신 있게 틀렸다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "정책이 말하지 않는 요청 = 추측·일괄 거절 말고 넘김",
+  "explain_ko": [
+   "**says nothing about annual subscription renewals** — 정책이 이 요청에 대해 침묵한다. 정책 공백은 에스컬레이션 조건이다.",
+   "**refunded 61, denied 52** 처럼 결과가 제각각인 건 에이전트가 없는 규칙을 매번 지어냈다는 증거다. 그래서 공백이면 넘기라고 알려 주는 {B} 가 맞다.",
+   "{A} 는 비슷한 조항으로 계속 추측하게 두고, {C} 는 거절이라는 정책 결정을 에이전트가 대신 내린다. {D} 의 자기 보고 확신도는 실제 난도와 맞지 않는다."
+  ],
+  "clues": [
+   {
+    "en": "says nothing about annual subscription renewals",
+    "ko": "정책 공백"
+   },
+   {
+    "en": "refunded 61, denied 52, and offered partial credits to the rest",
+    "ko": "판단이 제각각"
+   },
+   {
+    "en": "refunds that nobody had approved",
+    "ko": "에이전트가 권한 밖 결정"
+   }
+  ],
+  "discuss_ko": "{C} 처럼 정책에 없으면 모두 거절하면 승인 안 된 환불은 확실히 사라지는데, 회사와 고객 입장에서는 무엇이 문제일까?",
+  "words": [
+   {
+    "word": "defective",
+    "pos": "adj.",
+    "ko": "결함이 있는",
+    "example": "covers defective items"
+   },
+   {
+    "word": "in full",
+    "pos": "phr.",
+    "ko": "전부, 빠짐없이",
+    "example": "includes the policy in full"
+   },
+   {
+    "word": "cite",
+    "pos": "v.",
+    "ko": "근거로 들다, 인용하다",
+    "example": "citing a different policy section each time"
+   },
+   {
+    "word": "flag",
+    "pos": "v.",
+    "ko": "문제로 표시하다, 지적하다",
+    "example": "finance flagged $18,400 in refunds"
+   },
+   {
+    "word": "whichever",
+    "pos": "det.",
+    "ko": "어느 것이든 ~한 것",
+    "example": "apply whichever existing policy section is most similar"
+   },
+   {
+    "word": "silent",
+    "pos": "adj.",
+    "ko": "언급이 없는, 침묵하는",
+    "example": "the policy is silent or ambiguous about"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A5-05",
+  "domain": 5,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "5.3"
+  ],
+  "guide_en": "Having subagents implement local recovery for transient failures and only propagate errors they cannot resolve, including what was attempted and partial results",
+  "q_en": "Your Agent SDK dependency-audit tool has a coordinator that spawns one subagent per repository. Each subagent reads files through an MCP tool that times out on about 8% of calls, and almost all of those calls succeed when retried once. Today every timeout is returned straight to the coordinator, which re-plans and respawns the entire subagent. A 40-repository audit now takes three hours instead of one, and half of the coordinator's context is filled with failure reports. What's the most effective change?",
+  "q_ko": "Agent SDK 로 만든 의존성 감사 도구에서 coordinator 는 저장소마다 subagent 하나를 띄운다. 각 subagent 는 MCP tool 로 파일을 읽는데, 이 tool 은 호출의 약 8% 에서 타임아웃이 나고 그중 거의 전부가 한 번 다시 부르면 성공한다. 지금은 타임아웃이 날 때마다 곧장 coordinator 로 올라가고, coordinator 는 계획을 다시 세워 subagent 전체를 새로 띄운다. 그 결과 저장소 40개 감사가 1시간이 아니라 3시간 걸리고, coordinator context 의 절반이 실패 보고로 찼다. 가장 효과적인 변경은?",
+  "options": [
+   {
+    "en": "When the MCP tool times out, have the subagent return an empty file list marked as successful so the coordinator is not interrupted by failures.",
+    "ko": "MCP tool 이 타임아웃되면 subagent 가 빈 파일 목록을 성공으로 표시해 돌려줘서 coordinator 가 실패에 방해받지 않게 한다.",
+    "why": "실패를 성공으로 숨기는 안티패턴이다. 감사 결과에서 파일이 조용히 빠진다."
+   },
+   {
+    "en": "Have the coordinator summarize each failure report as soon as it arrives, keeping only one line per failure to save context space.",
+    "ko": "coordinator 가 실패 보고를 받자마자 요약해 실패당 한 줄만 남기도록 해 context 공간을 아낀다.",
+    "why": "context 증상만 줄인다. subagent 를 통째로 다시 띄우는 시간 낭비는 그대로다."
+   },
+   {
+    "en": "Have each subagent retry transient timeouts locally and propagate only the errors it cannot resolve, including what it attempted and any partial results.",
+    "ko": "각 subagent 가 일시적인 타임아웃은 스스로 재시도하고, 풀지 못한 오류만 시도한 내용과 부분 결과를 붙여 위로 올린다.",
+    "why": "한 번 재시도로 풀리는 일시 실패를 현장에서 처리해 재기동과 보고 폭주를 함께 없앤다. 정답."
+   },
+   {
+    "en": "Run the audit through the Message Batches API so that timed-out repositories are simply resubmitted in the next batch using their `custom_id`.",
+    "ko": "감사를 Message Batches API 로 돌려 타임아웃된 저장소는 `custom_id` 로 다음 배치에 다시 넣기만 한다.",
+    "why": "Batches API 는 여러 턴의 tool 호출을 지원하지 않아 파일을 읽어 가며 감사하는 subagent 에 맞지 않는다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "일시 실패는 subagent 가 직접 재시도, 못 푼 것만 위로",
+  "explain_ko": [
+   "**succeed when retried once** — 타임아웃이 일시적(transient)이라는 뜻이다. 한 번 더 부르면 풀리는 일을 coordinator 까지 올릴 이유가 없다.",
+   "지금은 **returned straight to the coordinator** 라서 subagent 를 통째로 다시 띄우고(**respawns the entire subagent**), 실패 보고가 context 를 채운다.",
+   "{C} 처럼 subagent 안에서 먼저 복구하고, 그래도 안 되는 것만 시도한 내용과 부분 결과를 붙여 올린다. {A} 는 실패를 성공으로 숨기는 안티패턴이다."
+  ],
+  "clues": [
+   {
+    "en": "almost all of those calls succeed when retried once",
+    "ko": "일시적 실패"
+   },
+   {
+    "en": "every timeout is returned straight to the coordinator",
+    "ko": "현장 복구 없음"
+   },
+   {
+    "en": "respawns the entire subagent",
+    "ko": "비싼 복구 방식"
+   },
+   {
+    "en": "filled with failure reports",
+    "ko": "보고가 context 를 잠식"
+   }
+  ],
+  "discuss_ko": "{B} 처럼 실패 보고를 한 줄로 줄이면 context 문제는 줄어드는데, 세 시간이 걸리는 문제는 왜 그대로 남을까?",
+  "words": [
+   {
+    "word": "transient",
+    "pos": "adj.",
+    "ko": "일시적인",
+    "example": "retry transient timeouts locally"
+   },
+   {
+    "word": "propagate",
+    "pos": "v.",
+    "ko": "전파하다, 위로 넘기다",
+    "example": "propagate only the errors it cannot resolve"
+   },
+   {
+    "word": "respawn",
+    "pos": "v.",
+    "ko": "다시 띄우다, 재생성하다",
+    "example": "respawns the entire subagent"
+   },
+   {
+    "word": "resubmit",
+    "pos": "v.",
+    "ko": "다시 제출하다",
+    "example": "simply resubmitted in the next batch"
+   },
+   {
+    "word": "interrupt",
+    "pos": "v.",
+    "ko": "방해하다, 중단시키다",
+    "example": "is not interrupted by failures"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A5-06",
+  "domain": 5,
+  "scenario": "Multi-Agent Research System",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "5.3"
+  ],
+  "guide_en": "Structured error context (failure type, attempted query, partial results, alternative approaches) as enabling intelligent coordinator recovery decisions",
+  "q_en": "The document analysis subagent is asked to extract findings from a 420-page regulatory filing. It processes the first 260 pages, then fails when a scanned appendix cannot be parsed, and returns only the message \"analysis failed.\" The coordinator has no way to tell what went wrong, so it respawns the subagent with the same instructions three times. Each attempt fails at the same appendix, and the 260 pages of findings are discarded every time. What's the most effective change?",
+  "q_ko": "문서 분석 subagent 가 420쪽짜리 규제 제출 서류에서 발견 사항을 뽑으라는 요청을 받는다. 앞 260쪽을 처리한 뒤 스캔된 부록을 읽어 들이지 못해 실패하고, \"analysis failed\" 라는 메시지만 돌려준다. coordinator 는 무엇이 잘못됐는지 알 길이 없어 같은 지시로 subagent 를 세 번 다시 띄운다. 매번 같은 부록에서 실패하고, 260쪽 분량의 발견 사항은 매번 버려진다. 가장 효과적인 변경은?",
+  "options": [
+   {
+    "en": "Have the coordinator retry the subagent with exponential backoff, up to five attempts, before it reports the filing as unavailable to the synthesis agent.",
+    "ko": "coordinator 가 지수적 대기로 subagent 를 최대 다섯 번 재시도한 뒤에야 synthesis agent 에 이 서류를 쓸 수 없다고 알린다.",
+    "why": "매번 같은 부록에서 막히는 실패라 기다렸다 다시 해도 풀리지 않고, 부분 결과도 계속 버려진다."
+   },
+   {
+    "en": "Have the subagent return the findings from the 260 pages as a normal successful result, leaving out any mention of the appendix it could not parse.",
+    "ko": "subagent 가 260쪽의 발견 사항을 정상 성공 결과로 돌려주고, 읽지 못한 부록 이야기는 빼 버린다.",
+    "why": "빠진 부록을 숨겨 보고서가 서류 전체를 분석한 것처럼 보이게 만든다. 오류 은폐다."
+   },
+   {
+    "en": "Increase the subagent's `max_tokens` so that it has enough output capacity to finish analyzing the full 420-page filing in a single attempt.",
+    "ko": "subagent 의 `max_tokens` 를 늘려 420쪽 서류 전체 분석을 한 번에 끝낼 출력 여유를 준다.",
+    "why": "`max_tokens` 는 출력 길이다. 부록을 읽지 못하는 실패와는 관계가 없다."
+   },
+   {
+    "en": "Have the subagent return the failure type, the pages it attempted, the findings from the first 260 pages, and alternatives such as analyzing the appendix separately.",
+    "ko": "subagent 가 실패 유형, 시도한 쪽 범위, 앞 260쪽의 발견 사항, 부록만 따로 분석하기 같은 대안을 함께 돌려준다.",
+    "why": "coordinator 가 부분 결과를 살리고 부록만 다른 방식으로 처리하는 복구 결정을 내릴 수 있다. 정답."
+   }
+  ],
+  "answer": 3,
+  "point_ko": "실패 보고 = 유형 + 시도 범위 + 부분 결과 + 대안",
+  "explain_ko": [
+   "**returns only the message \"analysis failed.\"** 한마디로는 coordinator 가 원인을 모른다(**has no way to tell what went wrong**). 그래서 같은 지시로 세 번 반복했다.",
+   "**fails at the same appendix** — 일시 오류가 아니라 매번 같은 곳에서 막히는 실패다. 재시도({A})로는 안 풀린다.",
+   "{D} 처럼 실패 유형·시도한 범위·260쪽 부분 결과·대안을 넘기면, coordinator 는 결과를 살리고 부록만 따로 처리하는 식으로 복구할 수 있다. {B} 는 빠진 부록을 숨긴다."
+  ],
+  "clues": [
+   {
+    "en": "returns only the message",
+    "ko": "뭉뚱그린 오류 메시지"
+   },
+   {
+    "en": "has no way to tell what went wrong",
+    "ko": "복구 판단 재료 없음"
+   },
+   {
+    "en": "fails at the same appendix",
+    "ko": "재시도로 안 풀리는 실패"
+   },
+   {
+    "en": "the 260 pages of findings are discarded every time",
+    "ko": "부분 결과가 버려짐"
+   }
+  ],
+  "discuss_ko": "{B} 처럼 260쪽 결과를 성공으로 넘기면 적어도 작업은 버려지지 않는데, 최종 보고서를 읽는 사람에게는 무엇이 문제가 될까?",
+  "words": [
+   {
+    "word": "regulatory filing",
+    "pos": "phr.",
+    "ko": "규제 당국 제출 서류",
+    "example": "a 420-page regulatory filing"
+   },
+   {
+    "word": "parse",
+    "pos": "v.",
+    "ko": "구문 분석하다, 읽어 들이다",
+    "example": "a scanned appendix cannot be parsed"
+   },
+   {
+    "word": "discard",
+    "pos": "v.",
+    "ko": "버리다, 폐기하다",
+    "example": "the 260 pages of findings are discarded every time"
+   },
+   {
+    "word": "exponential backoff",
+    "pos": "phr.",
+    "ko": "지수적으로 간격을 늘리는 재시도",
+    "example": "retry the subagent with exponential backoff"
+   },
+   {
+    "word": "leave out",
+    "pos": "phr.",
+    "ko": "빼다, 누락하다",
+    "example": "leaving out any mention of the appendix"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A5-07",
+  "domain": 5,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "5.4"
+  ],
+  "guide_en": "Summarizing key findings from one exploration phase before spawning sub-agents for the next phase, injecting summaries into initial context",
+  "q_en": "Your Agent SDK assistant maps a legacy insurance platform in two phases. In phase one, the main agent spends 90 minutes identifying 14 modules, their entry points, and a shared `PolicyContext` object. In phase two, it spawns one subagent per module to trace data flow. Logs show that each subagent spends its first 15 minutes re-running Glob and Grep to rediscover the module layout, and three of them describe `PolicyContext` as unused, contradicting phase one. What's the most effective change?",
+  "q_ko": "Agent SDK 로 만든 도우미가 오래된 보험 플랫폼을 두 단계로 파악한다. 1단계에서 main agent 는 90분 동안 모듈 14개, 각 진입점, 공유 객체 `PolicyContext` 를 찾아낸다. 2단계에서는 데이터 흐름을 추적하려고 모듈마다 subagent 하나를 띄운다. 로그를 보면 subagent 마다 처음 15분을 Glob 과 Grep 을 다시 돌려 모듈 구성을 새로 찾는 데 쓰고, 그중 셋은 `PolicyContext` 를 쓰이지 않는 객체라고 설명해 1단계 결과와 어긋난다. 가장 효과적인 변경은?",
+  "options": [
+   {
+    "en": "Summarize the key findings from phase one, including the module list, entry points, and the role of `PolicyContext`, and inject that summary into each subagent's initial prompt.",
+    "ko": "모듈 목록, 진입점, `PolicyContext` 의 역할 같은 1단계 핵심 발견을 요약해 각 subagent 의 첫 프롬프트에 넣는다.",
+    "why": "subagent 는 main 의 context 를 물려받지 않으니 요약을 넣어 줘야 같은 출발점에서 시작한다. 정답."
+   },
+   {
+    "en": "Pass each subagent the complete phase-one transcript, including every Glob, Grep, and Read result, so it has exactly the same information as the main agent.",
+    "ko": "모든 Glob·Grep·Read 결과를 포함한 1단계 대화 기록 전체를 각 subagent 에 넘겨 main agent 와 똑같은 정보를 갖게 한다.",
+    "why": "장황한 탐색 출력으로 subagent 의 context 를 채워, 격리해서 가볍게 일하게 하려던 이점을 없앤다."
+   },
+   {
+    "en": "Add an instruction to each subagent's prompt telling it to avoid contradicting earlier findings and to reuse the module layout discovered in phase one.",
+    "ko": "각 subagent 프롬프트에 앞선 발견과 어긋나지 말고 1단계에서 찾은 모듈 구성을 재사용하라는 지시를 넣는다.",
+    "why": "subagent 는 그 발견을 본 적이 없다. 내용 없이 지시만 더하는 함정이다."
+   },
+   {
+    "en": "Remove the subagents and have the main agent trace all 14 modules itself, since it already holds the phase-one findings in its own context.",
+    "ko": "subagent 를 없애고, 1단계 발견을 이미 context 에 갖고 있는 main agent 가 모듈 14개를 직접 추적하게 한다.",
+    "why": "이미 오래 탐색한 main agent 에 장황한 출력을 더 쌓아 context 저하를 부른다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "다음 단계 subagent 에게 = 앞 단계 핵심 요약을 처음부터",
+  "explain_ko": [
+   "subagent 는 main agent 의 context 를 물려받지 않는다. 그래서 **rediscover the module layout** 하느라 15분을 쓰고, `PolicyContext` 를 몰라 **contradicting phase one** 이 생긴다.",
+   "{A} 처럼 1단계 핵심 발견을 요약해 각 subagent 의 첫 프롬프트에 넣으면, 짧은 입력으로 같은 출발점을 공유한다.",
+   "{B} 는 장황한 탐색 출력을 그대로 옮기고, {C} 는 볼 수 없는 발견을 지키라고만 한다. {D} 는 이미 90분 쓴 main agent 에 짐을 더 얹는다."
+  ],
+  "clues": [
+   {
+    "en": "spawns one subagent per module",
+    "ko": "다음 단계는 subagent 가 맡음"
+   },
+   {
+    "en": "re-running Glob and Grep to rediscover the module layout",
+    "ko": "앞 단계 결과를 모름"
+   },
+   {
+    "en": "contradicting phase one",
+    "ko": "발견이 전달되지 않음"
+   }
+  ],
+  "discuss_ko": "{B} 처럼 1단계 기록을 전부 넘기면 빠지는 정보는 없을 텐데, 요약만 넘기는 편이 더 나은 이유는 무엇일까?",
+  "words": [
+   {
+    "word": "legacy",
+    "pos": "adj.",
+    "ko": "오래된 기존 (시스템)의",
+    "example": "maps a legacy insurance platform"
+   },
+   {
+    "word": "entry point",
+    "pos": "n.",
+    "ko": "진입점",
+    "example": "their entry points"
+   },
+   {
+    "word": "trace",
+    "pos": "v.",
+    "ko": "추적하다, 따라가다",
+    "example": "to trace data flow"
+   },
+   {
+    "word": "rediscover",
+    "pos": "v.",
+    "ko": "다시 찾아내다",
+    "example": "to rediscover the module layout"
+   },
+   {
+    "word": "inject",
+    "pos": "v.",
+    "ko": "주입하다, 넣어 주다",
+    "example": "inject that summary into each subagent's initial prompt"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A5-08",
+  "domain": 5,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "5.4"
+  ],
+  "guide_en": "Spawning subagents to investigate specific questions (e.g., \"find all test files,\" \"trace refund flow dependencies\") while the main agent preserves high-level coordination",
+  "q_en": "An engineer asks your Agent SDK assistant to plan moving the refund module out of a 1.2-million-line monorepo. The main agent answers each sub-question itself, such as \"find all test files that touch refunds\" and \"trace refund flow dependencies,\" running every Grep and Read in its own conversation. By the fourth sub-question, about 70% of its context is raw search output, and the final plan omits two dependencies it had reported an hour earlier. What's the most effective change?",
+  "q_ko": "엔지니어가 Agent SDK 도우미에게 120만 줄짜리 monorepo 에서 환불 모듈을 떼어 내는 계획을 세워 달라고 한다. main agent 는 \"환불을 건드리는 테스트 파일 모두 찾기\", \"환불 흐름 의존성 추적\" 같은 하위 질문을 자기 대화 안에서 Grep 과 Read 를 모두 돌리며 직접 답한다. 네 번째 하위 질문쯤 되자 context 의 약 70% 가 가공 안 된 검색 출력이고, 최종 계획에는 한 시간 전에 스스로 보고했던 의존성 두 개가 빠졌다. 가장 효과적인 변경은?",
+  "options": [
+   {
+    "en": "Restrict `allowedTools` to Grep and Glob only, so the main agent cannot fill its context by reading the full contents of files.",
+    "ko": "`allowedTools` 를 Grep 과 Glob 으로만 제한해 main agent 가 파일 전체를 읽어 context 를 채우지 못하게 한다.",
+    "why": "코드를 읽지 못하면 의존성을 제대로 추적할 수 없다. 다른 문제를 만드는 해법이다."
+   },
+   {
+    "en": "Spawn a subagent for each specific question that returns a concise answer with file paths, keeping the main agent focused on coordinating the overall plan.",
+    "ko": "구체적인 질문마다 subagent 를 띄워 파일 경로가 담긴 간결한 답을 돌려받고, main agent 는 전체 계획 조율에 집중하게 한다.",
+    "why": "장황한 탐색 출력은 subagent 안에 남고 main 에는 짧은 답만 쌓여 전체 그림을 지킨다. 정답."
+   },
+   {
+    "en": "Raise `max_tokens` for the main agent so it can produce a longer final plan that covers every dependency discovered during the session.",
+    "ko": "main agent 의 `max_tokens` 를 올려 세션 중에 찾은 의존성을 모두 담는 더 긴 최종 계획을 쓰게 한다.",
+    "why": "`max_tokens` 는 출력 길이다. 입력 context 가 검색 출력으로 넘치는 원인과는 관계가 없다."
+   },
+   {
+    "en": "Ask the main agent to write the final plan first and then run all searches, so the plan is not affected by accumulated search output.",
+    "ko": "main agent 가 최종 계획을 먼저 쓰고 나서 검색을 모두 돌리게 해, 쌓인 검색 출력이 계획에 영향을 주지 않게 한다.",
+    "why": "근거 없이 계획부터 쓰게 되어 의존성을 더 많이 놓친다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "구체 질문은 subagent 에게, main 은 전체 조율만",
+  "explain_ko": [
+   "**answers each sub-question itself** 와 **raw search output** — 탐색 출력이 main agent 의 context 를 채워 앞서 찾은 의존성까지 밀려났다.",
+   "{B} 처럼 '테스트 파일 찾기', '환불 흐름 추적' 같은 질문을 subagent 에게 맡기면 장황한 출력은 subagent context 에 남고 main 에는 짧은 답만 돌아온다.",
+   "{A} 는 코드를 읽을 수 없게 만들고, {C} 의 `max_tokens` 는 출력 길이라 입력이 넘치는 문제와 무관하다. {D} 는 근거 없이 계획부터 쓰게 한다."
+  ],
+  "clues": [
+   {
+    "en": "answers each sub-question itself",
+    "ko": "main 이 모든 탐색을 직접 함"
+   },
+   {
+    "en": "running every Grep and Read in its own conversation",
+    "ko": "출력이 main context 에 쌓임"
+   },
+   {
+    "en": "70% of its context is raw search output",
+    "ko": "context 가 탐색 찌꺼기로 참"
+   },
+   {
+    "en": "omits two dependencies it had reported an hour earlier",
+    "ko": "전체 조율이 무너짐"
+   }
+  ],
+  "discuss_ko": "subagent 가 짧은 답만 돌려주면 main agent 가 세부 근거를 놓칠 수도 있는데, 그 위험은 어떻게 줄일 수 있을까?",
+  "words": [
+   {
+    "word": "sub-question",
+    "pos": "n.",
+    "ko": "하위 질문",
+    "example": "By the fourth sub-question"
+   },
+   {
+    "word": "omit",
+    "pos": "v.",
+    "ko": "빠뜨리다, 누락하다",
+    "example": "the final plan omits two dependencies"
+   },
+   {
+    "word": "restrict",
+    "pos": "v.",
+    "ko": "제한하다",
+    "example": "Restrict `allowedTools` to Grep and Glob only"
+   },
+   {
+    "word": "concise",
+    "pos": "adj.",
+    "ko": "간결한",
+    "example": "returns a concise answer"
+   },
+   {
+    "word": "accumulated",
+    "pos": "adj.",
+    "ko": "쌓인, 누적된",
+    "example": "accumulated search output"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A5-09",
+  "domain": 5,
+  "scenario": "Structured Data Extraction",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "5.5"
+  ],
+  "guide_en": "Implementing stratified random sampling of high-confidence extractions for ongoing error rate measurement and novel pattern detection",
+  "q_en": "Six months ago your extraction pipeline began auto-approving extractions with high field-level confidence, after accuracy was validated for each document type. A monthly audit reviews 200 auto-approved documents chosen at random, but 88% of volume is standard invoices, so customs declarations and bills of lading get only a few audit samples each. Last month a carrier changed its bill of lading layout, and wrong `port_of_loading` values were auto-approved for five weeks before a customer complained. What's the most effective change?",
+  "q_ko": "6개월 전, 문서 유형별 정확도를 검증한 뒤 추출 파이프라인은 필드 단위 확신도가 높은 추출을 자동 승인하기 시작했다. 매달 감사에서 자동 승인된 문서 200건을 무작위로 뽑아 검토하지만, 물량의 88% 가 일반 인보이스라 세관 신고서와 선하증권은 유형마다 표본이 몇 건뿐이다. 지난달 한 운송사가 선하증권 양식을 바꿨고, 잘못된 `port_of_loading` 값이 고객 불만이 들어오기까지 5주 동안 자동 승인됐다. 가장 효과적인 변경은?",
+  "options": [
+   {
+    "en": "Re-run the original labeled validation set every quarter, and keep auto-approving as long as each document type still meets its accuracy target.",
+    "ko": "처음 쓴 labeled validation set 을 분기마다 다시 돌리고, 문서 유형마다 목표 정확도를 넘는 한 계속 자동 승인한다.",
+    "why": "고정된 검증 세트에는 새 양식이 없어, 운영 중에 새로 생긴 오류 패턴을 잡지 못한다."
+   },
+   {
+    "en": "Raise the auto-approval confidence threshold for every field to 0.99, so that fewer extractions skip human review across all document types.",
+    "ko": "모든 필드의 자동 승인 확신도 기준을 0.99 로 올려, 모든 문서 유형에서 사람 검토를 건너뛰는 추출을 줄인다.",
+    "why": "오류율을 재지 않고 기준만 올린다. 검토량만 늘고 확신도 높은 새 오류는 여전히 통과할 수 있다."
+   },
+   {
+    "en": "Send only low-confidence extractions to reviewers and stop the monthly audit, since reviewer time is better spent where the model is unsure.",
+    "ko": "확신도가 낮은 추출만 검토자에게 보내고 월간 감사는 멈춘다. 모델이 확신하지 못하는 곳에 시간을 쓰는 게 낫기 때문이다.",
+    "why": "이번 오류는 확신도가 높은 채로 자동 승인됐다. 감사를 멈추면 이런 오류를 볼 창구가 사라진다."
+   },
+   {
+    "en": "Sample high-confidence extractions at random within each document type, so every type gets enough samples to measure error rates and reveal new patterns.",
+    "ko": "문서 유형별로 나눠 그 안에서 확신도 높은 추출을 무작위로 뽑아, 모든 유형이 오류율을 재고 새 패턴을 드러낼 만큼 표본을 갖게 한다.",
+    "why": "층화 무작위 표본이라 드문 유형도 꾸준히 감시되어 양식 변경 같은 새 오류를 빨리 찾는다. 정답."
+   }
+  ],
+  "answer": 3,
+  "point_ko": "자동 승인분 감시 = 유형별 층화 무작위 표본",
+  "explain_ko": [
+   "**chosen at random** 이지만 **88% of volume is standard invoices** 라서 드문 문서 유형은 표본이 몇 건뿐이다. 그 유형에서 생긴 새 오류는 감사에 거의 걸리지 않는다.",
+   "{D} 처럼 문서 유형별로 나눠(층화) 그 안에서 무작위로 뽑으면, 모든 유형의 오류율을 재고 양식 변경 같은 새 오류 패턴도 빨리 잡는다.",
+   "{A} 의 고정된 validation set 에는 새 양식이 없고, {B} 는 재지 않고 기준만 올리며, {C} 는 확신도가 높은 오류를 아예 못 본다."
+  ],
+  "clues": [
+   {
+    "en": "chosen at random",
+    "ko": "층화 없는 단순 무작위"
+   },
+   {
+    "en": "88% of volume is standard invoices",
+    "ko": "한 유형이 표본을 독차지"
+   },
+   {
+    "en": "get only a few audit samples each",
+    "ko": "드문 유형은 감시 공백"
+   },
+   {
+    "en": "auto-approved for five weeks",
+    "ko": "새 오류 패턴을 늦게 발견"
+   }
+  ],
+  "discuss_ko": "{A} 처럼 labeled validation set 을 주기적으로 다시 돌리는 것도 정확도 확인인데, 운영 중에 새로 생기는 오류를 잡는 데는 왜 부족할까?",
+  "words": [
+   {
+    "word": "customs declaration",
+    "pos": "n.",
+    "ko": "세관 신고서",
+    "example": "customs declarations and bills of lading"
+   },
+   {
+    "word": "bill of lading",
+    "pos": "n.",
+    "ko": "선하증권(화물 운송 증서)",
+    "example": "changed its bill of lading layout"
+   },
+   {
+    "word": "volume",
+    "pos": "n.",
+    "ko": "물량, 처리량",
+    "example": "88% of volume is standard invoices"
+   },
+   {
+    "word": "as long as",
+    "pos": "phr.",
+    "ko": "~하는 한",
+    "example": "as long as each document type still meets its accuracy target"
+   },
+   {
+    "word": "reveal",
+    "pos": "v.",
+    "ko": "드러내다",
+    "example": "reveal new patterns"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A5-10",
+  "domain": 5,
+  "scenario": "Structured Data Extraction",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "5.5"
+  ],
+  "guide_en": "Routing extractions with low model confidence or ambiguous/contradictory source documents to human review, prioritizing limited reviewer capacity",
+  "q_en": "Your pipeline extracts terms from about 5,000 supplier contracts a day, and your two reviewers can check roughly 400. Field-level confidence scores have been calibrated against a labeled validation set. Today reviewers take contracts in arrival order until they run out of time, so most of their effort goes to clean, high-confidence extractions. Meanwhile, amendments that change a payment term stated in the original contract are auto-approved without review. Which TWO routing rules make the best use of reviewer capacity? (Choose TWO.)",
+  "q_ko": "파이프라인은 하루 약 5,000건의 공급업체 계약서에서 조건을 추출하고, 검토자 두 명은 약 400건을 볼 수 있다. 필드 단위 확신도는 labeled validation set 으로 보정되어 있다. 지금은 검토자가 시간이 다 될 때까지 도착 순서대로 계약서를 보기 때문에, 대부분의 노력이 문제없는 고확신 추출에 들어간다. 그러는 동안 원 계약서의 지급 조건을 바꾸는 수정 계약서는 검토 없이 자동 승인된다. 검토 인력을 가장 잘 쓰는 라우팅 규칙 두 가지는? (2개 고르시오.)",
+  "options": [
+   {
+    "en": "Route the longest contracts first, since documents with more pages contain more fields and therefore give reviewers more chances to find errors.",
+    "ko": "쪽수가 많은 문서일수록 필드가 많아 오류를 찾을 기회도 많으니 가장 긴 계약서부터 보낸다.",
+    "why": "길이는 오류 위험과 무관하다. 한정된 인력을 위험이 아닌 분량에 쓰게 된다."
+   },
+   {
+    "en": "Route extractions in which any field's calibrated confidence score falls below the review threshold that was set for that field on the validation set.",
+    "ko": "어느 한 필드라도 보정된 확신도가 validation set 으로 그 필드에 정한 검토 기준 아래로 떨어진 추출을 보낸다.",
+    "why": "보정된 필드별 확신도로 틀릴 가능성이 큰 곳에 인력을 모은다. 정답."
+   },
+   {
+    "en": "Route a fixed share of each reviewer's day to the most common contract type, because it contributes most to the overall accuracy figure.",
+    "ko": "가장 흔한 계약 유형이 전체 정확도 수치에 가장 크게 기여하니, 검토자 하루의 일정 몫을 그 유형에 배정한다.",
+    "why": "전체 수치를 올리는 데 맞춘 배분이라 위험이 큰 건을 우선하지 못한다."
+   },
+   {
+    "en": "Have Claude decide which contracts need review by setting a `needs_review` boolean based on how difficult the document seemed to process.",
+    "ko": "문서 처리가 얼마나 어려워 보였는지에 따라 Claude 가 `needs_review` boolean 을 정해 검토할 계약서를 고르게 한다.",
+    "why": "보정되지 않은 자기 보고 판단이라 실제 오류와 맞는다는 근거가 없다."
+   },
+   {
+    "en": "Route extractions where the source documents are ambiguous or contradictory, such as an amendment that changes a term stated in the original contract.",
+    "ko": "원 계약서의 조건을 바꾸는 수정 계약서처럼 원문 문서가 애매하거나 서로 모순되는 추출을 보낸다.",
+    "why": "원문끼리 어긋나면 확신도와 상관없이 사람 판단이 필요하다. 정답."
+   }
+  ],
+  "answer": [
+   1,
+   4
+  ],
+  "select": 2,
+  "point_ko": "검토 인력 한정 = 낮은 확신도 + 모순된 원문 우선",
+  "explain_ko": [
+   "**5,000** 건 중 **roughly 400** 건만 볼 수 있으니, 틀릴 가능성이 큰 곳에 먼저 보내야 한다. **in arrival order** 는 위험과 무관한 순서다.",
+   "확신도가 이미 **calibrated against a labeled validation set** 되어 있으니, 필드별 기준 아래로 떨어진 건을 보내는 {B} 가 첫 번째 정답이다.",
+   "원문끼리 어긋나는 **amendments that change a payment term** 은 확신도와 상관없이 사람 판단이 필요하다. 그래서 {E} 가 두 번째 정답이다.",
+   "{A} 의 길이, {C} 의 흔한 유형 비중은 오류 위험과 관계없고, {D} 는 보정되지 않은 자기 보고 판단에 기대는 함정이다."
+  ],
+  "clues": [
+   {
+    "en": "two reviewers can check roughly 400",
+    "ko": "검토 인력이 한정됨"
+   },
+   {
+    "en": "have been calibrated against a labeled validation set",
+    "ko": "확신도를 믿고 쓸 수 있음"
+   },
+   {
+    "en": "in arrival order",
+    "ko": "위험과 무관한 순서"
+   },
+   {
+    "en": "amendments that change a payment term stated in the original contract",
+    "ko": "원문끼리 모순"
+   }
+  ],
+  "discuss_ko": "{C} 처럼 가장 흔한 계약 유형을 집중 검토하면 전체 정확도 수치는 가장 크게 오를 텐데, 그게 한정된 검토 인력의 최선이 아닌 이유는 무엇일까?",
+  "words": [
+   {
+    "word": "amendment",
+    "pos": "n.",
+    "ko": "수정 계약서, 개정",
+    "example": "amendments that change a payment term"
+   },
+   {
+    "word": "run out of",
+    "pos": "phr.",
+    "ko": "~이 다 떨어지다",
+    "example": "until they run out of time"
+   },
+   {
+    "word": "in arrival order",
+    "pos": "phr.",
+    "ko": "도착한 순서대로",
+    "example": "reviewers take contracts in arrival order"
+   },
+   {
+    "word": "contribute",
+    "pos": "v.",
+    "ko": "기여하다",
+    "example": "it contributes most to the overall accuracy figure"
+   },
+   {
+    "word": "fall below",
+    "pos": "phr.",
+    "ko": "~아래로 떨어지다",
+    "example": "falls below the review threshold"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A5-11",
+  "domain": 5,
+  "scenario": "Multi-Agent Research System",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "5.6"
+  ],
+  "guide_en": "Requiring subagents to output structured claim-source mappings (source URLs, document names, relevant excerpts) that downstream agents preserve through synthesis",
+  "q_en": "Your research system produces cited reports on public health policy. The search and analysis subagents return prose summaries with a list of sources at the end, and the synthesis agent condenses these into a final report. A fact-check of 50 reports found that 23% of citations point to a source that does not support the claim beside it, and several key claims have no citation at all. The individual subagent summaries were accurate. What's the most effective fix?",
+  "q_ko": "리서치 시스템은 공중보건 정책에 대한 인용 포함 보고서를 만든다. 검색·분석 subagent 는 끝에 출처 목록을 붙인 줄글 요약을 돌려주고, synthesis agent 가 이를 압축해 최종 보고서를 쓴다. 보고서 50건을 사실 확인해 보니 인용의 23% 가 옆의 주장을 뒷받침하지 않는 출처를 가리켰고, 인용이 아예 없는 핵심 주장도 여럿 있었다. subagent 요약 하나하나는 정확했다. 가장 효과적인 해결책은?",
+  "options": [
+   {
+    "en": "Add an instruction to the synthesis agent's prompt telling it to be especially careful to attach the correct source to every claim it includes.",
+    "ko": "synthesis agent 프롬프트에 보고서에 넣는 주장마다 올바른 출처를 붙이도록 특히 신경 쓰라는 지시를 넣는다.",
+    "why": "어떤 주장이 어느 출처인지 짝이 입력에 없으니 조심해도 맞힐 수 없다. 프롬프트만 강화하는 함정이다."
+   },
+   {
+    "en": "Add a citation agent that runs a new web search after the report is written to find a supporting source for each claim.",
+    "ko": "보고서를 다 쓴 뒤 새로 웹 검색을 돌려 주장마다 뒷받침 출처를 찾아 붙이는 인용 전담 agent 를 추가한다.",
+    "why": "실제로 쓴 출처가 아닌 새 출처를 사후에 붙이는 방식이라 출처 추적이 오히려 흐려진다."
+   },
+   {
+    "en": "Require subagents to output structured claim-source mappings, with the source URL, document name, and relevant excerpt for each claim, and have synthesis preserve them.",
+    "ko": "subagent 가 주장마다 출처 URL·문서명·관련 발췌를 붙인 구조화된 주장-출처 매핑을 출력하게 하고, synthesis 가 이를 보존하게 한다.",
+    "why": "주장과 출처의 짝이 처음부터 구조로 전달되어 압축 단계에서도 끊기지 않는다. 정답."
+   },
+   {
+    "en": "Have the synthesis agent receive the full text of every source document instead of summaries, so it can look up citations directly while writing.",
+    "ko": "synthesis agent 가 요약 대신 모든 출처 문서의 전문을 받게 해서 쓰는 동안 인용을 직접 찾아보게 한다.",
+    "why": "원문 전체가 context 를 채워 중간 내용을 놓치기 쉽고, 짝을 구조로 넘기는 근본 해결도 아니다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "출처가 엇갈림 = 주장-출처 짝을 구조화해 끝까지 유지",
+  "explain_ko": [
+   "**a list of sources at the end** — 어떤 주장이 어느 출처에서 왔는지 짝이 처음부터 없다. synthesis 가 **condenses** 하면서 그 연결이 완전히 끊긴다.",
+   "**The individual subagent summaries were accurate** 이니 문제는 내용이 아니라 출처 연결이다. {C} 처럼 주장마다 URL·문서명·발췌를 붙인 구조로 받고 synthesis 가 그대로 보존·병합해야 한다.",
+   "{A} 는 없는 정보를 조심하라고만 하고, {B} 는 원래 쓴 출처가 아닌 새 출처를 붙인다. {D} 는 원문 전체로 context 를 채운다."
+  ],
+  "clues": [
+   {
+    "en": "prose summaries with a list of sources at the end",
+    "ko": "주장-출처 짝이 없음"
+   },
+   {
+    "en": "condenses these into a final report",
+    "ko": "압축하며 출처 연결이 끊김"
+   },
+   {
+    "en": "does not support the claim beside it",
+    "ko": "잘못 붙은 인용"
+   },
+   {
+    "en": "The individual subagent summaries were accurate",
+    "ko": "내용이 아니라 출처 추적 문제"
+   }
+  ],
+  "discuss_ko": "{B} 처럼 나중에 근거 출처를 다시 검색해 붙이면 인용이 비는 주장은 없어질 텐데, 연구 보고서로서 어떤 위험이 생길까?",
+  "words": [
+   {
+    "word": "condense",
+    "pos": "v.",
+    "ko": "압축하다, 줄이다",
+    "example": "the synthesis agent condenses these into a final report"
+   },
+   {
+    "word": "fact-check",
+    "pos": "n.",
+    "ko": "사실 확인",
+    "example": "A fact-check of 50 reports"
+   },
+   {
+    "word": "excerpt",
+    "pos": "n.",
+    "ko": "발췌문",
+    "example": "relevant excerpt for each claim"
+   },
+   {
+    "word": "attach",
+    "pos": "v.",
+    "ko": "붙이다, 첨부하다",
+    "example": "attach the correct source to every claim"
+   },
+   {
+    "word": "look up",
+    "pos": "phr.",
+    "ko": "찾아보다",
+    "example": "look up citations directly while writing"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A5-12",
+  "domain": 5,
+  "scenario": "Multi-Agent Research System",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "5.6"
+  ],
+  "guide_en": "Structuring reports with explicit sections distinguishing well-established findings from contested ones, preserving original source characterizations and methodological context",
+  "q_en": "Stakeholders reviewing your research system's report on the semiconductor market raise two complaints. First, quarterly revenue for eight companies is buried in long paragraphs, while breaking news about export restrictions was chopped into bullet fragments that lost their context. Second, a claim backed by a single preprint appears with the same certainty as one supported by twelve peer-reviewed studies, and a source's \"preliminary estimate\" is described as \"confirmed.\" Which TWO changes best address these complaints? (Choose TWO.)",
+  "q_ko": "리서치 시스템이 만든 반도체 시장 보고서를 검토한 이해관계자들이 두 가지 불만을 제기한다. 첫째, 8개 회사의 분기 매출이 긴 문단 속에 묻혀 있고, 수출 규제 속보는 맥락을 잃은 짧은 글머리표 조각으로 잘려 있다. 둘째, 사전 공개 논문 한 편에만 근거한 주장이 동료 심사 연구 12편이 뒷받침하는 주장과 똑같이 확실한 것처럼 쓰였고, 한 출처의 \"잠정 추정치\"가 \"확인됨\"으로 표현됐다. 이 불만을 가장 잘 해결하는 변경 두 가지는? (2개 고르시오.)",
+  "options": [
+   {
+    "en": "Render each content type in a suitable form, with financial figures as tables, news developments as prose, and technical findings as structured lists.",
+    "ko": "내용 종류마다 알맞은 형식으로 쓴다. 재무 수치는 표로, 뉴스 전개는 줄글로, 기술적 발견은 구조화된 목록으로 쓴다.",
+    "why": "매출은 표, 속보는 문장으로 쓰게 되어 첫째 불만을 직접 해결한다. 정답."
+   },
+   {
+    "en": "Convert all findings into one uniform bullet-point format, so that every section of the report looks consistent and is quicker to skim.",
+    "ko": "모든 발견을 하나의 통일된 글머리표 형식으로 바꿔 보고서의 모든 절이 일관돼 보이고 훑어보기 쉽게 한다.",
+    "why": "모든 걸 한 형식으로 바꾸는 것이 바로 뉴스 맥락을 잃게 한 원인이다."
+   },
+   {
+    "en": "Remove any claim that is supported by fewer than three sources, so that the report contains only findings stakeholders can treat as certain.",
+    "ko": "출처가 세 개보다 적은 주장은 모두 빼서 이해관계자가 확실하다고 여길 수 있는 발견만 보고서에 남긴다.",
+    "why": "논쟁 중인 발견을 구분해 보여 주지 않고 정보 자체를 버린다."
+   },
+   {
+    "en": "Separate well-established findings from contested ones in explicit sections, keeping each source's original characterization, such as \"preliminary,\" and its methodological context.",
+    "ko": "확립된 발견과 논쟁 중인 발견을 명시적인 절로 나누고, \"잠정\" 같은 출처의 원래 표현과 연구 방법 맥락을 그대로 유지한다.",
+    "why": "확실성의 차이와 원래 표현을 살려 둘째 불만을 직접 해결한다. 정답."
+   },
+   {
+    "en": "Have a final editing agent rewrite the report in a single confident tone, so that readers are not distracted by hedging language from different sources.",
+    "ko": "마지막 편집 agent 가 보고서를 하나의 자신 있는 어조로 다시 써서, 출처마다 다른 조심스러운 표현에 독자가 흔들리지 않게 한다.",
+    "why": "\"잠정\"을 \"확인됨\"으로 바꾼 것과 같은 방향이라 둘째 불만을 더 키운다."
+   }
+  ],
+  "answer": [
+   0,
+   3
+  ],
+  "select": 2,
+  "point_ko": "내용 종류별 형식 + 확립/논쟁 구분, 원래 표현 유지",
+  "explain_ko": [
+   "첫째 불만은 형식이다. 매출이 **buried in long paragraphs**, 뉴스는 **chopped into bullet fragments** — 재무는 표로, 뉴스는 문장으로 써야 한다. 그래서 {A}.",
+   "둘째 불만은 확실성이다. **a single preprint** 와 **twelve peer-reviewed studies** 를 같은 무게로 쓰고 **preliminary estimate** 를 확인된 것처럼 바꿨다. 확립된 발견과 논쟁 중인 발견을 나누고 원래 표현을 지키는 {D}.",
+   "{B} 는 획일적 형식이라는 원인 그 자체이고, {C} 는 정보를 버리며, {E} 는 불확실성을 더 지운다."
+  ],
+  "clues": [
+   {
+    "en": "buried in long paragraphs",
+    "ko": "표가 맞는 수치를 줄글로 씀"
+   },
+   {
+    "en": "chopped into bullet fragments",
+    "ko": "줄글이 맞는 뉴스를 조각냄"
+   },
+   {
+    "en": "backed by a single preprint",
+    "ko": "근거 강도가 다른 주장"
+   },
+   {
+    "en": "preliminary estimate",
+    "ko": "원래 표현이 바뀜"
+   }
+  ],
+  "discuss_ko": "{C} 처럼 출처가 적은 주장을 빼면 보고서가 더 믿음직해 보이는데, 의사결정자에게는 어떤 정보가 사라질까?",
+  "words": [
+   {
+    "word": "bury",
+    "pos": "v.",
+    "ko": "파묻다",
+    "example": "is buried in long paragraphs"
+   },
+   {
+    "word": "chop",
+    "pos": "v.",
+    "ko": "잘게 자르다",
+    "example": "chopped into bullet fragments"
+   },
+   {
+    "word": "preprint",
+    "pos": "n.",
+    "ko": "사전 공개 논문(심사 전 원고)",
+    "example": "backed by a single preprint"
+   },
+   {
+    "word": "peer-reviewed",
+    "pos": "adj.",
+    "ko": "동료 심사를 거친",
+    "example": "twelve peer-reviewed studies"
+   },
+   {
+    "word": "contested",
+    "pos": "adj.",
+    "ko": "논쟁 중인, 이견이 있는",
+    "example": "from contested ones"
+   },
+   {
+    "word": "hedging language",
+    "pos": "phr.",
+    "ko": "단정을 피하는 조심스러운 표현",
+    "example": "hedging language from different sources"
+   },
+   {
+    "word": "skim",
+    "pos": "v.",
+    "ko": "훑어보다",
+    "example": "quicker to skim"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ }
+]

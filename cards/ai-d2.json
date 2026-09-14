@@ -1,0 +1,1041 @@
+[
+ {
+  "id": "A2-01",
+  "domain": 2,
+  "scenario": "Multi-Agent Research System",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "2.1"
+  ],
+  "guide_en": "Splitting generic tools into purpose-specific tools with defined input/output contracts (e.g., splitting a generic analyze_document into extract_data_points, summarize_content, and verify_claim_against_source)",
+  "q_en": "Your document analysis subagent exposes a single tool, `analyze_document(document_id, instructions)`, described as \"Analyzes a document according to the instructions.\" Across 400 logged calls, the coordinator used it for three different jobs: pulling statistics, summarizing sources, and checking whether a source supports a specific claim. The outputs vary unpredictably. Claim checks return a summary with no verdict in 29% of calls, and extracted statistics arrive as loose prose in 38% of calls, so the synthesis agent silently drops them. What's the most effective change?",
+  "q_ko": "문서 분석 subagent 에는 `analyze_document(document_id, instructions)` 라는 tool 하나만 있고, 설명은 \"지시에 따라 문서를 분석합니다.\" 가 전부다. 기록된 호출 400건을 보면 coordinator 는 이 tool 을 세 가지 일에 썼다. 통계 뽑기, 출처 요약, 그리고 어떤 출처가 특정 주장을 뒷받침하는지 확인하기. 출력은 예측할 수 없게 들쭉날쭉하다. 주장 확인 호출의 29% 는 판정 없이 요약만 돌려주고, 추출한 통계의 38% 는 형식 없는 줄글로 와서 synthesis agent 가 조용히 버린다. 가장 효과적인 변경은?",
+  "options": [
+   {
+    "en": "Add a system prompt instruction telling the subagent to always return JSON and to include an explicit verdict whenever the instructions mention checking a claim.",
+    "ko": "subagent 에게 항상 JSON 으로 돌려주고, 지시에 주장 확인이 나오면 명확한 판정을 넣으라고 system prompt 에 지시를 추가한다.",
+    "why": "프롬프트만 강화하는 해법이다. tool 자체가 여전히 무엇이든 받는 만능 도구라서 출력 형식을 보장해 줄 계약이 없다."
+   },
+   {
+    "en": "Insert a formatting agent between the document analysis subagent and the synthesis agent that converts every prose output into structured records before synthesis.",
+    "ko": "문서 분석 subagent 와 synthesis agent 사이에 줄글 출력을 모두 구조화된 기록으로 바꿔 주는 포맷 변환 agent 를 끼워 넣는다.",
+    "why": "과한 인프라로 증상만 가린다. 판정이 아예 빠진 출력은 변환해도 판정이 생기지 않는다."
+   },
+   {
+    "en": "Split the tool into `extract_data_points`, `summarize_content`, and `verify_claim_against_source`, each with its own description and a defined input and output contract.",
+    "ko": "tool 을 `extract_data_points`, `summarize_content`, `verify_claim_against_source` 로 나누고, 각각 자기 설명과 정해진 입력·출력 계약을 준다.",
+    "why": "정답. 세 가지 일을 목적별 tool 로 쪼개면 호출할 때 할 일이 분명해지고 돌아오는 출력 모양도 tool 마다 고정된다."
+   },
+   {
+    "en": "Expand the `analyze_document` description to list its three common uses with examples, while keeping the single free-text `instructions` parameter unchanged.",
+    "ko": "`analyze_document` 설명에 흔한 용도 세 가지를 예시와 함께 적되, 자유 텍스트 `instructions` 파라미터 하나는 그대로 둔다.",
+    "why": "설명은 좋아지지만 여전히 한 tool 이 세 가지 일을 하고 출력 계약이 없어서 결과 모양이 계속 들쭉날쭉하다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "여러 일을 하는 만능 tool = 목적별로 쪼개고 입출력 계약",
+  "explain_ko": [
+   "**a single tool** 이 **three different jobs** 를 맡고 있다. 무엇을 돌려줄지 정해진 약속이 없으니 **The outputs vary unpredictably** 가 생긴다.",
+   "가이드는 generic `analyze_document` 를 `extract_data_points`, `summarize_content`, `verify_claim_against_source` 로 **목적별로 쪼개고 입력·출력 계약을 정하라**고 한다. {C} 가 그대로다.",
+   "{A} 는 프롬프트만, {B} 는 뒤에서 수습하는 인프라, {D} 는 설명만 늘린 것이라 만능 tool 이라는 뿌리가 남는다."
+  ],
+  "clues": [
+   {
+    "en": "a single tool",
+    "ko": "만능 tool 하나"
+   },
+   {
+    "en": "three different jobs",
+    "ko": "용도가 섞여 있음 = 쪼갤 대상"
+   },
+   {
+    "en": "The outputs vary unpredictably",
+    "ko": "출력 계약이 없음"
+   },
+   {
+    "en": "silently drops them",
+    "ko": "다음 단계가 형식을 못 믿음"
+   }
+  ],
+  "discuss_ko": "{D} 처럼 설명에 세 용도와 예시를 적으면 호출은 더 정확해질 텐데, 왜 출력이 들쭉날쭉한 문제는 그대로 남을까?",
+  "words": [
+   {
+    "word": "unpredictably",
+    "pos": "adv.",
+    "ko": "예측할 수 없게",
+    "example": "The outputs vary unpredictably"
+   },
+   {
+    "word": "verdict",
+    "pos": "n.",
+    "ko": "판정, 결론",
+    "example": "return a summary with no verdict"
+   },
+   {
+    "word": "prose",
+    "pos": "n.",
+    "ko": "(형식 없는) 줄글, 산문",
+    "example": "arrive as loose prose"
+   },
+   {
+    "word": "loose",
+    "pos": "adj.",
+    "ko": "느슨한, 형식이 잡히지 않은",
+    "example": "arrive as loose prose"
+   },
+   {
+    "word": "contract",
+    "pos": "n.",
+    "ko": "계약, (주고받는 형식에 대한) 약속",
+    "example": "a defined input and output contract"
+   },
+   {
+    "word": "insert",
+    "pos": "v.",
+    "ko": "끼워 넣다",
+    "example": "Insert a formatting agent between the document analysis subagent and the synthesis agent"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A2-02",
+  "domain": 2,
+  "scenario": "Customer Support Resolution Agent",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "2.1"
+  ],
+  "guide_en": "The importance of including input formats, example queries, edge cases, and boundary explanations in tool descriptions",
+  "select": 2,
+  "q_en": "Over the past month, 23% of `lookup_order` calls failed validation. Logs show the agent passing values such as `#40188213`, `A-40188213`, and customer email addresses, while the tool accepts only an 8-digit numeric order ID. Separately, when customers ask about orders bought through partner marketplaces, which your system never stores, the agent receives a not-found result, tells them the order does not exist, and closes the case. The tool's entire description reads: \"Looks up an order.\" Which TWO changes most effectively address these problems? (Choose TWO.)",
+  "q_ko": "지난 한 달 동안 `lookup_order` 호출의 23% 가 입력 검증에서 실패했다. 로그를 보면 tool 은 8자리 숫자 주문 ID 만 받는데, 에이전트는 `#40188213`, `A-40188213`, 고객 이메일 주소 같은 값을 넘기고 있다. 이와 별개로, 고객이 제휴 마켓플레이스에서 산 주문(우리 시스템에는 절대 저장되지 않음)을 물으면 에이전트는 not-found 결과를 받고 그런 주문은 없다고 말한 뒤 케이스를 닫는다. 이 tool 의 설명은 \"Looks up an order.\" 한 줄이 전부다. 이 문제들을 가장 효과적으로 해결하는 변경 두 가지는? (2개 고르시오.)",
+  "options": [
+   {
+    "en": "Add the accepted input format to the description, an 8-digit number without prefixes or symbols, plus example queries showing how common customer phrasings map to it.",
+    "ko": "설명에 받는 입력 형식(접두어·기호 없는 8자리 숫자)과, 고객이 흔히 쓰는 표현이 그 형식으로 어떻게 바뀌는지 보여 주는 예시 쿼리를 추가한다.",
+    "why": "정답. 에이전트가 무엇을 넘겨야 하는지 설명에서 알 수 있으니 형식 오류가 줄어든다."
+   },
+   {
+    "en": "Add a system prompt rule: \"Whenever a customer mentions an order, call `lookup_order` immediately with whatever identifier they gave.\"",
+    "ko": "system prompt 에 \"고객이 주문을 언급하면 고객이 준 식별자 그대로 즉시 `lookup_order` 를 호출하라\" 는 규칙을 넣는다.",
+    "why": "키워드에 반응하는 지시라서 이메일이나 기호가 붙은 값까지 그대로 넘기게 만든다. 오류를 오히려 늘린다."
+   },
+   {
+    "en": "Retry each failed `lookup_order` call up to three times before telling the customer that no matching order could be found.",
+    "ko": "실패한 `lookup_order` 호출을 최대 세 번 다시 시도한 뒤에 일치하는 주문을 찾지 못했다고 고객에게 알린다.",
+    "why": "입력 형식이 틀린 호출은 똑같이 다시 보내도 또 실패한다. 재시도만 낭비하고, 마켓플레이스 주문 문제는 손대지 못한다."
+   },
+   {
+    "en": "Explain in the description that partner-marketplace orders are outside this tool's data, so a not-found result for them does not mean the order is missing.",
+    "ko": "설명에 제휴 마켓플레이스 주문은 이 tool 의 데이터 범위 밖이라서, 그런 주문의 not-found 결과가 주문이 없다는 뜻이 아님을 적는다.",
+    "why": "정답. tool 의 경계를 알려 주면 에이전트가 not-found 를 '주문 없음'으로 잘못 해석해 케이스를 닫지 않는다."
+   },
+   {
+    "en": "Add a PostToolUse hook that turns every not-found result from `lookup_order` into an automatic escalation to a human agent.",
+    "ko": "`lookup_order` 의 not-found 결과를 모두 사람 상담원에게 자동으로 넘기는 PostToolUse hook 을 추가한다.",
+    "why": "형식 실수로 생긴 not-found 까지 전부 사람에게 넘겨 first-contact resolution 을 떨어뜨린다. 원인인 빈약한 설명은 그대로다."
+   }
+  ],
+  "answer": [
+   0,
+   3
+  ],
+  "point_ko": "입력 형식 실수·범위 밖 요청 = tool 설명에 형식·예시·경계",
+  "explain_ko": [
+   "설명이 **\"Looks up an order.\"** 뿐이라 에이전트는 어떤 값을 넣어야 하는지(**accepts only an 8-digit numeric order ID**), 어떤 주문은 없는지 알 길이 없다.",
+   "가이드는 tool 설명에 **input formats, example queries, edge cases, boundary explanations** 를 넣으라고 한다. 형식과 예시는 {A}, 경계 설명은 {D} 가 맡는다.",
+   "{C} 의 재시도는 입력 오류에 소용없고, {B} 는 키워드 지시로 잘못된 호출을 부추기며, {E} 는 증상을 사람에게 떠넘길 뿐이다."
+  ],
+  "clues": [
+   {
+    "en": "failed validation",
+    "ko": "입력 형식 오류 = 재시도로 안 풀림"
+   },
+   {
+    "en": "accepts only an 8-digit numeric order ID",
+    "ko": "설명에 적어야 할 입력 형식"
+   },
+   {
+    "en": "which your system never stores",
+    "ko": "tool 의 경계(범위 밖 데이터)"
+   },
+   {
+    "en": "\"Looks up an order.\"",
+    "ko": "설명이 너무 짧음"
+   }
+  ],
+  "discuss_ko": "{C} 처럼 세 번 재시도하면 일시적 장애는 넘길 수 있는데, 이 로그에 나온 실패에는 왜 소용이 없을까?",
+  "words": [
+   {
+    "word": "validation",
+    "pos": "n.",
+    "ko": "(입력) 검증",
+    "example": "calls failed validation"
+   },
+   {
+    "word": "prefix",
+    "pos": "n.",
+    "ko": "접두어, 앞에 붙는 기호",
+    "example": "without prefixes or symbols"
+   },
+   {
+    "word": "phrasing",
+    "pos": "n.",
+    "ko": "말하는 방식, 표현",
+    "example": "how common customer phrasings map to it"
+   },
+   {
+    "word": "separately",
+    "pos": "adv.",
+    "ko": "그와 별개로",
+    "example": "Separately, when customers ask about orders"
+   },
+   {
+    "word": "identifier",
+    "pos": "n.",
+    "ko": "식별자",
+    "example": "with whatever identifier they gave"
+   },
+   {
+    "word": "map to",
+    "pos": "phr. v.",
+    "ko": "~에 대응되다, ~로 바뀌다",
+    "example": "how common customer phrasings map to it"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A2-03",
+  "domain": 2,
+  "scenario": "Customer Support Resolution Agent",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "2.2"
+  ],
+  "guide_en": "The distinction between transient errors (timeouts, service unavailability), validation errors (invalid input), business errors (policy violations), and permission errors",
+  "q_en": "Your `process_refund` MCP server catches every exception and returns `isError: true` with the message \"Service temporarily unavailable.\" A review of two weeks of logs shows that 71% of these errors were actually rejected inputs: the agent sent amounts such as `\"$42.50\"` where the tool requires an integer number of cents. The agent treats every error as an outage, repeats the identical call three times, and then escalates to a human, adding about 140 unnecessary escalations per week. What's the most effective fix?",
+  "q_ko": "`process_refund` MCP 서버는 모든 예외를 잡아 `isError: true` 와 \"Service temporarily unavailable.\" 메시지를 돌려준다. 2주치 로그를 살펴보니 이 오류의 71% 는 사실 입력이 거절된 경우였다. tool 은 센트 단위 정수를 요구하는데 에이전트가 `\"$42.50\"` 같은 금액을 보냈다. 에이전트는 모든 오류를 서비스 장애로 여겨 똑같은 호출을 세 번 되풀이한 다음 사람에게 넘기고, 그 결과 불필요한 에스컬레이션이 주당 140건가량 늘었다. 가장 효과적인 수정은?",
+  "options": [
+   {
+    "en": "Increase the retry limit to five attempts with exponential backoff so that genuine outages have more time to clear before any escalation happens.",
+    "ko": "재시도 한도를 다섯 번으로 늘리고 exponential backoff 를 적용해, 진짜 장애가 풀릴 시간을 에스컬레이션 전에 더 준다.",
+    "why": "입력 오류를 계속 일시적 장애로 취급한다. 잘못된 금액은 얼마를 기다렸다 다시 보내도 또 거절된다."
+   },
+   {
+    "en": "Return rejected inputs as validation errors, with a description naming the invalid field and the expected integer-cents format, so the agent corrects its arguments.",
+    "ko": "거절된 입력은 validation 오류로 돌려주고, 잘못된 필드와 기대하는 센트 정수 형식을 설명에 담아 에이전트가 인자를 고치게 한다.",
+    "why": "정답. 오류 종류가 맞게 표시되니 에이전트가 기다렸다 재시도하는 대신 금액을 고쳐 다시 호출할 수 있다."
+   },
+   {
+    "en": "Add a system prompt instruction telling the agent to escalate to a human immediately whenever `process_refund` returns any error, skipping retries entirely.",
+    "ko": "`process_refund` 가 어떤 오류든 돌려주면 재시도 없이 즉시 사람에게 넘기라는 지시를 system prompt 에 추가한다.",
+    "why": "헛된 재시도는 없어지지만 에이전트가 스스로 고칠 수 있던 입력 실수까지 전부 사람에게 넘어가 불필요한 에스컬레이션이 그대로다."
+   },
+   {
+    "en": "Return `isError: false` and place the error text inside the normal result content, so the agent reads the message instead of retrying the call.",
+    "ko": "`isError: false` 로 돌려주고 오류 문구는 일반 결과 내용 안에 넣어, 에이전트가 재시도 대신 메시지를 읽게 한다.",
+    "why": "실패를 성공처럼 보이게 하는 안티패턴이다. 에이전트가 환불이 처리된 것으로 오해해 고객에게 잘못 안내할 수 있다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "입력 오류를 장애로 포장 = 헛재시도, validation 으로 구분",
+  "explain_ko": [
+   "서버가 **catches every exception** 해서 모든 실패를 \"Service temporarily unavailable\" 로 돌려주니, 에이전트는 **actually rejected inputs** 도 장애로 알고 **repeats the identical call** 한다.",
+   "가이드는 transient(시간 초과·서비스 불가), **validation(잘못된 입력)**, business(정책 위반), permission 오류를 구분하라고 한다. 입력 오류는 기다려서가 아니라 **입력을 고쳐야** 풀린다.",
+   "{B} 처럼 validation 으로 표시하고 무엇이 틀렸는지 알려 주면 에이전트가 금액을 고쳐 스스로 해결한다. {A} 는 재시도 강화, {C} 는 사람에게 떠넘기기, {D} 는 실패 숨기기다."
+  ],
+  "clues": [
+   {
+    "en": "catches every exception",
+    "ko": "모든 실패를 한 종류로 뭉뚱그림"
+   },
+   {
+    "en": "\"Service temporarily unavailable.\"",
+    "ko": "transient 로 잘못 표시"
+   },
+   {
+    "en": "actually rejected inputs",
+    "ko": "진짜 원인 = validation 오류"
+   },
+   {
+    "en": "repeats the identical call three times",
+    "ko": "고칠 정보가 없어 헛재시도"
+   }
+  ],
+  "discuss_ko": "{C} 처럼 오류가 나면 바로 사람에게 넘기면 재시도 낭비는 사라지는데, 이것이 근본 해결이 아닌 이유는 무엇일까?",
+  "words": [
+   {
+    "word": "exception",
+    "pos": "n.",
+    "ko": "예외 (프로그램 실행 중 오류)",
+    "example": "catches every exception"
+   },
+   {
+    "word": "outage",
+    "pos": "n.",
+    "ko": "(서비스) 장애, 중단",
+    "example": "treats every error as an outage"
+   },
+   {
+    "word": "genuine",
+    "pos": "adj.",
+    "ko": "진짜의",
+    "example": "genuine outages have more time to clear"
+   },
+   {
+    "word": "exponential backoff",
+    "pos": "n.",
+    "ko": "재시도 간격을 점점 늘리는 방식",
+    "example": "with exponential backoff"
+   },
+   {
+    "word": "integer",
+    "pos": "n.",
+    "ko": "정수",
+    "example": "an integer number of cents"
+   },
+   {
+    "word": "entirely",
+    "pos": "adv.",
+    "ko": "완전히, 전부",
+    "example": "skipping retries entirely"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A2-04",
+  "domain": 2,
+  "scenario": "Multi-Agent Research System",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "2.2"
+  ],
+  "guide_en": "Implementing local error recovery within subagents for transient failures, propagating to the coordinator only errors that cannot be resolved locally along with partial results and what was attempted",
+  "select": 2,
+  "q_en": "Your document analysis subagent loads sources through an internal `get_document` MCP tool. In one run of 20 requests, 6 timed out and 3 returned access-denied errors because those documents sit in a restricted legal archive. The subagent retries every failure up to five times. All the timeouts succeeded on the second attempt, but the restricted documents burned 15 retries, and the subagent finally returned only \"analysis failed\" to the coordinator, discarding the 17 documents it had already analyzed. Which TWO changes are most effective? (Choose TWO.)",
+  "q_ko": "문서 분석 subagent 는 사내 `get_document` MCP tool 로 자료를 불러온다. 요청 20건을 처리한 한 번의 실행에서 6건은 시간 초과가 났고, 3건은 해당 문서가 접근 제한된 법무 보관소에 있어서 access-denied 오류를 돌려줬다. subagent 는 모든 실패를 최대 다섯 번 재시도한다. 시간 초과 건은 모두 두 번째 시도에서 성공했지만 제한 문서들은 재시도 15번을 헛되이 썼고, 결국 subagent 는 이미 분석을 끝낸 문서 17건을 버린 채 coordinator 에게 \"analysis failed\" 만 돌려줬다. 가장 효과적인 변경 두 가지는? (2개 고르시오.)",
+  "options": [
+   {
+    "en": "Return an empty successful result for restricted documents so the subagent can finish its run without reporting any error to the coordinator.",
+    "ko": "제한 문서에는 빈 성공 결과를 돌려줘, subagent 가 coordinator 에게 아무 오류도 보고하지 않고 실행을 마치게 한다.",
+    "why": "접근 실패를 '결과 없음'으로 위장한다. coordinator 는 문서 3건이 빠진 줄 모르고 불완전한 보고서를 만든다."
+   },
+   {
+    "en": "Have the tool label access-denied responses with `errorCategory: \"permission\"` and `isRetryable: false`, while timeouts keep a transient, retryable category.",
+    "ko": "tool 이 access-denied 응답에는 `errorCategory: \"permission\"` 과 `isRetryable: false` 를 붙이고, 시간 초과는 transient·재시도 가능으로 표시하게 한다.",
+    "why": "정답. 권한 오류는 다시 시도해도 풀리지 않는다는 정보가 생겨 헛된 재시도 15번이 사라진다."
+   },
+   {
+    "en": "Send every error, including first-attempt timeouts, directly to the coordinator so that it makes all retry decisions for the research run.",
+    "ko": "첫 시도의 시간 초과까지 포함해 모든 오류를 곧바로 coordinator 에게 보내, 재시도 판단을 전부 coordinator 가 하게 한다.",
+    "why": "두 번째 시도면 풀리는 일시적 오류까지 위로 올려 coordinator 를 번거로운 오류 처리에 끌어들인다."
+   },
+   {
+    "en": "Raise the retry limit to ten attempts with longer backoff for all errors, giving the restricted archive more time to respond successfully.",
+    "ko": "모든 오류의 재시도 한도를 열 번으로 늘리고 대기 간격도 길게 해, 제한 보관소가 성공적으로 응답할 시간을 더 준다.",
+    "why": "권한 문제는 시간이 지나도 바뀌지 않는다. 낭비되는 재시도가 15번에서 30번으로 늘어날 뿐이다."
+   },
+   {
+    "en": "Keep retrying timeouts locally, but propagate the three permission failures to the coordinator together with the 17 completed analyses and what was attempted.",
+    "ko": "시간 초과는 subagent 안에서 계속 재시도하되, 권한 실패 3건은 완료된 분석 17건과 시도한 내용을 함께 담아 coordinator 에게 올린다.",
+    "why": "정답. 스스로 풀 수 있는 오류는 안에서 처리하고, 못 푸는 오류만 부분 결과와 함께 올려 coordinator 가 다음 행동을 정할 수 있다."
+   }
+  ],
+  "answer": [
+   1,
+   4
+  ],
+  "point_ko": "풀리는 오류는 안에서, 권한 오류는 부분 결과와 함께 위로",
+  "explain_ko": [
+   "시간 초과는 **succeeded on the second attempt**, 즉 subagent 안에서 풀리는 transient 오류다. 반면 **access-denied** 는 몇 번을 다시 해도 안 풀리는데 똑같이 재시도됐다.",
+   "{B} 로 tool 이 **permission / isRetryable: false** 를 알려 주면 헛된 재시도가 멈춘다.",
+   "{E} 는 가이드 그대로다. 일시적 오류는 **locally** 복구하고, 못 푸는 오류만 **partial results and what was attempted** 와 함께 coordinator 에게 올린다. **discarding the 17 documents** 같은 손실이 사라진다.",
+   "{A} 는 실패를 빈 결과로 숨기고, {C} 는 모든 오류를 위로 떠넘기며, {D} 는 재시도만 늘린다."
+  ],
+  "clues": [
+   {
+    "en": "returned access-denied errors",
+    "ko": "permission 오류 = 재시도로 안 풀림"
+   },
+   {
+    "en": "retries every failure up to five times",
+    "ko": "오류 종류 구분 없이 재시도"
+   },
+   {
+    "en": "only \"analysis failed\"",
+    "ko": "무엇을 시도했는지 정보 없음"
+   },
+   {
+    "en": "discarding the 17 documents",
+    "ko": "부분 결과를 버림"
+   }
+  ],
+  "discuss_ko": "{C} 처럼 모든 오류를 coordinator 가 판단하게 하면 정보는 빠짐없이 올라가는데, 무엇이 문제일까?",
+  "words": [
+   {
+    "word": "restricted",
+    "pos": "adj.",
+    "ko": "접근이 제한된",
+    "example": "a restricted legal archive"
+   },
+   {
+    "word": "archive",
+    "pos": "n.",
+    "ko": "보관소, 기록 보관 시스템",
+    "example": "a restricted legal archive"
+   },
+   {
+    "word": "burn",
+    "pos": "v.",
+    "ko": "(시간·기회를) 헛되이 써 버리다",
+    "example": "burned 15 retries"
+   },
+   {
+    "word": "discard",
+    "pos": "v.",
+    "ko": "버리다, 폐기하다",
+    "example": "discarding the 17 documents"
+   },
+   {
+    "word": "propagate",
+    "pos": "v.",
+    "ko": "(위로) 전달하다, 전파하다",
+    "example": "propagate the three permission failures to the coordinator"
+   },
+   {
+    "word": "locally",
+    "pos": "adv.",
+    "ko": "(그 자리에서) 자체적으로",
+    "example": "Keep retrying timeouts locally"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A2-05",
+  "domain": 2,
+  "scenario": "Customer Support Resolution Agent",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "2.3"
+  ],
+  "guide_en": "The principle that giving an agent access to too many tools (e.g., 18 instead of 4-5) degrades tool selection reliability by increasing decision complexity",
+  "q_en": "To meet a launch deadline, your team connected the support agent to the company's full internal MCP server, exposing 18 tools: the four support tools plus 14 others covering inventory, marketing campaigns, warehouse scheduling, and payroll. Since the change, wrong-tool calls rose from 3% to 16% of sessions, including `adjust_inventory` calls in the middle of refund conversations. The descriptions of `get_customer`, `lookup_order`, `process_refund`, and `escalate_to_human` are unchanged and already clear. What's the most effective fix?",
+  "q_ko": "출시 마감을 맞추려고 팀이 support agent 를 회사 내부 MCP 서버 전체에 연결했고, 그 결과 tool 18개가 노출됐다. 지원용 tool 4개에 재고, 마케팅 캠페인, 창고 일정, 급여를 다루는 tool 14개가 더해진 것이다. 이 변경 뒤로 잘못된 tool 호출이 세션의 3% 에서 16% 로 늘었고, 환불 대화 도중에 `adjust_inventory` 를 호출한 경우도 있었다. `get_customer`, `lookup_order`, `process_refund`, `escalate_to_human` 의 설명은 바뀌지 않았고 이미 명확하다. 가장 효과적인 수정은?",
+  "options": [
+   {
+    "en": "Add a system prompt section that lists all 18 tools with trigger keywords, such as mapping the word \"stock\" to `adjust_inventory`.",
+    "ko": "system prompt 에 tool 18개 전부를 트리거 키워드와 함께 나열하는 부분을 추가한다. 예를 들어 \"stock\" 이라는 단어를 `adjust_inventory` 에 연결한다.",
+    "why": "키워드 지시는 의도치 않은 tool 연결을 만든다. 환불 대화에 \"stock\" 이 나오면 오히려 재고 tool 을 부르게 된다."
+   },
+   {
+    "en": "Set `tool_choice: \"any\"` so the agent is required to call one of its available tools on every turn of the conversation.",
+    "ko": "`tool_choice: \"any\"` 로 설정해 에이전트가 대화의 매 턴마다 사용 가능한 tool 중 하나를 반드시 호출하게 한다.",
+    "why": "다른 문제를 푸는 해법이다. tool 을 부르게 강제할 뿐 18개 중 맞는 것을 고르게 해 주지는 않는다."
+   },
+   {
+    "en": "Deploy a second Claude instance that reviews each proposed tool call and blocks any call it judges unrelated to customer support.",
+    "ko": "제안된 tool 호출을 하나하나 검토해 고객 지원과 무관하다고 판단한 호출을 막는 두 번째 Claude 인스턴스를 둔다.",
+    "why": "과한 인프라로 증상만 막는다. 선택지가 너무 많아 헷갈리는 원인은 그대로이고 호출마다 비용과 지연이 늘어난다."
+   },
+   {
+    "en": "Limit the agent's tool access to the few tools its support role needs, removing the inventory, marketing, warehouse, and payroll tools from its set.",
+    "ko": "에이전트의 tool 접근을 지원 역할에 필요한 몇 개로 줄이고, 재고·마케팅·창고·급여 tool 은 목록에서 뺀다.",
+    "why": "정답. tool 이 너무 많으면 고르는 판단이 복잡해져 선택이 흔들린다. 역할에 맞는 4~5개만 주면 원래 수준으로 돌아간다."
+   }
+  ],
+  "answer": 3,
+  "point_ko": "tool 18개 = 선택이 흔들림, 역할에 필요한 4~5개만",
+  "explain_ko": [
+   "문제가 생긴 시점은 **exposing 18 tools** 이후다. 지원 tool 설명은 **unchanged and already clear** 이니 설명 탓이 아니다.",
+   "가이드: tool 이 너무 많으면(**18 instead of 4-5**) 판단이 복잡해져 선택 신뢰도가 떨어진다. 해법은 역할에 필요한 tool 만 주는 {D}.",
+   "{A} 는 키워드 연결로 오히려 오선택을 부르고, {B} 는 호출 여부만 강제하며, {C} 는 뒤에서 막는 과한 장치다."
+  ],
+  "clues": [
+   {
+    "en": "exposing 18 tools",
+    "ko": "tool 이 너무 많음"
+   },
+   {
+    "en": "rose from 3% to 16% of sessions",
+    "ko": "tool 을 늘린 뒤 선택 품질 급락"
+   },
+   {
+    "en": "in the middle of refund conversations",
+    "ko": "역할 밖 tool 을 오용"
+   },
+   {
+    "en": "unchanged and already clear",
+    "ko": "설명은 원인이 아님"
+   }
+  ],
+  "discuss_ko": "{C} 처럼 별도 인스턴스가 호출을 걸러 주면 엉뚱한 호출은 막을 텐데, 왜 가장 효과적인 해법이 아닐까?",
+  "words": [
+   {
+    "word": "deadline",
+    "pos": "n.",
+    "ko": "마감 기한",
+    "example": "To meet a launch deadline"
+   },
+   {
+    "word": "expose",
+    "pos": "v.",
+    "ko": "노출하다, (기능을) 쓸 수 있게 드러내다",
+    "example": "exposing 18 tools"
+   },
+   {
+    "word": "payroll",
+    "pos": "n.",
+    "ko": "급여 (지급 업무)",
+    "example": "warehouse scheduling, and payroll"
+   },
+   {
+    "word": "in the middle of",
+    "pos": "phr.",
+    "ko": "~하는 도중에",
+    "example": "in the middle of refund conversations"
+   },
+   {
+    "word": "trigger",
+    "pos": "n.",
+    "ko": "(무언가를 일으키는) 계기, 방아쇠",
+    "example": "with trigger keywords"
+   },
+   {
+    "word": "unrelated",
+    "pos": "adj.",
+    "ko": "관계없는",
+    "example": "unrelated to customer support"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A2-06",
+  "domain": 2,
+  "scenario": "Multi-Agent Research System",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "2.3"
+  ],
+  "guide_en": "Replacing generic tools with constrained alternatives (e.g., replacing fetch_url with load_document that validates document URLs)",
+  "q_en": "Your document analysis subagent is supposed to analyze PDF reports and published papers that the web search subagent has already found, but it was given a generic `fetch_url` tool. Audit logs from 50 research runs show that 41% of its fetches returned login pages, cookie banners, or news homepages instead of documents, and several calls reached internal admin URLs copied from search snippets. Each irrelevant page adds roughly 6,000 tokens to the subagent's context. What's the most effective change?",
+  "q_ko": "문서 분석 subagent 는 web search subagent 가 이미 찾아 둔 PDF 보고서와 출판 논문을 분석해야 하는데, 받은 tool 은 범용 `fetch_url` 이다. 연구 실행 50번의 감사 로그를 보면 가져온 결과의 41% 가 문서가 아닌 로그인 페이지, 쿠키 배너, 뉴스 홈페이지였고, 검색 스니펫에서 복사한 내부 관리자 URL 에 접속한 호출도 몇 건 있었다. 쓸모없는 페이지 하나가 subagent 의 context 에 약 6,000 토큰씩 더해진다. 가장 효과적인 변경은?",
+  "options": [
+   {
+    "en": "Replace `fetch_url` with a `load_document` tool that validates each URL points to a supported document before loading it and returning its text.",
+    "ko": "`fetch_url` 을 `load_document` tool 로 바꿔, URL 이 지원되는 문서를 가리키는지 먼저 검증한 뒤에 불러와 텍스트를 돌려주게 한다.",
+    "why": "정답. 역할에 맞게 제한된 tool 로 바꾸면 문서가 아닌 페이지나 관리자 URL 은 애초에 불러올 수 없다."
+   },
+   {
+    "en": "Add a system prompt rule telling the subagent to open only URLs that look like documents and never to visit login or admin pages.",
+    "ko": "문서처럼 보이는 URL 만 열고 로그인·관리자 페이지에는 절대 들어가지 말라는 규칙을 subagent 의 system prompt 에 추가한다.",
+    "why": "프롬프트만 강화하는 해법이다. tool 은 여전히 무엇이든 가져올 수 있어서 URL 모양만 보고 판단하다 계속 새어 나간다."
+   },
+   {
+    "en": "Add a URL-screening subagent that must approve every link before the document analysis subagent is allowed to fetch it with `fetch_url`.",
+    "ko": "문서 분석 subagent 가 `fetch_url` 로 가져오기 전에 모든 링크를 승인해야 하는 URL 검사 전용 subagent 를 추가한다.",
+    "why": "과한 인프라다. 링크마다 agent 를 한 번 더 거치게 되고, tool 이 범용이라는 뿌리는 그대로 남는다."
+   },
+   {
+    "en": "Keep `fetch_url`, but truncate every fetched page to its first 1,000 tokens so that irrelevant pages consume far less context.",
+    "ko": "`fetch_url` 은 그대로 두고, 가져온 페이지를 앞 1,000 토큰으로 잘라 쓸모없는 페이지가 context 를 훨씬 덜 차지하게 한다.",
+    "why": "증상만 가린다. 엉뚱한 페이지는 계속 불러오고, 진짜 PDF 보고서까지 앞부분만 남아 분석을 망친다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "범용 fetch_url = 문서 URL 만 검증하는 load_document 로",
+  "explain_ko": [
+   "subagent 의 일은 **PDF reports and published papers** 분석인데 **a generic `fetch_url` tool** 을 받아서 **login pages** 와 **internal admin URLs** 까지 가져온다.",
+   "가이드는 범용 tool 을 **제한된 대안**으로 바꾸라고 한다. 대표 예가 문서 URL 을 검증하는 `load_document` 로 `fetch_url` 을 대체하는 {A} 다.",
+   "{B} 는 프롬프트만, {C} 는 과한 검사 단계, {D} 는 잘라서 증상만 가린다. 모두 무엇이든 가져오는 tool 은 그대로 둔다."
+  ],
+  "clues": [
+   {
+    "en": "a generic `fetch_url` tool",
+    "ko": "무엇이든 가져오는 범용 tool"
+   },
+   {
+    "en": "41% of its fetches returned login pages",
+    "ko": "역할과 무관한 결과가 많음"
+   },
+   {
+    "en": "internal admin URLs",
+    "ko": "범용 tool 의 위험한 오용"
+   },
+   {
+    "en": "adds roughly 6,000 tokens",
+    "ko": "쓸모없는 결과가 context 를 낭비"
+   }
+  ],
+  "discuss_ko": "{D} 처럼 페이지를 잘라 넣으면 context 낭비는 줄어드는데, 이 방법이 오히려 문서 분석을 망치는 이유는 무엇일까?",
+  "words": [
+   {
+    "word": "be supposed to",
+    "pos": "phr.",
+    "ko": "~하기로 되어 있다",
+    "example": "is supposed to analyze PDF reports"
+   },
+   {
+    "word": "audit",
+    "pos": "n.",
+    "ko": "감사, 점검 (기록)",
+    "example": "Audit logs from 50 research runs"
+   },
+   {
+    "word": "irrelevant",
+    "pos": "adj.",
+    "ko": "관련 없는, 쓸모없는",
+    "example": "Each irrelevant page adds roughly 6,000 tokens"
+   },
+   {
+    "word": "snippet",
+    "pos": "n.",
+    "ko": "(검색 결과의) 짧은 발췌문",
+    "example": "copied from search snippets"
+   },
+   {
+    "word": "truncate",
+    "pos": "v.",
+    "ko": "(뒷부분을) 잘라 내다",
+    "example": "truncate every fetched page to its first 1,000 tokens"
+   },
+   {
+    "word": "validate",
+    "pos": "v.",
+    "ko": "검증하다",
+    "example": "validates each URL points to a supported document"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A2-07",
+  "domain": 2,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "2.4"
+  ],
+  "guide_en": "Configuring personal/experimental MCP servers in user-scoped ~/.claude.json",
+  "q_en": "An engineer is trying out an experimental MCP server that searches her personal meeting notes. She added it to the repository's `.mcp.json`, next to the team's shared Jira and GitHub servers, and merged the change. The next morning, 12 teammates reported startup errors because the server's executable path exists only on her laptop, and two asked why a personal notes tool had appeared in their sessions. She still wants to keep using the server herself. What's the most appropriate configuration?",
+  "q_ko": "한 엔지니어가 자기 개인 회의록을 검색하는 실험용 MCP 서버를 써 보고 있다. 그녀는 이 서버를 저장소의 `.mcp.json` 에 팀 공용 Jira·GitHub 서버 옆에 추가하고 변경을 머지했다. 다음 날 아침 팀원 12명이 시작 오류를 보고했다. 서버 실행 파일 경로가 그녀의 노트북에만 있기 때문이다. 두 명은 왜 개인 메모 tool 이 자기 세션에 나타났는지 물었다. 그녀는 이 서버를 계속 혼자 쓰고 싶다. 가장 적절한 설정은?",
+  "options": [
+   {
+    "en": "Keep the entry in `.mcp.json`, but replace the local path with `${NOTES_SERVER_PATH}` so each teammate can point it somewhere on their own machine.",
+    "ko": "`.mcp.json` 항목은 그대로 두되 로컬 경로를 `${NOTES_SERVER_PATH}` 로 바꿔, 팀원마다 자기 컴퓨터의 경로를 지정할 수 있게 한다.",
+    "why": "개인 실험 서버를 여전히 팀 전체 설정에 밀어 넣는다. 팀원들은 필요 없는 서버를 떠안고, 경로를 안 정하면 오류도 계속된다."
+   },
+   {
+    "en": "Add `.mcp.json` to `.gitignore` so that every developer maintains a private copy of all MCP server entries, including Jira and GitHub.",
+    "ko": "`.mcp.json` 을 `.gitignore` 에 넣어, Jira·GitHub 를 포함한 모든 MCP 서버 항목을 개발자마다 따로 관리하게 한다.",
+    "why": "팀이 버전 관리로 공유하던 Jira·GitHub 설정까지 잃는다. 한 항목 문제를 풀려고 공유 구조 전체를 깨뜨린다."
+   },
+   {
+    "en": "Move the notes server entry to her user-scoped `~/.claude.json`, leaving the shared Jira and GitHub servers in the project `.mcp.json`.",
+    "ko": "메모 서버 항목을 그녀의 사용자 범위 `~/.claude.json` 으로 옮기고, 공용 Jira·GitHub 서버는 프로젝트 `.mcp.json` 에 남긴다.",
+    "why": "정답. 개인·실험용 서버는 사용자 범위, 팀 공용 서버는 프로젝트 범위라는 원칙 그대로다. 그녀만 계속 쓰고 팀은 영향이 없다."
+   },
+   {
+    "en": "Add a note to `CLAUDE.md` instructing Claude to ignore the notes server unless the engineer who owns it is running the session.",
+    "ko": "`CLAUDE.md` 에 이 엔지니어가 실행한 세션이 아니면 메모 서버를 무시하라는 안내를 적는다.",
+    "why": "MCP 서버 연결은 설정 파일이 정한다. 지시문으로는 연결 시도와 시작 오류를 막을 수 없다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "개인·실험용 MCP = ~/.claude.json, 팀 공용 = .mcp.json",
+  "explain_ko": [
+   "**experimental MCP server**, **her personal meeting notes**, **exists only on her laptop** 모두 이 서버가 개인용이라는 신호다.",
+   "가이드: 팀 공용 tool 은 프로젝트 범위 `.mcp.json`, **개인·실험용 서버는 사용자 범위 `~/.claude.json`**. 그래서 {C}.",
+   "{A} 는 환경 변수로 경로만 바꿔 여전히 팀에 공유하고, {B} 는 공용 설정까지 버리며, {D} 는 설정 문제를 프롬프트로 풀려는 것이다."
+  ],
+  "clues": [
+   {
+    "en": "experimental MCP server",
+    "ko": "실험용 = 사용자 범위"
+   },
+   {
+    "en": "her personal meeting notes",
+    "ko": "개인 데이터"
+   },
+   {
+    "en": "exists only on her laptop",
+    "ko": "팀과 공유할 수 없는 설정"
+   },
+   {
+    "en": "She still wants to keep using the server herself.",
+    "ko": "지우지 말고 옮기기"
+   }
+  ],
+  "discuss_ko": "{A} 처럼 경로를 환경 변수로 바꾸면 시작 오류는 피할 수도 있는데, 그래도 설정 위치가 틀린 이유는 무엇일까?",
+  "words": [
+   {
+    "word": "try out",
+    "pos": "phr. v.",
+    "ko": "시험 삼아 써 보다",
+    "example": "is trying out an experimental MCP server"
+   },
+   {
+    "word": "experimental",
+    "pos": "adj.",
+    "ko": "실험적인, 시험 단계의",
+    "example": "an experimental MCP server"
+   },
+   {
+    "word": "executable",
+    "pos": "adj.",
+    "ko": "실행할 수 있는 (실행 파일의)",
+    "example": "the server's executable path"
+   },
+   {
+    "word": "merge",
+    "pos": "v.",
+    "ko": "(변경을) 병합하다, 머지하다",
+    "example": "merged the change"
+   },
+   {
+    "word": "maintain",
+    "pos": "v.",
+    "ko": "유지·관리하다",
+    "example": "every developer maintains a private copy"
+   },
+   {
+    "word": "instruct",
+    "pos": "v.",
+    "ko": "지시하다",
+    "example": "instructing Claude to ignore the notes server"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A2-08",
+  "domain": 2,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "2.4"
+  ],
+  "guide_en": "That tools from all configured MCP servers are discovered at connection time and available simultaneously to the agent",
+  "q_en": "Your project `.mcp.json` configures two servers: a community Jira server and a GitHub server. A developer wants the agent to find every open pull request that references a Jira ticket closed as \"Won't Do\" this sprint. Believing that a session can use only one MCP server at a time, he wrote a 200-line wrapper script that exports Jira results to a file, restarts the session with only the GitHub server enabled, and asks the agent to read the file. What should you tell him?",
+  "q_ko": "프로젝트 `.mcp.json` 에는 커뮤니티 Jira 서버와 GitHub 서버, 두 개가 설정돼 있다. 한 개발자가 이번 스프린트에 \"Won't Do\" 로 닫힌 Jira 티켓을 참조하는 열린 pull request 를 에이전트가 모두 찾게 하고 싶다. 그는 한 세션에서 MCP 서버를 한 번에 하나만 쓸 수 있다고 믿고, Jira 결과를 파일로 내보낸 뒤 GitHub 서버만 켠 채 세션을 다시 시작해 에이전트에게 그 파일을 읽히는 200줄짜리 wrapper 스크립트를 짰다. 그에게 뭐라고 말해야 할까?",
+  "options": [
+   {
+    "en": "Keep the wrapper script, but expose the exported Jira file as an MCP resource so the GitHub session can browse it without a restart.",
+    "ko": "wrapper 스크립트는 유지하되, 내보낸 Jira 파일을 MCP resource 로 노출해 GitHub 세션이 재시작 없이 볼 수 있게 한다.",
+    "why": "잘못된 전제(서버는 하나만)를 그대로 두고 우회로만 늘린다. resource 는 콘텐츠 목록을 보여 주는 용도지 서버 제한을 푸는 장치가 아니다."
+   },
+   {
+    "en": "Replace both community servers with one custom MCP server that combines the Jira and GitHub APIs into a single unified set of tools.",
+    "ko": "두 커뮤니티 서버를 Jira·GitHub API 를 하나로 합친 custom MCP 서버 하나로 바꾼다.",
+    "why": "없는 제약을 피하려고 표준 연동을 직접 다시 만드는 셈이다. 커뮤니티 서버로 충분한 곳에 custom 서버는 과하다."
+   },
+   {
+    "en": "Move the GitHub server into `~/.claude.json`, because each configuration scope can contribute only one active MCP server to a session.",
+    "ko": "설정 범위마다 세션에 활성 MCP 서버를 하나씩만 보탤 수 있으니, GitHub 서버를 `~/.claude.json` 으로 옮긴다.",
+    "why": "범위당 서버 하나라는 제약은 없다. 게다가 팀 공용 서버를 개인 범위로 옮기면 팀 공유가 깨진다."
+   },
+   {
+    "en": "Drop the wrapper: tools from every configured MCP server are discovered at connection time and available together, so one session can query both systems.",
+    "ko": "wrapper 는 버린다. 설정된 모든 MCP 서버의 tool 은 연결할 때 발견되어 함께 쓸 수 있으니 한 세션에서 두 시스템을 다 조회할 수 있다.",
+    "why": "정답. 여러 MCP 서버의 tool 은 연결 시점에 모두 발견되어 동시에 에이전트에게 주어진다. 한 세션에서 Jira 와 GitHub 를 함께 쓰면 된다."
+   }
+  ],
+  "answer": 3,
+  "point_ko": "MCP 서버 여러 개 = 연결 때 모두 발견, 한 세션에서 동시 사용",
+  "explain_ko": [
+   "개발자의 전제 **can use only one MCP server at a time** 가 틀렸다. 그래서 **a 200-line wrapper script** 와 **restarts the session** 같은 헛수고가 생겼다.",
+   "가이드: 설정된 **모든 MCP 서버의 tool 은 연결 시점에 발견되어 동시에** 에이전트가 쓸 수 있다. 그래서 {D}.",
+   "{A}·{C} 는 틀린 전제 위에 우회로를 쌓고, {B} 는 커뮤니티 서버로 충분한 표준 연동을 custom 으로 다시 만든다."
+  ],
+  "clues": [
+   {
+    "en": "configures two servers",
+    "ko": "이미 둘 다 설정됨"
+   },
+   {
+    "en": "can use only one MCP server at a time",
+    "ko": "틀린 전제"
+   },
+   {
+    "en": "a 200-line wrapper script",
+    "ko": "필요 없는 우회"
+   },
+   {
+    "en": "restarts the session",
+    "ko": "없는 제약 때문에 생긴 헛수고"
+   }
+  ],
+  "discuss_ko": "{B} 처럼 두 API 를 합친 custom 서버를 만들면 한 세션에서 쓸 수는 있을 텐데, 왜 권할 만한 선택이 아닐까?",
+  "words": [
+   {
+    "word": "reference",
+    "pos": "v.",
+    "ko": "참조하다, 언급하다",
+    "example": "references a Jira ticket"
+   },
+   {
+    "word": "wrapper",
+    "pos": "n.",
+    "ko": "(다른 것을 감싸 호출하는) 래퍼",
+    "example": "a 200-line wrapper script"
+   },
+   {
+    "word": "export",
+    "pos": "v.",
+    "ko": "내보내다",
+    "example": "exports Jira results to a file"
+   },
+   {
+    "word": "browse",
+    "pos": "v.",
+    "ko": "훑어보다, 둘러보다",
+    "example": "can browse it without a restart"
+   },
+   {
+    "word": "contribute",
+    "pos": "v.",
+    "ko": "보태다, 기여하다",
+    "example": "can contribute only one active MCP server"
+   },
+   {
+    "word": "unified",
+    "pos": "adj.",
+    "ko": "하나로 통합된",
+    "example": "a single unified set of tools"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A2-09",
+  "domain": 2,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "2.5"
+  ],
+  "guide_en": "Read/Write for full file operations; Edit for targeted modifications using unique text matching",
+  "q_en": "An engineer asked your productivity agent to change one constant in a 2,400-line `settings.py`, from `REQUEST_TIMEOUT = 30` to `REQUEST_TIMEOUT = 45`; that line appears exactly once in the file. The agent used Read to load the file and Write to save a regenerated copy. The diff touched 63 lines: imports were reordered, comments were reworded, and a dictionary at the end lost its last eight entries. Similar one-line requests produced noisy diffs in 9 of the last 20 runs. What's the most effective change?",
+  "q_ko": "엔지니어가 생산성 에이전트에게 2,400줄짜리 `settings.py` 의 상수 하나를 `REQUEST_TIMEOUT = 30` 에서 `REQUEST_TIMEOUT = 45` 로 바꿔 달라고 했다. 그 줄은 파일에 딱 한 번 나온다. 에이전트는 Read 로 파일을 불러온 뒤 Write 로 다시 만든 사본을 저장했다. diff 는 63줄에 걸쳤다. import 순서가 바뀌고, 주석 문구가 달라지고, 파일 끝의 dictionary 는 마지막 항목 8개를 잃었다. 비슷한 한 줄 수정 요청이 최근 20번 중 9번 지저분한 diff 를 냈다. 가장 효과적인 변경은?",
+  "options": [
+   {
+    "en": "Raise `max_tokens` so that the Write call has enough room to reproduce the entire file without dropping entries at the end.",
+    "ko": "`max_tokens` 를 늘려 Write 호출이 끝부분 항목을 빠뜨리지 않고 파일 전체를 다시 쓸 여유를 준다.",
+    "why": "끝이 잘리는 증상만 줄인다. 한 줄 수정을 위해 2,400줄을 통째로 다시 만드는 방식이라 순서·주석이 바뀌는 문제는 그대로다."
+   },
+   {
+    "en": "Use Edit with the unique text `REQUEST_TIMEOUT = 30` as the match, and reserve Read plus Write for changes that really rewrite whole files.",
+    "ko": "유일한 텍스트 `REQUEST_TIMEOUT = 30` 을 기준으로 Edit 을 쓰고, Read + Write 는 정말로 파일 전체를 다시 쓰는 변경에만 쓴다.",
+    "why": "정답. 부분 수정은 유일한 텍스트 매칭으로 그 부분만 바꾸는 Edit 의 몫이다. 나머지 줄은 손대지 않으니 diff 가 한 줄로 끝난다."
+   },
+   {
+    "en": "Run a code formatter through Bash after every Write so the reordered imports and reworded comments are normalized before review.",
+    "ko": "Write 할 때마다 Bash 로 코드 포매터를 돌려, 순서가 바뀐 import 와 달라진 주석을 리뷰 전에 정리한다.",
+    "why": "증상만 가린다. 포매터는 사라진 dictionary 항목을 되살리지 못하고 바뀐 주석 문구도 원래대로 돌리지 못한다."
+   },
+   {
+    "en": "Add a system prompt instruction telling the agent to copy every unchanged line exactly as it was whenever it writes a file.",
+    "ko": "파일을 쓸 때마다 바뀌지 않는 줄은 전부 원래대로 정확히 옮기라는 지시를 system prompt 에 넣는다.",
+    "why": "프롬프트만 강화하는 해법이다. 2,400줄을 통째로 다시 생성하는 한 실수 가능성은 남는다. 애초에 전체를 다시 쓸 필요가 없다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "한 줄 수정 = 유일한 텍스트로 Edit, 통째 Write 아님",
+  "explain_ko": [
+   "요청은 상수 **한 줄** 수정이고 그 줄은 **appears exactly once** 이다. 그런데 에이전트는 **Write to save a regenerated copy**, 즉 파일 전체를 다시 만들었다.",
+   "가이드: Read/Write 는 **파일 전체 작업**, Edit 은 **유일한 텍스트 매칭으로 하는 부분 수정**. 그래서 {B}.",
+   "{A}·{C}·{D} 는 모두 파일 전체를 다시 쓰는 방식을 유지한 채 증상만 줄이려 한다."
+  ],
+  "clues": [
+   {
+    "en": "appears exactly once",
+    "ko": "유일한 anchor = Edit 가능"
+   },
+   {
+    "en": "Write to save a regenerated copy",
+    "ko": "부분 수정에 전체 쓰기를 씀"
+   },
+   {
+    "en": "lost its last eight entries",
+    "ko": "통째로 다시 쓰다 생긴 손실"
+   },
+   {
+    "en": "noisy diffs",
+    "ko": "바꿀 필요 없는 줄까지 바뀜"
+   }
+  ],
+  "discuss_ko": "{A} 처럼 max_tokens 를 늘리면 끝부분이 잘리는 문제는 사라질 텐데, 그래도 Write 로 한 줄을 고치는 방식이 위험한 이유는 무엇일까?",
+  "words": [
+   {
+    "word": "regenerate",
+    "pos": "v.",
+    "ko": "다시 생성하다",
+    "example": "save a regenerated copy"
+   },
+   {
+    "word": "reorder",
+    "pos": "v.",
+    "ko": "순서를 바꾸다",
+    "example": "imports were reordered"
+   },
+   {
+    "word": "reword",
+    "pos": "v.",
+    "ko": "표현을 바꾸다",
+    "example": "comments were reworded"
+   },
+   {
+    "word": "noisy",
+    "pos": "adj.",
+    "ko": "(불필요한 변경이 섞여) 지저분한",
+    "example": "produced noisy diffs"
+   },
+   {
+    "word": "reserve",
+    "pos": "v.",
+    "ko": "(특정 용도로) 남겨 두다",
+    "example": "reserve Read plus Write for changes"
+   },
+   {
+    "word": "normalize",
+    "pos": "v.",
+    "ko": "(일정한 형식으로) 정리하다, 정규화하다",
+    "example": "are normalized before review"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A2-10",
+  "domain": 2,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "2.5"
+  ],
+  "guide_en": "Selecting Grep for searching code content across a codebase (e.g., finding all callers of a function, locating error messages)",
+  "q_en": "Before retiring the `new_checkout` feature flag, a product engineer asked the agent where the flag is checked in a 1,300-file TypeScript monorepo. The agent read `config/featureFlags.ts`, where the flag is defined, and reported the two files named in a comment above the definition. After the flag was deleted, 17 other call sites, such as `isEnabled(\"new_checkout\")` in `cart/summary.tsx`, broke the build. What's the most effective way for the agent to handle this kind of request?",
+  "q_ko": "`new_checkout` feature flag 를 없애기 전에, 제품 엔지니어가 파일 1,300개짜리 TypeScript 모노레포에서 이 flag 를 검사하는 곳이 어디인지 에이전트에게 물었다. 에이전트는 flag 가 정의된 `config/featureFlags.ts` 를 읽고, 정의 위 주석에 적힌 파일 두 개를 보고했다. flag 를 지우자 `cart/summary.tsx` 의 `isEnabled(\"new_checkout\")` 같은 다른 호출 지점 17곳이 빌드를 깨뜨렸다. 에이전트가 이런 종류의 요청을 처리하는 가장 효과적인 방법은?",
+  "options": [
+   {
+    "en": "Grep across the whole repository for the flag name `new_checkout` to find every call site, then Read only the matching files that need closer review.",
+    "ko": "저장소 전체에서 flag 이름 `new_checkout` 을 Grep 해 호출 지점을 모두 찾고, 자세히 봐야 할 일치 파일만 Read 한다.",
+    "why": "정답. 코드 속에서 쓰이는 곳을 찾는 일은 코드베이스 전체 내용을 검색하는 Grep 의 몫이다."
+   },
+   {
+    "en": "Glob for files whose names contain `checkout`, such as `**/*checkout*.tsx`, and report those files as the places where the flag is checked.",
+    "ko": "`**/*checkout*.tsx` 처럼 이름에 `checkout` 이 들어간 파일을 Glob 으로 찾아, 그 파일들을 flag 를 검사하는 곳으로 보고한다.",
+    "why": "Glob 은 파일 이름만 본다. `cart/summary.tsx` 처럼 이름과 무관한 파일 안의 호출은 놓친다."
+   },
+   {
+    "en": "Use Glob to list all 1,300 TypeScript files, then Read every one of them in batches to look for references to the flag.",
+    "ko": "Glob 으로 TypeScript 파일 1,300개를 모두 나열한 뒤, 여러 묶음으로 나눠 전부 Read 하며 flag 참조를 찾는다.",
+    "why": "빠짐없이 찾을 수는 있어도 모든 파일을 통째로 읽어 context 와 시간을 낭비한다. Grep 한 번이면 되는 일이다."
+   },
+   {
+    "en": "Ask engineers to keep an up-to-date list of every flag usage in `CLAUDE.md`, and have the agent answer from that list.",
+    "ko": "엔지니어들에게 모든 flag 사용 위치를 `CLAUDE.md` 에 최신 상태로 적어 두게 하고, 에이전트는 그 목록으로 답하게 한다.",
+    "why": "사람이 관리하는 목록은 이번의 주석처럼 금방 낡는다. 실제 코드를 검색하지 않는 한 같은 사고가 반복된다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "쓰이는 곳 찾기 = 정의 파일 말고 저장소 전체 Grep",
+  "explain_ko": [
+   "질문은 **where the flag is checked**, 즉 코드 속 **사용 위치**인데 에이전트는 **where the flag is defined** 인 정의 파일과 **the two files named in a comment** 만 보고 답했다.",
+   "가이드: 함수 호출자 찾기처럼 **코드베이스 전체의 내용 검색은 Grep**. flag 이름으로 Grep 하면 **17 other call sites** 까지 한 번에 나온다. 그래서 {A}.",
+   "{B} 는 파일 이름만 보고, {C} 는 전부 읽어 낭비하며, {D} 는 금방 낡는 수동 목록에 기댄다."
+  ],
+  "clues": [
+   {
+    "en": "where the flag is checked",
+    "ko": "사용 위치 = 내용 검색"
+   },
+   {
+    "en": "where the flag is defined",
+    "ko": "정의 파일 ≠ 사용 위치"
+   },
+   {
+    "en": "the two files named in a comment",
+    "ko": "사람이 적은 목록은 낡는다"
+   },
+   {
+    "en": "17 other call sites",
+    "ko": "코드베이스 전체 검색이 필요"
+   }
+  ],
+  "discuss_ko": "{D} 처럼 CLAUDE.md 에 사용 위치 목록을 적어 두면 에이전트가 빨리 답할 텐데, 이 지문 같은 사고를 막지 못하는 이유는 무엇일까?",
+  "words": [
+   {
+    "word": "retire",
+    "pos": "v.",
+    "ko": "(기능을) 없애다, 은퇴시키다",
+    "example": "Before retiring the `new_checkout` feature flag"
+   },
+   {
+    "word": "call site",
+    "pos": "n.",
+    "ko": "호출 지점",
+    "example": "17 other call sites"
+   },
+   {
+    "word": "break the build",
+    "pos": "phr.",
+    "ko": "빌드를 깨뜨리다 (빌드 실패를 일으키다)",
+    "example": "broke the build"
+   },
+   {
+    "word": "in batches",
+    "pos": "phr.",
+    "ko": "여러 묶음으로 나눠서",
+    "example": "Read every one of them in batches"
+   },
+   {
+    "word": "up-to-date",
+    "pos": "adj.",
+    "ko": "최신의",
+    "example": "keep an up-to-date list of every flag usage"
+   },
+   {
+    "word": "closer review",
+    "pos": "phr.",
+    "ko": "더 자세한 검토",
+    "example": "the matching files that need closer review"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ }
+]

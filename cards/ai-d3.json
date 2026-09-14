@@ -1,0 +1,1238 @@
+[
+ {
+  "id": "A3-01",
+  "domain": 3,
+  "scenario": "Code Generation with Claude Code",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "3.1"
+  ],
+  "guide_en": "Splitting large CLAUDE.md files into focused topic-specific files in .claude/rules/ (e.g., testing.md, api-conventions.md, deployment.md)",
+  "q_en": "Your repository's root `CLAUDE.md` has grown to 1,900 lines covering testing conventions, API design rules, and deployment procedures, all of which apply across the whole repository. Three teams edit the file, and in the last month it caused 11 merge conflicts. Reviewers also struggle to see which team owns which section. Last week a deployment-rule update accidentally deleted part of the API guidance, and nobody noticed for six days. You want these standards to stay shared and always available to everyone. What's the most effective way to reorganize this configuration?",
+  "q_ko": "저장소 루트 `CLAUDE.md` 가 1,900줄로 불어났다. 테스트 규칙, API 설계 규칙, 배포 절차가 들어 있고 모두 저장소 전체에 적용된다. 세 팀이 이 파일을 고치다 보니 지난달에만 merge conflict 가 11번 났다. 리뷰어는 어느 팀이 어느 부분을 맡는지 알아보기 힘들다. 지난주에는 배포 규칙을 고치다 API 지침 일부가 실수로 지워졌는데 6일 동안 아무도 몰랐다. 이 표준은 계속 모두에게 공유되고 항상 적용돼야 한다. 이 설정을 재구성하는 가장 효과적인 방법은?",
+  "options": [
+   {
+    "en": "Move each team's section into its members' own `~/.claude/CLAUDE.md` files so that edits no longer collide in the shared repository file.",
+    "ko": "팀별 부분을 그 팀원 각자의 `~/.claude/CLAUDE.md` 로 옮겨, 공유 저장소 파일에서 수정이 부딪치지 않게 한다.",
+    "why": "user-level 파일은 버전 관리로 공유되지 않아, 다른 팀원과 새로 온 사람은 그 표준을 받지 못한다."
+   },
+   {
+    "en": "Split the file into focused topic files such as `.claude/rules/testing.md`, `.claude/rules/api-conventions.md`, and `.claude/rules/deployment.md`, each maintained by its owning team.",
+    "ko": "파일을 `.claude/rules/testing.md`, `.claude/rules/api-conventions.md`, `.claude/rules/deployment.md` 같은 주제별 파일로 나누고, 담당 팀이 각각 관리한다.",
+    "why": "정답. 저장소 안에 두니 계속 공유되고, 주제별로 나뉘어 소유가 분명해지며 충돌과 실수 삭제가 줄어든다."
+   },
+   {
+    "en": "Convert each section into a skill under `.claude/skills/` so developers invoke the testing, API, or deployment guidance only when they need it.",
+    "ko": "부분마다 `.claude/skills/` 아래 skill 로 바꿔, 개발자가 테스트·API·배포 지침을 필요할 때만 호출하게 한다.",
+    "why": "skill 은 필요할 때 부르는 작업용이다. 항상 적용돼야 하는 저장소 전체 표준을 호출에 맡기면 빠지는 세션이 생긴다."
+   },
+   {
+    "en": "Place the testing rules in `tests/CLAUDE.md`, the API rules in `api/CLAUDE.md`, and the deployment rules in `deploy/CLAUDE.md` as directory-level files.",
+    "ko": "테스트 규칙은 `tests/CLAUDE.md`, API 규칙은 `api/CLAUDE.md`, 배포 규칙은 `deploy/CLAUDE.md` 에 directory-level 파일로 둔다.",
+    "why": "directory-level 파일은 그 폴더에서 작업할 때 적용된다. 저장소 전체에 적용돼야 하는 규칙이 다른 곳에서는 빠진다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "거대한 CLAUDE.md = .claude/rules/ 주제별 파일로 분리",
+  "explain_ko": [
+   "**grown to 1,900 lines**, **Three teams edit the file**, **11 merge conflicts** — 파일 하나가 너무 크고 여러 팀이 함께 고치는 것이 문제의 뿌리다.",
+   "**apply across the whole repository** 와 **stay shared and always available** 는 저장소 전체에 늘 적용되는 공유 표준이라는 뜻이다. 그러니 저장소 안에 두되 주제별로 쪼갠 `.claude/rules/` 파일이 맞다 ({B}).",
+   "{A} 는 user-level 이라 팀에 공유되지 않고, {C} 는 호출할 때만 쓰여 늘 적용돼야 할 표준과 맞지 않는다. {D} 는 해당 폴더에서 일할 때만 적용돼 저장소 전체 규칙이 새어 나간다."
+  ],
+  "clues": [
+   {
+    "en": "grown to 1,900 lines",
+    "ko": "파일 하나가 너무 큼"
+   },
+   {
+    "en": "Three teams edit the file",
+    "ko": "주인이 여럿, 충돌"
+   },
+   {
+    "en": "apply across the whole repository",
+    "ko": "특정 폴더 규칙이 아님"
+   },
+   {
+    "en": "stay shared and always available",
+    "ko": "저장소 안 + 항상 적용"
+   }
+  ],
+  "discuss_ko": "{D} 처럼 폴더별 CLAUDE.md 로 나눠도 파일은 작아지는데, 규칙이 저장소 전체에 적용돼야 할 때는 왜 문제가 될까?",
+  "words": [
+   {
+    "word": "merge conflict",
+    "pos": "n. phr.",
+    "ko": "병합 충돌",
+    "example": "it caused 11 merge conflicts"
+   },
+   {
+    "word": "procedure",
+    "pos": "n.",
+    "ko": "절차",
+    "example": "deployment procedures"
+   },
+   {
+    "word": "accidentally",
+    "pos": "adv.",
+    "ko": "실수로, 뜻하지 않게",
+    "example": "accidentally deleted part of the API guidance"
+   },
+   {
+    "word": "reorganize",
+    "pos": "v.",
+    "ko": "재구성하다, 다시 정리하다",
+    "example": "the most effective way to reorganize this configuration"
+   },
+   {
+    "word": "collide",
+    "pos": "v.",
+    "ko": "충돌하다, 부딪치다",
+    "example": "so that edits no longer collide"
+   },
+   {
+    "word": "owning",
+    "pos": "adj.",
+    "ko": "담당하는, 소유한",
+    "example": "each maintained by its owning team"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A3-02",
+  "domain": 3,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "3.1"
+  ],
+  "guide_en": "Using the /memory command to verify which memory files are loaded and diagnose inconsistent behavior across sessions",
+  "q_en": "Your engineers use Claude Code to explore and modify a 12-year-old legacy monolith. The billing conventions live in `legacy/billing/CLAUDE.md`, which has not changed in four months. Over two weeks, engineers logged 23 sessions that edited the same billing files: in 14, Claude followed the billing conventions, and in 9 it ignored them. Two engineers already added \"IMPORTANT\" to the conventions without any improvement. Before changing any configuration, what's the most effective way to find out why the behavior differs between sessions?",
+  "q_ko": "엔지니어들이 Claude Code 로 12년 된 legacy monolith 를 살펴보고 수정한다. billing 규칙은 `legacy/billing/CLAUDE.md` 에 있고, 이 파일은 4개월 동안 바뀌지 않았다. 2주 동안 같은 billing 파일을 고친 세션 23개를 기록해 보니, 14개에서는 Claude 가 billing 규칙을 따랐고 9개에서는 무시했다. 엔지니어 두 명이 이미 규칙에 \"IMPORTANT\" 를 붙였지만 나아지지 않았다. 설정을 바꾸기 전에, 세션마다 행동이 다른 이유를 알아내는 가장 효과적인 방법은?",
+  "options": [
+   {
+    "en": "Run `/memory` and `/context` in a session that follows the conventions and in one that ignores them, then compare which memory files each session loaded.",
+    "ko": "규칙을 따르는 세션과 무시하는 세션에서 각각 `/memory` 와 `/context` 를 실행해, 세션마다 어떤 memory 파일이 로드됐는지 비교한다.",
+    "why": "정답. `/memory` 로 memory 파일 위치를, `/context` 로 그 세션에 실제 로드된 파일 목록을 확인해 두 세션을 비교하면 차이의 원인이 드러난다."
+   },
+   {
+    "en": "Ask Claude at the start of each session to restate every convention it is following, then compare its answers across compliant and non-compliant sessions.",
+    "ko": "세션을 시작할 때마다 Claude 에게 지금 따르는 규칙을 모두 다시 말해 보게 하고, 따른 세션과 안 따른 세션의 답을 비교한다.",
+    "why": "Claude 의 자기 보고는 어떤 파일이 로드됐는지 증명하지 못한다. 그럴듯하게 지어낸 답이 나올 수도 있다."
+   },
+   {
+    "en": "Review the `git log` history of `legacy/billing/CLAUDE.md` to identify a recent commit that may have corrupted the file's formatting.",
+    "ko": "`legacy/billing/CLAUDE.md` 의 `git log` 기록을 살펴, 파일 형식을 망가뜨렸을 만한 최근 커밋을 찾는다.",
+    "why": "지문에 4개월 동안 바뀌지 않았다고 했다. 게다가 파일이 망가졌다면 모든 세션이 똑같이 실패해야 한다."
+   },
+   {
+    "en": "Copy the billing conventions into the root `CLAUDE.md` as well, then track over the next two weeks whether the rate of ignored sessions drops.",
+    "ko": "billing 규칙을 루트 `CLAUDE.md` 에도 복사해 두고, 앞으로 2주 동안 무시하는 세션 비율이 줄어드는지 지켜본다.",
+    "why": "설정을 바꾸기 전에 원인을 찾으라는 요구와 어긋난다. 진단 없이 규칙을 복제해 context 만 늘린다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "세션마다 행동이 다름 = 먼저 /memory·/context 로 로드된 파일 확인",
+  "explain_ko": [
+   "**in 14 ... in 9 it ignored them** — 같은 파일을 고치는데 세션마다 결과가 갈린다. 하위 폴더의 `CLAUDE.md` 는 시작할 때가 아니라 Claude 가 그 폴더 파일을 읽을 때 로드되므로, 규칙 문구보다 **그 세션에 어떤 memory 파일이 로드됐는지**가 다를 가능성이 크다.",
+   "**Before changing any configuration** 과 **find out why** 는 고치기 전에 진단부터 하라는 뜻이다. `/memory`(가이드가 말하는 확인 명령)와 `/context`(공식 문서상 실제 로드 목록)로 잘 된 세션과 안 된 세션을 비교한다 ({A}).",
+   "{B} 는 자기 보고라 증거가 못 되고, {C} 는 **has not changed in four months** 와 맞지 않는다. {D} 는 진단 없이 설정부터 바꾼다."
+  ],
+  "clues": [
+   {
+    "en": "has not changed in four months",
+    "ko": "파일 자체는 그대로"
+   },
+   {
+    "en": "in 9 it ignored them",
+    "ko": "세션마다 결과가 다름"
+   },
+   {
+    "en": "without any improvement",
+    "ko": "강조 문구로는 안 됨"
+   },
+   {
+    "en": "Before changing any configuration",
+    "ko": "고치기 전에 진단"
+   }
+  ],
+  "discuss_ko": "{B} 처럼 Claude 에게 따르는 규칙을 말해 보라고 해도 꽤 그럴듯한 답이 나올 텐데, 왜 그것으로는 파일이 로드됐는지 확인할 수 없을까?",
+  "words": [
+   {
+    "word": "legacy",
+    "pos": "adj.",
+    "ko": "오래된 기존 (시스템의)",
+    "example": "a 12-year-old legacy monolith"
+   },
+   {
+    "word": "convention",
+    "pos": "n.",
+    "ko": "관례, 규약",
+    "example": "The billing conventions live in"
+   },
+   {
+    "word": "differ",
+    "pos": "v.",
+    "ko": "다르다, 차이가 나다",
+    "example": "why the behavior differs between sessions"
+   },
+   {
+    "word": "restate",
+    "pos": "v.",
+    "ko": "다시 말하다, 다시 진술하다",
+    "example": "restate every convention it is following"
+   },
+   {
+    "word": "compliant",
+    "pos": "adj.",
+    "ko": "(규칙을) 따르는, 준수하는",
+    "example": "compliant and non-compliant sessions"
+   },
+   {
+    "word": "corrupt",
+    "pos": "v.",
+    "ko": "손상시키다, 망가뜨리다",
+    "example": "may have corrupted the file's formatting"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "fixed"
+ },
+ {
+  "id": "A3-03",
+  "domain": 3,
+  "scenario": "Code Generation with Claude Code",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "3.2"
+  ],
+  "guide_en": "Choosing between skills (on-demand invocation for task-specific workflows) and CLAUDE.md (always-loaded universal standards)",
+  "select": 2,
+  "q_en": "Your team's root `CLAUDE.md` includes a 700-line release-rollback runbook that engineers use about twice a month, so it is loaded into every session even when nobody is doing a rollback. Meanwhile, the rule \"all database queries must use parameterized statements\" exists only as a `/secure-sql` skill in `.claude/skills/`. Developers forget to invoke it, and a security audit found 17 new string-concatenated queries written with Claude Code last quarter. Which two changes best match each piece of guidance to the right mechanism? (Choose TWO.)",
+  "q_ko": "팀의 루트 `CLAUDE.md` 에는 700줄짜리 release rollback 절차서가 들어 있다. 엔지니어들이 한 달에 두 번쯤 쓰는 것인데, 아무도 rollback 을 하지 않는 세션에도 매번 로드된다. 한편 \"모든 데이터베이스 쿼리는 parameterized statement 를 써야 한다\" 는 규칙은 `.claude/skills/` 의 `/secure-sql` skill 에만 있다. 개발자들은 이것을 호출하는 걸 잊고, 보안 감사에서 지난 분기 Claude Code 로 작성된 문자열 연결 쿼리 17개가 새로 발견됐다. 각 지침을 알맞은 방식에 맞추는 변경 두 가지는? (2개 고르시오.)",
+  "options": [
+   {
+    "en": "Move the release-rollback runbook out of `CLAUDE.md` into a skill in `.claude/skills/` so engineers invoke it on demand when a rollback is needed.",
+    "ko": "release rollback 절차서를 `CLAUDE.md` 에서 빼 `.claude/skills/` 의 skill 로 옮기고, rollback 이 필요할 때 호출하게 한다.",
+    "why": "정답. 가끔 쓰는 작업 절차는 필요할 때 부르는 skill 이 맞고, 모든 세션에 로드되던 700줄이 빠진다."
+   },
+   {
+    "en": "Add `context: fork` to the `/secure-sql` skill's frontmatter so its guidance runs in an isolated sub-agent context whenever developers invoke it.",
+    "ko": "`/secure-sql` skill frontmatter 에 `context: fork` 를 넣어, 개발자가 호출할 때마다 격리된 sub-agent context 에서 돌게 한다.",
+    "why": "`context: fork` 는 출력을 메인 대화와 떼어 놓을 뿐이다. 여전히 호출해야 적용되니 '호출을 잊는' 문제는 그대로다."
+   },
+   {
+    "en": "Move both the runbook and the query rule into each developer's `~/.claude/CLAUDE.md` so they stay out of the shared repository file.",
+    "ko": "절차서와 쿼리 규칙을 둘 다 개발자 각자의 `~/.claude/CLAUDE.md` 로 옮겨 공유 저장소 파일에서 뺀다.",
+    "why": "user-level 파일은 팀에 공유되지 않는다. 새 팀원이나 CI 는 규칙을 받지 못하고, 절차서도 여전히 매 세션 로드된다."
+   },
+   {
+    "en": "Move the parameterized-query rule from the skill into the project's `CLAUDE.md` so it is always loaded as a universal standard in every session.",
+    "ko": "parameterized query 규칙을 skill 에서 프로젝트 `CLAUDE.md` 로 옮겨, 모든 세션에 늘 로드되는 공통 표준으로 만든다.",
+    "why": "정답. 모든 쿼리에 늘 지켜야 하는 규칙은 항상 로드되는 `CLAUDE.md` 에 있어야 호출을 잊어도 빠지지 않는다."
+   },
+   {
+    "en": "Add `allowed-tools` to the `/secure-sql` skill's frontmatter so Claude can use the listed database tools without permission prompts while the skill runs.",
+    "ko": "`/secure-sql` skill frontmatter 에 `allowed-tools` 를 넣어, skill 이 도는 동안 나열한 데이터베이스 도구를 권한 확인 없이 쓰게 한다.",
+    "why": "`allowed-tools` 는 skill 이 도는 동안 나열한 도구의 사용 권한을 미리 줄 뿐이다. skill 이 호출되지 않는 문제와는 상관없다."
+   }
+  ],
+  "answer": [
+   0,
+   3
+  ],
+  "point_ko": "가끔 쓰는 절차 = skill, 늘 지킬 표준 = CLAUDE.md",
+  "explain_ko": [
+   "**about twice a month** 인데 **loaded into every session** — 가끔 쓰는 작업 절차가 항상 로드되는 곳에 있다. 필요할 때 부르는 skill 로 옮긴다 ({A}).",
+   "반대로 **all database queries must** 는 모든 코드에 늘 적용되는 표준인데 skill 에만 있어서 **Developers forget to invoke it** 이 생겼다. 항상 로드되는 `CLAUDE.md` 로 옮긴다 ({D}).",
+   "{B} 는 실행 격리, {E} 는 도구 권한 설정이라 둘 다 호출된 뒤에야 의미가 있어 '호출을 잊는다'를 풀지 못한다. {C} 는 user-level 이라 팀에 공유되지 않는다."
+  ],
+  "clues": [
+   {
+    "en": "about twice a month",
+    "ko": "가끔 쓰는 작업"
+   },
+   {
+    "en": "loaded into every session",
+    "ko": "늘 로드돼 낭비"
+   },
+   {
+    "en": "exists only as a `/secure-sql` skill",
+    "ko": "호출해야만 적용"
+   },
+   {
+    "en": "Developers forget to invoke it",
+    "ko": "늘 적용돼야 할 규칙이 빠짐"
+   }
+  ],
+  "discuss_ko": "{B} 로 `/secure-sql` 을 격리해 돌리면 메인 대화는 깔끔해질 텐데, 왜 문자열 연결 쿼리 17개 같은 문제는 그대로 남을까?",
+  "words": [
+   {
+    "word": "runbook",
+    "pos": "n.",
+    "ko": "(운영) 절차서, 대응 매뉴얼",
+    "example": "a 700-line release-rollback runbook"
+   },
+   {
+    "word": "meanwhile",
+    "pos": "adv.",
+    "ko": "한편, 그 사이에",
+    "example": "Meanwhile, the rule"
+   },
+   {
+    "word": "parameterized",
+    "pos": "adj.",
+    "ko": "매개변수화된",
+    "example": "must use parameterized statements"
+   },
+   {
+    "word": "audit",
+    "pos": "n.",
+    "ko": "감사, 점검",
+    "example": "a security audit found 17 new string-concatenated queries"
+   },
+   {
+    "word": "on demand",
+    "pos": "phr.",
+    "ko": "필요할 때, 요청하는 대로",
+    "example": "invoke it on demand"
+   },
+   {
+    "word": "universal",
+    "pos": "adj.",
+    "ko": "보편적인, 모두에게 적용되는",
+    "example": "as a universal standard"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "fixed"
+ },
+ {
+  "id": "A3-04",
+  "domain": 3,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "3.2"
+  ],
+  "guide_en": "Project-scoped commands in .claude/commands/ (shared via version control) vs user-scoped commands in ~/.claude/commands/ (personal)",
+  "q_en": "A senior engineer created `/my-standup` and `/my-triage` commands in the repository's `.claude/commands/` directory. Both use his personal Jira filter and post to his own Slack channel through an MCP server. After the files were merged, all 40 engineers see these commands, and twice this week a teammate ran `/my-standup`, posting a confusing update under the engineer's name. The same directory also holds the team's shared `/review` and `/release` commands, which must stay available to everyone. What's the most effective fix?",
+  "q_ko": "시니어 엔지니어가 저장소의 `.claude/commands/` 폴더에 `/my-standup` 과 `/my-triage` 명령을 만들었다. 둘 다 그의 개인 Jira 필터를 쓰고, MCP server 를 통해 그의 Slack 채널에 글을 올린다. 파일이 병합된 뒤 엔지니어 40명 모두에게 이 명령이 보이고, 이번 주에만 두 번 동료가 `/my-standup` 을 실행해 그 엔지니어 이름으로 엉뚱한 업데이트가 올라갔다. 같은 폴더에는 모두가 계속 써야 하는 팀 공유 명령 `/review`, `/release` 도 있다. 가장 효과적인 해결책은?",
+  "options": [
+   {
+    "en": "Add `.claude/commands/` to `.gitignore` so that command files in that directory are no longer shared with teammates through version control.",
+    "ko": "`.claude/commands/` 를 `.gitignore` 에 넣어, 그 폴더의 명령 파일이 더는 버전 관리로 팀원과 공유되지 않게 한다.",
+    "why": "개인 명령만이 아니라 모두가 써야 하는 `/review`, `/release` 까지 공유가 끊긴다."
+   },
+   {
+    "en": "Rename the two commands to `/zz-my-standup` and `/zz-my-triage` so that they sort to the bottom of the command list for everyone.",
+    "ko": "두 명령 이름을 `/zz-my-standup`, `/zz-my-triage` 로 바꿔 모두의 명령 목록 맨 아래로 가게 한다.",
+    "why": "이름만 바꿨을 뿐 여전히 저장소에 있어 40명에게 보이고, 누군가 실행하는 일도 막지 못한다."
+   },
+   {
+    "en": "Move the personal Jira filter and Slack channel details into the engineer's `~/.claude/CLAUDE.md` while leaving both command files in the repository.",
+    "ko": "개인 Jira 필터와 Slack 채널 정보는 그 엔지니어의 `~/.claude/CLAUDE.md` 로 옮기고, 명령 파일 두 개는 저장소에 그대로 둔다.",
+    "why": "명령 파일이 저장소에 남아 모두에게 계속 보인다. 개인 명령의 위치라는 근본 문제를 고치지 않는다."
+   },
+   {
+    "en": "Move the two personal command files into the engineer's `~/.claude/commands/` directory, leaving the shared `/review` and `/release` commands in the repository.",
+    "ko": "개인 명령 파일 두 개를 그 엔지니어의 `~/.claude/commands/` 로 옮기고, 공유 명령 `/review`, `/release` 는 저장소에 남긴다.",
+    "why": "정답. 개인 명령은 user-scope 로 옮기면 본인에게만 보이고, 팀 명령은 저장소에서 계속 공유된다."
+   }
+  ],
+  "answer": 3,
+  "point_ko": "개인 명령 = ~/.claude/commands/, 팀 명령 = 저장소",
+  "explain_ko": [
+   "**his personal Jira filter**, **his own Slack channel** — 한 사람만 쓰는 개인 명령이다. 그런데 저장소의 `.claude/commands/` 에 있어 버전 관리로 **all 40 engineers** 에게 퍼졌다.",
+   "개인 명령은 user-scope 인 `~/.claude/commands/` 로 옮기면 본인에게만 보인다. **must stay available to everyone** 인 `/review`, `/release` 는 저장소에 그대로 둔다 ({D}).",
+   "{A} 는 팀 공유 명령까지 잃고, {B} 는 이름만 바꿔 여전히 모두에게 퍼진다. {C} 는 명령 파일이 저장소에 남는다."
+  ],
+  "clues": [
+   {
+    "en": "his personal Jira filter",
+    "ko": "개인 전용 설정"
+   },
+   {
+    "en": "all 40 engineers see these commands",
+    "ko": "버전 관리로 공유됨"
+   },
+   {
+    "en": "under the engineer's name",
+    "ko": "남이 실행한 피해"
+   },
+   {
+    "en": "must stay available to everyone",
+    "ko": "팀 명령은 유지"
+   }
+  ],
+  "discuss_ko": "{A} 처럼 `.gitignore` 에 넣으면 개인 명령은 확실히 안 퍼질 텐데, 팀 전체로 보면 무엇을 잃게 될까?",
+  "words": [
+   {
+    "word": "triage",
+    "pos": "n.",
+    "ko": "(우선순위) 분류, 선별",
+    "example": "`/my-standup` and `/my-triage` commands"
+   },
+   {
+    "word": "merge",
+    "pos": "v.",
+    "ko": "병합하다",
+    "example": "After the files were merged"
+   },
+   {
+    "word": "confusing",
+    "pos": "adj.",
+    "ko": "혼란스러운, 헷갈리게 하는",
+    "example": "posting a confusing update"
+   },
+   {
+    "word": "under someone's name",
+    "pos": "phr.",
+    "ko": "~의 이름으로",
+    "example": "under the engineer's name"
+   },
+   {
+    "word": "sort",
+    "pos": "v.",
+    "ko": "정렬되다, 순서대로 놓이다",
+    "example": "so that they sort to the bottom of the command list"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A3-05",
+  "domain": 3,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "3.3"
+  ],
+  "guide_en": "How path-scoped rules load only when editing matching files, reducing irrelevant context and token usage",
+  "q_en": "Your platform team keeps 450 lines of Terraform conventions in `.claude/rules/terraform.md`, which has no frontmatter. The Terraform code lives only under `infra/terraform/`, yet 85% of Claude Code sessions are frontend and backend work that never touches it. Session logs show the rules consume about 6,000 tokens of context in every session, and two frontend developers reported Claude suggesting Terraform-style naming in React code. The rules must still apply automatically whenever anyone edits Terraform files. What's the most effective change?",
+  "q_ko": "플랫폼 팀은 Terraform 규칙 450줄을 `.claude/rules/terraform.md` 에 두고 있고, 이 파일에는 frontmatter 가 없다. Terraform 코드는 `infra/terraform/` 아래에만 있는데, Claude Code 세션의 85% 는 Terraform 을 전혀 건드리지 않는 프론트엔드·백엔드 작업이다. 세션 로그를 보면 이 규칙이 모든 세션에서 context 를 약 6,000 token 씩 차지하고, 프론트엔드 개발자 두 명은 Claude 가 React 코드에 Terraform 식 이름을 제안했다고 알렸다. 누구든 Terraform 파일을 편집할 때는 규칙이 여전히 자동으로 적용돼야 한다. 가장 효과적인 변경은?",
+  "options": [
+   {
+    "en": "Add a line at the top of `terraform.md` saying \"Ignore these rules unless you are editing Terraform files\" so Claude disregards them during other work.",
+    "ko": "`terraform.md` 맨 위에 \"Terraform 파일을 편집할 때가 아니면 이 규칙을 무시할 것\" 이라는 줄을 넣어, 다른 작업 중에는 Claude 가 무시하게 한다.",
+    "why": "파일은 여전히 매 세션 로드돼 6,000 token 을 쓴다. 문장으로 부탁하는 '프롬프트만 강화' 함정이다."
+   },
+   {
+    "en": "Move the Terraform conventions into a `/terraform` skill that platform engineers invoke manually before they start any infrastructure change.",
+    "ko": "Terraform 규칙을 `/terraform` skill 로 옮기고, 플랫폼 엔지니어가 인프라 변경을 시작하기 전에 직접 호출하게 한다.",
+    "why": "수동 호출이라 누가 잊으면 적용되지 않는다. 편집할 때 자동으로 적용돼야 한다는 조건이 깨진다."
+   },
+   {
+    "en": "Add YAML frontmatter with `paths: [\"infra/terraform/**/*\"]` to `terraform.md` so that the rules load only when Claude works with matching Terraform files.",
+    "ko": "`terraform.md` 에 `paths: [\"infra/terraform/**/*\"]` YAML frontmatter 를 넣어, Claude 가 해당 Terraform 파일을 다룰 때만 규칙이 로드되게 한다.",
+    "why": "정답. path-scoped rule 은 Claude 가 패턴에 맞는 파일을 읽고 다룰 때만 로드돼, 나머지 85% 세션의 token 낭비와 엉뚱한 영향을 없애면서 자동 적용은 유지한다."
+   },
+   {
+    "en": "Reference `terraform.md` from the root `CLAUDE.md` with an `@import` line so that the conventions stay in a separate, easier-to-maintain file.",
+    "ko": "루트 `CLAUDE.md` 에서 `@import` 줄로 `terraform.md` 를 불러와, 규칙을 관리하기 쉬운 별도 파일로 유지한다.",
+    "why": "`@import` 는 파일을 나눠 정리해 줄 뿐, 불러온 내용은 여전히 세션마다 함께 로드된다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "해당 파일 다룰 때만 로드 = rules 에 paths frontmatter",
+  "explain_ko": [
+   "**has no frontmatter** 인 rules 파일은 조건 없이 모든 세션에 로드된다. 그래서 Terraform 과 무관한 세션까지 **about 6,000 tokens** 를 쓰고, React 코드에도 엉뚱한 영향을 준다.",
+   "**must still apply automatically whenever anyone edits Terraform files** — 자동 적용은 지키되 Terraform 파일을 다룰 때만 로드돼야 한다. `paths` glob frontmatter 가 딱 그 역할이다 ({C}).",
+   "{A} 는 여전히 로드되는 '프롬프트만 강화', {B} 는 수동 호출이라 자동 적용이 깨진다. {D} 의 `@import` 는 정리용일 뿐 매번 함께 로드된다."
+  ],
+  "clues": [
+   {
+    "en": "which has no frontmatter",
+    "ko": "조건 없이 항상 로드"
+   },
+   {
+    "en": "never touches it",
+    "ko": "대부분 세션엔 무관"
+   },
+   {
+    "en": "consume about 6,000 tokens of context in every session",
+    "ko": "context 낭비"
+   },
+   {
+    "en": "apply automatically whenever anyone edits Terraform files",
+    "ko": "편집할 때만 자동 적용"
+   }
+  ],
+  "discuss_ko": "{D} 처럼 `@import` 로 파일을 나누면 관리는 쉬워지는데, 왜 세션마다 쓰는 token 은 전혀 줄지 않을까?",
+  "words": [
+   {
+    "word": "yet",
+    "pos": "conj.",
+    "ko": "그런데도, 그렇지만",
+    "example": "yet 85% of Claude Code sessions"
+   },
+   {
+    "word": "consume",
+    "pos": "v.",
+    "ko": "소비하다, 차지하다",
+    "example": "the rules consume about 6,000 tokens"
+   },
+   {
+    "word": "whenever",
+    "pos": "conj.",
+    "ko": "~할 때마다, ~할 때는 언제든",
+    "example": "whenever anyone edits Terraform files"
+   },
+   {
+    "word": "disregard",
+    "pos": "v.",
+    "ko": "무시하다, 개의치 않다",
+    "example": "so Claude disregards them during other work"
+   },
+   {
+    "word": "manually",
+    "pos": "adv.",
+    "ko": "수동으로, 직접",
+    "example": "invoke manually"
+   },
+   {
+    "word": "infrastructure",
+    "pos": "n.",
+    "ko": "인프라, 기반 시설",
+    "example": "before they start any infrastructure change"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "fixed"
+ },
+ {
+  "id": "A3-06",
+  "domain": 3,
+  "scenario": "Code Generation with Claude Code",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "3.3"
+  ],
+  "guide_en": "Using glob patterns in path-specific rules to apply conventions to files by type regardless of directory location (e.g., **/*.test.tsx for all test files)",
+  "q_en": "Your team added `.claude/rules/storybook.md` with the frontmatter `paths: [\"src/components/*.stories.tsx\"]` to enforce story-writing conventions. Story files are spread across the monorepo, such as `src/components/forms/Input.stories.tsx` and `packages/charts/src/Bar.stories.tsx`, and new component folders are created every week. Of 60 stories written with Claude Code last sprint, only the 9 files placed directly in `src/components/` followed the conventions. The rule content itself is correct. What's the most effective change to make the conventions apply to every story file?",
+  "q_ko": "팀이 story 작성 규칙을 적용하려고 `.claude/rules/storybook.md` 에 `paths: [\"src/components/*.stories.tsx\"]` frontmatter 를 달았다. story 파일은 `src/components/forms/Input.stories.tsx`, `packages/charts/src/Bar.stories.tsx` 처럼 monorepo 곳곳에 흩어져 있고, 새 컴포넌트 폴더가 매주 생긴다. 지난 sprint 에 Claude Code 로 작성한 story 60개 중 `src/components/` 바로 아래에 있는 9개만 규칙을 따랐다. 규칙 내용 자체는 맞다. 모든 story 파일에 규칙이 적용되게 하는 가장 효과적인 변경은?",
+  "options": [
+   {
+    "en": "Create a `CLAUDE.md` in every directory that contains story files, and copy the Storybook conventions into each one so they are always nearby.",
+    "ko": "story 파일이 있는 모든 폴더에 `CLAUDE.md` 를 만들고, Storybook 규칙을 각각 복사해 넣어 늘 가까이 있게 한다.",
+    "why": "복사본을 폴더마다 관리해야 하고, 매주 생기는 새 폴더에는 또 빠진다. 흩어진 파일에는 glob rule 이 맞다."
+   },
+   {
+    "en": "Change the frontmatter to `paths: [\"**/*.stories.tsx\"]` so that the rule matches story files regardless of which directory they are in.",
+    "ko": "frontmatter 를 `paths: [\"**/*.stories.tsx\"]` 로 바꿔, 어느 폴더에 있든 story 파일이면 규칙이 매칭되게 한다.",
+    "why": "정답. `**/` 로 시작하는 glob 은 폴더 위치와 상관없이 파일 종류로 매칭해, 하위 폴더·다른 패키지·새 폴더까지 모두 잡는다."
+   },
+   {
+    "en": "Remove the `paths` frontmatter entirely and add a sentence asking Claude to apply these rules only when it is writing Storybook stories.",
+    "ko": "`paths` frontmatter 를 아예 지우고, Storybook story 를 쓸 때만 규칙을 적용하라는 문장을 넣는다.",
+    "why": "규칙이 모든 세션에 로드되고, 언제 적용할지는 Claude 의 추측에 맡겨진다. 확실한 매칭을 문장으로 바꾼 셈이다."
+   },
+   {
+    "en": "Add each directory that currently contains stories to the `paths` list as a separate `<directory>/*.stories.tsx` entry.",
+    "ko": "지금 story 가 있는 폴더를 하나씩 `<directory>/*.stories.tsx` 항목으로 `paths` 목록에 추가한다.",
+    "why": "지금 있는 폴더만 잡힌다. 새 컴포넌트 폴더가 매주 생기니 목록이 계속 뒤처진다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "어느 폴더든 같은 종류 파일 = **/*.stories.tsx",
+  "explain_ko": [
+   "**only the 9 files placed directly in `src/components/`** 만 규칙을 따랐다. `src/components/*.stories.tsx` 의 `*` 는 그 폴더 바로 아래만 매칭하고, 하위 폴더나 다른 패키지는 놓친다.",
+   "**The rule content itself is correct** 이니 내용이 아니라 glob 이 문제다. `**/*.stories.tsx` 로 바꾸면 폴더 위치와 상관없이 파일 종류로 매칭된다 ({B}).",
+   "{A} 는 폴더마다 복사본을 관리해야 하고, {D} 는 **new component folders are created every week** 라서 계속 빠진다. {C} 는 늘 로드한 채 Claude 의 추측에 맡긴다."
+  ],
+  "clues": [
+   {
+    "en": "spread across the monorepo",
+    "ko": "여러 폴더에 흩어짐"
+   },
+   {
+    "en": "new component folders are created every week",
+    "ko": "폴더 나열로는 못 따라감"
+   },
+   {
+    "en": "only the 9 files placed directly in `src/components/`",
+    "ko": "glob 이 하위 폴더를 못 잡음"
+   },
+   {
+    "en": "The rule content itself is correct",
+    "ko": "내용 말고 매칭 문제"
+   }
+  ],
+  "discuss_ko": "{D} 처럼 지금 있는 폴더를 paths 에 다 적으면 오늘은 60개가 모두 잡힐 텐데, 몇 주 뒤에는 왜 다시 문제가 생길까?",
+  "words": [
+   {
+    "word": "enforce",
+    "pos": "v.",
+    "ko": "(규칙을) 적용하다, 지키게 하다",
+    "example": "to enforce story-writing conventions"
+   },
+   {
+    "word": "spread across",
+    "pos": "phr.",
+    "ko": "~에 흩어져 있다",
+    "example": "Story files are spread across the monorepo"
+   },
+   {
+    "word": "sprint",
+    "pos": "n.",
+    "ko": "스프린트(짧은 개발 주기)",
+    "example": "written with Claude Code last sprint"
+   },
+   {
+    "word": "directly",
+    "pos": "adv.",
+    "ko": "바로, 곧장",
+    "example": "placed directly in"
+   },
+   {
+    "word": "regardless of",
+    "pos": "phr.",
+    "ko": "~와 상관없이",
+    "example": "regardless of which directory they are in"
+   },
+   {
+    "word": "entry",
+    "pos": "n.",
+    "ko": "(목록의) 항목",
+    "example": "as a separate `<directory>/*.stories.tsx` entry"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A3-07",
+  "domain": 3,
+  "scenario": "Code Generation with Claude Code",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "3.4"
+  ],
+  "guide_en": "Selecting direct execution for well-understood changes with clear scope (e.g., a single-file bug fix with a clear stack trace, adding a date validation conditional)",
+  "q_en": "A production alert shows a `TypeError: Cannot read properties of undefined (reading 'zip')` stack trace pointing to line 88 of `src/checkout/formatAddress.ts`. The cause is clear: orders without a shipping address reach a function that assumes one exists, and the fix is a single guard clause in that function. No other files call it. Your team lead recently suggested defaulting to plan mode for Claude Code tasks, and a similar one-line fix yesterday took 40 minutes of planning review. What's the most appropriate way to handle this fix?",
+  "q_ko": "운영 알림에 `TypeError: Cannot read properties of undefined (reading 'zip')` stack trace 가 떴고, `src/checkout/formatAddress.ts` 88번째 줄을 가리킨다. 원인은 분명하다. 배송 주소가 없는 주문이, 주소가 있다고 가정하는 함수에 들어온 것이고, 고치려면 그 함수에 guard clause 하나만 넣으면 된다. 이 함수를 부르는 다른 파일은 없다. 팀장은 최근 Claude Code 작업에 plan mode 를 기본으로 쓰자고 제안했고, 어제 비슷한 한 줄 수정은 계획 검토에만 40분이 걸렸다. 이 수정을 처리하는 가장 적절한 방법은?",
+  "options": [
+   {
+    "en": "Use plan mode to explore the checkout module and produce a design document for review before any code in `formatAddress.ts` is changed.",
+    "ko": "plan mode 로 checkout 모듈을 살펴보고 설계 문서를 만들어 검토받은 뒤에 `formatAddress.ts` 코드를 고친다.",
+    "why": "plan mode 는 여러 접근법·아키텍처 판단이 걸린 큰 작업용이다. 원인과 범위가 분명한 한 줄 수정에는 과한 절차다."
+   },
+   {
+    "en": "Run the Explore subagent across the whole repository first to summarize every address-handling path before deciding where to add the guard.",
+    "ko": "먼저 Explore subagent 로 저장소 전체를 훑어 주소를 다루는 모든 경로를 요약한 뒤, guard 를 어디에 넣을지 정한다.",
+    "why": "Explore subagent 는 장황한 탐색이 필요할 때 쓴다. 다른 파일이 호출하지 않는 함수라 탐색할 것이 없다."
+   },
+   {
+    "en": "Use the interview pattern so Claude asks questions about address validation strategies and failure modes before it writes the guard clause.",
+    "ko": "interview pattern 을 써서, Claude 가 guard clause 를 쓰기 전에 주소 검증 전략과 failure mode 를 먼저 질문하게 한다.",
+    "why": "interview pattern 은 낯선 영역에서 설계 고려사항을 끌어낼 때 쓴다. 원인이 이미 분명한 버그에는 필요 없다."
+   },
+   {
+    "en": "Use direct execution to add the guard clause in `formatAddress.ts`, and then run the existing checkout tests to confirm the fix works.",
+    "ko": "direct execution 으로 `formatAddress.ts` 에 guard clause 를 넣고, 기존 checkout 테스트를 돌려 수정이 잘 되는지 확인한다.",
+    "why": "정답. stack trace 가 분명하고 범위가 한 파일, 한 함수인 잘 이해된 변경이라 direct execution 이 맞다."
+   }
+  ],
+  "answer": 3,
+  "point_ko": "원인 분명한 한 파일 수정 = direct execution",
+  "explain_ko": [
+   "**pointing to line 88**, **The cause is clear**, **a single guard clause**, **No other files call it** — 범위가 한 파일, 한 함수로 분명한 수정이다.",
+   "이렇게 잘 이해된 작은 변경은 direct execution 이 맞다 ({D}). plan mode 는 여러 접근법이나 아키텍처 결정이 걸린 큰 작업에 쓴다.",
+   "{A} 는 **40 minutes of planning review** 같은 낭비를 되풀이하고, {B} 는 탐색할 것이 없는데 탐색부터 하며, {C} 는 낯선 설계 영역용 기법이다."
+  ],
+  "clues": [
+   {
+    "en": "The cause is clear",
+    "ko": "조사할 것이 없음"
+   },
+   {
+    "en": "a single guard clause in that function",
+    "ko": "작고 분명한 범위"
+   },
+   {
+    "en": "No other files call it",
+    "ko": "영향이 한 파일뿐"
+   },
+   {
+    "en": "took 40 minutes of planning review",
+    "ko": "plan mode 과잉"
+   }
+  ],
+  "discuss_ko": "팀장 제안대로 plan mode 를 기본으로 쓰면 안전해 보이는데, 이 상황에서 {A} 가 오히려 나쁜 선택인 이유는 무엇일까?",
+  "words": [
+   {
+    "word": "production",
+    "pos": "n.",
+    "ko": "운영 환경, 실서비스",
+    "example": "A production alert shows"
+   },
+   {
+    "word": "assume",
+    "pos": "v.",
+    "ko": "(그렇다고) 가정하다",
+    "example": "a function that assumes one exists"
+   },
+   {
+    "word": "guard clause",
+    "pos": "n. phr.",
+    "ko": "guard 절(먼저 조건을 검사해 빠져나가는 코드)",
+    "example": "a single guard clause"
+   },
+   {
+    "word": "appropriate",
+    "pos": "adj.",
+    "ko": "적절한, 알맞은",
+    "example": "the most appropriate way to handle this fix"
+   },
+   {
+    "word": "failure mode",
+    "pos": "n. phr.",
+    "ko": "고장·실패가 일어나는 방식",
+    "example": "address validation strategies and failure modes"
+   },
+   {
+    "word": "confirm",
+    "pos": "v.",
+    "ko": "확인하다",
+    "example": "to confirm the fix works"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "fixed"
+ },
+ {
+  "id": "A3-08",
+  "domain": 3,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "3.4"
+  ],
+  "guide_en": "Combining plan mode for investigation with direct execution for implementation (e.g., planning a library migration, then executing the planned approach)",
+  "select": 2,
+  "q_en": "Your team must replace a homegrown job scheduler used by 52 files with a managed queue. Two integration approaches are on the table: a push-based design that needs a new webhook endpoint and load balancer changes, and a pull-based design that needs worker processes but no network changes. Last quarter, a similar migration started with direct execution, and 30 edited files had to be reverted after the chosen approach clashed with the network team's constraints. Which two steps form the most effective workflow? (Choose TWO.)",
+  "q_ko": "팀은 52개 파일이 쓰는 자체 제작 job scheduler 를 managed queue 로 바꿔야 한다. 검토 중인 통합 방식은 두 가지다. push 방식은 새 webhook endpoint 와 load balancer 변경이 필요하고, pull 방식은 worker 프로세스가 필요하지만 네트워크 변경은 없다. 지난 분기 비슷한 migration 을 direct execution 으로 시작했다가, 고른 방식이 네트워크 팀의 제약과 충돌해 수정한 파일 30개를 되돌려야 했다. 가장 효과적인 작업 흐름을 이루는 단계 두 가지는? (2개 고르시오.)",
+  "options": [
+   {
+    "en": "Start in direct execution on the most-used files, and let the implementation reveal which integration approach fits the codebase better.",
+    "ko": "가장 많이 쓰이는 파일부터 direct execution 으로 시작하고, 구현하면서 어느 통합 방식이 코드베이스에 맞는지 드러나게 한다.",
+    "why": "지난 분기에 파일 30개를 되돌린 실패를 그대로 반복한다. 설계 선택을 구현 중에 떠맡기는 방식이다."
+   },
+   {
+    "en": "Use plan mode first to explore the scheduler's usages and compare both integration approaches against the infrastructure constraints before any files change.",
+    "ko": "먼저 plan mode 로 scheduler 사용처를 살펴보고, 파일을 고치기 전에 두 통합 방식을 인프라 제약에 비춰 비교한다.",
+    "why": "정답. 방식이 둘이고 인프라 요구가 다르며 52개 파일에 걸친 작업이라, 먼저 안전하게 조사하고 설계해야 비싼 재작업을 막는다."
+   },
+   {
+    "en": "Run the whole migration inside the Explore subagent so that both the investigation and all 52 file edits stay out of the main conversation.",
+    "ko": "migration 전체를 Explore subagent 안에서 돌려, 조사와 파일 52개 수정이 모두 메인 대화 밖에서 이뤄지게 한다.",
+    "why": "Explore subagent 는 장황한 탐색 결과를 요약해 돌려주는 용도다. 설계 비교와 구현을 통째로 맡기는 곳이 아니다."
+   },
+   {
+    "en": "Keep the session in plan mode for the entire implementation so that every one of the 52 file edits is reviewed as a separate plan.",
+    "ko": "구현이 끝날 때까지 plan mode 에 머물러, 52개 파일 수정 하나하나를 별도 계획으로 검토한다.",
+    "why": "계획이 승인된 뒤에는 할 일이 분명하다. 실행까지 계획 단계에 묶어 두는 것은 과한 절차다."
+   },
+   {
+    "en": "Once the approach and plan are approved, switch to direct execution to implement the planned changes across the 52 files.",
+    "ko": "방식과 계획이 승인되면 direct execution 으로 바꿔, 계획대로 52개 파일의 변경을 구현한다.",
+    "why": "정답. 조사는 plan mode, 정해진 계획의 구현은 direct execution 으로 나누는 것이 가장 효율적인 조합이다."
+   }
+  ],
+  "answer": [
+   1,
+   4
+  ],
+  "point_ko": "조사·설계 = plan mode, 승인 후 구현 = direct execution",
+  "explain_ko": [
+   "**Two integration approaches**, 서로 다른 인프라 요구, **used by 52 files** — 아키텍처 선택이 걸린 큰 작업이라 먼저 plan mode 로 조사하고 비교한다 ({B}). **had to be reverted** 는 계획 없이 시작하면 비싼 재작업이 생긴다는 증거다.",
+   "방식과 계획이 정해지면 할 일이 분명해지니 direct execution 으로 구현한다 ({E}). plan mode 로 조사하고 direct execution 으로 실행하는 **조합**이 핵심이다.",
+   "{A} 는 지난 분기 실패를 반복하고, {C} 는 탐색 요약용 subagent 에 구현까지 맡긴다. {D} 는 정해진 계획의 실행까지 계획 단계에 묶어 둔다."
+  ],
+  "clues": [
+   {
+    "en": "used by 52 files",
+    "ko": "대규모 변경"
+   },
+   {
+    "en": "Two integration approaches are on the table",
+    "ko": "설계 선택이 필요"
+   },
+   {
+    "en": "load balancer changes",
+    "ko": "인프라 요구가 다름"
+   },
+   {
+    "en": "had to be reverted",
+    "ko": "계획 없이 시작한 대가"
+   }
+  ],
+  "discuss_ko": "{D} 처럼 구현 내내 plan mode 에 머물면 더 안전할 것 같은데, 계획이 승인된 뒤에도 그렇게 하는 것이 왜 비효율일까?",
+  "words": [
+   {
+    "word": "homegrown",
+    "pos": "adj.",
+    "ko": "자체 제작한, 직접 만든",
+    "example": "a homegrown job scheduler"
+   },
+   {
+    "word": "on the table",
+    "pos": "phr.",
+    "ko": "검토 중인, 논의 대상인",
+    "example": "Two integration approaches are on the table"
+   },
+   {
+    "word": "revert",
+    "pos": "v.",
+    "ko": "되돌리다, 원래대로 돌리다",
+    "example": "had to be reverted"
+   },
+   {
+    "word": "clash with",
+    "pos": "phr. v.",
+    "ko": "~와 충돌하다, 맞지 않다",
+    "example": "clashed with the network team's constraints"
+   },
+   {
+    "word": "constraint",
+    "pos": "n.",
+    "ko": "제약 조건",
+    "example": "against the infrastructure constraints"
+   },
+   {
+    "word": "reveal",
+    "pos": "v.",
+    "ko": "드러내다, 밝히다",
+    "example": "let the implementation reveal"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A3-09",
+  "domain": 3,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "3.5"
+  ],
+  "guide_en": "Writing test suites covering expected behavior, edge cases, and performance requirements before implementation, then iterating by sharing test failures",
+  "q_en": "An engineer is using Claude Code to rewrite a legacy rate limiter that must allow 100 requests per minute per API key, reset cleanly at window boundaries, and add under 2 ms of latency per request. The requirements are well understood. Over four rounds, Claude reported the implementation as complete each time, but QA found a new regression in every round: burst traffic at window edges, keys containing unusual characters, and a latency spike above 15 ms. What's the most effective way to drive this work to a correct result?",
+  "q_ko": "엔지니어가 Claude Code 로 legacy rate limiter 를 다시 작성하고 있다. 이 limiter 는 API key 마다 분당 100 요청을 허용하고, 시간 창 경계에서 깔끔하게 초기화되며, 요청당 지연을 2 ms 미만으로만 늘려야 한다. 요구사항은 잘 정리돼 있다. 네 번의 반복 동안 Claude 는 매번 구현이 완료됐다고 했지만, QA 는 매번 새로운 회귀를 찾았다. 시간 창 가장자리의 순간 폭증 트래픽, 특이한 문자가 들어간 key, 15 ms 가 넘는 지연 급등이었다. 이 작업을 올바른 결과까지 이끄는 가장 효과적인 방법은?",
+  "options": [
+   {
+    "en": "Write a test suite covering the rate limits, window-edge bursts, unusual keys, and the 2 ms latency budget first, then iterate by sharing failing test output with Claude.",
+    "ko": "요청 한도, 시간 창 가장자리 폭증, 특이한 key, 2 ms 지연 예산을 담은 테스트를 먼저 쓰고, 실패한 테스트 출력을 Claude 에게 넘기며 반복한다.",
+    "why": "정답. 정상 동작·경계 사례·성능 요구를 테스트로 먼저 고정하면, '완료' 를 판단할 객관적 기준이 생기고 실패 결과로 구체적으로 고칠 수 있다."
+   },
+   {
+    "en": "Tell Claude to double-check its work carefully and confirm that every requirement is satisfied before it reports the rate limiter as complete.",
+    "ko": "Claude 에게 작업을 꼼꼼히 다시 확인하고, 모든 요구사항을 만족하는지 확인한 뒤에 완료라고 보고하라고 한다.",
+    "why": "'더 조심해' 식 프롬프트 강화다. 확인할 기준이 여전히 없으니 같은 자기 판단이 반복된다."
+   },
+   {
+    "en": "Use the interview pattern so Claude asks questions about rate-limiting algorithms and failure modes before it writes another version of the limiter.",
+    "ko": "interview pattern 을 써서, Claude 가 다음 버전을 쓰기 전에 rate limiting 알고리즘과 failure mode 에 대해 질문하게 한다.",
+    "why": "interview pattern 은 낯선 영역에서 놓친 고려사항을 찾을 때 쓴다. 요구사항이 이미 분명한 이 상황의 문제는 검증 기준이 없다는 것이다."
+   },
+   {
+    "en": "Switch to plan mode and have Claude produce a detailed architecture document for the rate limiter before it attempts a fifth implementation round.",
+    "ko": "plan mode 로 바꿔, 다섯 번째 구현을 시도하기 전에 Claude 가 rate limiter 의 상세 아키텍처 문서를 만들게 한다.",
+    "why": "설계가 아니라 검증이 빠진 문제다. 문서를 만들어도 경계 사례와 성능을 확인할 방법은 여전히 없다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "완료라는데 계속 회귀 = 테스트 먼저 + 실패 공유",
+  "explain_ko": [
+   "**reported the implementation as complete each time** 인데 **a new regression in every round** 가 네 번 반복됐다. '완료' 를 판단할 객관적 기준이 없다는 뜻이다.",
+   "요구사항이 **well understood** 이고 수치(100 requests, 2 ms)까지 분명하니, 정상 동작·경계 사례·성능 요구를 담은 테스트를 먼저 쓰고 실패 출력을 넘기며 반복한다 ({A}).",
+   "{B} 는 프롬프트 강화라 기준이 없고, {C} 는 낯선 영역용 기법이다. {D} 는 설계가 아니라 검증이 빠진 문제에 엉뚱한 도구다."
+  ],
+  "clues": [
+   {
+    "en": "must allow 100 requests per minute per API key",
+    "ko": "테스트로 옮길 수 있는 요구"
+   },
+   {
+    "en": "add under 2 ms of latency per request",
+    "ko": "성능 요구도 테스트 대상"
+   },
+   {
+    "en": "The requirements are well understood",
+    "ko": "interview 가 필요 없음"
+   },
+   {
+    "en": "reported the implementation as complete each time",
+    "ko": "완료 기준이 없음"
+   }
+  ],
+  "discuss_ko": "{C} 의 interview pattern 도 빠진 고려사항을 찾아 주는 기법인데, 이 상황에서는 왜 테스트를 먼저 쓰는 방식보다 약할까?",
+  "words": [
+   {
+    "word": "boundary",
+    "pos": "n.",
+    "ko": "경계",
+    "example": "reset cleanly at window boundaries"
+   },
+   {
+    "word": "latency",
+    "pos": "n.",
+    "ko": "지연 시간",
+    "example": "add under 2 ms of latency per request"
+   },
+   {
+    "word": "regression",
+    "pos": "n.",
+    "ko": "회귀(잘 되던 것이 다시 망가짐)",
+    "example": "QA found a new regression in every round"
+   },
+   {
+    "word": "burst",
+    "pos": "n.",
+    "ko": "순간적인 폭증",
+    "example": "burst traffic at window edges"
+   },
+   {
+    "word": "spike",
+    "pos": "n.",
+    "ko": "급등, 급증",
+    "example": "a latency spike above 15 ms"
+   },
+   {
+    "word": "drive to",
+    "pos": "phr. v.",
+    "ko": "~까지 이끌다, 몰고 가다",
+    "example": "drive this work to a correct result"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A3-10",
+  "domain": 3,
+  "scenario": "Code Generation with Claude Code",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "3.5"
+  ],
+  "guide_en": "Providing specific test cases with example input and expected output to fix edge case handling (e.g., null values in migration scripts)",
+  "q_en": "Claude Code wrote a script that migrates 2.4 million customer records from a legacy MySQL table to a new PostgreSQL schema. A dry run succeeded for 99.7% of rows, but rows with `NULL` in `middle_name` or `discount_rate` failed. You asked Claude to \"handle null values properly\" twice: the first revision skipped those rows entirely, and the second wrote the string \"None\" into `middle_name` and `0` into `discount_rate`. Downstream billing treats a missing discount differently from a zero discount. What's the most effective next step?",
+  "q_ko": "Claude Code 가 고객 레코드 240만 건을 legacy MySQL 테이블에서 새 PostgreSQL schema 로 옮기는 스크립트를 썼다. 시험 실행에서 99.7% 의 행은 성공했지만, `middle_name` 이나 `discount_rate` 가 `NULL` 인 행은 실패했다. Claude 에게 \"null 값을 제대로 처리해\" 라고 두 번 요청했다. 첫 수정본은 그런 행을 통째로 건너뛰었고, 두 번째 수정본은 `middle_name` 에 문자열 \"None\" 을, `discount_rate` 에 `0` 을 넣었다. 후속 billing 시스템은 할인 없음(값 없음)과 0% 할인을 다르게 처리한다. 가장 효과적인 다음 단계는?",
+  "options": [
+   {
+    "en": "Rewrite the null-handling request as a longer prose explanation describing why skipping rows and writing placeholder values both break downstream billing.",
+    "ko": "null 처리 요청을 더 긴 설명글로 다시 써서, 행을 건너뛰는 것과 자리 표시 값을 넣는 것이 왜 둘 다 billing 을 망가뜨리는지 설명한다.",
+    "why": "이미 말로 된 요청이 두 번 다르게 해석됐다. 설명을 늘려도 정확히 어떤 값이 나와야 하는지는 여전히 모호하다."
+   },
+   {
+    "en": "Use the interview pattern so Claude asks about the migration's goals, timelines, and rollback plans before it produces a third revision of the script.",
+    "ko": "interview pattern 을 써서, 세 번째 수정본을 만들기 전에 Claude 가 migration 의 목표·일정·rollback 계획을 질문하게 한다.",
+    "why": "interview pattern 은 낯선 영역의 설계 고려사항을 찾는 기법이다. 특정 경계 사례의 기대 결과를 전하는 문제는 풀지 못한다."
+   },
+   {
+    "en": "Give Claude specific test cases, such as an input row with `NULL` `discount_rate` and the exact expected output row keeping it `NULL`, then iterate until they pass.",
+    "ko": "`discount_rate` 가 `NULL` 인 입력 행과 그 값을 그대로 `NULL` 로 유지한 정확한 기대 출력 행 같은 구체적 테스트 케이스를 주고, 통과할 때까지 반복한다.",
+    "why": "정답. 입력과 기대 출력을 짝지은 테스트 케이스는 '제대로' 가 무엇인지 모호함 없이 보여 주고, 통과 여부로 수정을 확인할 수 있다."
+   },
+   {
+    "en": "Ask Claude to load the full 2.4 million-row dataset into context so it can discover every null pattern before revising the script again.",
+    "ko": "Claude 에게 240만 행 데이터 전체를 context 에 불러와 모든 null 패턴을 찾은 뒤 스크립트를 다시 고치라고 한다.",
+    "why": "수백만 행을 context 에 넣는 것은 비현실적이고, 기대 출력이 무엇인지는 여전히 전달되지 않는다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "경계 사례 수정 = 입력 + 기대 출력 테스트 케이스",
+  "explain_ko": [
+   "**\"handle null values properly\" twice** 에 Claude 는 두 번 다르게 답했다(행 건너뛰기, \"None\" 과 `0` 넣기). '제대로' 가 무엇인지가 전달되지 않은 것이다.",
+   "**treats a missing discount differently from a zero discount** 는 정확한 기대 결과가 중요하다는 단서다. `NULL` 입력 행과 `NULL` 을 유지한 기대 출력 행을 테스트 케이스로 주면 모호함이 사라진다 ({C}).",
+   "{A} 는 이미 실패한 말 설명을 늘릴 뿐이고, {B} 는 낯선 설계 영역용 기법이다. {D} 는 수백만 행을 context 에 넣는 비현실적 방법이다."
+  ],
+  "clues": [
+   {
+    "en": "rows with `NULL` in `middle_name` or `discount_rate` failed",
+    "ko": "경계 사례만 실패"
+   },
+   {
+    "en": "\"handle null values properly\" twice",
+    "ko": "모호한 말 지시"
+   },
+   {
+    "en": "skipped those rows entirely",
+    "ko": "해석이 제각각"
+   },
+   {
+    "en": "treats a missing discount differently from a zero discount",
+    "ko": "기대 출력이 정확해야 함"
+   }
+  ],
+  "discuss_ko": "{A} 처럼 두 수정본이 왜 틀렸는지 길게 설명하면 Claude 도 이해할 것 같은데, 테스트 케이스가 말보다 확실한 이유는 무엇일까?",
+  "words": [
+   {
+    "word": "migrate",
+    "pos": "v.",
+    "ko": "옮기다, 이전하다",
+    "example": "a script that migrates 2.4 million customer records"
+   },
+   {
+    "word": "dry run",
+    "pos": "n. phr.",
+    "ko": "시험 실행, 예행연습",
+    "example": "A dry run succeeded for 99.7% of rows"
+   },
+   {
+    "word": "revision",
+    "pos": "n.",
+    "ko": "수정본, 개정판",
+    "example": "the first revision skipped those rows entirely"
+   },
+   {
+    "word": "entirely",
+    "pos": "adv.",
+    "ko": "완전히, 통째로",
+    "example": "skipped those rows entirely"
+   },
+   {
+    "word": "downstream",
+    "pos": "adj.",
+    "ko": "후속 단계의, 뒤에서 받아 쓰는",
+    "example": "Downstream billing treats a missing discount"
+   },
+   {
+    "word": "placeholder",
+    "pos": "n.",
+    "ko": "자리 표시 값, 임시 값",
+    "example": "writing placeholder values"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A3-11",
+  "domain": 3,
+  "scenario": "Claude Code for Continuous Integration",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "3.6"
+  ],
+  "guide_en": "Using --output-format json with --json-schema to produce machine-parseable structured findings for automated posting as inline PR comments",
+  "q_en": "Your CI job runs `claude -p \"Review this PR for security issues\" --output-format json`, and a script turns each finding into an inline PR comment. The job never hangs, but the posting script fails on 18% of runs. Logs show the JSON output parses correctly, yet the review text inside it varies: sometimes a Markdown list, sometimes a table, and sometimes JSON wrapped in code fences with inconsistent field names such as `line` versus `lineNumber`. What's the most effective fix?",
+  "q_ko": "CI job 이 `claude -p \"Review this PR for security issues\" --output-format json` 을 실행하고, 스크립트가 finding 하나하나를 inline PR comment 로 올린다. job 이 멈추는 일은 없지만 comment 를 올리는 스크립트가 실행의 18% 에서 실패한다. 로그를 보면 JSON 출력 자체는 제대로 파싱되는데, 그 안의 리뷰 텍스트가 제각각이다. 어떤 때는 Markdown 목록, 어떤 때는 표, 어떤 때는 code fence 에 감싼 JSON 이고, 필드 이름도 `line` 과 `lineNumber` 처럼 일관되지 않다. 가장 효과적인 해결책은?",
+  "options": [
+   {
+    "en": "Add an instruction to the prompt: \"Always return findings as raw JSON without code fences, using the field names file, line, and message.\"",
+    "ko": "프롬프트에 \"findings 는 항상 code fence 없는 순수 JSON 으로, 필드 이름은 file, line, message 로 반환할 것\" 이라는 지시를 추가한다.",
+    "why": "프롬프트 부탁은 대부분 지켜져도 가끔 어긋난다. 자동 게시 스크립트에 필요한 구조 보장이 없다."
+   },
+   {
+    "en": "Keep `--output-format json` and add `--json-schema` defining a findings array with required file, line, severity, and message fields for the script to consume.",
+    "ko": "`--output-format json` 은 그대로 두고, 스크립트가 쓸 file, line, severity, message 필수 필드를 가진 findings 배열을 `--json-schema` 로 정의해 추가한다.",
+    "why": "정답. `--output-format json` 만으로는 결과를 JSON 으로 감쌀 뿐이다. `--json-schema` 를 함께 써야 findings 구조가 강제돼 기계가 안정적으로 읽는다."
+   },
+   {
+    "en": "Wrap the posting script in a retry loop that reruns the whole Claude Code review until the output parses into the expected finding structure.",
+    "ko": "게시 스크립트를 재시도 루프로 감싸, 출력이 기대한 finding 구조로 파싱될 때까지 Claude Code 리뷰 전체를 다시 돌린다.",
+    "why": "원인은 그대로 두고 증상만 가린다. 리뷰를 여러 번 돌리는 비용과 시간이 늘고, 구조 보장은 여전히 없다."
+   },
+   {
+    "en": "Drop `--output-format json` and add a second `claude -p` step that converts the first step's plain-text review into the comment format.",
+    "ko": "`--output-format json` 을 빼고, 첫 단계의 일반 텍스트 리뷰를 comment 형식으로 바꾸는 두 번째 `claude -p` 단계를 추가한다.",
+    "why": "변환 단계를 하나 더 둬도 그 출력 모양이 강제되지 않아 같은 문제가 반복되고, 파이프라인만 복잡해진다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "json 출력만으론 모양 보장 X = --json-schema 추가",
+  "explain_ko": [
+   "**The job never hangs** 이니 `-p` 문제는 아니다. **the JSON output parses correctly** 인데 **the review text inside it varies** — `--output-format json` 은 결과를 JSON 으로 감쌀 뿐, 안의 findings 모양까지 정해 주지 않는다.",
+   "스크립트는 항상 같은 필드가 필요하므로 `--json-schema` 로 구조를 강제해야 한다 ({B}).",
+   "{A} 는 프롬프트 부탁이라 가끔 어긋나고, {C} 는 원인은 두고 재실행 비용만 늘린다. {D} 는 단계를 늘려도 모양 보장이 없다."
+  ],
+  "clues": [
+   {
+    "en": "The job never hangs",
+    "ko": "-p 문제는 아님"
+   },
+   {
+    "en": "the JSON output parses correctly",
+    "ko": "겉 JSON 은 정상"
+   },
+   {
+    "en": "the review text inside it varies",
+    "ko": "안의 구조가 강제되지 않음"
+   },
+   {
+    "en": "inconsistent field names",
+    "ko": "schema 가 필요"
+   }
+  ],
+  "discuss_ko": "{A} 처럼 프롬프트에 필드 이름을 정확히 적어 주면 대부분은 맞게 나올 텐데, CI 자동화에서는 왜 '대부분' 으로 부족할까?",
+  "words": [
+   {
+    "word": "parse",
+    "pos": "v.",
+    "ko": "(구조를) 해석하다, 파싱하다",
+    "example": "the JSON output parses correctly"
+   },
+   {
+    "word": "vary",
+    "pos": "v.",
+    "ko": "제각각이다, 달라지다",
+    "example": "the review text inside it varies"
+   },
+   {
+    "word": "wrap",
+    "pos": "v.",
+    "ko": "감싸다",
+    "example": "JSON wrapped in code fences"
+   },
+   {
+    "word": "inconsistent",
+    "pos": "adj.",
+    "ko": "일관성 없는",
+    "example": "inconsistent field names"
+   },
+   {
+    "word": "versus",
+    "pos": "prep.",
+    "ko": "~ 대(對), ~와 대조적으로",
+    "example": "`line` versus `lineNumber`"
+   },
+   {
+    "word": "rerun",
+    "pos": "v.",
+    "ko": "다시 실행하다",
+    "example": "reruns the whole Claude Code review"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A3-12",
+  "domain": 3,
+  "scenario": "Claude Code for Continuous Integration",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "3.6"
+  ],
+  "guide_en": "Including prior review findings in context when re-running reviews after new commits, instructing Claude to report only new or still-unaddressed issues to avoid duplicate comments",
+  "q_en": "To stop duplicate PR comments, your CI review now includes the previous run's findings in context with the instruction \"Do not report any issue that appears in the prior findings.\" Duplicates dropped from 40% to 2%. However, in the last month three PRs were merged with an SQL injection flaw that the first review had flagged. In each case, the author pushed unrelated commits, the re-run stayed silent about the unfixed flaw, and the original comment had been marked outdated. What's the most effective change?",
+  "q_ko": "PR comment 중복을 막으려고, 이제 CI 리뷰는 이전 실행의 findings 를 context 에 넣고 \"이전 findings 에 있는 문제는 어떤 것도 보고하지 말 것\" 이라고 지시한다. 중복은 40% 에서 2% 로 줄었다. 그런데 지난달 첫 리뷰가 지적했던 SQL injection 결함이 있는 채로 PR 세 개가 병합됐다. 세 번 모두 작성자가 관련 없는 커밋을 올렸고, 재리뷰는 고쳐지지 않은 결함에 대해 아무 말도 하지 않았으며, 원래 comment 는 outdated 로 표시돼 있었다. 가장 효과적인 변경은?",
+  "options": [
+   {
+    "en": "Stop including prior findings and review every commit from scratch, accepting the duplicate comments as the cost of complete coverage.",
+    "ko": "이전 findings 를 넣지 않고 커밋마다 처음부터 리뷰하며, 중복 comment 는 빠짐없는 검토의 대가로 받아들인다.",
+    "why": "누락은 줄겠지만 40% 중복 문제가 되살아난다. 이전 findings 주입 자체는 효과가 있었으니 버릴 이유가 없다."
+   },
+   {
+    "en": "Review only the diff of the newest commits so that unchanged code with previously reported issues is never analyzed again in later runs.",
+    "ko": "가장 최근 커밋의 diff 만 리뷰해, 이미 보고된 문제가 있는 바뀌지 않은 코드는 이후 실행에서 다시 분석하지 않는다.",
+    "why": "고쳐지지 않은 결함은 바뀌지 않은 코드에 남아 있다. 그 코드를 아예 안 보니 같은 누락이 오히려 확실해진다."
+   },
+   {
+    "en": "Run each re-review in a fresh independent instance without prior findings, and post only findings rated high severity to limit comment volume.",
+    "ko": "재리뷰마다 이전 findings 없이 새 독립 인스턴스로 돌리고, comment 양을 줄이려고 심각도 높은 findings 만 올린다.",
+    "why": "독립 인스턴스는 자기 코드 리뷰의 편향을 막는 해법이라 다른 문제를 푼다. 이전 findings 가 없으니 중복이 돌아오고 낮은 심각도 문제는 사라진다."
+   },
+   {
+    "en": "Keep the prior findings in context, but instruct Claude to report new issues plus prior findings that are still unaddressed, without repeating ones already fixed.",
+    "ko": "이전 findings 는 context 에 계속 넣되, 새 문제와 아직 해결되지 않은 이전 문제는 보고하고 이미 고쳐진 것은 반복하지 말라고 지시한다.",
+    "why": "정답. 중복을 막는 이전 findings 주입은 유지하면서, 미해결 문제는 계속 드러나게 지시 범위를 바로잡는다."
+   }
+  ],
+  "answer": 3,
+  "point_ko": "재리뷰 = 새 문제 + 아직 안 고친 이전 문제",
+  "explain_ko": [
+   "이전 findings 를 넣은 것은 맞았다(**Duplicates dropped from 40% to 2%**). 문제는 **Do not report any issue that appears in the prior findings** 라는 지시가 너무 넓어, 안 고친 문제까지 묻혔다는 점이다.",
+   "**stayed silent about the unfixed flaw** — 이미 고친 것만 빼고, 새 문제와 **아직 해결되지 않은** 이전 문제는 계속 보고하게 지시를 바꾼다 ({D}).",
+   "{A} 와 {C} 는 중복 문제를 되살리고, {B} 는 바뀌지 않은 코드에 남은 결함을 아예 보지 않는다."
+  ],
+  "clues": [
+   {
+    "en": "Do not report any issue that appears in the prior findings",
+    "ko": "지시 범위가 너무 넓음"
+   },
+   {
+    "en": "Duplicates dropped from 40% to 2%",
+    "ko": "이전 findings 주입은 효과 있음"
+   },
+   {
+    "en": "stayed silent about the unfixed flaw",
+    "ko": "미해결 문제가 묻힘"
+   },
+   {
+    "en": "pushed unrelated commits",
+    "ko": "결함은 그대로 남음"
+   }
+  ],
+  "discuss_ko": "{B} 처럼 새 커밋의 diff 만 보면 중복도 없고 빠를 텐데, 이 방식은 왜 SQL injection 같은 남은 결함을 놓치게 될까?",
+  "words": [
+   {
+    "word": "flaw",
+    "pos": "n.",
+    "ko": "결함, 흠",
+    "example": "an SQL injection flaw"
+   },
+   {
+    "word": "flag",
+    "pos": "v.",
+    "ko": "(문제로) 표시하다, 지적하다",
+    "example": "that the first review had flagged"
+   },
+   {
+    "word": "unrelated",
+    "pos": "adj.",
+    "ko": "관련 없는",
+    "example": "the author pushed unrelated commits"
+   },
+   {
+    "word": "outdated",
+    "pos": "adj.",
+    "ko": "오래된, 더 이상 유효하지 않은",
+    "example": "had been marked outdated"
+   },
+   {
+    "word": "from scratch",
+    "pos": "phr.",
+    "ko": "처음부터, 백지 상태에서",
+    "example": "review every commit from scratch"
+   },
+   {
+    "word": "unaddressed",
+    "pos": "adj.",
+    "ko": "처리되지 않은, 해결되지 않은",
+    "example": "prior findings that are still unaddressed"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ }
+]

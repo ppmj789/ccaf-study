@@ -1,0 +1,1452 @@
+[
+ {
+  "id": "A1-01",
+  "domain": 1,
+  "scenario": "Customer Support Resolution Agent",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "1.1"
+  ],
+  "guide_en": "Adding tool results to conversation context between iterations so the model can incorporate new information into its reasoning",
+  "q_en": "Your support agent's loop correctly continues while `stop_reason` is `\"tool_use\"`. To keep requests small, the loop executes each requested tool but sends back only a short confirmation such as \"lookup_order completed\" instead of the returned data. Logs from 1,200 billing disputes show the agent calling `lookup_order` for the same order an average of 3.4 times per conversation, and 17% of replies say it \"could not retrieve the order details.\" Token usage per conversation has risen 40% since launch. What's the most effective fix?",
+  "q_ko": "support agent 의 loop 는 `stop_reason` 이 `\"tool_use\"` 인 동안 제대로 계속 돈다. 요청을 작게 유지하려고, loop 는 요청된 tool 을 실행하지만 돌려받은 데이터 대신 \"lookup_order completed\" 같은 짧은 확인 문구만 돌려보낸다. 청구 분쟁 1,200건의 로그를 보면 agent 가 대화 한 번에 같은 주문으로 `lookup_order` 를 평균 3.4번 부르고, 답변의 17%는 \"주문 정보를 가져오지 못했다\"고 말한다. 대화당 token 사용량은 출시 이후 40% 늘었다. 가장 효과적인 해결책은?",
+  "options": [
+   {
+    "en": "Add a system prompt rule telling the agent never to call the same tool twice with identical arguments within a single conversation.",
+    "ko": "한 대화 안에서 같은 인자로 같은 tool 을 두 번 부르지 말라는 규칙을 system prompt 에 넣는다.",
+    "why": "반복 호출은 줄겠지만 주문 데이터는 여전히 모델에게 가지 않아 '못 가져왔다'는 답은 그대로 남는다."
+   },
+   {
+    "en": "Cap the loop at two `lookup_order` calls per conversation and escalate to a human whenever the agent reaches that limit.",
+    "ko": "대화당 `lookup_order` 호출을 2번으로 제한하고, 한도에 닿으면 사람에게 escalate 한다.",
+    "why": "임의의 반복 상한은 가이드가 말하는 anti-pattern 이고, 원인은 그대로 둔 채 escalation 만 늘린다."
+   },
+   {
+    "en": "Append each tool's actual returned result to the conversation history before the next request so the agent can reason over the order data.",
+    "ko": "다음 요청을 보내기 전에 각 tool 이 실제로 돌려준 결과를 대화 기록에 붙여, agent 가 주문 데이터를 보고 추론하게 한다.",
+    "why": "정답. tool 결과가 대화 기록에 들어가야 모델이 새 정보를 반영해 다음 행동을 정한다."
+   },
+   {
+    "en": "Cache `lookup_order` responses in the MCP server so repeated calls for the same order return faster and cost less.",
+    "ko": "MCP 서버에서 `lookup_order` 응답을 캐시해 같은 주문을 반복 호출할 때 더 빠르고 싸게 돌아오게 한다.",
+    "why": "반복 호출을 빠르게 할 뿐, 결과가 모델에게 전달되지 않는 근본 문제는 못 고친다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "tool 결과 '내용'을 대화 기록에 붙여야 다음 판단이 된다",
+  "explain_ko": [
+   "**sends back only a short confirmation** → Claude 는 tool 이 '끝났다'는 사실만 알고, 주문 내용은 한 번도 보지 못한다.",
+   "그래서 같은 주문을 **3.4 times** 다시 부르고, 결국 **could not retrieve the order details** 라고 답한다. token 이 40% 늘어난 것도 헛도는 반복 때문이다.",
+   "agentic loop 는 실행한 tool 의 결과를 대화 기록에 붙여 다음 요청에 보내야 모델이 그 정보로 추론한다. 그래서 {C}."
+  ],
+  "clues": [
+   {
+    "en": "sends back only a short confirmation",
+    "ko": "결과 내용이 모델에게 안 감"
+   },
+   {
+    "en": "the same order an average of 3.4 times",
+    "ko": "못 봤으니 또 부름"
+   },
+   {
+    "en": "could not retrieve the order details",
+    "ko": "데이터가 대화에 없음"
+   },
+   {
+    "en": "To keep requests small",
+    "ko": "줄이려다 결과를 뺌"
+   }
+  ],
+  "discuss_ko": "{D} 처럼 캐시로 반복 호출을 빠르고 싸게 만들면 비용 문제는 줄 텐데, 왜 17% 의 '가져오지 못했다' 답변은 그대로 남을까?",
+  "words": [
+   {
+    "word": "retrieve",
+    "pos": "v.",
+    "ko": "가져오다, 불러오다",
+    "example": "could not retrieve the order details"
+   },
+   {
+    "word": "identical",
+    "pos": "adj.",
+    "ko": "똑같은, 동일한",
+    "example": "with identical arguments"
+   },
+   {
+    "word": "append",
+    "pos": "v.",
+    "ko": "(뒤에) 덧붙이다, 추가하다",
+    "example": "Append each tool's actual returned result to the conversation history"
+   },
+   {
+    "word": "cap",
+    "pos": "v.",
+    "ko": "상한을 두다, 제한하다",
+    "example": "Cap the loop at two `lookup_order` calls per conversation"
+   },
+   {
+    "word": "reason over",
+    "pos": "phr.",
+    "ko": "~을 근거로 추론하다",
+    "example": "so the agent can reason over the order data"
+   },
+   {
+    "word": "an average of",
+    "pos": "phr.",
+    "ko": "평균 ~",
+    "example": "an average of 3.4 times per conversation"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A1-02",
+  "domain": 1,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "1.1"
+  ],
+  "guide_en": "The distinction between model-driven decision-making (Claude reasons about which tool to call next based on context) and pre-configured decision trees or tool sequences",
+  "q_en": "Your codebase Q&A agent answers engineers' questions about a legacy monorepo. To make runs predictable, the code always executes the same sequence: `Glob` for files matching the question's keywords, `Read` the top three matches, then send everything to Claude for a final answer. Across 300 questions, 29% of answers are wrong, and most failures involve behavior defined in config files or in modules that the first three files only import. Every run makes exactly four calls regardless of the question. What's the most effective change?",
+  "q_ko": "코드베이스 Q&A agent 가 오래된 monorepo 에 대한 엔지니어 질문에 답한다. 실행을 예측 가능하게 하려고, 코드는 항상 같은 순서를 실행한다: 질문 키워드와 맞는 파일을 `Glob` 으로 찾고, 상위 3개를 `Read` 한 뒤, 전부 Claude 에게 보내 최종 답을 받는다. 질문 300개 중 29%가 틀렸고, 실패는 대부분 config 파일에 정의된 동작이나 앞의 세 파일이 import 만 하는 모듈과 관련 있다. 질문과 상관없이 실행마다 정확히 네 번 호출한다. 가장 효과적인 변경은?",
+  "options": [
+   {
+    "en": "Give Claude the `Glob`, `Grep`, and `Read` tools in a loop so it decides each next call based on what earlier results revealed.",
+    "ko": "Claude 에게 loop 안에서 `Glob`, `Grep`, `Read` tool 을 주고, 앞선 결과에서 드러난 내용을 보고 다음 호출을 스스로 정하게 한다.",
+    "why": "정답. 모델이 맥락을 보고 다음 tool 을 고르면 import 를 따라가거나 config 파일을 여는 식으로 필요한 곳까지 간다."
+   },
+   {
+    "en": "Add more branches to the fixed sequence, such as reading config files when the question mentions settings and following imports for functions.",
+    "ko": "고정 순서에 분기를 더한다. 질문에 설정 얘기가 있으면 config 파일을 읽고, 함수 얘기면 import 를 따라가는 식이다.",
+    "why": "여전히 미리 짠 결정 트리라, 질문 문구로는 알 수 없는 경우(답이 어디 있는지 읽어 봐야 아는 경우)를 못 따라간다."
+   },
+   {
+    "en": "Increase the fixed step from three files to fifteen files so the answer is more likely to include config files and imported modules.",
+    "ko": "고정 단계의 파일 수를 3개에서 15개로 늘려 config 파일과 import 된 모듈이 답에 들어갈 가능성을 높인다.",
+    "why": "키워드와 맞는 파일만 더 읽을 뿐 발견한 내용을 따라가지 않고, 관련 없는 파일로 문맥만 부풀린다."
+   },
+   {
+    "en": "Add few-shot examples to the final prompt showing how to infer config-file behavior from the three source files already read.",
+    "ko": "이미 읽은 소스 파일 3개로 config 파일의 동작을 추론하는 방법을 보여 주는 few-shot 예시를 최종 프롬프트에 넣는다.",
+    "why": "읽지 않은 파일의 내용은 예시로도 알아낼 수 없다. 추측만 늘린다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "고정 tool 순서 대신, 결과를 보고 모델이 다음 tool 을 고르게",
+  "explain_ko": [
+   "**always executes the same sequence** 와 **exactly four calls regardless of the question** → 미리 정해 둔 tool 순서다. 무엇을 발견하든 다음 행동이 바뀌지 않는다.",
+   "실패는 **config files** 나 **only import** 되는 모듈, 즉 읽어 본 뒤에야 어디로 가야 할지 알 수 있는 곳에서 난다.",
+   "agentic loop 의 핵심은 Claude 가 맥락을 보고 다음 tool 을 정하는 것이다. 그래서 tool 을 주고 스스로 탐색하게 하는 {A} 가 맞다. {B} 는 분기를 늘려도 여전히 미리 짠 트리다."
+  ],
+  "clues": [
+   {
+    "en": "always executes the same sequence",
+    "ko": "미리 정한 tool 순서"
+   },
+   {
+    "en": "in modules that the first three files only import",
+    "ko": "읽고 나서야 따라갈 곳이 보임"
+   },
+   {
+    "en": "regardless of the question",
+    "ko": "상황에 따라 안 바뀜"
+   }
+  ],
+  "discuss_ko": "{B} 처럼 분기를 충분히 많이 넣으면 29% 실패를 결국 잡을 수 있지 않을까? 분기를 늘리는 방식이 어디서 한계에 부딪히는지 이야기해 볼 수 있을까?",
+  "words": [
+   {
+    "word": "predictable",
+    "pos": "adj.",
+    "ko": "예측 가능한",
+    "example": "To make runs predictable"
+   },
+   {
+    "word": "regardless of",
+    "pos": "prep.",
+    "ko": "~와 상관없이",
+    "example": "regardless of the question"
+   },
+   {
+    "word": "legacy",
+    "pos": "adj.",
+    "ko": "오래된, 예전부터 물려받은",
+    "example": "questions about a legacy monorepo"
+   },
+   {
+    "word": "reveal",
+    "pos": "v.",
+    "ko": "드러내다, 밝히다",
+    "example": "based on what earlier results revealed"
+   },
+   {
+    "word": "infer",
+    "pos": "v.",
+    "ko": "추론하다, 미루어 짐작하다",
+    "example": "how to infer config-file behavior"
+   },
+   {
+    "word": "involve",
+    "pos": "v.",
+    "ko": "관련되다, 수반하다",
+    "example": "most failures involve behavior defined in config files"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A1-03",
+  "domain": 1,
+  "scenario": "Multi-Agent Research System",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "1.2"
+  ],
+  "guide_en": "Designing coordinator agents that analyze query requirements and dynamically select which subagents to invoke rather than always routing through the full pipeline",
+  "q_en": "Your research system's coordinator sends every request through all four subagents in order: web search, document analysis, synthesis, and report generation. Usage logs show that 45% of requests are narrow factual questions such as \"When did the EU AI Act enter into force?\" For these, users wait about four minutes and receive a five-page cited report when one verified sentence would do. Complex topic requests are rated highly and should keep their current depth. What's the most effective way to improve the narrow requests?",
+  "q_ko": "research system 의 coordinator 는 모든 요청을 subagent 4개(웹 검색, 문서 분석, 종합, 보고서 작성)에 차례로 통과시킨다. 사용 로그를 보면 요청의 45%는 \"EU AI Act 는 언제 발효됐나?\" 같은 좁은 사실 질문이다. 이런 질문에 사용자는 약 4분을 기다리고, 검증된 한 문장이면 될 것을 인용이 달린 5쪽짜리 보고서로 받는다. 복잡한 주제 요청은 평가가 좋아서 지금 깊이를 유지해야 한다. 좁은 요청을 개선하는 가장 효과적인 방법은?",
+  "options": [
+   {
+    "en": "Run all four subagents in parallel instead of in sequence so that narrow factual questions finish sooner while still producing the full report.",
+    "ko": "subagent 4개를 순차 대신 병렬로 돌려, 좁은 사실 질문도 전체 보고서를 만들되 더 빨리 끝나게 한다.",
+    "why": "여전히 전체 파이프라인을 다 돌리고 5쪽 보고서가 나온다. 종합은 앞 단계 결과가 있어야 해서 병렬로 돌릴 수도 없다."
+   },
+   {
+    "en": "Build a separate lightweight question-answering service with its own classifier model and route factual questions to it before the coordinator.",
+    "ko": "자체 분류 모델을 가진 별도의 가벼운 질의응답 서비스를 만들어 사실 질문을 coordinator 앞에서 그쪽으로 보낸다.",
+    "why": "coordinator 가 이미 할 수 있는 판단을 위해 별도 서비스와 모델을 새로 만드는 과한 인프라다."
+   },
+   {
+    "en": "Instruct the report generation subagent to keep reports under one page whenever the synthesized findings appear to answer a simple question.",
+    "ko": "종합 결과가 단순한 질문에 대한 답으로 보이면 보고서를 한 쪽 이내로 쓰라고 보고서 작성 subagent 에 지시한다.",
+    "why": "보고서만 짧아질 뿐 네 subagent 를 다 거치는 4분 대기는 그대로다. 증상만 가린다."
+   },
+   {
+    "en": "Have the coordinator analyze each request's requirements and invoke only the subagents it needs, such as web search alone for simple factual lookups.",
+    "ko": "coordinator 가 요청마다 필요한 것을 분석해 필요한 subagent 만 부르게 한다. 단순 사실 조회라면 웹 검색만 부르는 식이다.",
+    "why": "정답. coordinator 가 질의 복잡도를 보고 부를 subagent 를 동적으로 고르면, 복잡한 요청의 깊이는 지키면서 좁은 요청은 가볍게 끝난다."
+   }
+  ],
+  "answer": 3,
+  "point_ko": "coordinator 가 질문 복잡도를 보고 필요한 subagent 만 부른다",
+  "explain_ko": [
+   "**sends every request through all four subagents** → 질문 크기와 상관없이 늘 전체 파이프라인이다.",
+   "**narrow factual questions** 에 **five-page cited report** 와 4분 대기가 붙는 게 문제고, **Complex topic requests ... should keep their current depth** 라서 파이프라인 전체를 줄이면 안 된다.",
+   "coordinator 의 역할에는 질의 복잡도에 따라 어떤 subagent 를 부를지 정하는 일이 들어 있다. 그래서 {D}. {B} 는 같은 판단을 위해 서비스를 하나 더 만드는 과한 해법이다."
+  ],
+  "clues": [
+   {
+    "en": "sends every request through all four subagents",
+    "ko": "늘 전체 파이프라인"
+   },
+   {
+    "en": "narrow factual questions",
+    "ko": "subagent 다 필요 없음"
+   },
+   {
+    "en": "when one verified sentence would do",
+    "ko": "결과가 과함"
+   },
+   {
+    "en": "should keep their current depth",
+    "ko": "복잡한 요청은 그대로"
+   }
+  ],
+  "discuss_ko": "{C} 로 보고서를 한 쪽으로 줄이면 사용자 불만의 절반은 풀릴 것 같은데, 남는 문제는 무엇이고 왜 그게 설계 문제일까?",
+  "words": [
+   {
+    "word": "narrow",
+    "pos": "adj.",
+    "ko": "좁은, 범위가 한정된",
+    "example": "narrow factual questions"
+   },
+   {
+    "word": "enter into force",
+    "pos": "phr.",
+    "ko": "(법이) 발효되다",
+    "example": "When did the EU AI Act enter into force?"
+   },
+   {
+    "word": "would do",
+    "pos": "phr.",
+    "ko": "~면 충분하다",
+    "example": "when one verified sentence would do"
+   },
+   {
+    "word": "invoke",
+    "pos": "v.",
+    "ko": "호출하다, 부르다",
+    "example": "invoke only the subagents it needs"
+   },
+   {
+    "word": "lookup",
+    "pos": "n.",
+    "ko": "조회",
+    "example": "for simple factual lookups"
+   },
+   {
+    "word": "rate",
+    "pos": "v.",
+    "ko": "평가하다, 점수를 매기다",
+    "example": "Complex topic requests are rated highly"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A1-04",
+  "domain": 1,
+  "scenario": "Multi-Agent Research System",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "1.2"
+  ],
+  "guide_en": "Implementing iterative refinement loops where the coordinator evaluates synthesis output for gaps, re-delegates to search and analysis subagents with targeted queries, and re-invokes synthesis until coverage is sufficient",
+  "q_en": "For a report on battery recycling regulations, the coordinator assigned distinct regions to subagents, and a review confirmed the plan covered every required region. The pipeline runs once: search, analysis, synthesis, report. In 30% of recent reports, the synthesis output itself states gaps such as \"No 2025 sources found for Southeast Asia,\" and the final report ships with those sections empty. Reviewers then request follow-up research manually, adding two days per report. What's the most effective change?",
+  "q_ko": "배터리 재활용 규제 보고서를 위해 coordinator 는 subagent 들에게 서로 다른 지역을 나눠 맡겼고, 검토 결과 계획이 필요한 지역을 모두 포함했음이 확인됐다. 파이프라인은 검색, 분석, 종합, 보고서 순으로 한 번만 돈다. 최근 보고서의 30%에서 종합 결과 자체가 \"동남아시아의 2025년 자료를 찾지 못함\" 같은 빈틈을 적어 두었고, 최종 보고서는 그 섹션이 빈 채로 나간다. 그러면 검토자가 추가 조사를 손으로 요청해 보고서마다 이틀이 더 걸린다. 가장 효과적인 변경은?",
+  "options": [
+   {
+    "en": "Tell the synthesis subagent to fill any stated gaps using its own general knowledge so that every region section contains content before the report is generated.",
+    "ko": "보고서가 만들어지기 전에 모든 지역 섹션이 채워지도록, 적힌 빈틈은 synthesis subagent 가 자기 일반 지식으로 메우게 한다.",
+    "why": "출처 없는 내용으로 빈칸을 채우는 것이라 인용 보고서의 신뢰를 깬다. 빈틈을 조사로 메우는 게 아니다."
+   },
+   {
+    "en": "Have the coordinator check the synthesis output for gaps, send targeted queries for them to search and analysis subagents, and re-run synthesis until coverage suffices.",
+    "ko": "coordinator 가 종합 결과에서 빈틈을 찾고, 그 빈틈에 맞춘 질의를 검색·분석 subagent 에 보낸 뒤, 커버리지가 충분할 때까지 종합을 다시 돌린다.",
+    "why": "정답. 종합 결과를 평가해 빈틈을 겨냥해 다시 맡기고 재종합하는 반복 개선 loop 가 바로 이 상황의 해법이다."
+   },
+   {
+    "en": "Allow the synthesis subagent to call the web search subagent directly whenever it notices missing data, bypassing the coordinator to save a round trip.",
+    "ko": "synthesis subagent 가 빠진 데이터를 발견하면 coordinator 를 거치지 않고 웹 검색 subagent 를 직접 부르게 해 왕복을 줄인다.",
+    "why": "모든 subagent 통신은 coordinator 를 거쳐야 관찰 가능성·일관된 오류 처리·정보 흐름 통제가 유지된다."
+   },
+   {
+    "en": "Increase the number of search results for every region from 10 to 50 on the first pass so gaps are less likely to appear.",
+    "ko": "첫 검색에서 모든 지역의 검색 결과 수를 10개에서 50개로 늘려 빈틈이 덜 생기게 한다.",
+    "why": "빈틈이 없는 지역까지 비용을 다섯 배로 쓰면서도, 특정 빈틈을 겨냥하지 않아 여전히 한 번에 끝나는 구조다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "종합 결과의 빈틈 → coordinator 가 겨냥해 재위임 → 재종합",
+  "explain_ko": [
+   "**a review confirmed the plan covered every required region** → 분해가 좁았던 게 아니다. 계획은 맞았고 검색 결과가 비었을 뿐이다.",
+   "**The pipeline runs once** 와 **the synthesis output itself states gaps** → 빈틈을 알고도 다시 조사할 단계가 없다. 그 일을 사람이 **manually** 하고 있다.",
+   "coordinator 가 종합 결과를 평가해 빈틈에 맞춘 질의로 다시 맡기고 재종합하는 반복 loop 를 두면 된다. 그래서 {B}. {C} 는 coordinator 를 우회해 hub-and-spoke 구조를 깬다."
+  ],
+  "clues": [
+   {
+    "en": "a review confirmed the plan covered every required region",
+    "ko": "분해는 문제 아님"
+   },
+   {
+    "en": "The pipeline runs once",
+    "ko": "다시 조사할 고리가 없음"
+   },
+   {
+    "en": "the synthesis output itself states gaps",
+    "ko": "빈틈을 이미 알고 있음"
+   },
+   {
+    "en": "request follow-up research manually",
+    "ko": "사람이 loop 를 대신함"
+   }
+  ],
+  "discuss_ko": "{C} 처럼 synthesis subagent 가 직접 검색을 부르면 왕복이 줄어 더 빠를 텐데, coordinator 를 거치지 않을 때 무엇을 잃는지 운영 관점에서 이야기해 볼 수 있을까?",
+  "words": [
+   {
+    "word": "assign",
+    "pos": "v.",
+    "ko": "배정하다, 맡기다",
+    "example": "the coordinator assigned distinct regions to subagents"
+   },
+   {
+    "word": "distinct",
+    "pos": "adj.",
+    "ko": "서로 다른, 겹치지 않는",
+    "example": "assigned distinct regions"
+   },
+   {
+    "word": "follow-up",
+    "pos": "adj.",
+    "ko": "후속의, 추가의",
+    "example": "request follow-up research manually"
+   },
+   {
+    "word": "bypass",
+    "pos": "v.",
+    "ko": "우회하다, 건너뛰다",
+    "example": "bypassing the coordinator to save a round trip"
+   },
+   {
+    "word": "round trip",
+    "pos": "n. phr.",
+    "ko": "왕복 (요청을 보내고 받기)",
+    "example": "to save a round trip"
+   },
+   {
+    "word": "suffice",
+    "pos": "v.",
+    "ko": "충분하다",
+    "example": "re-run synthesis until coverage suffices"
+   },
+   {
+    "word": "ship",
+    "pos": "v.",
+    "ko": "(제품·결과물을) 내보내다, 출시하다",
+    "example": "the final report ships with those sections empty"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A1-05",
+  "domain": 1,
+  "scenario": "Multi-Agent Research System",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "1.3"
+  ],
+  "guide_en": "Using structured data formats to separate content from metadata (source URLs, document names, page numbers) when passing context between agents to preserve attribution",
+  "q_en": "The coordinator passes prior findings to the synthesis subagent as one plain-text block: web search and document analysis outputs are concatenated, with source URLs, document names, and page numbers mixed into the prose wherever each subagent happened to write them. An audit of 50 reports finds that 22% of claims cite the wrong source or no source, and several page numbers are attached to quotes from a different document. The findings themselves are accurate. What's the most effective fix?",
+  "q_ko": "coordinator 는 앞선 결과를 synthesis subagent 에게 평문 한 덩어리로 넘긴다. 웹 검색과 문서 분석 결과를 이어 붙인 것이고, 출처 URL·문서 이름·쪽 번호는 각 subagent 가 마침 적은 자리마다 본문에 섞여 있다. 보고서 50개를 감사해 보니 주장의 22%가 엉뚱한 출처를 달았거나 출처가 없고, 쪽 번호 몇 개는 다른 문서의 인용문에 붙어 있다. 결과 내용 자체는 정확하다. 가장 효과적인 해결책은?",
+  "options": [
+   {
+    "en": "Pass findings as structured records that keep each claim's content separate from its metadata, including source URL, document name, and page number.",
+    "ko": "결과를 구조화된 레코드로 넘겨, 주장마다 내용과 metadata(출처 URL, 문서 이름, 쪽 번호)를 분리해 둔다.",
+    "why": "정답. 내용과 metadata 를 구조로 나눠 넘기면 주장과 출처의 짝이 agent 사이에서 흐트러지지 않는다."
+   },
+   {
+    "en": "Add an instruction to the synthesis subagent's prompt emphasizing that every claim must cite its exact source and page number accurately.",
+    "ko": "synthesis subagent 프롬프트에 모든 주장은 정확한 출처와 쪽 번호를 달아야 한다고 강조하는 지시를 넣는다.",
+    "why": "입력에서 이미 출처가 섞여 있으니, 지시를 강조해도 어느 쪽 번호가 어느 인용인지 알 수 없다."
+   },
+   {
+    "en": "Give the synthesis subagent its own web search tool so it can look up the original source for each claim before citing it.",
+    "ko": "synthesis subagent 에 웹 검색 tool 을 줘서 인용하기 전에 주장마다 원래 출처를 다시 찾게 한다.",
+    "why": "이미 가진 출처 정보를 다시 찾는 중복 작업이고, 내부 문서의 쪽 번호는 웹 검색으로 찾을 수도 없다."
+   },
+   {
+    "en": "Use `fork_session` to give the synthesis subagent a branch of the document analysis subagent's session so it sees the original context.",
+    "ko": "`fork_session` 으로 문서 분석 subagent 세션의 분기를 synthesis subagent 에게 줘서 원래 문맥을 보게 한다.",
+    "why": "fork 는 같은 기점에서 다른 접근을 탐색하는 도구다. 웹 검색 결과는 빠지고, 출처를 구조로 나누는 문제도 안 풀린다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "agent 간 전달은 내용과 출처 metadata 를 구조로 분리",
+  "explain_ko": [
+   "**one plain-text block** 과 **mixed into the prose wherever each subagent happened to write them** → 출처 정보가 어느 주장 것인지 구조가 없다.",
+   "**The findings themselves are accurate** → 조사 품질은 문제없다. 깨진 건 주장과 출처의 연결(attribution)이다.",
+   "agent 사이에 문맥을 넘길 때 내용과 metadata(URL, 문서명, 쪽 번호)를 구조화된 형식으로 분리하면 출처가 보존된다. 그래서 {A}."
+  ],
+  "clues": [
+   {
+    "en": "one plain-text block",
+    "ko": "구조 없는 전달"
+   },
+   {
+    "en": "mixed into the prose",
+    "ko": "내용과 출처가 뒤섞임"
+   },
+   {
+    "en": "attached to quotes from a different document",
+    "ko": "출처 짝이 어긋남"
+   },
+   {
+    "en": "The findings themselves are accurate",
+    "ko": "조사는 멀쩡함"
+   }
+  ],
+  "discuss_ko": "{B} 처럼 프롬프트로 '정확히 인용하라'고 강조하는 게 왜 이 경우엔 거의 효과가 없을까? 모델이 받는 입력 모양에서부터 설명해 볼 수 있을까?",
+  "words": [
+   {
+    "word": "concatenate",
+    "pos": "v.",
+    "ko": "이어 붙이다, 연결하다",
+    "example": "document analysis outputs are concatenated"
+   },
+   {
+    "word": "prose",
+    "pos": "n.",
+    "ko": "산문, (서식 없는) 본문 글",
+    "example": "mixed into the prose"
+   },
+   {
+    "word": "happen to",
+    "pos": "phr.",
+    "ko": "마침 ~하다, 우연히 ~하다",
+    "example": "wherever each subagent happened to write them"
+   },
+   {
+    "word": "audit",
+    "pos": "n.",
+    "ko": "감사, 점검",
+    "example": "An audit of 50 reports"
+   },
+   {
+    "word": "cite",
+    "pos": "v.",
+    "ko": "인용하다, 출처로 들다",
+    "example": "22% of claims cite the wrong source"
+   },
+   {
+    "word": "look up",
+    "pos": "phr. v.",
+    "ko": "찾아보다, 조회하다",
+    "example": "look up the original source for each claim"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A1-06",
+  "domain": 1,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "1.3"
+  ],
+  "guide_en": "The AgentDefinition configuration including descriptions, system prompts, and tool restrictions for each subagent type",
+  "q_en": "Your productivity agent's coordinator can spawn two subagents. Both AgentDefinitions share the description \"Helps with code tasks,\" and neither restricts tools. Logs from one week show two problems. The coordinator sent 38% of \"explain how this module works\" requests to the test-writer subagent instead of the codebase-explorer subagent. Separately, the codebase-explorer subagent edited files in 12 sessions, although engineers expect exploration to be strictly read-only. Which TWO changes address these problems? (Choose TWO.)",
+  "q_ko": "productivity agent 의 coordinator 는 subagent 두 개를 생성할 수 있다. 두 AgentDefinition 의 description 은 똑같이 \"Helps with code tasks\" 이고, 둘 다 tool 제한이 없다. 일주일치 로그에서 문제가 두 가지 보인다. coordinator 가 \"이 모듈이 어떻게 동작하는지 설명해 줘\" 요청의 38%를 codebase-explorer 대신 test-writer subagent 에게 보냈다. 이와 별개로, codebase-explorer subagent 가 12개 세션에서 파일을 수정했는데, 엔지니어들은 탐색이 철저히 읽기 전용이기를 기대한다. 이 문제들을 해결하는 변경 두 가지는? (2개 고르시오.)",
+  "options": [
+   {
+    "en": "Add a coordinator system prompt rule listing request keywords, such as \"explain\" and \"module,\" that should always be routed to the codebase-explorer subagent.",
+    "ko": "\"explain\", \"module\" 같은 요청 키워드를 나열하고 이런 요청은 항상 codebase-explorer 로 보내라는 규칙을 coordinator system prompt 에 넣는다.",
+    "why": "키워드 목록은 표현이 조금만 달라도 빗나가고, 두 subagent 를 구분 못 하게 만든 똑같은 description 은 그대로 남는다."
+   },
+   {
+    "en": "Rewrite each AgentDefinition description to state clearly what that subagent does and when to use it, distinguishing exploration from test writing.",
+    "ko": "각 AgentDefinition 의 description 을 그 subagent 가 무엇을 하고 언제 쓰는지 분명히 적도록 고쳐, 탐색과 테스트 작성을 구분한다.",
+    "why": "정답. coordinator 는 description 을 보고 어떤 subagent 를 부를지 고르므로, 똑같은 description 이 잘못된 위임의 원인이다."
+   },
+   {
+    "en": "Tell the codebase-explorer subagent in its system prompt to avoid editing files unless an engineer explicitly asks for code changes.",
+    "ko": "엔지니어가 코드 변경을 명시적으로 요청하지 않는 한 파일을 수정하지 말라고 codebase-explorer 의 system prompt 에 적는다.",
+    "why": "프롬프트 지시는 확률적이라 수정 권한이 남아 있는 한 다시 파일을 고칠 수 있고, 읽기 전용이라는 기대와도 어긋난다."
+   },
+   {
+    "en": "Remove \"Task\" from the coordinator's `allowedTools` so it handles explanation requests itself instead of choosing the wrong subagent.",
+    "ko": "coordinator 의 `allowedTools` 에서 \"Task\" 를 빼서, 잘못된 subagent 를 고르는 대신 설명 요청을 직접 처리하게 한다.",
+    "why": "Task 가 없으면 subagent 를 아예 못 부른다. 위임 구조 전체를 없애는 과한 조치이고 파일 수정 문제와도 무관하다."
+   },
+   {
+    "en": "Restrict the codebase-explorer AgentDefinition's tools to read-only ones such as `Read`, `Grep`, and `Glob`, removing `Write` and `Edit`.",
+    "ko": "codebase-explorer AgentDefinition 의 tool 을 `Read`, `Grep`, `Glob` 같은 읽기 전용으로 제한하고 `Write`, `Edit` 는 뺀다.",
+    "why": "정답. AgentDefinition 의 tool 제한은 설정으로 강제되므로, 파일을 고칠 수단 자체가 사라진다."
+   }
+  ],
+  "answer": [
+   1,
+   4
+  ],
+  "select": 2,
+  "point_ko": "잘못된 위임 = description 구분, 권한 초과 = tool 제한",
+  "explain_ko": [
+   "첫 번째 문제: **share the description \"Helps with code tasks,\"** → coordinator 가 두 subagent 를 구분할 근거가 없다. description 을 역할과 사용 시점이 드러나게 고치는 {B}.",
+   "두 번째 문제: **neither restricts tools** 인데 **strictly read-only** 를 기대한다 → 권한을 설정으로 막아야 한다. 읽기 전용 tool 만 남기는 {E}.",
+   "{A} 와 {C} 는 같은 문제를 프롬프트로만 덮는 방식이라 확실하지 않고, {D} 는 위임 자체를 없앤다."
+  ],
+  "clues": [
+   {
+    "en": "share the description \"Helps with code tasks,\"",
+    "ko": "subagent 구분 불가"
+   },
+   {
+    "en": "neither restricts tools",
+    "ko": "수정 권한이 열려 있음"
+   },
+   {
+    "en": "instead of the codebase-explorer subagent",
+    "ko": "잘못 위임됨"
+   },
+   {
+    "en": "strictly read-only",
+    "ko": "설정으로 막아야 함"
+   }
+  ],
+  "discuss_ko": "{C} 처럼 system prompt 로 '수정하지 말라'고 해도 대부분은 지킬 텐데, 엔지니어가 '철저히 읽기 전용'을 기대할 때 왜 tool 제한이 더 맞는 선택일까?",
+  "words": [
+   {
+    "word": "spawn",
+    "pos": "v.",
+    "ko": "(새 인스턴스를) 생성하다, 띄우다",
+    "example": "can spawn two subagents"
+   },
+   {
+    "word": "restrict",
+    "pos": "v.",
+    "ko": "제한하다",
+    "example": "neither restricts tools"
+   },
+   {
+    "word": "separately",
+    "pos": "adv.",
+    "ko": "이와 별개로, 따로",
+    "example": "Separately, the codebase-explorer subagent edited files"
+   },
+   {
+    "word": "strictly",
+    "pos": "adv.",
+    "ko": "엄격히, 철저히",
+    "example": "expect exploration to be strictly read-only"
+   },
+   {
+    "word": "route",
+    "pos": "v.",
+    "ko": "(요청을) 보내다, 경로를 정하다",
+    "example": "should always be routed to the codebase-explorer subagent"
+   },
+   {
+    "word": "distinguish",
+    "pos": "v.",
+    "ko": "구별하다",
+    "example": "distinguishing exploration from test writing"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A1-07",
+  "domain": 1,
+  "scenario": "Customer Support Resolution Agent",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "1.4"
+  ],
+  "guide_en": "The difference between programmatic enforcement (hooks, prerequisite gates) and prompt-based guidance for workflow ordering",
+  "q_en": "You are adding two ordering rules to the support agent. Rule 1: `process_refund` must never run before `get_customer` returns a verified customer ID; last quarter, a prompt-only version of this rule failed in 0.8% of refunds. Rule 2: before calling `escalate_to_human`, the agent should usually offer a relevant self-service option, but it must escalate immediately when a customer explicitly asks for a human. Which TWO implementation choices are most appropriate? (Choose TWO.)",
+  "q_ko": "support agent 에 순서 규칙 두 개를 추가하려 한다. 규칙 1: `get_customer` 가 검증된 customer ID 를 돌려주기 전에는 `process_refund` 가 절대 실행되면 안 된다. 지난 분기에 이 규칙을 프롬프트로만 두었더니 환불의 0.8%에서 지켜지지 않았다. 규칙 2: `escalate_to_human` 을 부르기 전에 agent 는 보통 관련된 셀프서비스 방법을 안내해야 하지만, 고객이 사람 상담원을 명시적으로 요청하면 즉시 escalate 해야 한다. 가장 적절한 구현 선택 두 가지는? (2개 고르시오.)",
+  "options": [
+   {
+    "en": "Enforce Rule 1 with a programmatic prerequisite that blocks `process_refund` until `get_customer` has returned a verified customer ID.",
+    "ko": "규칙 1은 `get_customer` 가 검증된 customer ID 를 돌려줄 때까지 `process_refund` 를 막는 프로그램적 전제 조건으로 강제한다.",
+    "why": "정답. 금융 작업 전 신원 확인처럼 확실한 준수가 필요한 순서는 프롬프트가 아니라 코드로 막아야 한다."
+   },
+   {
+    "en": "Enforce Rule 2 with a gate that blocks `escalate_to_human` until the agent has offered at least one self-service option in the conversation.",
+    "ko": "규칙 2는 agent 가 대화에서 셀프서비스 방법을 한 번 이상 안내하기 전까지 `escalate_to_human` 을 막는 gate 로 강제한다.",
+    "why": "사람을 명시적으로 요청한 고객도 막혀 버린다. 예외가 있는 유연한 규칙을 코드 gate 로 굳히면 안 된다."
+   },
+   {
+    "en": "Keep Rule 1 in the system prompt but rewrite it in capital letters with an example showing the correct order of tool calls.",
+    "ko": "규칙 1은 system prompt 에 두되 대문자로 다시 쓰고 올바른 tool 호출 순서를 보여 주는 예시를 붙인다.",
+    "why": "강조와 예시를 더해도 프롬프트 지시는 실패율이 0이 아니다. 이미 0.8% 실패가 확인됐다."
+   },
+   {
+    "en": "Express Rule 2 as system prompt guidance, including the exception that an explicit request for a human triggers immediate escalation.",
+    "ko": "규칙 2는 사람을 명시적으로 요청하면 즉시 escalate 한다는 예외까지 포함해 system prompt 지침으로 적는다.",
+    "why": "정답. '보통은 안내, 요청하면 즉시 escalate' 처럼 맥락 판단이 필요한 순서는 프롬프트 지침이 알맞다."
+   },
+   {
+    "en": "Move both rules into the `escalate_to_human` tool description so the agent reads them each time it considers escalating a case.",
+    "ko": "두 규칙을 모두 `escalate_to_human` tool description 으로 옮겨, agent 가 escalate 를 고려할 때마다 읽게 한다.",
+    "why": "tool description 도 결국 모델이 읽는 안내라 규칙 1을 보장하지 못하고, 규칙 1은 escalate 가 아니라 환불 순서 문제다."
+   }
+  ],
+  "answer": [
+   0,
+   3
+  ],
+  "select": 2,
+  "point_ko": "확실히 지켜야 할 순서 = 코드 gate, 예외 있는 판단 = 프롬프트",
+  "explain_ko": [
+   "규칙 1: **must never run before** + **a prompt-only version ... failed in 0.8%** → 금융 작업 전 신원 확인은 결정적 준수가 필요하다. 프롬프트는 실패율이 0이 아니니 프로그램적 전제 조건 {A}.",
+   "규칙 2: **should usually** 와 **must escalate immediately when a customer explicitly asks** → 예외가 있는 판단이다. gate 로 막으면 사람을 요청한 고객까지 막으므로, 예외를 담은 프롬프트 지침 {D}.",
+   "{B} 는 도구를 거꾸로 골랐고, {C} 와 {E} 는 규칙 1을 여전히 모델의 선택에 맡긴다."
+  ],
+  "clues": [
+   {
+    "en": "must never run before",
+    "ko": "결정적 준수 필요"
+   },
+   {
+    "en": "a prompt-only version of this rule failed in 0.8% of refunds",
+    "ko": "프롬프트는 실패율 0 아님"
+   },
+   {
+    "en": "should usually offer",
+    "ko": "유연한 기본 행동"
+   },
+   {
+    "en": "must escalate immediately when a customer explicitly asks for a human",
+    "ko": "gate 로 막으면 안 되는 예외"
+   }
+  ],
+  "discuss_ko": "{B} 처럼 규칙 2도 코드로 강제하면 셀프서비스 안내율은 100% 가 될 텐데, 이것이 오히려 고객 경험과 가이드 원칙에 어긋나는 이유는 무엇일까?",
+  "words": [
+   {
+    "word": "verified",
+    "pos": "adj.",
+    "ko": "검증된, 확인된",
+    "example": "returns a verified customer ID"
+   },
+   {
+    "word": "prerequisite",
+    "pos": "n.",
+    "ko": "전제 조건, 선행 조건",
+    "example": "a programmatic prerequisite that blocks `process_refund`"
+   },
+   {
+    "word": "explicitly",
+    "pos": "adv.",
+    "ko": "명시적으로, 분명히",
+    "example": "when a customer explicitly asks for a human"
+   },
+   {
+    "word": "enforce",
+    "pos": "v.",
+    "ko": "(규칙을) 강제하다, 시행하다",
+    "example": "Enforce Rule 1 with a programmatic prerequisite"
+   },
+   {
+    "word": "trigger",
+    "pos": "v.",
+    "ko": "촉발하다, 일으키다",
+    "example": "an explicit request for a human triggers immediate escalation"
+   },
+   {
+    "word": "implementation",
+    "pos": "n.",
+    "ko": "구현, 실행 방식",
+    "example": "Which TWO implementation choices are most appropriate?"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A1-08",
+  "domain": 1,
+  "scenario": "Customer Support Resolution Agent",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "1.4"
+  ],
+  "guide_en": "Implementing programmatic prerequisites that block downstream tool calls until prerequisite steps have completed (e.g., blocking process_refund until get_customer has returned a verified customer ID)",
+  "q_en": "After misidentified refunds, your team added a gate that allows `process_refund` only if `get_customer` has been called earlier in the conversation. Refund errors dropped from 12% to 5% but then stalled. Reviewing the remaining cases, you find that `get_customer` was called every time, but it returned either \"no match\" or three possible accounts, and the agent then issued the refund using an order number the customer had typed. The system prompt already instructs the agent to ask for more identifiers when a lookup is ambiguous. What's the most effective next step?",
+  "q_ko": "엉뚱한 고객에게 환불이 나간 뒤, 팀은 대화 앞부분에서 `get_customer` 가 호출된 경우에만 `process_refund` 를 허용하는 gate 를 추가했다. 환불 오류는 12%에서 5%로 줄었다가 더 내려가지 않는다. 남은 사례를 보니 `get_customer` 는 매번 호출됐지만 \"no match\" 나 가능한 계정 3개를 돌려줬고, 그러자 agent 는 고객이 입력한 주문 번호로 환불을 진행했다. 조회 결과가 애매하면 식별 정보를 더 물어보라는 지시는 이미 system prompt 에 들어 있다. 가장 효과적인 다음 조치는?",
+  "options": [
+   {
+    "en": "Strengthen the existing system prompt instruction with emphatic wording and examples of asking for more identifiers when `get_customer` returns no match or multiple accounts.",
+    "ko": "`get_customer` 가 no match 나 여러 계정을 돌려줄 때 식별 정보를 더 묻는 예시와 강한 어조를 넣어 기존 system prompt 지시를 강화한다.",
+    "why": "같은 지시가 이미 프롬프트에 있는데도 오류가 남았다. 강조만 더해도 실패율이 0이 되지 않으니, 환불 같은 금융 작업은 코드로 막아야 한다."
+   },
+   {
+    "en": "Require `get_customer` to be called twice before a refund so the agent has a second chance to find the correct customer account.",
+    "ko": "환불 전에 `get_customer` 를 두 번 호출하게 해서 agent 가 올바른 계정을 찾을 기회를 한 번 더 갖게 한다.",
+    "why": "여전히 '호출했는가'만 본다. 두 번 다 no match 여도 환불이 통과된다."
+   },
+   {
+    "en": "Route every refund request to `escalate_to_human` until the error rate falls below 1%, then re-enable automated refunds.",
+    "ko": "오류율이 1% 아래로 떨어질 때까지 모든 환불 요청을 `escalate_to_human` 으로 보내고, 그 뒤 자동 환불을 다시 켠다.",
+    "why": "자동 해결을 멈추는 과한 조치이고, 원인(gate 조건)을 고치지 않으니 다시 켜면 같은 오류가 돌아온다."
+   },
+   {
+    "en": "Change the gate condition so `process_refund` is blocked until `get_customer` has returned a single verified customer ID for that refund.",
+    "ko": "gate 조건을 바꿔, `get_customer` 가 그 환불에 대해 검증된 customer ID 하나를 돌려줄 때까지 `process_refund` 를 막는다.",
+    "why": "정답. 전제 조건은 '단계가 호출됐는가'가 아니라 '검증된 결과가 나왔는가'로 걸어야 downstream 호출을 제대로 막는다."
+   }
+  ],
+  "answer": 3,
+  "point_ko": "gate 조건은 '호출했나'가 아니라 '검증된 ID 가 나왔나'",
+  "explain_ko": [
+   "**allows `process_refund` only if `get_customer` has been called** → 지금 gate 는 호출 여부만 본다.",
+   "남은 오류는 **was called every time** 인데 결과가 **\"no match\" or three possible accounts** 인 경우다. 호출은 했지만 검증은 안 됐으니 지금 gate 를 그대로 통과한다.",
+   "전제 조건은 '검증된 customer ID 를 돌려받았을 때'까지 downstream 호출을 막아야 한다. 그래서 gate 조건을 고치는 {D}. **The system prompt already instructs** 로 보듯 프롬프트 지시는 이미 있고 실패했으니, 그걸 강조만 하는 {A} 는 답이 아니다."
+  ],
+  "clues": [
+   {
+    "en": "only if `get_customer` has been called earlier",
+    "ko": "호출 여부만 확인"
+   },
+   {
+    "en": "The system prompt already instructs the agent to ask for more identifiers",
+    "ko": "프롬프트 지시는 이미 실패"
+   },
+   {
+    "en": "returned either \"no match\" or three possible accounts",
+    "ko": "검증 실패인데 통과"
+   },
+   {
+    "en": "an order number the customer had typed",
+    "ko": "검증 안 된 입력으로 환불"
+   }
+  ],
+  "discuss_ko": "프롬프트의 '식별 정보 더 묻기' 지시는 좋은 고객 응대인데, gate 조건을 고치는 {D} 와 함께 쓰면 둘은 각각 어떤 역할을 맡게 될까?",
+  "words": [
+   {
+    "word": "misidentified",
+    "pos": "adj.",
+    "ko": "잘못 식별된, 엉뚱한 대상으로 판별된",
+    "example": "After misidentified refunds"
+   },
+   {
+    "word": "stall",
+    "pos": "v.",
+    "ko": "(진전이) 멈추다, 정체되다",
+    "example": "dropped from 12% to 5% but then stalled"
+   },
+   {
+    "word": "issue",
+    "pos": "v.",
+    "ko": "(환불·문서를) 발행하다, 처리해 내주다",
+    "example": "the agent then issued the refund"
+   },
+   {
+    "word": "identifier",
+    "pos": "n.",
+    "ko": "식별 정보, 식별자",
+    "example": "ask for more identifiers"
+   },
+   {
+    "word": "re-enable",
+    "pos": "v.",
+    "ko": "다시 켜다, 다시 활성화하다",
+    "example": "then re-enable automated refunds"
+   },
+   {
+    "word": "fall below",
+    "pos": "phr. v.",
+    "ko": "~ 아래로 떨어지다",
+    "example": "until the error rate falls below 1%"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "fixed"
+ },
+ {
+  "id": "A1-09",
+  "domain": 1,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "1.5"
+  ],
+  "guide_en": "Hook patterns that intercept outgoing tool calls to enforce compliance rules (e.g., blocking refunds above a threshold)",
+  "q_en": "Your developer productivity agent uses `Bash` to automate repetitive tasks. Security policy forbids any command that pushes directly to the `main` branch, and the system prompt states this policy. The team implemented a `PostToolUse` hook that detects such commands in tool results and posts a warning to the security channel. Last month the hook fired correctly all 6 times, yet all 6 pushes had already reached `main` and had to be reverted by hand. What's the most effective fix?",
+  "q_ko": "developer productivity agent 는 반복 작업을 자동화하려고 `Bash` 를 쓴다. 보안 정책은 `main` 브랜치로 바로 push 하는 명령을 전부 금지하고, system prompt 에도 이 정책이 적혀 있다. 팀은 tool 결과에서 그런 명령을 감지해 보안 채널에 경고를 올리는 `PostToolUse` hook 을 구현했다. 지난달 hook 은 6번 모두 제대로 작동했지만, 6번의 push 는 이미 `main` 에 들어간 뒤라 손으로 되돌려야 했다. 가장 효과적인 해결책은?",
+  "options": [
+   {
+    "en": "Extend the `PostToolUse` hook so that, after detecting a push to `main`, it automatically runs a revert command to undo the change.",
+    "ko": "`PostToolUse` hook 을 확장해, `main` 으로의 push 를 감지하면 자동으로 revert 명령을 실행해 변경을 되돌리게 한다.",
+    "why": "여전히 push 가 일어난 뒤에 대응한다. 되돌리기 전까지 금지된 변경이 `main` 에 들어가 있다."
+   },
+   {
+    "en": "Add a hook that intercepts outgoing `Bash` tool calls, blocks any command that pushes to `main`, and redirects the agent to open a pull request instead.",
+    "ko": "나가는 `Bash` tool 호출을 가로채는 hook 을 추가해 `main` 으로 push 하는 명령을 막고, 대신 pull request 를 열도록 agent 를 돌린다.",
+    "why": "정답. 실행 전에 호출을 가로채 막아야 정책 위반이 아예 일어나지 않고, 대안 경로로 작업은 이어진다."
+   },
+   {
+    "en": "Repeat the no-push policy at the end of the system prompt and in the `Bash` tool description so the agent sees it more often.",
+    "ko": "push 금지 정책을 system prompt 끝과 `Bash` tool description 에도 반복해 agent 가 더 자주 보게 한다.",
+    "why": "이미 프롬프트에 있는데도 6번 어겼다. 반복해도 확률적 준수일 뿐 보장이 안 된다."
+   },
+   {
+    "en": "Remove the `Bash` tool from the agent entirely and require engineers to run every repetitive automation command manually.",
+    "ko": "agent 에서 `Bash` tool 을 아예 빼고 반복 자동화 명령은 모두 엔지니어가 직접 실행하게 한다.",
+    "why": "명령 하나를 막으려고 agent 의 핵심 기능을 없애는 과한 조치다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "막아야 할 행동은 실행 '전' 호출 가로채기 hook 으로",
+  "explain_ko": [
+   "**`PostToolUse` hook** 은 tool 이 실행된 **뒤** 결과를 다룬다. 그래서 **fired correctly** 했는데도 **already reached `main`** 이다.",
+   "금지 행동은 실행 전에 막아야 한다. 나가는 tool 호출을 가로채 정책 위반을 차단하고 다른 경로(pull request)로 돌리는 hook 이 맞다. 그래서 {B}.",
+   "**the system prompt states this policy** 인데도 위반했으니 프롬프트 반복({C})은 답이 아니고, {A} 는 여전히 사후 처리다."
+  ],
+  "clues": [
+   {
+    "en": "a `PostToolUse` hook that detects such commands in tool results",
+    "ko": "실행 뒤에 감지"
+   },
+   {
+    "en": "the hook fired correctly all 6 times",
+    "ko": "hook 동작은 정상"
+   },
+   {
+    "en": "had already reached `main`",
+    "ko": "타이밍이 늦음"
+   },
+   {
+    "en": "the system prompt states this policy",
+    "ko": "프롬프트는 이미 실패"
+   }
+  ],
+  "discuss_ko": "{A} 처럼 자동으로 즉시 revert 하면 사람이 손댈 일은 없어지는데, 그래도 '실행 전 차단'이 필요한 이유는 무엇일까? `main` 에 잠깐이라도 들어가면 생길 수 있는 일로 이야기해 보자.",
+  "words": [
+   {
+    "word": "forbid",
+    "pos": "v.",
+    "ko": "금지하다",
+    "example": "Security policy forbids any command"
+   },
+   {
+    "word": "revert",
+    "pos": "v.",
+    "ko": "(변경을) 되돌리다",
+    "example": "had to be reverted by hand"
+   },
+   {
+    "word": "by hand",
+    "pos": "phr.",
+    "ko": "손으로, 수작업으로",
+    "example": "reverted by hand"
+   },
+   {
+    "word": "intercept",
+    "pos": "v.",
+    "ko": "가로채다",
+    "example": "intercepts outgoing `Bash` tool calls"
+   },
+   {
+    "word": "redirect",
+    "pos": "v.",
+    "ko": "다른 곳으로 돌리다",
+    "example": "redirects the agent to open a pull request instead"
+   },
+   {
+    "word": "fire",
+    "pos": "v.",
+    "ko": "(이벤트·hook 이) 작동하다, 실행되다",
+    "example": "the hook fired correctly all 6 times"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A1-10",
+  "domain": 1,
+  "scenario": "Customer Support Resolution Agent",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "1.5"
+  ],
+  "guide_en": "Hook patterns (e.g., PostToolUse) that intercept tool results for transformation before the model processes them",
+  "q_en": "The `get_customer` MCP tool returns each customer's full payment card number, and the team that owns it cannot change its response format this quarter. Compliance requires that full card numbers never reach the model. Even though the system prompt says \"Never repeat card numbers,\" an audit found full numbers in 0.3% of customer replies and in several `escalate_to_human` handoff notes. The agent only needs the last four digits to confirm a card. What's the most effective fix?",
+  "q_ko": "`get_customer` MCP tool 은 고객의 결제 카드 번호 전체를 돌려주고, 이 tool 을 맡은 팀은 이번 분기에 응답 형식을 바꿀 수 없다. 컴플라이언스 규정상 카드 번호 전체가 모델에 절대 닿으면 안 된다. system prompt 에 \"카드 번호를 절대 반복하지 말 것\" 이라고 적었는데도, 감사 결과 고객 답변의 0.3%와 `escalate_to_human` 인계 메모 여러 건에서 전체 번호가 발견됐다. agent 가 카드를 확인하는 데는 끝 네 자리만 있으면 된다. 가장 효과적인 해결책은?",
+  "options": [
+   {
+    "en": "Add a filter on outgoing customer replies that masks any card-number pattern before the message is shown to the customer.",
+    "ko": "고객에게 나가는 답변에 필터를 달아, 메시지가 보이기 전에 카드 번호 패턴을 가린다.",
+    "why": "고객 답변만 가릴 뿐 번호는 여전히 모델에 닿고, 인계 메모에도 그대로 남는다. 증상만 가린다."
+   },
+   {
+    "en": "Add a hook that intercepts outgoing `get_customer` calls and blocks them whenever the customer record might contain payment card data.",
+    "ko": "나가는 `get_customer` 호출을 가로채, 고객 기록에 결제 카드 정보가 있을 수 있으면 호출을 막는 hook 을 추가한다.",
+    "why": "모든 고객 기록에 카드 번호가 있으니 고객 확인 자체가 막혀 업무가 멈춘다."
+   },
+   {
+    "en": "Implement a `PostToolUse` hook that masks card numbers in `get_customer` results to the last four digits before the model processes them.",
+    "ko": "`get_customer` 결과의 카드 번호를 모델이 처리하기 전에 끝 네 자리만 남기고 가리는 `PostToolUse` hook 을 구현한다.",
+    "why": "정답. tool 결과를 모델이 보기 전에 변환하므로 번호가 답변·인계 메모 어디에도 들어갈 수 없다."
+   },
+   {
+    "en": "Add few-shot examples to the system prompt showing the agent referring to cards only by their last four digits in replies and handoffs.",
+    "ko": "답변과 인계 메모에서 카드를 끝 네 자리로만 언급하는 모습을 보여 주는 few-shot 예시를 system prompt 에 넣는다.",
+    "why": "여전히 전체 번호가 모델에 닿고, 예시는 확률적으로만 따른다. '절대 닿으면 안 된다'는 요구를 못 채운다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "tool 결과를 모델 전에 바꿔야 하면 PostToolUse hook",
+  "explain_ko": [
+   "**never reach the model** → 요구는 '답변에 안 나오게'가 아니라 '모델이 아예 못 보게'다. 그러려면 tool 결과를 모델이 처리하기 **전에** 바꿔야 한다.",
+   "**cannot change its response format** → MCP 서버를 고치는 길은 막혔고, **Even though the system prompt says** → 프롬프트는 이미 실패했다.",
+   "tool 결과를 가로채 변환하는 `PostToolUse` hook 으로 끝 네 자리만 남기면 된다. **only needs the last four digits** 라 업무에도 지장이 없다. 그래서 {C}."
+  ],
+  "clues": [
+   {
+    "en": "cannot change its response format this quarter",
+    "ko": "서버 수정 불가"
+   },
+   {
+    "en": "never reach the model",
+    "ko": "모델 전에 변환해야"
+   },
+   {
+    "en": "in several `escalate_to_human` handoff notes",
+    "ko": "답변 필터로는 부족"
+   },
+   {
+    "en": "only needs the last four digits",
+    "ko": "마스킹해도 업무 가능"
+   }
+  ],
+  "discuss_ko": "{A} 의 답변 필터는 고객에게 보이는 유출은 막는데, 규정이 '모델에 닿으면 안 된다'고 할 때 이 필터가 어디서 모자란지 짚어 볼 수 있을까?",
+  "words": [
+   {
+    "word": "compliance",
+    "pos": "n.",
+    "ko": "규정 준수 (부서)",
+    "example": "Compliance requires that full card numbers never reach the model"
+   },
+   {
+    "word": "mask",
+    "pos": "v.",
+    "ko": "(일부를) 가리다, 마스킹하다",
+    "example": "masks card numbers in `get_customer` results"
+   },
+   {
+    "word": "audit",
+    "pos": "n.",
+    "ko": "감사, 점검",
+    "example": "an audit found full numbers"
+   },
+   {
+    "word": "handoff",
+    "pos": "n.",
+    "ko": "인계, 넘겨주기",
+    "example": "`escalate_to_human` handoff notes"
+   },
+   {
+    "word": "even though",
+    "pos": "conj.",
+    "ko": "~인데도, 비록 ~이지만",
+    "example": "Even though the system prompt says"
+   },
+   {
+    "word": "refer to",
+    "pos": "phr. v.",
+    "ko": "~을 언급하다, 가리키다",
+    "example": "referring to cards only by their last four digits"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A1-11",
+  "domain": 1,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "1.6"
+  ],
+  "guide_en": "The value of adaptive investigation plans that generate subtasks based on what is discovered at each step",
+  "q_en": "Engineers ask your agent to investigate why a legacy invoicing job now takes 40 minutes instead of 6. The agent follows a fixed checklist: review database queries, check cache settings, inspect network calls, then write a report. In step 1 it noted that a vendor library was upgraded two weeks ago and now logs every row, but steps 2 and 3 proceeded as planned. The final report lists 14 generic tuning tips and never examines the library change. What's the most effective improvement?",
+  "q_ko": "엔지니어들이 오래된 청구서 작업이 왜 6분이 아니라 40분씩 걸리는지 조사해 달라고 agent 에게 요청한다. agent 는 고정된 체크리스트를 따른다: DB 쿼리 검토, 캐시 설정 확인, 네트워크 호출 점검, 그리고 보고서 작성. 1단계에서 agent 는 외부 라이브러리가 2주 전에 업그레이드됐고 이제 모든 행을 로그로 남긴다는 점을 적었지만, 2·3단계는 계획대로 진행됐다. 최종 보고서는 일반적인 튜닝 팁 14개를 나열할 뿐 라이브러리 변경은 한 번도 살피지 않는다. 가장 효과적인 개선은?",
+  "options": [
+   {
+    "en": "Add a fifth fixed checklist step that reviews recent dependency upgrades, so future investigations always check library changes after the network step.",
+    "ko": "최근 의존성 업그레이드를 검토하는 다섯 번째 고정 단계를 추가해, 앞으로는 네트워크 단계 뒤에 항상 라이브러리 변경을 확인하게 한다.",
+    "why": "이번 원인에 맞춘 단계를 하나 더 붙였을 뿐 여전히 고정 순서다. 다음에 다른 단서가 나오면 또 지나친다."
+   },
+   {
+    "en": "Run the three checklist steps as parallel subagents so the investigation finishes faster and the report is available to engineers sooner.",
+    "ko": "체크리스트 세 단계를 병렬 subagent 로 돌려 조사를 더 빨리 끝내고 보고서를 더 일찍 전달한다.",
+    "why": "속도만 빨라진다. 발견한 단서를 따라가지 않는 문제는 그대로다."
+   },
+   {
+    "en": "Split the investigation into per-file analysis passes followed by a cross-file integration pass across the invoicing job's source files.",
+    "ko": "조사를 파일별 분석 패스로 나누고, 이어서 청구서 작업 소스 파일 전체에 대한 cross-file 통합 패스를 돌린다.",
+    "why": "큰 코드 리뷰의 attention dilution 을 푸는 패턴이다. 원인을 찾아가는 열린 조사와는 다른 문제다."
+   },
+   {
+    "en": "Let the agent generate its next subtasks from what each step discovers, so a finding like the logging change becomes the next thing investigated.",
+    "ko": "각 단계에서 발견한 내용으로 agent 가 다음 하위 작업을 만들게 해, 로그 변경 같은 발견이 바로 다음 조사 대상이 되게 한다.",
+    "why": "정답. 열린 조사는 단계마다 발견한 것에 따라 하위 작업을 만드는 적응형 계획이 원인에 빨리 닿는다."
+   }
+  ],
+  "answer": 3,
+  "point_ko": "열린 조사 = 발견한 단서로 다음 하위 작업을 만든다",
+  "explain_ko": [
+   "**investigate why** → 답이 어디 있는지 모르는 열린 조사다. 그런데 agent 는 **a fixed checklist** 를 따른다.",
+   "**In step 1 it noted** 라이브러리 변경이라는 강한 단서를 찾았는데도 **steps 2 and 3 proceeded as planned** → 고정 계획이 발견을 무시했다. 결과는 **14 generic tuning tips**.",
+   "열린 조사는 단계마다 발견한 것으로 다음 하위 작업을 만드는 적응형 분해가 맞다. 그래서 {D}. {A} 는 이번 원인만 체크리스트에 추가한 또 하나의 고정 순서다."
+  ],
+  "clues": [
+   {
+    "en": "investigate why",
+    "ko": "열린 조사 과제"
+   },
+   {
+    "en": "follows a fixed checklist",
+    "ko": "발견과 무관한 고정 순서"
+   },
+   {
+    "en": "steps 2 and 3 proceeded as planned",
+    "ko": "단서를 따라가지 않음"
+   },
+   {
+    "en": "never examines the library change",
+    "ko": "핵심 단서를 놓침"
+   }
+  ],
+  "discuss_ko": "{A} 처럼 '의존성 업그레이드 확인' 단계를 체크리스트에 넣으면 같은 사고는 다시 안 놓칠 텐데, 그래도 적응형 계획이 필요한 이유를 다음 사고 예시로 이야기해 볼 수 있을까?",
+  "words": [
+   {
+    "word": "investigate",
+    "pos": "v.",
+    "ko": "조사하다",
+    "example": "investigate why a legacy invoicing job now takes 40 minutes"
+   },
+   {
+    "word": "invoicing",
+    "pos": "n.",
+    "ko": "청구서 발행",
+    "example": "a legacy invoicing job"
+   },
+   {
+    "word": "proceed",
+    "pos": "v.",
+    "ko": "진행하다, 계속하다",
+    "example": "steps 2 and 3 proceeded as planned"
+   },
+   {
+    "word": "generic",
+    "pos": "adj.",
+    "ko": "일반적인, 뻔한",
+    "example": "14 generic tuning tips"
+   },
+   {
+    "word": "examine",
+    "pos": "v.",
+    "ko": "살펴보다, 검토하다",
+    "example": "never examines the library change"
+   },
+   {
+    "word": "dependency",
+    "pos": "n.",
+    "ko": "의존성 (의존하는 라이브러리)",
+    "example": "reviews recent dependency upgrades"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A1-12",
+  "domain": 1,
+  "scenario": "Claude Code for Continuous Integration",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "1.6"
+  ],
+  "guide_en": "Selecting task decomposition patterns appropriate to the workflow: prompt chaining for predictable multi-aspect reviews, dynamic decomposition for open-ended investigation tasks",
+  "q_en": "Every pull request in your CI pipeline must be reviewed for the same four aspects: security, test coverage, API compatibility, and error handling. Last month the team replaced its sequential review steps with one open-ended agent that decides for itself what to examine. Since then, security findings have been missing from 18% of reviews, and rerunning the same pull request produces different sets of checked aspects. Typical pull requests touch only two or three files. What's the most effective change?",
+  "q_ko": "CI 파이프라인의 모든 pull request 는 같은 네 가지 측면(보안, 테스트 커버리지, API 호환성, 오류 처리)으로 리뷰받아야 한다. 지난달 팀은 순차 리뷰 단계를, 무엇을 볼지 스스로 정하는 열린 agent 하나로 바꿨다. 그 뒤로 리뷰의 18%에서 보안 지적이 빠졌고, 같은 pull request 를 다시 돌리면 확인한 측면이 매번 달라진다. 보통 pull request 는 파일 두세 개만 건드린다. 가장 효과적인 변경은?",
+  "options": [
+   {
+    "en": "Use prompt chaining with one focused pass for each required aspect, then a final step that combines their findings into the review comment.",
+    "ko": "필수 측면마다 집중 패스를 하나씩 두는 prompt chaining 을 쓰고, 마지막 단계에서 결과를 합쳐 리뷰 코멘트로 만든다.",
+    "why": "정답. 매번 같은 측면을 봐야 하는 예측 가능한 리뷰는 고정된 순차 패스가 빠짐없이, 일관되게 돈다."
+   },
+   {
+    "en": "Keep the open-ended agent but add a sentence to its prompt stressing that all four aspects must be examined on every pull request.",
+    "ko": "열린 agent 는 그대로 두고, 모든 pull request 에서 네 측면을 다 봐야 한다고 강조하는 문장을 프롬프트에 넣는다.",
+    "why": "프롬프트 강조만으로는 여전히 agent 가 무엇을 볼지 정해서 누락과 들쭉날쭉함이 남는다."
+   },
+   {
+    "en": "Split each review into per-file analysis passes followed by a cross-file integration pass to reduce attention dilution across large pull requests.",
+    "ko": "리뷰를 파일별 분석 패스와 이어지는 cross-file 통합 패스로 나눠 큰 pull request 의 attention dilution 을 줄인다.",
+    "why": "파일이 두세 개뿐이라 attention dilution 이 원인이 아니다. 측면 누락이라는 다른 문제를 못 푼다."
+   },
+   {
+    "en": "Run the open-ended agent three times on each pull request and merge only the findings that appear in at least two of the runs.",
+    "ko": "pull request 마다 열린 agent 를 세 번 돌리고, 적어도 두 번 나온 지적만 합친다.",
+    "why": "비용이 세 배인데, 여러 번 빠지는 보안 측면은 다수결에서 오히려 더 걸러진다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "매번 같은 측면을 보는 리뷰 = prompt chaining",
+  "explain_ko": [
+   "**must be reviewed for the same four aspects** → 할 일이 미리 정해진 예측 가능한 리뷰다.",
+   "**one open-ended agent that decides for itself** 로 바꾸자 **missing from 18%** 와 **different sets of checked aspects** 가 생겼다. 열린 탐색 방식을 정해진 리뷰에 쓴 게 원인이다.",
+   "예측 가능한 다측면 리뷰는 prompt chaining(측면별 집중 패스 → 합치기)이 맞다. 그래서 {A}. **only two or three files** 라서 파일별 분할 {C} 는 이 문제와 상관없다."
+  ],
+  "clues": [
+   {
+    "en": "the same four aspects",
+    "ko": "예측 가능한 리뷰"
+   },
+   {
+    "en": "decides for itself what to examine",
+    "ko": "열린 분해 방식"
+   },
+   {
+    "en": "produces different sets of checked aspects",
+    "ko": "일관성 없음"
+   },
+   {
+    "en": "touch only two or three files",
+    "ko": "파일 수 문제 아님"
+   }
+  ],
+  "discuss_ko": "지난달 팀이 열린 agent 로 바꾼 데에도 이유가 있었을 텐데, 어떤 종류의 CI 작업이라면 {B} 의 열린 agent 가 prompt chaining 보다 나을까?",
+  "words": [
+   {
+    "word": "aspect",
+    "pos": "n.",
+    "ko": "측면, 관점",
+    "example": "the same four aspects"
+   },
+   {
+    "word": "compatibility",
+    "pos": "n.",
+    "ko": "호환성",
+    "example": "API compatibility"
+   },
+   {
+    "word": "open-ended",
+    "pos": "adj.",
+    "ko": "정해진 끝이 없는, 열린",
+    "example": "one open-ended agent"
+   },
+   {
+    "word": "for itself",
+    "pos": "phr.",
+    "ko": "스스로, 알아서",
+    "example": "decides for itself what to examine"
+   },
+   {
+    "word": "stress",
+    "pos": "v.",
+    "ko": "강조하다",
+    "example": "stressing that all four aspects must be examined"
+   },
+   {
+    "word": "attention dilution",
+    "pos": "n. phr.",
+    "ko": "주의 분산 (한 번에 너무 많이 봐서 집중이 흐려짐)",
+    "example": "to reduce attention dilution across large pull requests"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A1-13",
+  "domain": 1,
+  "scenario": "Code Generation with Claude Code",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "1.7"
+  ],
+  "guide_en": "Using --resume with session names to continue named investigation sessions across work sessions",
+  "q_en": "A developer runs two long Claude Code investigations over the same week: one maps the payment retry logic, the other tracks down flaky integration tests. Each morning she starts a fresh session and spends about 25 minutes re-exploring the code to rebuild context. When she tried resuming her most recent session instead, she often landed in the wrong investigation. The code under both investigations rarely changes during the week. What's the most effective approach?",
+  "q_ko": "한 개발자가 같은 주에 Claude Code 로 긴 조사 두 개를 진행한다. 하나는 결제 재시도 로직을 파악하고, 다른 하나는 불안정한 통합 테스트의 원인을 추적한다. 매일 아침 그녀는 새 세션을 열고 문맥을 다시 쌓으려고 약 25분 동안 코드를 다시 탐색한다. 대신 가장 최근 세션을 이어 보려 했더니 엉뚱한 조사로 들어가는 일이 잦았다. 두 조사 대상 코드는 그 주 동안 거의 바뀌지 않는다. 가장 효과적인 방법은?",
+  "options": [
+   {
+    "en": "Record both investigations' findings in the project CLAUDE.md each evening so every new session loads them automatically for the whole team.",
+    "ko": "매일 저녁 두 조사 결과를 프로젝트 CLAUDE.md 에 적어, 팀 전체의 모든 새 세션이 자동으로 읽게 한다.",
+    "why": "CLAUDE.md 는 팀이 공유하는 지속 지침이다. 개인의 진행 중인 조사 기록으로 채우면 모든 세션 문맥만 부풀린다."
+   },
+   {
+    "en": "Give each investigation its own session name and use `--resume <session-name>` to continue the specific investigation she wants each morning.",
+    "ko": "조사마다 세션 이름을 붙이고, 매일 아침 `--resume <session-name>` 으로 원하는 조사를 콕 집어 이어 간다.",
+    "why": "정답. 코드가 거의 안 바뀌어 이전 문맥이 유효하고, 이름으로 이어 가면 엉뚱한 세션에 들어갈 일이 없다."
+   },
+   {
+    "en": "Use `fork_session` from the most recent session each morning so she gets a fresh branch of whichever investigation she used last.",
+    "ko": "매일 아침 가장 최근 세션에서 `fork_session` 으로 분기를 만들어, 마지막에 쓴 조사의 새 가지를 받는다.",
+    "why": "fork 는 같은 기점에서 다른 접근을 나눠 탐색할 때 쓴다. 게다가 여전히 '가장 최근' 세션 기준이라 엉뚱한 조사 문제가 남는다."
+   },
+   {
+    "en": "Keep a single session for both investigations and run `/compact` each evening so the combined context stays small enough to reuse.",
+    "ko": "두 조사를 한 세션에서 함께 하고, 매일 저녁 `/compact` 를 돌려 합쳐진 문맥을 다시 쓸 만큼 작게 유지한다.",
+    "why": "서로 무관한 조사를 한 문맥에 섞으면 헷갈리고, 압축하면서 세부 발견도 잃는다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "여러 조사를 오가며 이어 가기 = 세션 이름 + --resume",
+  "explain_ko": [
+   "**starts a fresh session** 마다 **25 minutes re-exploring** → 이전 문맥을 버리고 있다. **rarely changes** 이니 이전 문맥은 여전히 유효하다.",
+   "**resuming her most recent session** 은 조사가 둘이라 **the wrong investigation** 으로 간다. 필요한 건 '최근 것'이 아니라 '특정 조사'를 고르는 방법이다.",
+   "세션에 이름을 붙이고 `--resume <session-name>` 으로 이어 가면 된다. 그래서 {B}."
+  ],
+  "clues": [
+   {
+    "en": "spends about 25 minutes re-exploring the code",
+    "ko": "문맥을 매번 버림"
+   },
+   {
+    "en": "resuming her most recent session",
+    "ko": "최근 세션 ≠ 원하는 조사"
+   },
+   {
+    "en": "landed in the wrong investigation",
+    "ko": "특정 세션 지정 필요"
+   },
+   {
+    "en": "rarely changes during the week",
+    "ko": "이전 문맥이 유효함"
+   }
+  ],
+  "discuss_ko": "대상 코드가 이번 주에 크게 바뀌었다면 {B} 대신 어떤 방식이 더 나았을까? 이어 가기와 새로 시작하기를 가르는 기준으로 이야기해 보자.",
+  "words": [
+   {
+    "word": "track down",
+    "pos": "phr. v.",
+    "ko": "(원인을) 추적해 찾아내다",
+    "example": "the other tracks down flaky integration tests"
+   },
+   {
+    "word": "flaky",
+    "pos": "adj.",
+    "ko": "(테스트가) 들쭉날쭉한, 불안정한",
+    "example": "flaky integration tests"
+   },
+   {
+    "word": "rebuild",
+    "pos": "v.",
+    "ko": "다시 쌓다, 재구성하다",
+    "example": "re-exploring the code to rebuild context"
+   },
+   {
+    "word": "land in",
+    "pos": "phr. v.",
+    "ko": "(뜻하지 않게) ~에 들어가게 되다",
+    "example": "she often landed in the wrong investigation"
+   },
+   {
+    "word": "rarely",
+    "pos": "adv.",
+    "ko": "좀처럼 ~하지 않는",
+    "example": "rarely changes during the week"
+   },
+   {
+    "word": "whichever",
+    "pos": "det.",
+    "ko": "어느 ~든",
+    "example": "whichever investigation she used last"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "pass"
+ },
+ {
+  "id": "A1-14",
+  "domain": 1,
+  "scenario": "Multi-Agent Research System",
+  "source": "claude",
+  "ai": true,
+  "ts": [
+   "1.7"
+  ],
+  "guide_en": "Why starting a new session with a structured summary is more reliable than resuming with stale tool results",
+  "q_en": "On Friday, your research agent's session gathered 60 web search results on a pending EU battery regulation and drafted conclusions. Over the weekend, the final vote took place and several key provisions changed. On Monday, the team resumed the Friday session and asked for the final report. The report treats the pre-vote search results as current and says the regulation is \"still under negotiation.\" Most of the Friday session's context consists of those raw search results. What's the most effective approach?",
+  "q_ko": "금요일에 research agent 세션은 계류 중인 EU 배터리 규제에 대한 웹 검색 결과 60개를 모으고 결론 초안을 썼다. 주말 동안 최종 표결이 있었고 핵심 조항 몇 개가 바뀌었다. 월요일에 팀은 금요일 세션을 이어서 최종 보고서를 요청했다. 보고서는 표결 전 검색 결과를 현재 정보로 취급하고 규제가 \"아직 협상 중\"이라고 쓴다. 금요일 세션 문맥의 대부분은 그 검색 결과 원문이다. 가장 효과적인 방법은?",
+  "options": [
+   {
+    "en": "Resume the Friday session, add a message saying the vote has happened, and ask the agent to update its conclusions using the search results already in context.",
+    "ko": "금요일 세션을 이어서 표결이 있었다는 메시지를 넣고, 이미 문맥에 있는 검색 결과로 결론을 고치라고 요청한다.",
+    "why": "표결이 있었다는 사실만 알려 줄 뿐 바뀐 조항 정보는 없다. 낡은 검색 결과로 다시 결론을 내니 여전히 옛 내용에 기대어 쓴다."
+   },
+   {
+    "en": "Use `fork_session` on the Friday session to create a new branch, then ask that branch to write the final report with extra caution.",
+    "ko": "금요일 세션에 `fork_session` 을 써서 새 분기를 만들고, 그 분기에게 더 신중하게 최종 보고서를 쓰라고 한다.",
+    "why": "fork 는 낡은 검색 결과까지 그대로 복사한다. 신중하라는 지시로는 오래된 정보가 새로워지지 않는다."
+   },
+   {
+    "en": "Start a new session with a structured summary of the still-valid findings, note that the vote changed key provisions, and run fresh searches.",
+    "ko": "아직 유효한 결과를 구조화한 요약으로 새 세션을 시작하고, 표결로 핵심 조항이 바뀌었음을 알린 뒤 새로 검색한다.",
+    "why": "정답. 이전 tool 결과가 대부분 낡았을 때는 이어 가기보다 요약을 넣은 새 세션이 더 믿을 만하다."
+   },
+   {
+    "en": "Resume the Friday session and raise the report subagent's `max_tokens` so it can reconsider all 60 search results in more detail.",
+    "ko": "금요일 세션을 이어 가되 report subagent 의 `max_tokens` 를 늘려 검색 결과 60개를 더 자세히 다시 검토하게 한다.",
+    "why": "`max_tokens` 는 출력 길이 한도일 뿐이다. 낡은 결과를 더 자세히 봐도 여전히 낡았다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "이전 tool 결과가 낡았으면 이어 가지 말고 요약 + 새 세션",
+  "explain_ko": [
+   "**the final vote took place and several key provisions changed** → 금요일에 모은 검색 결과가 이제 낡았다.",
+   "**Most of the Friday session's context consists of those raw search results** → 세션 문맥 대부분이 낡은 tool 결과다. 이어 가면 agent 는 그걸 현재 정보로 믿는다(**treats the pre-vote search results as current**).",
+   "이전 문맥이 대부분 유효할 때는 이어 가기, 낡았을 때는 유효한 것만 구조화한 요약을 넣고 새로 시작한다. 그래서 {C}. {A} 는 한 줄 알림이 낡은 결과 60개를 이기지 못한다."
+  ],
+  "clues": [
+   {
+    "en": "several key provisions changed",
+    "ko": "이전 결과가 낡음"
+   },
+   {
+    "en": "treats the pre-vote search results as current",
+    "ko": "낡은 tool 결과를 믿음"
+   },
+   {
+    "en": "Most of the Friday session's context consists of those raw search results",
+    "ko": "문맥 대부분이 낡음"
+   }
+  ],
+  "discuss_ko": "{A} 처럼 이어 간 세션에 '바뀐 점'을 알려 주는 방식이 잘 통하는 경우도 있는데, 이 상황과 무엇이 다를 때 그 방식이 맞는 선택이 될까?",
+  "words": [
+   {
+    "word": "pending",
+    "pos": "adj.",
+    "ko": "계류 중인, 아직 결정되지 않은",
+    "example": "a pending EU battery regulation"
+   },
+   {
+    "word": "provision",
+    "pos": "n.",
+    "ko": "(법의) 조항",
+    "example": "several key provisions changed"
+   },
+   {
+    "word": "take place",
+    "pos": "phr. v.",
+    "ko": "열리다, 일어나다",
+    "example": "the final vote took place"
+   },
+   {
+    "word": "under negotiation",
+    "pos": "phr.",
+    "ko": "협상 중인",
+    "example": "still under negotiation"
+   },
+   {
+    "word": "consist of",
+    "pos": "phr. v.",
+    "ko": "~로 이루어지다",
+    "example": "context consists of those raw search results"
+   },
+   {
+    "word": "resume",
+    "pos": "v.",
+    "ko": "(중단한 것을) 이어서 하다, 재개하다",
+    "example": "the team resumed the Friday session"
+   },
+   {
+    "word": "draft",
+    "pos": "v.",
+    "ko": "초안을 쓰다",
+    "example": "drafted conclusions"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "",
+  "verified": "fixed"
+ }
+]
