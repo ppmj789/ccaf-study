@@ -121,7 +121,11 @@ for e in words.values():
     e["freq"] = max(count(e["word"]), len(e["ids"]))
 wordlist = sorted(words.values(), key=lambda e: (-e["freq"], e["word"]))
 
-data = {"domains": DOMAINS, "scenarios": SCENARIOS, "cards": cards, "words": wordlist, "guide": guide,
+site = {}
+if os.path.exists(os.path.join(ROOT, "site.json")):
+    site = json.load(open(os.path.join(ROOT, "site.json"), encoding="utf-8"))
+
+data = {"site": site, "domains": DOMAINS, "scenarios": SCENARIOS, "cards": cards, "words": wordlist, "guide": guide,
         "source": {"name": "hamzafarooq/claude-certified-architect", "url": "https://github.com/hamzafarooq/claude-certified-architect", "license": "MIT"}}
 
 tpl = open(os.path.join(ROOT, "template.html"), encoding="utf-8").read()
