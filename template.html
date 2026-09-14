@@ -159,6 +159,11 @@ td .ex button { border: 0; background: none; padding: 0; color: var(--sel-line);
 .flash .fk { font-size: 19px; font-weight: 700; }
 .flash .ex { text-align: left; color: var(--muted); font-size: 14px; }
 .flash .ex mark { background: var(--mark); color: var(--ink); }
+.exko { display: block; color: #3A414C; font-size: .95em; }
+.tip { margin-top: 4px; font-size: 13px; color: var(--sel-line); }
+.wgroup { display: block; font-size: 11.5px; font-weight: 400; color: var(--muted); }
+.btn.big { padding: 10px 26px; font-size: 16px; }
+@media (max-width: 640px) { .flash { padding: 22px 12px; min-height: 58vh; align-content: center; } .bottombar .btn { padding: 9px 14px; font-size: 15px; } }
 
 .pop { position: fixed; left: 50%; bottom: 70px; transform: translateX(-50%); width: min(420px, calc(100% - 32px)); background: #FFFFFF; border: 1px solid var(--ink); box-shadow: 0 6px 20px rgba(0,0,0,.18); padding: 12px 14px; display: grid; gap: 6px; z-index: 20; font-size: 14.5px; }
 .pop .pw { font-size: 18px; font-weight: 700; }
@@ -170,6 +175,21 @@ td .ex button { border: 0; background: none; padding: 0; color: var(--sel-line);
 .srcchip { font-size: 12px; border: 1px solid var(--line); padding: 0 6px; color: var(--muted); background: #FFFFFF; white-space: nowrap; }
 .srcchip.official { border-color: var(--bar); color: var(--bar); font-weight: 700; }
 .srcchip.claude { border-color: var(--flag); color: var(--flag); }
+.scbox { margin: 0 0 16px; border: 1px solid var(--line); background: var(--panel); }
+.scbox summary { padding: 7px 12px; cursor: pointer; font-size: 14px; }
+.scbox .scbody { padding: 2px 12px 8px; font-size: 14.5px; border-top: 1px solid var(--line); background: #FFFFFF; }
+.scbox .scbody p { margin: 6px 0; }
+.scbox .scbody .ko { display: block; color: var(--muted); font-size: 13.5px; }
+.memo textarea, .note-item textarea { width: 100%; resize: vertical; font-size: 14px; padding: 6px 8px; border: 1px solid #9AA3AF; }
+.memo-state { font-size: 12px; color: var(--muted); }
+.seg-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.note-item { border: 1px solid var(--line); border-left: 4px solid var(--no); padding: 10px 14px; margin-bottom: 10px; display: grid; gap: 6px; }
+.note-item.fixed { border-left-color: var(--ok); }
+.note-item header { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 13.5px; color: var(--muted); }
+.note-item header b { color: var(--ink); }
+.note-item .nq { margin: 0; font-size: 14.5px; }
+.note-item .na { margin: 0; font-size: 14px; }
+.note-item .row { display: flex; flex-wrap: wrap; gap: 8px; }
 .prev-note { margin: 0 0 12px; padding: 6px 10px; background: var(--panel); border: 1px solid var(--line); font-size: 14px; }
 .sync-pill { font-size: 12.5px; border: 1px solid rgba(255,255,255,.45); padding: 1px 8px; white-space: nowrap; }
 .select-note { font-weight: 700; color: var(--bar); }
@@ -256,11 +276,30 @@ const letters = p => arr(p).map(i => L[i]).join(", ");
 const need = c => c.select || 1;
 const complete = (c, p) => arr(p).length === need(c);
 
-let state = { answers: {}, words: {}, wordsAt: {}, tries: {}, exams: [] };
+let state = { answers: {}, words: {}, wordsAt: {}, tries: {}, exams: [], wrongs: {}, notes: {} };
 let ui = { screen: "home", ko: false, wordsOn: true, filter: "todo", domain: "all", scen: "all", study: 1, vmode: "list", vfilter: "all", vsort: "freq", fi: 0, flip: false, session: null };
 try { Object.assign(state, JSON.parse(localStorage.getItem(LS)) || {}); } catch (e) {}
 try { Object.assign(ui, JSON.parse(localStorage.getItem(LS + "-ui")) || {}, { flip: false }); } catch (e) {}
 if (ui.session && ui.session.ids.some(id => !byId[id])) ui.session = null;
+// 오답노트가 생기기 전에 틀린 기록도 오답노트에 넣는다
+function backfillWrongs() {
+  state.wrongs = state.wrongs || {}; state.notes = state.notes || {};
+  Object.entries(state.answers).forEach(([id, a]) => { if (!a.ok && !state.wrongs[id]) state.wrongs[id] = { n: 1, at: a.at, first: a.at }; });
+}
+backfillWrongs();
+// 채점 한 건을 기록한다: 틀리면 오답노트에 쌓고, 다시 맞히면 극복 시각을 남긴다
+function recordAnswer(id, pick) {
+  const c = byId[id], now = new Date().toISOString();
+  const n = (state.tries[id] || 0) + 1;
+  state.tries[id] = n;
+  const ok = isRight(c, pick);
+  state.answers[id] = { pick, ok, at: now, n };
+  const w = state.wrongs[id];
+  if (!ok) state.wrongs[id] = { n: (w?.n || 0) + 1, at: now, first: w?.first || now };
+  else if (w) state.wrongs[id] = { ...w, fixedAt: now };
+  return { answers: { [id]: state.answers[id] }, tries: { [id]: n }, ...(state.wrongs[id] ? { wrongs: { [id]: state.wrongs[id] } } : {}) };
+}
+const isUnfixed = id => state.wrongs[id] && !state.answers[id]?.ok;
 let dbRef = null;
 
 function saveLocal() {
@@ -368,6 +407,11 @@ function renderHome() {
         <div class="row"><button class="btn primary" data-start="practice">연습 시작</button></div>
       </section>
       <section class="mode">
+        <h3>오답노트</h3>
+        <p>틀린 문제 ${Object.keys(state.wrongs).filter(id => byId[id]).length}개 · 아직 못 맞힌 문제 <b class="${Object.keys(state.wrongs).some(id => byId[id] && isUnfixed(id)) ? "pass-no" : ""}">${Object.keys(state.wrongs).filter(id => byId[id] && isUnfixed(id)).length}개</b>. 왜 틀렸는지 메모하고 다시 풀어요.</p>
+        <div class="row"><button class="btn primary" data-screen="note">오답노트 열기</button></div>
+      </section>
+      <section class="mode">
         <h3>모의고사</h3>
         <p>실제 시험처럼 ${EXAM_Q}문항 · ${EXAM_MIN}분. 영역 비중(27·18·20·20·15)대로 뽑아요. 끝날 때까지 정답을 보여 주지 않고, 검토 표시와 검토 화면을 쓸 수 있어요.</p>
         <div class="row"><button class="btn primary" data-start="exam">모의고사 시작</button></div>
@@ -375,7 +419,9 @@ function renderHome() {
       <section class="mode">
         <h3>단어장</h3>
         <p>지문과 보기에서 뽑은 시험 영어 ${DATA.words.length}개. 외운 단어 ${DATA.words.filter(x => state.words[x.word] === "known").length}개.</p>
-        <div class="row"><button class="btn primary" data-drill>외울 단어만 암기 카드</button><button class="btn" data-screen="words">단어장 전체 표</button></div>
+        <div class="row"><button class="btn primary" data-drill="all">외울 단어 전체 암기 카드</button></div>
+        <div class="row"><button class="btn" data-drill="phrase">시험 질문 표현</button><button class="btn" data-drill="guide">가이드 핵심어</button><button class="btn" data-drill="card">문제 속 단어</button></div>
+        <div class="row"><button class="btn" data-screen="words">단어장 전체 표</button></div>
       </section>
       <section class="mode sync-box">
         <h3>기기 간 저장</h3>
@@ -494,6 +540,7 @@ function renderQuestion() {
         <div><h4>지문 단서</h4><dl class="clues">${c.clues.map(x => `<div><dt><mark>${fmt(x.en)}</mark></dt><dd>${esc(x.ko)}</dd></div>`).join("")}</dl></div>
         ${c.guide_en ? `<div class="gq"><h4>공식 가이드 근거${c.ts ? ` (Task Statement ${esc(c.ts.join(", "))})` : ""}</h4><p class="en">${fmt(c.guide_en)}</p></div>` : ""}
         ${c.check === "doubt" && c.checkNote ? `<p class="note"><b>정답 확인 필요:</b> ${fmt(c.checkNote)}</p>` : ""}
+        ${!ok || state.wrongs[c.id] ? memoBox(c.id) : ""}
         <div class="discuss"><h4>토론 거리</h4><p>${esc(c.discuss_ko)}</p>
           <textarea id="discuss-text" rows="2" readonly>${esc(discussText)}</textarea>
           <button class="btn" data-copy>토론 요청 복사</button></div>
@@ -505,6 +552,7 @@ function renderQuestion() {
   const prev = s.mode !== "exam" && !reveal ? state.answers[c.id] : null;
   $("#app").innerHTML = `
     ${prev ? `<p class="prev-note">지난번에 풀었어요 · <b class="${prev.ok ? "pass-ok" : "pass-no"}">${prev.ok ? "정답" : "오답"}</b> · 내 답 ${letters(prev.pick)} · ${esc(String(prev.at).slice(5, 16).replace("T", " "))} <button class="lnk" data-showprev>지난 풀이 보기</button></p>` : ""}
+    ${scenarioBox(c)}
     ${c.check === "doubt" && reveal ? `<span class="doubt">정답 확인 필요</span>` : ""}
     <p class="stem">${rich(c.q_en, c.words, reveal ? c.clues : null)}</p>
     ${ui.ko ? `<p class="stem-ko">${fmt(c.q_ko)}</p>` : ""}
@@ -527,6 +575,54 @@ function renderQuestion() {
       <button class="btn" data-screen="review">검토 화면</button>
     </span>
     ${last ? (s.mode === "exam" && !s.submitted ? `<button class="btn primary" data-screen="review">검토 후 종료</button>` : `<button class="btn primary" data-screen="${s.mode === "exam" ? "result" : "review"}">끝</button>`) : `<button class="btn primary" data-move="1">다음 ▶</button>`}`;
+}
+
+function scenarioBox(c) {
+  const g = guideOf(c.sc);
+  if (!g) return "";
+  return `<details class="scbox" ${ui.scOpen === false ? "" : "open"}>
+    <summary><b>Scenario ${c.sc}:</b> ${esc(g.name_en)}</summary>
+    <div class="scbody">${g.description.map(x => `<p>${fmt(x.en)}${ui.ko ? `<span class="ko">${fmt(x.ko)}</span>` : ""}</p>`).join("")}</div>
+  </details>`;
+}
+function memoBox(id) {
+  const w = state.wrongs[id], nt = state.notes[id];
+  return `<div class="memo"><h4>오답 메모${w ? ` · 틀린 횟수 ${w.n}회${w.fixedAt && state.answers[id]?.ok ? " · 다시 맞힘" : ""}` : ""}</h4>
+    <textarea id="memo-${id}" data-memo="${id}" rows="2" placeholder="왜 틀렸는지 한 줄로 적어 두세요. 예: 확률적 방법(프롬프트)과 확정적 방법(hook)을 헷갈림">${esc(nt?.text || "")}</textarea>
+    <span class="memo-state" id="memo-state-${id}">${nt?.at ? "저장됨" : ""}</span></div>`;
+}
+
+/* ---------- 오답노트 ---------- */
+function renderNote() {
+  const f = ui.nfilter || "open";
+  const entries = Object.entries(state.wrongs).filter(([id]) => byId[id])
+    .filter(([id]) => f === "all" ? true : f === "open" ? isUnfixed(id) : !isUnfixed(id))
+    .filter(([id]) => !ui.nscen || ui.nscen === "all" || String(byId[id].sc) === String(ui.nscen))
+    .sort((a, b) => (b[1].fixedAt || b[1].at) < (a[1].fixedAt || a[1].at) ? -1 : 1);
+  const open = Object.keys(state.wrongs).filter(id => byId[id] && isUnfixed(id));
+  const fixed = Object.keys(state.wrongs).filter(id => byId[id] && !isUnfixed(id));
+  $("#subbar").innerHTML = `<span class="where"><b>오답노트</b> · 아직 못 맞힌 문제 ${open.length} · 다시 맞힌 문제 ${fixed.length}</span>
+    <label for="n-scen">시나리오 <select id="n-scen"><option value="all">전체</option>${DATA.scenarios.map(x => `<option value="${x.no}" ${String(ui.nscen) === String(x.no) ? "selected" : ""}>${x.no}. ${esc(x.ko)}</option>`).join("")}</select></label>`;
+  $("#app").innerHTML = `
+    <h1 class="title">오답노트</h1>
+    <p class="lead">틀린 문제가 여기 쌓여요. 다시 풀어 맞히면 '다시 맞힌 문제'로 옮겨져요. 메모는 모든 기기에 같이 저장돼요.</p>
+    <div class="vtools">
+      <div class="seg-row" role="group" aria-label="오답 거르기">${[["open", `아직 못 맞힌 문제 ${open.length}`], ["fixed", `다시 맞힌 문제 ${fixed.length}`], ["all", "전체"]].map(([k, l]) => `<button class="btn ${f === k ? "primary" : ""}" data-nfilter="${k}">${l}</button>`).join("")}</div>
+    </div>
+    ${entries.length ? entries.map(([id, w]) => {
+      const c = byId[id], a = state.answers[id], nt = state.notes[id];
+      const firstSentence = c.q_en.replace(/`/g, "").split(/(?<=[.?!])\s/)[0];
+      return `<article class="note-item ${isUnfixed(id) ? "open" : "fixed"}">
+        <header><b>${id}</b><span>시나리오 ${c.sc} · D${c.domain}</span><span class="${isUnfixed(id) ? "pass-no" : "pass-ok"}">${isUnfixed(id) ? "아직 못 맞힘" : "다시 맞힘"}</span><span>틀린 횟수 ${w.n}회 · ${esc(String(w.fixedAt && !isUnfixed(id) ? w.fixedAt : w.at).slice(5, 10).replace("-", "/"))}</span></header>
+        <p class="nq">${esc(firstSentence.length > 160 ? firstSentence.slice(0, 157) + "…" : firstSentence)}</p>
+        <p class="na">${a ? `마지막 내 답 <b>${letters(a.pick)}</b> · ` : ""}정답 <b>${letters(c.answer)}</b> — ${fmt(c.point_ko)}</p>
+        <label class="lead" for="memo-${id}" style="margin:0">내 메모</label>
+        <textarea id="memo-${id}" data-memo="${id}" rows="2" placeholder="왜 틀렸는지 한 줄로 적어 두세요">${esc(nt?.text || "")}</textarea>
+        <span class="memo-state" id="memo-state-${id}">${nt?.at ? "저장됨" : ""}</span>
+        <div class="row"><button class="btn primary" data-noteretry="${id}">다시 풀기</button><button class="btn" data-noteview="${id}">풀이 보기</button></div>
+      </article>`;
+    }).join("") : `<p class="lead">${f === "open" ? "못 맞힌 문제가 없어요." : f === "fixed" ? "아직 다시 맞힌 문제가 없어요." : "틀린 문제가 없어요."}</p>`}`;
+  $("#bottombar").innerHTML = `<button class="btn" data-home>◀ 처음 화면</button><span class="mid"></span><button class="btn primary" data-noteall ${open.length ? "" : "disabled"}>못 맞힌 문제 다시 풀기 (${open.length})</button>`;
 }
 
 /* ---------- 검토 화면 ---------- */
@@ -580,16 +676,15 @@ function renderResult() {
 function submitExam() {
   const s = ui.session;
   s.submitted = true;
-  const patchAns = {}, patchTries = {};
+  const patchAns = {}, patchTries = {}, patchWrongs = {};
   s.ids.forEach(id => {
     if (!arr(s.picks[id]).length) return;
-    const n = (state.tries[id] || 0) + 1;
-    state.tries[id] = n; patchTries[id] = n;
-    state.answers[id] = patchAns[id] = { pick: s.picks[id], ok: isRight(byId[id], s.picks[id]), at: new Date().toISOString(), n };
+    const p = recordAnswer(id, s.picks[id]);
+    Object.assign(patchAns, p.answers); Object.assign(patchTries, p.tries); Object.assign(patchWrongs, p.wrongs || {});
   });
   const { ok, score } = examScore(s);
   if (Object.keys(patchAns).length) state.exams.push({ at: new Date().toISOString(), ok, total: s.ids.length, score, secs: Math.round((Date.now() - s.startedAt) / 1000) });
-  persist({ answers: patchAns, tries: patchTries, exams: state.exams });
+  persist({ answers: patchAns, tries: patchTries, wrongs: patchWrongs, exams: state.exams });
   ui.screen = "result"; render(); window.scrollTo(0, 0);
 }
 
@@ -684,8 +779,10 @@ function renderStudy() {
 }
 
 /* ---------- 단어장 ---------- */
+const WGROUP = { card: "문제 속 단어", phrase: "시험 질문 표현", guide: "가이드 핵심어" };
 function wordList() {
   let ws = DATA.words.slice();
+  if (ui.vgroup && ui.vgroup !== "all") ws = ws.filter(w => (w.group || "card") === ui.vgroup);
   if (ui.vfilter === "learn") ws = ws.filter(w => state.words[w.word] !== "known");
   if (ui.vfilter === "known") ws = ws.filter(w => state.words[w.word] === "known");
   if (ui.vsort === "abc") ws.sort((a, b) => a.word.localeCompare(b.word));
@@ -696,17 +793,19 @@ function exHtml(w, links) {
     const t = ex.text.replace(/`/g, "");
     const mm = stemRe(w.word).exec(t);
     const body = mm ? esc(t.slice(0, mm.index)) + "<mark>" + esc(mm[0]) + "</mark>" + esc(t.slice(mm.index + mm[0].length)) : esc(t);
-    return `<div class="ex">${links ? `<button data-card="${ex.id}">${ex.id}</button>` : ""}${body}</div>`;
+    return `<div class="ex">${links && ex.id ? `<button data-card="${ex.id}">${ex.id}</button>` : ""}${body}${ex.ko ? `<span class="exko">${esc(ex.ko)}</span>` : ""}</div>`;
   }).join("");
 }
 function renderWords() {
-  const all = DATA.words.length, known = DATA.words.filter(w => state.words[w.word] === "known").length;
+  const pool = DATA.words.filter(w => !ui.vgroup || ui.vgroup === "all" || (w.group || "card") === ui.vgroup);
+  const all = pool.length, known = pool.filter(w => state.words[w.word] === "known").length;
   const ws = wordList();
-  $("#subbar").innerHTML = `<span class="where"><b>단어장</b> · 전체 ${all} · 외운 단어 ${known} · 남은 단어 ${all - known}</span>`;
+  $("#subbar").innerHTML = `<span class="where"><b>단어장</b>${ui.vgroup && ui.vgroup !== "all" ? " · " + WGROUP[ui.vgroup] : ""} · 전체 ${all} · 외운 단어 ${known} · 남은 단어 ${all - known}</span>`;
   const tools = `
     <div class="vtools">
       <span class="count">${ws.length}개 표시</span>
       <label>보기 <select id="v-mode"><option value="list" ${ui.vmode === "list" ? "selected" : ""}>표</option><option value="flash" ${ui.vmode === "flash" ? "selected" : ""}>암기 카드</option></select></label>
+      <label>종류 <select id="v-group">${[["all", "전체"], ["card", "문제 속 단어"], ["phrase", "시험 질문 표현"], ["guide", "가이드 핵심어"]].map(([k, l]) => `<option value="${k}" ${(ui.vgroup || "all") === k ? "selected" : ""}>${l}</option>`).join("")}</select></label>
       <label>거르기 <select id="v-filter">${[["all", "전체"], ["learn", "외울 것"], ["known", "외운 것"]].map(([k, l]) => `<option value="${k}" ${ui.vfilter === k ? "selected" : ""}>${l}</option>`).join("")}</select></label>
       <label>정렬 <select id="v-sort"><option value="freq" ${ui.vsort === "freq" ? "selected" : ""}>빈출순</option><option value="abc" ${ui.vsort === "abc" ? "selected" : ""}>ABC순</option></select></label>
     </div>`;
@@ -717,17 +816,17 @@ function renderWords() {
       <thead><tr><th>외움</th><th>단어</th><th>뜻과 예문</th><th class="num">빈출</th></tr></thead>
       <tbody>${ws.map(w => `<tr>
         <td><input type="checkbox" id="k-${esc(w.word).replace(/\s/g, "_")}" data-know="${esc(w.word)}" ${state.words[w.word] === "known" ? "checked" : ""} aria-label="${esc(w.word)} 외움"></td>
-        <td class="word">${esc(w.word)}<small>${esc(w.pos)}</small></td>
-        <td>${esc(w.ko)}${exHtml(w, true)}</td>
+        <td class="word">${esc(w.word)}<small>${esc(w.pos)}</small><span class="wgroup">${WGROUP[w.group || "card"]}</span></td>
+        <td>${esc(w.ko)}${exHtml(w, true)}${w.tip ? `<div class="tip">${esc(w.tip)}</div>` : ""}</td>
         <td class="num">${w.freq}회</td></tr>`).join("")}</tbody>
     </table></div>`;
   } else {
     ui.fi = Math.min(ui.fi, ws.length - 1);
     const w = ws[ui.fi];
     body = `<div class="flash">
-      <div class="fp">${ui.fi + 1} / ${ws.length} · 지문 ${w.freq}회</div>
+      <div class="fp">${ui.fi + 1} / ${ws.length} · ${WGROUP[w.group || "card"]} · 빈출 ${w.freq}회</div>
       <div class="fw">${esc(w.word)}</div><div class="fp">${esc(w.pos)}</div>
-      ${ui.flip ? `<div class="fk">${esc(w.ko)}</div>${exHtml(w, false)}` : `<button class="btn" data-flip>뜻 보기</button>`}
+      ${ui.flip ? `<div class="fk">${esc(w.ko)}</div>${exHtml(w, false)}${w.tip ? `<div class="tip">${esc(w.tip)}</div>` : ""}` : `<button class="btn primary big" data-flip>뜻 보기</button>`}
     </div>`;
   }
   $("#app").innerHTML = tools + body;
@@ -753,6 +852,16 @@ function mergeInto(d, preferIncomingWords) {
     if (take) { state.words[w] = v; if (a) state.wordsAt[w] = a; nw++; }
   });
   Object.entries(d.tries || {}).forEach(([id, n]) => { state.tries[id] = Math.max(state.tries[id] || 0, n); });
+  state.wrongs = state.wrongs || {}; state.notes = state.notes || {};
+  const last = w => (w.fixedAt && w.fixedAt > w.at) ? w.fixedAt : w.at;
+  Object.entries(d.wrongs || {}).forEach(([id, w]) => {
+    const cur = state.wrongs[id];
+    if (!cur) { state.wrongs[id] = w; return; }
+    const base = last(w) > last(cur) ? w : cur;
+    state.wrongs[id] = { ...base, n: Math.max(cur.n || 0, w.n || 0), first: [cur.first, w.first].filter(Boolean).sort()[0] };
+  });
+  Object.entries(d.notes || {}).forEach(([id, nt]) => { const cur = state.notes[id]; if (!cur || (nt.at || "") > (cur.at || "")) state.notes[id] = nt; });
+  backfillWrongs();
   const seen = new Set(state.exams.map(x => x.at));
   (d.exams || []).forEach(x => { if (!seen.has(x.at)) state.exams.push(x); });
   state.exams.sort((a, b) => a.at < b.at ? -1 : 1);
@@ -858,6 +967,7 @@ function render() {
   else if (ui.screen === "review") renderReview();
   else if (ui.screen === "result") renderResult();
   else if (ui.screen === "study") renderStudy();
+  else if (ui.screen === "note") renderNote();
   else renderWords();
   tick();
 }
@@ -944,8 +1054,8 @@ document.addEventListener("click", e => {
       return render();
     } catch (err) { return toast("코드를 읽지 못했어요. CCAF1: 로 시작하는 코드 전체를 붙여 넣었는지 확인하세요"); }
   }
-  if ("drill" in d) { ui.vmode = "flash"; ui.vfilter = "learn"; ui.fi = 0; ui.flip = false; return go("words"); }
-  if (d.screen === "words" && el.closest(".mode")) { ui.vmode = "list"; ui.vfilter = "all"; }
+  if ("drill" in d) { ui.vmode = "flash"; ui.vfilter = "learn"; ui.vgroup = d.drill || "all"; ui.fi = 0; ui.flip = false; return go("words"); }
+  if (d.screen === "words" && el.closest(".mode")) { ui.vmode = "list"; ui.vfilter = "all"; ui.vgroup = "all"; }
   if ("resume" in d) return go("q");
   if (d.study) { ui.study = Math.max(1, Math.min(6, +d.study)); return go("study"); }
   if (d.scenarioPractice) { ui.scen = d.scenarioPractice; ui.domain = "all"; ui.filter = "all"; return start("practice"); }
@@ -963,11 +1073,16 @@ document.addEventListener("click", e => {
     const id = s.ids[s.i], c = byId[id], pick = s.picks[id];
     if (!complete(c, pick)) return;
     s.checked[id] = true;
-    const n = (state.tries[id] || 0) + 1;
-    state.tries[id] = n;
-    state.answers[id] = { pick, ok: isRight(c, pick), at: new Date().toISOString(), n };
-    persist({ answers: { [id]: state.answers[id] }, tries: { [id]: n } });
+    persist(recordAnswer(id, pick));
     return render();
+  }
+  if (d.nfilter) { ui.nfilter = d.nfilter; saveLocal(); return render(); }
+  if (d.noteretry) return openSingle(d.noteretry);
+  if (d.noteview) { openSingle(d.noteview); const ss = ui.session, pr = state.answers[d.noteview]; if (pr) { ss.picks[d.noteview] = pr.pick; ss.checked[d.noteview] = true; saveLocal(); render(); } return; }
+  if ("noteall" in d) {
+    const ids = Object.keys(state.wrongs).filter(id => byId[id] && isUnfixed(id)).sort((a, b) => cards.indexOf(byId[a]) - cards.indexOf(byId[b]));
+    if (!ids.length) return;
+    ui.session = newSession("practice", ids); return go("q");
   }
   if ("showprev" in d) { const id = s.ids[s.i], pr = state.answers[id]; if (pr) { s.picks[id] = pr.pick; s.checked[id] = true; saveLocal(); render(); } return; }
   if ("retry" in d) { const id = s.ids[s.i]; delete s.checked[id]; delete s.picks[id]; saveLocal(); return render(); }
@@ -1010,12 +1125,30 @@ document.addEventListener("change", e => {
   if (t.id === "f-filter") { ui.filter = t.value; return saveLocal(); }
   if (t.id === "f-domain") { ui.domain = t.value; return saveLocal(); }
   if (t.id === "f-scen") { ui.scen = t.value; return saveLocal(); }
+  if (t.id === "n-scen") { ui.nscen = t.value; saveLocal(); return render(); }
   if (t.id === "s-pick") { ui.study = +t.value; return go("study"); }
   if (t.id === "v-mode") { ui.vmode = t.value; ui.fi = 0; ui.flip = false; saveLocal(); return render(); }
+  if (t.id === "v-group") { ui.vgroup = t.value; ui.fi = 0; ui.flip = false; saveLocal(); return render(); }
   if (t.id === "v-filter") { ui.vfilter = t.value; ui.fi = 0; ui.flip = false; saveLocal(); return render(); }
   if (t.id === "v-sort") { ui.vsort = t.value; saveLocal(); return render(); }
   if (t.dataset.know) { setKnown(t.dataset.know, t.checked); return render(); }
 });
+
+let memoTimer = {};
+document.addEventListener("input", e => {
+  const id = e.target.dataset?.memo;
+  if (!id) return;
+  const st = $("#memo-state-" + id); if (st) st.textContent = "저장 중…";
+  clearTimeout(memoTimer[id]);
+  memoTimer[id] = setTimeout(() => {
+    state.notes[id] = { text: e.target.value, at: new Date().toISOString() };
+    persist({ notes: { [id]: state.notes[id] } });
+    const st2 = $("#memo-state-" + id); if (st2) st2.textContent = "저장됨";
+  }, 700);
+});
+document.addEventListener("toggle", e => {
+  if (e.target.classList?.contains("scbox")) { ui.scOpen = e.target.open; saveLocal(); }
+}, true);
 
 document.addEventListener("keydown", e => {
   if (e.target.matches("textarea, select") || ui.screen !== "q") return;
@@ -1036,9 +1169,9 @@ render();
 
 updatePill();
 if (CLOUD_OK && syncHash) {
-  cloudSync(true).then(r => { if (r && (r.na || r.nw) && $("#pop").hidden) render(); });
+  cloudSync(true).then(r => { if (r && (r.na || r.nw) && $("#pop").hidden && !document.activeElement?.matches("textarea, input")) render(); });
   document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible") cloudSync(true).then(r => { if (r && (r.na || r.nw) && $("#pop").hidden) render(); });
+    if (document.visibilityState === "visible") cloudSync(true).then(r => { if (r && (r.na || r.nw) && $("#pop").hidden && !document.activeElement?.matches("textarea, input")) render(); });
   });
 }
 
@@ -1056,7 +1189,10 @@ if (CLOUD_OK && syncHash) {
         wordsAt: Object.assign({}, state.wordsAt, d.wordsAt),
         tries: Object.assign({}, state.tries, d.tries),
         exams: (d.exams && d.exams.length >= state.exams.length) ? d.exams : state.exams,
+        wrongs: Object.assign({}, state.wrongs, d.wrongs),
+        notes: Object.assign({}, state.notes, d.notes),
       };
+      backfillWrongs();
     } else {
       await dbRef.set(state);
     }

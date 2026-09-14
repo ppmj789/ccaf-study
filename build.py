@@ -119,6 +119,18 @@ def count(word):
 
 for e in words.values():
     e["freq"] = max(count(e["word"]), len(e["ids"]))
+    e["group"] = "card"
+
+# 추가 단어장: 공식 가이드 빈출어·시험 질문 표현 (freq 는 가이드+문제 기준으로 미리 계산해 둔 값)
+extra_path = os.path.join(ROOT, "words", "extra.json")
+if os.path.exists(extra_path):
+    for x in json.load(open(extra_path, encoding="utf-8")):
+        key = x["word"].strip().lower()
+        if key in words:
+            continue
+        words[key] = {"word": key, "pos": x.get("pos", ""), "ko": x["ko"], "group": x.get("group", "guide"),
+                      "examples": [{"id": None, "text": x.get("example", ""), "ko": x.get("example_ko", "")}],
+                      "ids": [], "tip": x.get("tip", ""), "freq": max(x.get("freq", 0), count(key))}
 wordlist = sorted(words.values(), key=lambda e: (-e["freq"], e["word"]))
 
 site = {}
@@ -138,7 +150,8 @@ by_sc = {s["no"]: sum(1 for c in cards if c["sc"] == s["no"]) for s in SCENARIOS
 by_src = {k: sum(1 for c in cards if c["source"] == k) for k in SRC_ORDER}
 multi = sum(1 for c in cards if c.get("select", 1) > 1)
 doubts = [c["id"] for c in cards if c.get("check") == "doubt"]
-print(f"카드 {len(cards)}장 (시나리오별 {by_sc}, 출처 {by_src}, 복수 선택 {multi}) · 단어 {len(wordlist)}개 · 공부 자료 {len(guide)}편 · 정답 확인 필요 {doubts or '없음'}")
+by_wg = {g: sum(1 for w in wordlist if w["group"] == g) for g in ("card", "phrase", "guide")}
+print(f"카드 {len(cards)}장 (시나리오별 {by_sc}, 출처 {by_src}, 복수 선택 {multi}) · 단어 {len(wordlist)}개 {by_wg} · 공부 자료 {len(guide)}편 · 정답 확인 필요 {doubts or '없음'}")
 for w in warn:
     print("경고:", w)
 sys.exit(1 if warn else 0)
