@@ -9,7 +9,7 @@
 - `cards/dN.json` — 영역(D1~D5)별 문제 카드. 필드 규격은 아래.
 - `template.html` — 앱 화면(답안지 OMR 모티프, 카드 4장: 지문 · 보기 · 정답 · 이유와 토론, 단어장 목록·암기 카드). 디자인은 여기서만 고친다.
 - `build.py` — 카드를 모아 검증(빠진 필드, 단서가 지문에 있는지), 보기 순서를 id 기준으로 섞고(원본 정답이 B·C 에 몰려 있음), 단어 빈도(전체 지문·보기에서 몇 번 나오는지)를 세어 `dist/index.html` 을 만든다.
-- 아티팩트: `dist/index.html` 을 발행, capabilities `{"db": {}}`. 진도는 db 문서 `progress/miji` (`answers{id:{pick, ok, at, n}}`, `words{word:"known"|"learn"}`, `tries`), 없으면 localStorage.
+- 아티팩트: https://claude.ai/code/artifact/543b273b-06c4-4823-88f0-0fee3b3fb520 — `dist/index.html` 을 이 `url` 로 재발행, capabilities `{"db": {}}`. 진도는 db 문서 `progress/miji` (`answers{id:{pick, ok, at, n}}`, `words{word:"known"|"learn"}`, `tries`), 없으면 localStorage.
 
 ## 문제 출처 원칙
 
