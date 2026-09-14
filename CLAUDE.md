@@ -11,7 +11,7 @@
 - `template.html` — 앱 화면. **실제 컴퓨터 시험(CBT) 화면처럼**: 지문과 보기를 한 화면에, 상단 바(문항 번호·남은 시간), 하단 바(이전·검토 표시·검토 화면·다음). 처음 화면에서 연습 모드(바로 채점, 풀이·보기별 해설·토론 거리가 아래에) / 모의고사(문항당 2분, 끝나고 성적표·환산 점수) / 단어장(표·암기 카드). 사용자가 카드뉴스·OMR 같은 꾸밈 디자인은 불편하다고 해서 뺐으니 다시 넣지 않는다. 디자인은 여기서만 고친다.
 - `build.py` — 카드를 모아 검증(빠진 필드, 단서가 지문에 있는지), 보기 순서를 id 기준으로 섞고(원본 정답이 B·C 에 몰려 있음), 단어 빈도(전체 지문·보기에서 몇 번 나오는지)를 세어 `dist/index.html` 을 만든다.
 - 아티팩트: https://claude.ai/code/artifact/543b273b-06c4-4823-88f0-0fee3b3fb520 — `dist/index.html` 을 이 `url` 로 재발행, capabilities `{"db": {}}`. 진도는 db 문서 `progress/miji` (`answers{id:{pick, ok, at, n}}`, `words{word:"known"|"learn"}`, `tries`), 없으면 localStorage.
-- **공개 주소(로그인 불필요, 휴대폰용)**: https://ppmj789.github.io/ccaf-study/ — GitHub 저장소 https://github.com/ppmj789/ccaf-study (공개, 브랜치 `main`). push 하면 `.github/workflows/pages.yml` 이 build 해서 배포한다. 이 주소는 로그인이 없어 기록이 브라우저마다 저장되고, 처음 화면 `기록 옮기기`(CCAF1: 진도 코드 복사·합치기)로 기기 간에 옮긴다.
+- **공개 주소(로그인 불필요, 휴대폰용)**: https://ppmj789.github.io/ccaf-study/ — GitHub 저장소 https://github.com/ppmj789/ccaf-study (공개, 브랜치 `main`). push 하면 `.github/workflows/pages.yml` 이 build 해서 배포한다. 기록은 Supabase 프로젝트 `ccaf-study`(ref `whmmrsgblocqhdjalojm`, 서울, 무료)에 **동기화 암호** 방식으로 저장한다: 기기마다 같은 암호를 입력하면 앱이 `sha256("ccaf-study:"+암호)` 를 열쇠로 `load_progress`/`save_progress` RPC 를 부른다. 테이블 `study_progress` 는 직접 접근이 막혀 있다(`supabase/schema.sql`). `site.json` 에는 공개용 publishable key 만 둔다(secret/service_role 키·액세스 토큰은 절대 커밋하지 않는다). DB 비밀번호는 `~/.config/ccaf-study/db-password`. 계정의 다른 프로젝트 UntoldChapters 는 이 앱과 무관하니 건드리지 않는다. claude.ai 아티팩트는 CSP 때문에 Supabase 에 못 붙어 계정 db 를 쓰고, 둘 사이는 처음 화면 `기기 간 저장 → 코드로 옮기기` 로 옮긴다.
 
 ## 문제 출처 원칙
 
