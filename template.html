@@ -66,7 +66,16 @@ main { padding-inline: 16px; padding-block: 20px 110px; }
 .opt.wrong { background: var(--no-bg); border-color: var(--no); }
 .opt.wrong .why { color: var(--no); }
 .opt.locked { cursor: default; }
-.wbtn { border: 0; background: none; padding: 0; cursor: pointer; font: inherit; color: inherit; text-decoration: underline dotted var(--sel-line) 1.5px; text-underline-offset: 3px; }
+.wbtn { border: 0; background: none; padding: 0 1px; cursor: pointer; font: inherit; color: inherit; text-underline-offset: 3px; }
+.wbtn.learn { background: #FFF1D6; text-decoration: underline solid #D98200 2px; }
+.wbtn.known { text-decoration: underline dotted var(--ok) 1.5px; }
+.wkey { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); }
+.wkey i { display: inline-block; width: 22px; height: 12px; vertical-align: -1px; margin-right: 3px; }
+.wkey .k-learn { background: #FFF1D6; border-bottom: 2px solid #D98200; }
+.wkey .k-known { border-bottom: 2px dotted var(--ok); }
+.pop .st { font-size: 12.5px; font-weight: 700; }
+.pop .st.learn { color: #B36B00; }
+.pop .st.known { color: var(--ok); }
 mark.clue { background: var(--mark); color: inherit; padding: 0 1px; }
 
 .check-row { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; }
@@ -247,6 +256,7 @@ function persist(patch) {
   if (dbRef) dbRef.update(patch).catch(() => toast("저장 연결이 끊겨 이 브라우저에만 저장했어요"));
 }
 
+const wcls = w => state.words[w] === "known" ? "known" : "learn";
 function stemRe(word) {
   const w = word.trim();
   const q = x => x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -271,7 +281,7 @@ function rich(text, words, clues) {
   const inner = (s, e) => {
     let out = "", p = s;
     ranges.filter(r => r.t === "word" && r.s >= s && r.e <= e).sort((a, b) => a.s - b.s).forEach(r => {
-      out += fmt(text.slice(p, r.s)) + `<button class="wbtn" data-word="${esc(r.w)}">${esc(text.slice(r.s, r.e))}</button>`;
+      out += fmt(text.slice(p, r.s)) + `<button class="wbtn ${wcls(r.w)}" data-word="${esc(r.w)}">${esc(text.slice(r.s, r.e))}</button>`;
       p = r.e;
     });
     return out + fmt(text.slice(p, e));
@@ -349,7 +359,7 @@ function renderHome() {
       <section class="mode">
         <h3>단어장</h3>
         <p>지문과 보기에서 뽑은 시험 영어 ${DATA.words.length}개. 외운 단어 ${DATA.words.filter(x => state.words[x.word] === "known").length}개.</p>
-        <div class="row"><button class="btn" data-screen="words">단어장 열기</button></div>
+        <div class="row"><button class="btn primary" data-drill>외울 단어만 암기 카드</button><button class="btn" data-screen="words">단어장 전체 표</button></div>
       </section>
     </div>
 
@@ -428,7 +438,8 @@ function renderQuestion() {
   $("#subbar").innerHTML = `
     <span class="where"><b>문항 ${s.i + 1} / ${s.ids.length}</b> · 시나리오 ${c.sc}: ${esc(c.scenario)} · D${d.id} ${esc(d.ko)} · <span class="srcchip ${c.source}">${SRC[c.source] || c.source}</span></span>
     <label><input type="checkbox" id="t-ko" ${ui.ko ? "checked" : ""}> 한국어 해석</label>
-    <label><input type="checkbox" id="t-words" ${ui.wordsOn ? "checked" : ""}> 단어 뜻</label>`;
+    <label><input type="checkbox" id="t-words" ${ui.wordsOn ? "checked" : ""}> 단어 뜻</label>
+    ${ui.wordsOn ? `<span class="wkey"><span><i class="k-learn"></i>외울 단어</span><span><i class="k-known"></i>외운 단어</span></span>` : ""}`;
 
   const chosen = arr(pick), ans = arr(c.answer);
   const opts = c.options.map((o, i) => {
@@ -457,7 +468,7 @@ function renderQuestion() {
         <div class="discuss"><h4>토론 거리</h4><p>${esc(c.discuss_ko)}</p>
           <textarea id="discuss-text" rows="2" readonly>${esc(discussText)}</textarea>
           <button class="btn" data-copy>토론 요청 복사</button></div>
-        <div><h4>이 문항의 단어</h4><div class="wlist-inline">${c.words.map(w => `<button class="wbtn" data-word="${esc(w.word.toLowerCase())}">${esc(w.word)}</button><span>${esc(w.ko)}</span>`).join("")}</div></div>
+        <div><h4>이 문항의 단어</h4><div class="wlist-inline">${c.words.map(w => `<button class="wbtn ${wcls(w.word.toLowerCase())}" data-word="${esc(w.word.toLowerCase())}">${esc(w.word)}</button><span>${esc(w.ko)}</span>`).join("")}</div></div>
         ${guideOf(c.sc) ? `<p style="margin:0"><button class="lnk" data-study="${c.sc}">시나리오 ${c.sc} 공부 자료 보기</button></p>` : ""}
       </div>
     </section>` : "";
@@ -544,7 +555,7 @@ function submitExam() {
     state.answers[id] = patchAns[id] = { pick: s.picks[id], ok: isRight(byId[id], s.picks[id]), at: new Date().toISOString(), n };
   });
   const { ok, score } = examScore(s);
-  state.exams.push({ at: new Date().toISOString(), ok, total: s.ids.length, score, secs: Math.round((Date.now() - s.startedAt) / 1000) });
+  if (Object.keys(patchAns).length) state.exams.push({ at: new Date().toISOString(), ok, total: s.ids.length, score, secs: Math.round((Date.now() - s.startedAt) / 1000) });
   persist({ answers: patchAns, tries: patchTries, exams: state.exams });
   ui.screen = "result"; render(); window.scrollTo(0, 0);
 }
@@ -726,7 +737,7 @@ function showWord(key) {
   if (!w) return;
   const known = state.words[key] === "known";
   const pop = $("#pop");
-  pop.innerHTML = `<div class="pw">${esc(w.word)}<small>${esc(w.pos)} · 전체 지문 ${w.freq}회</small></div><div>${esc(w.ko)}</div>
+  pop.innerHTML = `<div class="pw">${esc(w.word)}<small>${esc(w.pos)} · 전체 지문 ${w.freq}회</small></div><div class="st ${known ? "known" : "learn"}">${known ? "외운 단어" : "외울 단어"}</div><div>${esc(w.ko)}</div>
     <div class="row"><button class="btn" data-know="${esc(key)}">${known ? "외울 단어로 되돌리기" : "외웠어요"}</button><button class="btn" data-close>닫기</button></div>`;
   pop.hidden = false;
 }
@@ -756,6 +767,8 @@ document.addEventListener("click", e => {
   if ("home" in d) { if (s && (s.submitted || s.mode === "single")) ui.session = parked?.session || (s.submitted ? null : s); parked = null; return go("home"); }
   if ("back" in d) { ui.session = parked?.session || null; const scr = parked?.screen || "home"; parked = null; return go(scr); }
   if (d.start) return start(d.start);
+  if ("drill" in d) { ui.vmode = "flash"; ui.vfilter = "learn"; ui.fi = 0; ui.flip = false; return go("words"); }
+  if (d.screen === "words" && el.closest(".mode")) { ui.vmode = "list"; ui.vfilter = "all"; }
   if ("resume" in d) return go("q");
   if (d.study) { ui.study = Math.max(1, Math.min(6, +d.study)); return go("study"); }
   if (d.scenarioPractice) { ui.scen = d.scenarioPractice; ui.domain = "all"; ui.filter = "all"; return start("practice"); }
@@ -787,7 +800,7 @@ document.addEventListener("click", e => {
     else fallback();
     return;
   }
-  if (d.know) { setKnown(d.know); showWord(d.know); return; }
+  if (d.know) { setKnown(d.know); render(); showWord(d.know); return; }
   if ("close" in d) { $("#pop").hidden = true; return; }
   if (d.word) return showWord(d.word);
   if (d.card) return openSingle(d.card);
