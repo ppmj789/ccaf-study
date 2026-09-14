@@ -1,279 +1,216 @@
 <title>미지의 CCAF 카드</title>
-<meta name="description" content="CCAF 연습 문제 카드뉴스와 시험 영어 단어장">
+<meta name="description" content="CCAF 연습 문제를 실제 시험 화면처럼 풀고, 시험 영어 단어를 외우는 앱">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap">
 <style>
+/* 시험장 컴퓨터 화면처럼 한 가지 밝은 화면으로 고정한다 */
 :root {
-  --ground: #ECEFF3;
-  --card: #FFFFFF;
-  --ink: #16181D;
-  --muted: #5B6270;
-  --line: #D5DAE1;
-  --omr: #D6405A;
-  --omr-soft: #FBE3E7;
-  --omr-line: rgba(214, 64, 90, .38);
-  --ok: #1B7F53;
-  --ok-soft: #DDF1E7;
-  --mark: #FFE38A;
-  --shadow: 0 1px 2px rgba(22, 24, 29, .06), 0 8px 24px rgba(22, 24, 29, .07);
-  --f-display: "Black Han Sans", "IBM Plex Sans KR", system-ui, sans-serif;
-  --f-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
-  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --bg: #FFFFFF;
+  --panel: #F1F3F6;
+  --bar: #1E3A5F;
+  --bar-ink: #FFFFFF;
+  --ink: #1A1D21;
+  --muted: #5A6270;
+  --line: #C6CCD5;
+  --sel: #DDE8F6;
+  --sel-line: #3A6EA5;
+  --ok: #1F7A4D;
+  --ok-bg: #E3F2EA;
+  --no: #B3261E;
+  --no-bg: #FBE9E7;
+  --mark: #FFF0A0;
+  --flag: #B86E00;
+  --font: Arial, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   color-scheme: light;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --ground: #0F1115; --card: #181B21; --ink: #E8EAEE; --muted: #9AA1AE; --line: #2A2F38;
-    --omr: #F27487; --omr-soft: #3A1F26; --omr-line: rgba(242, 116, 135, .4);
-    --ok: #52C58E; --ok-soft: #15301F; --mark: #5B4A10;
-    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 28px rgba(0, 0, 0, .35);
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --ground: #0F1115; --card: #181B21; --ink: #E8EAEE; --muted: #9AA1AE; --line: #2A2F38;
-  --omr: #F27487; --omr-soft: #3A1F26; --omr-line: rgba(242, 116, 135, .4);
-  --ok: #52C58E; --ok-soft: #15301F; --mark: #5B4A10;
-  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 28px rgba(0, 0, 0, .35);
-  color-scheme: dark;
-}
-
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-body {
-  margin: 0; background: var(--ground); color: var(--ink);
-  font: 15px/1.6 var(--f-body); word-break: keep-all; overflow-wrap: anywhere;
-  padding-inline: 16px; padding-block: 0 48px;
-}
-button { font: inherit; color: inherit; }
-:focus-visible { outline: 2px solid var(--omr); outline-offset: 2px; }
-code { font: 500 .88em var(--f-mono); background: color-mix(in srgb, var(--line) 55%, transparent); padding: .05em .35em; border-radius: 4px; }
-.wrap { max-width: 1080px; margin: 0 auto; }
+html, body { background: var(--bg); color: var(--ink); }
+body { margin: 0; font: 15px/1.6 var(--font); word-break: keep-all; overflow-wrap: anywhere; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--sel-line); outline-offset: 2px; }
+code { font: .9em ui-monospace, Consolas, "Courier New", monospace; background: var(--panel); border: 1px solid #E1E5EA; padding: 0 .3em; border-radius: 2px; }
 
-/* 머리 */
-header.top { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding-block: 18px 14px; }
-.brand { display: flex; align-items: center; gap: 10px; margin-right: auto; }
-.brand .code { font: 600 12px var(--f-mono); letter-spacing: .08em; color: var(--omr); border: 1.5px solid var(--omr); padding: 2px 7px; border-radius: 4px; }
-.brand h1 { margin: 0; font: 22px/1.1 var(--f-display); letter-spacing: .01em; }
-.tabs { display: flex; gap: 4px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
-.tabs button { border: 0; background: none; padding: 7px 16px; border-radius: 999px; cursor: pointer; font-weight: 600; font-size: 14px; color: var(--muted); }
-.tabs button[aria-selected="true"] { background: var(--ink); color: var(--card); }
-.sync { font-size: 12px; color: var(--muted); }
+/* 상단 바 */
+.topbar { background: var(--bar); color: var(--bar-ink); display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; padding: 8px 16px; }
+.topbar .name { font-weight: 700; font-size: 14.5px; margin-right: auto; }
+.topbar .meta { font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.topbar .timer { font-weight: 700; font-size: 14.5px; font-variant-numeric: tabular-nums; }
+.topbar .timer.low { color: #FFD166; }
+.topbar button { background: transparent; border: 1px solid rgba(255,255,255,.5); color: var(--bar-ink); padding: 3px 10px; border-radius: 2px; font-size: 13px; cursor: pointer; }
+.subbar { background: var(--panel); border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; padding: 7px 16px; font-size: 13.5px; }
+.subbar .where { margin-right: auto; color: var(--muted); }
+.subbar .where b { color: var(--ink); }
+.subbar label { display: inline-flex; align-items: center; gap: 5px; cursor: pointer; }
 
-/* 답안지 */
-.layout { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 24px; align-items: start; }
-@media (max-width: 860px) { .layout { grid-template-columns: minmax(0, 1fr); } }
-.sheet { background: var(--card); border: 1px solid var(--omr-line); border-radius: 10px; padding: 16px; display: grid; gap: 14px; }
-.sheet-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; border-bottom: 1.5px solid var(--omr); padding-bottom: 8px; }
-.sheet-head h2 { margin: 0; font: 17px var(--f-display); color: var(--omr); letter-spacing: .04em; }
-.sheet-head .tally { font: 500 12px var(--f-mono); color: var(--muted); font-variant-numeric: tabular-nums; }
-.pass { display: grid; gap: 6px; }
-.pass-top { display: flex; justify-content: space-between; font-size: 13px; }
-.pass-top b { font: 20px var(--f-display); font-variant-numeric: tabular-nums; }
-.pass-bar { position: relative; height: 8px; border-radius: 99px; background: var(--omr-soft); }
-.pass-bar i { position: absolute; inset: 0 auto 0 0; border-radius: 99px; background: var(--ink); }
-.pass-bar s { position: absolute; top: -4px; bottom: -4px; left: 72%; width: 2px; background: var(--omr); }
-.pass-note { font-size: 12px; color: var(--muted); }
-.filters { display: flex; flex-wrap: wrap; gap: 6px; }
-.chip { border: 1px solid var(--line); background: none; border-radius: 999px; padding: 4px 11px; font-size: 13px; cursor: pointer; color: var(--muted); }
-.chip[aria-pressed="true"] { border-color: var(--ink); color: var(--ink); font-weight: 600; }
-.drow { display: grid; gap: 6px; }
-.drow-label { display: flex; justify-content: space-between; gap: 8px; font-size: 12.5px; }
-.drow-label span:first-child { font-weight: 600; }
-.drow-label .w { font: 500 11.5px var(--f-mono); color: var(--omr); }
-.bubbles { display: flex; flex-wrap: wrap; gap: 6px 4px; }
-.bub { display: grid; justify-items: center; gap: 1px; border: 0; background: none; padding: 2px; cursor: pointer; border-radius: 6px; }
-.bub small { font: 500 9.5px var(--f-mono); color: var(--omr); font-variant-numeric: tabular-nums; }
-.bub span { width: 18px; height: 24px; border: 1.5px solid var(--omr); border-radius: 50%; display: grid; place-items: center; font: 700 11px var(--f-mono); color: var(--card); }
-.bub.ok span { background: var(--ink); border-color: var(--ink); }
-.bub.no span { background: var(--omr); }
-.bub.no span::after { content: "✕"; }
-.bub.cur { background: var(--omr-soft); }
-.bub.dim { opacity: .28; }
-.legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12px; color: var(--muted); }
-.legend i { display: inline-block; width: 9px; height: 12px; border-radius: 50%; border: 1.5px solid var(--omr); vertical-align: -1px; margin-right: 4px; }
-.legend .l-ok { background: var(--ink); border-color: var(--ink); }
-.legend .l-no { background: var(--omr); }
+main { padding-inline: 16px; padding-block: 20px 110px; }
+.page { max-width: 920px; margin: 0 auto; }
 
-/* 카드 덱 */
-.deck { display: grid; gap: 12px; max-width: 560px; width: 100%; justify-self: center; }
-.deck-nav { display: flex; align-items: center; gap: 8px; }
-.deck-nav .qid { font: 600 13px var(--f-mono); color: var(--omr); }
-.deck-nav .scn { font-size: 13px; color: var(--muted); margin-right: auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.btn { border: 1px solid var(--line); background: var(--card); border-radius: 8px; padding: 6px 12px; font-size: 13.5px; font-weight: 600; cursor: pointer; }
-.btn:hover { border-color: var(--ink); }
-.btn.primary { background: var(--ink); color: var(--card); border-color: var(--ink); }
-.btn:disabled { opacity: .4; cursor: default; }
-.track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 14px; scrollbar-width: none; padding-bottom: 4px; }
-.track::-webkit-scrollbar { display: none; }
-.slide { flex: 0 0 100%; scroll-snap-align: start; background: var(--card); border-radius: 14px; box-shadow: var(--shadow); padding: 14px; display: flex; }
-.frame { flex: 1; border: 1px solid var(--omr-line); border-radius: 8px; padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 14px; min-height: 480px; }
-.slabel { display: flex; justify-content: space-between; align-items: center; gap: 8px; font: 600 11.5px var(--f-mono); letter-spacing: .06em; color: var(--omr); text-transform: uppercase; }
-.slabel b { font: 15px var(--f-display); letter-spacing: .02em; text-transform: none; }
-.q-en { font-size: 17px; line-height: 1.62; margin: 0; text-wrap: pretty; }
-.q-ko, .o-ko { color: var(--muted); font-size: 14px; }
-.q-ko { margin: 0; border-top: 1px dashed var(--line); padding-top: 12px; }
-.wbtn { border: 0; background: none; padding: 0; cursor: pointer; font: inherit; color: inherit; text-decoration: underline dotted var(--omr) 2px; text-underline-offset: 4px; }
-.wbtn:hover { background: var(--omr-soft); }
-mark.clue { background: linear-gradient(transparent 55%, var(--mark) 55%); color: inherit; padding: 0 1px; }
-.foot { margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
-.toggle { font-size: 13px; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
-.doubt { font-size: 12px; font-weight: 600; color: var(--omr); background: var(--omr-soft); border-radius: 4px; padding: 2px 8px; }
+/* 문항 */
+.stem { font-size: 16px; line-height: 1.7; margin: 0 0 6px; }
+.stem-ko { color: var(--muted); font-size: 14.5px; margin: 8px 0 0; padding: 8px 12px; background: var(--panel); border-left: 3px solid var(--line); }
+.doubt { display: inline-block; font-size: 12.5px; color: var(--flag); border: 1px solid var(--flag); padding: 0 6px; margin-bottom: 10px; }
+.opts { margin: 18px 0 0; display: grid; gap: 6px; border: 0; padding: 0; }
+.opts legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.opt { display: grid; grid-template-columns: 20px 22px 1fr; gap: 8px; align-items: start; padding: 9px 12px; border: 1px solid transparent; cursor: pointer; }
+.opt:hover { background: #F5F8FC; }
+.opt input { margin: 4px 0 0; width: 16px; height: 16px; accent-color: var(--sel-line); cursor: pointer; }
+.opt .let { font-weight: 700; }
+.opt .ko { display: block; color: var(--muted); font-size: 14px; margin-top: 2px; }
+.opt .why { display: block; font-size: 13.5px; margin-top: 4px; color: var(--muted); }
+.opt .why::before { content: "해설 · "; font-weight: 700; }
+.opt.checked { background: var(--sel); border-color: var(--sel-line); }
+.opt.right { background: var(--ok-bg); border-color: var(--ok); }
+.opt.right .why { color: var(--ok); }
+.opt.wrong { background: var(--no-bg); border-color: var(--no); }
+.opt.wrong .why { color: var(--no); }
+.opt.locked { cursor: default; }
+.wbtn { border: 0; background: none; padding: 0; cursor: pointer; font: inherit; color: inherit; text-decoration: underline dotted var(--sel-line) 1.5px; text-underline-offset: 3px; }
+mark.clue { background: var(--mark); color: inherit; padding: 0 1px; }
 
-.opts { display: grid; gap: 8px; }
-.opt { display: grid; grid-template-columns: 26px 1fr; gap: 12px; align-items: start; text-align: left; border: 1px solid var(--line); background: none; border-radius: 10px; padding: 11px 12px; cursor: pointer; }
-.opt:hover:not(:disabled) { border-color: var(--ink); }
-.opt:disabled { cursor: default; }
-.oval { width: 22px; height: 30px; border: 1.5px solid var(--omr); border-radius: 50%; display: grid; place-items: center; font: 600 12px var(--f-mono); color: var(--omr); margin-top: 1px; }
-.opt .o-en { font-size: 15px; line-height: 1.5; }
-.opt .o-ko { display: block; margin-top: 3px; font-size: 13.5px; line-height: 1.5; }
-.opt.picked .oval { background: var(--ink); border-color: var(--ink); color: var(--card); }
-.opt.right { border-color: var(--ok); background: var(--ok-soft); }
-.opt.right .oval { background: var(--ok); border-color: var(--ok); color: var(--card); }
-.opt.wrong { border-color: var(--omr); background: var(--omr-soft); }
-.opt.wrong .oval { background: var(--omr); border-color: var(--omr); color: var(--card); }
+.check-row { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; }
+.result { margin-top: 20px; border: 1px solid var(--line); }
+.result h3 { margin: 0; padding: 8px 14px; font-size: 14.5px; background: var(--panel); border-bottom: 1px solid var(--line); }
+.result h3.ok { color: var(--ok); }
+.result h3.no { color: var(--no); }
+.result .body { padding: 12px 14px; display: grid; gap: 12px; }
+.result .point { font-weight: 700; margin: 0; }
+.result ul { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
+.result h4 { margin: 0; font-size: 13px; color: var(--muted); }
+.clues { margin: 0; display: grid; gap: 4px; }
+.clues div { display: flex; flex-wrap: wrap; gap: 0 8px; font-size: 14px; }
+.clues dt mark { background: var(--mark); }
+.clues dd { margin: 0; color: var(--muted); }
+.note { margin: 0; font-size: 13.5px; color: var(--flag); }
+.discuss textarea { width: 100%; resize: vertical; font-size: 13.5px; padding: 6px 8px; border: 1px solid var(--line); color: var(--muted); }
+.discuss p { margin: 0 0 6px; }
+.wlist-inline { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 14px; }
+.wlist-inline span { color: var(--muted); }
 
-.locked { margin: auto; text-align: center; color: var(--muted); display: grid; gap: 10px; justify-items: center; }
-.locked .oval { width: 30px; height: 40px; }
-.verdict { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-.verdict .big { font: 44px/1 var(--f-display); }
-.verdict .big.ok { color: var(--ok); }
-.verdict .big.no { color: var(--omr); }
-.verdict .mine { font-size: 13px; color: var(--muted); }
-.point { font: 19px/1.45 var(--f-display); font-weight: 400; margin: 0; padding: 12px 14px; background: var(--omr-soft); border-radius: 8px; text-wrap: balance; }
-.explain { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
-.explain li::marker { color: var(--omr); }
-h3.sub { margin: 0; font: 600 12px var(--f-mono); letter-spacing: .06em; color: var(--muted); text-transform: uppercase; }
-.clues { display: grid; gap: 8px; margin: 0; }
-.clues div { display: grid; gap: 1px; }
-.clues dt { font-size: 14px; }
-.clues dt mark { background: linear-gradient(transparent 55%, var(--mark) 55%); color: inherit; }
-.clues dd { margin: 0; font-size: 13px; color: var(--omr); }
-.note { font-size: 13px; color: var(--muted); border-left: 2px solid var(--omr); padding-left: 10px; margin: 0; }
-.whys { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; }
-.whys li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; font-size: 14px; }
-.whys .oval { width: 18px; height: 24px; font-size: 10.5px; }
-.whys li.ans .oval { background: var(--ok); border-color: var(--ok); color: var(--card); }
-.discuss { display: grid; gap: 8px; background: color-mix(in srgb, var(--ground) 70%, var(--card)); border-radius: 8px; padding: 12px; }
-.discuss p { margin: 0; font-weight: 600; }
-.discuss textarea { width: 100%; resize: none; font: 13px/1.5 var(--f-body); color: var(--muted); background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 8px; }
-.wchips { display: flex; flex-wrap: wrap; gap: 6px; }
-.wchip { border: 1px solid var(--line); background: none; border-radius: 6px; padding: 4px 9px; cursor: pointer; font-size: 13.5px; text-align: left; }
-.wchip b { font-weight: 600; }
-.wchip span { color: var(--muted); margin-left: 5px; }
-.wchip.known { border-color: var(--ok); }
-.dots { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; }
-.dot { border: 0; background: none; cursor: pointer; font-size: 12.5px; color: var(--muted); padding: 4px 8px; border-radius: 99px; }
-.dot[aria-current="true"] { background: var(--ink); color: var(--card); font-weight: 600; }
+/* 하단 바 */
+.bottombar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--panel); border-top: 1px solid var(--line); padding: 8px 16px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; z-index: 10; }
+.bottombar .mid { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn { border: 1px solid #9AA3AF; background: linear-gradient(#FFFFFF, #E9ECF0); padding: 6px 14px; border-radius: 2px; cursor: pointer; font-size: 14px; white-space: nowrap; }
+.btn:hover { border-color: var(--sel-line); }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn.primary { background: var(--bar); border-color: var(--bar); color: #FFFFFF; }
+.btn.flag[aria-pressed="true"] { border-color: var(--flag); color: var(--flag); font-weight: 700; }
 
-/* 단어 말풍선 */
-.sheetpop { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); width: min(440px, calc(100% - 32px)); background: var(--ink); color: var(--card); border-radius: 12px; padding: 14px 16px; display: grid; gap: 6px; box-shadow: 0 12px 32px rgba(0, 0, 0, .3); z-index: 20; }
-.sheetpop .pw { font: 22px var(--f-display); }
-.sheetpop .pw small { font: 500 12px var(--f-mono); opacity: .7; margin-left: 6px; }
-.sheetpop .row { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
-.sheetpop .btn { background: transparent; color: var(--card); border-color: color-mix(in srgb, var(--card) 35%, transparent); }
-.toast { position: fixed; left: 50%; top: 16px; transform: translateX(-50%); background: var(--ink); color: var(--card); padding: 8px 14px; border-radius: 8px; font-size: 13.5px; z-index: 30; }
+/* 표 */
+h1.title { font-size: 22px; margin: 0 0 4px; }
+h2 { font-size: 16px; margin: 26px 0 8px; }
+.lead { color: var(--muted); margin: 0 0 14px; }
+.tbl-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; }
+th { background: var(--panel); font-weight: 700; white-space: nowrap; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.modes { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.mode { border: 1px solid var(--line); padding: 14px; display: grid; gap: 10px; align-content: start; }
+.mode h3 { margin: 0; font-size: 15.5px; }
+.mode p { margin: 0; color: var(--muted); font-size: 14px; }
+.mode .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+select { border: 1px solid #9AA3AF; padding: 5px 8px; background: #FFFFFF; border-radius: 2px; }
+.pass-ok { color: var(--ok); font-weight: 700; }
+.pass-no { color: var(--no); font-weight: 700; }
+
+/* 검토 화면 */
+.review { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.review button { border: 0; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: #FFFFFF; text-align: left; padding: 7px 10px; cursor: pointer; font-size: 13.5px; display: flex; justify-content: space-between; gap: 6px; }
+.review button:hover { background: #F5F8FC; }
+.review .st { color: var(--muted); }
+.review .st.unans { color: var(--no); font-weight: 700; }
+.review .st.flagged { color: var(--flag); font-weight: 700; }
+.review .st.ok { color: var(--ok); }
 
 /* 단어장 */
-.vhead { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin-bottom: 14px; }
-.vstat { font: 500 13px var(--f-mono); color: var(--muted); margin-right: auto; font-variant-numeric: tabular-nums; }
-.vstat b { color: var(--ink); }
-.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--card); }
-.seg button { border: 0; background: none; padding: 6px 12px; font-size: 13px; cursor: pointer; color: var(--muted); }
-.seg button + button { border-left: 1px solid var(--line); }
-.seg button[aria-pressed="true"] { background: var(--ink); color: var(--card); font-weight: 600; }
-.wlist { background: var(--card); border: 1px solid var(--line); border-radius: 10px; }
-.wrow { display: grid; grid-template-columns: minmax(0, 190px) minmax(0, 1fr) auto; gap: 6px 18px; padding: 13px 16px; align-items: start; }
-.wrow + .wrow { border-top: 1px solid var(--line); }
-@media (max-width: 640px) { .wrow { grid-template-columns: minmax(0, 1fr) auto; } .wrow .wmid { grid-column: 1 / -1; grid-row: 2; } }
-.wword { font-size: 17px; font-weight: 700; line-height: 1.3; }
-.wword small { font: 500 11.5px var(--f-mono); color: var(--muted); margin-left: 5px; }
-.freq { display: flex; align-items: center; gap: 6px; margin-top: 5px; font: 500 11.5px var(--f-mono); color: var(--omr); font-variant-numeric: tabular-nums; }
-.freq i { display: block; height: 4px; border-radius: 99px; background: var(--omr); }
-.wmid { display: grid; gap: 4px; }
-.wko { font-weight: 600; }
-.wex { font-size: 13.5px; color: var(--muted); }
-.wex mark { background: linear-gradient(transparent 55%, var(--mark) 55%); color: var(--ink); }
-.wex button { border: 0; background: none; padding: 0; font: 600 11.5px var(--f-mono); color: var(--omr); cursor: pointer; margin-right: 6px; }
-.know { border: 1px solid var(--line); background: none; border-radius: 99px; padding: 5px 11px; font-size: 12.5px; cursor: pointer; white-space: nowrap; color: var(--muted); }
-.know[aria-pressed="true"] { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); font-weight: 600; }
-.flash { max-width: 520px; margin: 0 auto; display: grid; gap: 12px; }
-.flash .frame { min-height: 360px; align-items: center; justify-content: center; text-align: center; }
-.flash .fword { font: clamp(34px, 9vw, 52px)/1.1 var(--f-display); }
-.flash .fpos { font: 500 13px var(--f-mono); color: var(--muted); }
-.flash .fko { font-size: 22px; font-weight: 700; }
-.flash .wex { text-align: left; }
-.flash .row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
-.flash .count { text-align: center; font: 500 12.5px var(--f-mono); color: var(--muted); }
-.empty { padding: 32px 16px; text-align: center; color: var(--muted); }
-footer.src { max-width: 1080px; margin: 32px auto 0; font-size: 12px; color: var(--muted); }
-footer.src a { color: inherit; }
-@media (prefers-reduced-motion: reduce) { .track { scroll-behavior: auto; } }
+.vtools { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin-bottom: 12px; font-size: 14px; }
+.vtools .count { margin-right: auto; color: var(--muted); font-variant-numeric: tabular-nums; }
+td.word { font-weight: 700; white-space: nowrap; }
+td.word small { font-weight: 400; color: var(--muted); margin-left: 4px; }
+td .ex { color: var(--muted); font-size: 13px; }
+td .ex mark { background: var(--mark); color: var(--ink); }
+td .ex button { border: 0; background: none; padding: 0; color: var(--sel-line); cursor: pointer; font-size: 12.5px; margin-right: 6px; text-decoration: underline; }
+.flash { border: 1px solid var(--line); padding: 28px 18px; text-align: center; display: grid; gap: 10px; justify-items: center; max-width: 560px; margin: 0 auto; }
+.flash .fw { font-size: clamp(28px, 7vw, 40px); font-weight: 700; }
+.flash .fp { color: var(--muted); font-size: 13px; }
+.flash .fk { font-size: 19px; font-weight: 700; }
+.flash .ex { text-align: left; color: var(--muted); font-size: 14px; }
+.flash .ex mark { background: var(--mark); color: var(--ink); }
+
+.pop { position: fixed; left: 50%; bottom: 70px; transform: translateX(-50%); width: min(420px, calc(100% - 32px)); background: #FFFFFF; border: 1px solid var(--ink); box-shadow: 0 6px 20px rgba(0,0,0,.18); padding: 12px 14px; display: grid; gap: 6px; z-index: 20; font-size: 14.5px; }
+.pop .pw { font-size: 18px; font-weight: 700; }
+.pop .pw small { font-size: 12.5px; font-weight: 400; color: var(--muted); margin-left: 6px; }
+.pop .row { display: flex; gap: 8px; justify-content: flex-end; }
+.toast { position: fixed; left: 50%; top: 12px; transform: translateX(-50%); background: var(--ink); color: #FFFFFF; padding: 7px 14px; font-size: 13.5px; z-index: 30; }
+.src { font-size: 12px; color: var(--muted); margin-top: 32px; }
+.src a { color: inherit; }
 </style>
 
-<div class="wrap">
-  <header class="top">
-    <div class="brand"><span class="code">CCA-F</span><h1>미지의 CCAF 카드</h1></div>
-    <div class="tabs" role="tablist">
-      <button id="tab-cards" role="tab" aria-selected="true" data-view="cards">문제 카드</button>
-      <button id="tab-words" role="tab" aria-selected="false" data-view="words">단어장</button>
-    </div>
-    <span class="sync" id="sync">이 브라우저에 저장 중</span>
-  </header>
-  <main id="app"></main>
-</div>
-<footer class="src" id="src"></footer>
-<div id="pop" class="sheetpop" hidden></div>
+<header class="topbar">
+  <span class="name">Claude Certified Architect – Foundations 연습</span>
+  <span class="meta" id="meta"></span>
+  <span class="timer" id="timer" hidden></span>
+  <button id="home-btn" data-home>처음 화면</button>
+</header>
+<div class="subbar" id="subbar" hidden></div>
+<main><div class="page" id="app"></div></main>
+<div class="bottombar" id="bottombar" hidden></div>
+<div id="pop" class="pop" hidden></div>
 <div id="toast" class="toast" hidden></div>
 
 <script>
 const DATA = /*__DATA__*/null;
-const LETTERS = ["A", "B", "C", "D"];
-const LS = "ccaf-cards-v1";
+const L = ["A", "B", "C", "D"];
+const LS = "ccaf-cbt-v1";
+const PASS = 0.72;
+const SEC_PER_Q = 120;
 const $ = (s, r = document) => r.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const fmt = s => esc(s).replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+const cards = DATA.cards;
+const byId = Object.fromEntries(cards.map(c => [c.id, c]));
+const wordMap = Object.fromEntries(DATA.words.map(w => [w.word, w]));
+const dom = id => DATA.domains.find(d => d.id === id);
 
-let state = { answers: {}, words: {} };
-let ui = { view: "cards", idx: 0, slide: 0, filter: "all", ko: false, vmode: "list", vfilter: "all", vsort: "freq", fi: 0, flip: false };
+// state: 기기 간 저장(db) / ui: 이 브라우저의 화면 상태
+let state = { answers: {}, words: {}, tries: {}, exams: [] };
+let ui = { screen: "home", ko: false, wordsOn: true, filter: "todo", domain: "all", vmode: "list", vfilter: "all", vsort: "freq", fi: 0, flip: false, session: null };
 try { Object.assign(state, JSON.parse(localStorage.getItem(LS)) || {}); } catch (e) {}
 try { Object.assign(ui, JSON.parse(localStorage.getItem(LS + "-ui")) || {}, { flip: false }); } catch (e) {}
-
-const cards = DATA.cards;
-const byId = Object.fromEntries(cards.map((c, i) => [c.id, i]));
-const wordMap = Object.fromEntries(DATA.words.map(w => [w.word, w]));
-let db = null, dbRef = null;
+let dbRef = null;
 
 function saveLocal() {
   try { localStorage.setItem(LS, JSON.stringify(state)); localStorage.setItem(LS + "-ui", JSON.stringify(ui)); } catch (e) {}
 }
 function persist(patch) {
   saveLocal();
-  if (dbRef) dbRef.update(patch).catch(() => { $("#sync").textContent = "저장 연결이 끊겨 이 브라우저에만 저장 중"; });
+  if (dbRef) dbRef.update(patch).catch(() => toast("저장 연결이 끊겨 이 브라우저에만 저장했어요"));
 }
 
 function stemRe(word) {
   const w = word.trim();
-  if (w.includes(" ")) return new RegExp("\\b" + w.split(/\s+/).map(x => x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("\\s+") + "\\b", "i");
-  let s = w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const q = x => x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  if (w.includes(" ")) return new RegExp("\\b" + w.split(/\s+/).map(q).join("\\s+") + "\\b", "i");
+  let s = q(w);
   if (w.length > 4) s = (w.endsWith("e") ? s.slice(0, -1) : s) + "\\w{0,4}";
   return new RegExp("\\b" + s + "\\b", "i");
 }
 
-// 지문에 단어 버튼과(풀고 나면) 단서 형광펜을 입힌다
+// 지문에 단어 버튼과(채점 뒤) 단서 형광펜을 입힌다
 function rich(text, words, clues) {
   const ranges = [];
   (clues || []).forEach(c => { const i = text.indexOf(c.en); if (i >= 0) ranges.push({ s: i, e: i + c.en.length, t: "clue" }); });
   const clueR = ranges.slice();
-  (words || []).forEach(w => {
+  (ui.wordsOn ? words || [] : []).forEach(w => {
     const m = stemRe(w.word).exec(text);
     if (!m) return;
     const r = { s: m.index, e: m.index + m[0].length, t: "word", w: w.word.toLowerCase() };
     const bad = ranges.some(x => x.t === "word" ? (r.s < x.e && x.s < r.e) : (r.s < x.e && x.s < r.e && !(r.s >= x.s && r.e <= x.e)));
     if (!bad) ranges.push(r);
   });
-  const wordsIn = (s, e) => {
+  const inner = (s, e) => {
     let out = "", p = s;
     ranges.filter(r => r.t === "word" && r.s >= s && r.e <= e).sort((a, b) => a.s - b.s).forEach(r => {
       out += fmt(text.slice(p, r.s)) + `<button class="wbtn" data-word="${esc(r.w)}">${esc(text.slice(r.s, r.e))}</button>`;
@@ -284,175 +221,219 @@ function rich(text, words, clues) {
   let out = "", p = 0;
   clueR.sort((a, b) => a.s - b.s).forEach(r => {
     if (r.s < p) return;
-    out += wordsIn(p, r.s) + `<mark class="clue">${wordsIn(r.s, r.e)}</mark>`;
+    out += inner(p, r.s) + `<mark class="clue">${inner(r.s, r.e)}</mark>`;
     p = r.e;
   });
-  return out + wordsIn(p, text.length);
+  return out + inner(p, text.length);
 }
 
-function stats() {
-  const per = DATA.domains.map(d => {
-    const cs = cards.filter(c => c.domain === d.id);
-    const done = cs.filter(c => state.answers[c.id]);
-    const ok = done.filter(c => state.answers[c.id].ok).length;
+function domainStats(ids, getPick) {
+  return DATA.domains.map(d => {
+    const cs = ids.map(id => byId[id]).filter(c => c.domain === d.id);
+    const done = cs.filter(c => getPick(c) != null);
+    const ok = done.filter(c => getPick(c) === c.answer).length;
     return { d, total: cs.length, done: done.length, ok };
   });
+}
+function weighted(per) {
+  const has = per.filter(x => x.done);
+  const w = has.reduce((a, x) => a + x.d.weight, 0);
+  return w ? has.reduce((a, x) => a + x.d.weight * x.ok / x.done, 0) / w : null;
+}
+// 실제 시험처럼 100~1000 척도로 환산(영역 비중 가중)
+const scaled = r => Math.round(100 + 900 * r);
+
+/* ---------- 처음 화면 ---------- */
+function renderHome() {
+  const per = domainStats(cards.map(c => c.id), c => state.answers[c.id]?.pick);
+  const w = weighted(per);
   const done = per.reduce((a, x) => a + x.done, 0), ok = per.reduce((a, x) => a + x.ok, 0);
-  const wsum = per.filter(x => x.done).reduce((a, x) => a + x.d.weight, 0);
-  const weighted = wsum ? per.filter(x => x.done).reduce((a, x) => a + x.d.weight * x.ok / x.done, 0) / wsum : null;
-  return { per, done, ok, wrong: done - ok, left: cards.length - done, weighted };
+  const wrong = cards.filter(c => state.answers[c.id] && !state.answers[c.id].ok).length;
+  const s = ui.session;
+  $("#app").innerHTML = `
+    <h1 class="title">CCAF 연습 시험</h1>
+    <p class="lead">문제 ${cards.length}개 · 풀어 본 문제 ${done}개 · 맞힌 문제 ${ok}개 · 틀린 문제 ${wrong}개${w != null ? ` · 환산 점수 <b>${scaled(w)}</b> / 1000 (합격 720)` : ""}</p>
+    ${s && !s.submitted ? `<p><button class="btn primary" data-resume>이어서 풀기 — ${s.mode === "exam" ? "모의고사" : "연습"} ${s.i + 1}번 문항</button></p>` : ""}
+    <div class="modes">
+      <section class="mode">
+        <h3>연습 모드</h3>
+        <p>한 문항씩 풀고 바로 채점해요. 정답·풀이·보기별 이유·토론 거리가 같은 화면 아래에 나와요.</p>
+        <div class="row">
+          <label for="f-filter">문제</label>
+          <select id="f-filter">${[["todo", "안 푼 문제"], ["wrong", "틀린 문제"], ["all", "전체"], ["doubt", "정답 확인 필요"]].map(([k, l]) => `<option value="${k}" ${ui.filter === k ? "selected" : ""}>${l}</option>`).join("")}</select>
+          <label for="f-domain">영역</label>
+          <select id="f-domain"><option value="all">전체</option>${DATA.domains.map(d => `<option value="${d.id}" ${String(ui.domain) === String(d.id) ? "selected" : ""}>D${d.id} ${esc(d.ko)}</option>`).join("")}</select>
+        </div>
+        <div class="row"><button class="btn primary" data-start="practice">연습 시작</button></div>
+      </section>
+      <section class="mode">
+        <h3>모의고사</h3>
+        <p>${cards.length}문항을 섞어 문항당 2분(${Math.round(cards.length * SEC_PER_Q / 60)}분)으로 풀어요. 끝날 때까지 정답을 보여 주지 않고, 검토 표시와 검토 화면을 쓸 수 있어요.</p>
+        <div class="row"><button class="btn primary" data-start="exam">모의고사 시작</button></div>
+      </section>
+      <section class="mode">
+        <h3>단어장</h3>
+        <p>지문과 보기에서 뽑은 시험 영어 ${DATA.words.length}개. 외운 단어 ${DATA.words.filter(x => state.words[x.word] === "known").length}개.</p>
+        <div class="row"><button class="btn" data-screen="words">단어장 열기</button></div>
+      </section>
+    </div>
+
+    <h2>영역별 정답률</h2>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>영역</th><th class="num">시험 비중</th><th class="num">푼 문제</th><th class="num">정답률</th></tr></thead>
+      <tbody>${per.map(x => `<tr><td>D${x.d.id} ${esc(x.d.ko)}</td><td class="num">${x.d.weight}%</td><td class="num">${x.done} / ${x.total}</td><td class="num">${x.done ? `<span class="${x.ok / x.done >= PASS ? "pass-ok" : "pass-no"}">${Math.round(x.ok / x.done * 100)}%</span>` : "—"}</td></tr>`).join("")}</tbody>
+    </table></div>
+
+    ${state.exams.length ? `
+    <h2>모의고사 기록</h2>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>날짜</th><th class="num">맞힌 문제</th><th class="num">환산 점수</th><th>결과</th><th class="num">걸린 시간</th></tr></thead>
+      <tbody>${state.exams.slice().reverse().map(x => `<tr><td>${esc(x.at.slice(0, 16).replace("T", " "))}</td><td class="num">${x.ok} / ${x.total}</td><td class="num">${x.score}</td><td>${x.score >= 720 ? `<span class="pass-ok">합격선 넘음</span>` : `<span class="pass-no">합격선 미달</span>`}</td><td class="num">${Math.round(x.secs / 60)}분</td></tr>`).join("")}</tbody>
+    </table></div>` : ""}
+
+    <p class="src">문제 원문: <a href="${DATA.source.url}" target="_blank" rel="noopener">${DATA.source.name}</a> (${DATA.source.license}, 커뮤니티 연습 문제 · 실제 시험 문항 아님). 한국어 해석·풀이·단어장은 Claude 가 만들었어요. <b>정답 확인 필요</b> 표시는 공식 문서와 어긋나 보이는 문제예요.</p>`;
 }
 
-function visible(c) {
-  const a = state.answers[c.id];
-  if (ui.filter === "todo") return !a;
-  if (ui.filter === "wrong") return a && !a.ok;
-  if (ui.filter === "doubt") return c.check === "doubt";
-  return true;
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+function start(mode) {
+  let ids;
+  if (mode === "exam") ids = shuffle(cards.map(c => c.id));
+  else {
+    ids = cards.filter(c => ui.domain === "all" || String(c.domain) === String(ui.domain)).filter(c => {
+      const a = state.answers[c.id];
+      if (ui.filter === "todo") return !a;
+      if (ui.filter === "wrong") return a && !a.ok;
+      if (ui.filter === "doubt") return c.check === "doubt";
+      return true;
+    }).map(c => c.id);
+    if (!ids.length) return toast(ui.filter === "todo" ? "안 푼 문제가 없어요. 문제를 '전체'나 '틀린 문제'로 바꿔 보세요." : "조건에 맞는 문제가 없어요.");
+  }
+  ui.session = { mode, ids, i: 0, picks: {}, marks: {}, checked: {}, startedAt: Date.now(), endsAt: mode === "exam" ? Date.now() + ids.length * SEC_PER_Q * 1000 : null, submitted: false };
+  ui.screen = "q";
+  saveLocal(); render(); window.scrollTo(0, 0);
 }
 
-function renderCards() {
-  const st = stats();
-  const c = cards[ui.idx];
-  const a = state.answers[c.id];
-  const pct = st.weighted == null ? null : Math.round(st.weighted * 100);
-  const sheet = `
-  <section class="sheet" aria-label="답안지">
-    <div class="sheet-head"><h2>답 안 지</h2><span class="tally">맞힘 ${st.ok} · 틀림 ${st.wrong} · 남음 ${st.left}</span></div>
-    <div class="pass">
-      <div class="pass-top"><span>영역 비중으로 환산한 정답률</span><b>${pct == null ? "—" : pct + "%"}</b></div>
-      <div class="pass-bar"><i style="width:${pct || 0}%"></i><s title="합격선 720/1000"></s></div>
-      <div class="pass-note">빨간 눈금이 합격선 720/1000(72%)이에요. ${st.done < 10 ? "10문제 넘게 풀면 믿을 만해져요." : "비중: D1 27 · D2 18 · D3 20 · D4 20 · D5 15"}</div>
-    </div>
-    <div class="filters" role="group" aria-label="보기 거르기">
-      ${[["all", "전체"], ["todo", "안 푼 문제"], ["wrong", "틀린 문제"], ["doubt", "정답 확인 필요"]].map(([k, l]) => `<button class="chip" data-filter="${k}" aria-pressed="${ui.filter === k}">${l}</button>`).join("")}
-    </div>
-    ${st.per.map(x => `
-      <div class="drow">
-        <div class="drow-label"><span>D${x.d.id} ${esc(x.d.ko)}</span><span class="w">${x.d.weight}% · ${x.ok}/${x.total}</span></div>
-        <div class="bubbles">${cards.map((cc, i) => [cc, i]).filter(([cc]) => cc.domain === x.d.id).map(([cc, i]) => {
-          const aa = state.answers[cc.id];
-          const cls = ["bub", aa ? (aa.ok ? "ok" : "no") : "", i === ui.idx ? "cur" : "", visible(cc) ? "" : "dim"].join(" ");
-          return `<button class="${cls}" data-go="${i}" aria-label="${cc.id}${aa ? (aa.ok ? " 맞힘" : " 틀림") : " 안 풂"}"><small>${cc.id.slice(3)}</small><span></span></button>`;
-        }).join("")}</div>
-      </div>`).join("")}
-    <div class="legend"><span><i class="l-ok"></i>맞힘</span><span><i class="l-no"></i>틀림</span><span><i></i>안 풂</span></div>
-  </section>`;
+/* ---------- 문항 화면 ---------- */
+function renderQuestion() {
+  const s = ui.session, c = byId[s.ids[s.i]];
+  const pick = s.picks[c.id];
+  const reveal = s.mode === "practice" ? !!s.checked[c.id] : s.submitted;
+  const d = dom(c.domain);
+  $("#subbar").innerHTML = `
+    <span class="where"><b>문항 ${s.i + 1} / ${s.ids.length}</b> · ${c.id} · D${d.id} ${esc(d.ko)} · 시나리오: ${esc(c.scenario)}</span>
+    <label><input type="checkbox" id="t-ko" ${ui.ko ? "checked" : ""}> 한국어 해석</label>
+    <label><input type="checkbox" id="t-words" ${ui.wordsOn ? "checked" : ""}> 단어 뜻</label>`;
 
-  const optsHtml = c.options.map((o, i) => {
+  const opts = c.options.map((o, i) => {
     let cls = "opt";
-    if (a) { if (i === c.answer) cls += " right"; else if (i === a.pick) cls += " wrong"; }
-    return `<button class="${cls}" data-pick="${i}" ${a ? "disabled" : ""}><span class="oval">${LETTERS[i]}</span><span><span class="o-en">${rich(o.en, c.words)}</span>${ui.ko ? `<span class="o-ko">${esc(o.ko)}</span>` : ""}</span></button>`;
+    if (reveal) { cls += " locked"; if (i === c.answer) cls += " right"; else if (i === pick) cls += " wrong"; }
+    else if (i === pick) cls += " checked";
+    return `<label class="${cls}">
+      <input type="radio" name="opt" value="${i}" ${i === pick ? "checked" : ""} ${reveal ? "disabled" : ""}>
+      <span class="let">${L[i]}.</span>
+      <span>${rich(o.en, c.words)}${ui.ko ? `<span class="ko">${esc(o.ko)}</span>` : ""}${reveal ? `<span class="why">${fmt(o.why)}</span>` : ""}</span>
+    </label>`;
   }).join("");
 
-  const koToggle = `<label class="toggle"><input type="checkbox" id="ko-toggle" ${ui.ko ? "checked" : ""}> 한국어 해석 보기</label>`;
-  const lock = `<div class="locked"><span class="oval">?</span><div>보기를 먼저 고르면 열려요</div><button class="btn" data-slide="1">보기 고르러 가기</button></div>`;
-  const discussText = a ? `CCAF ${c.id} 토론하자 — ${c.discuss_ko} (내 답 ${LETTERS[a.pick]}, 정답 ${LETTERS[c.answer]})` : "";
-
-  const slides = [
-    `<div class="frame">
-      <div class="slabel"><span>${c.id} · 지문</span>${c.check === "doubt" ? `<span class="doubt">정답 확인 필요</span>` : ""}</div>
-      <p class="q-en">${rich(c.q_en, c.words, a ? c.clues : null)}</p>
-      ${ui.ko ? `<p class="q-ko">${fmt(c.q_ko)}</p>` : ""}
-      <div class="foot">${koToggle}<button class="btn primary" data-slide="1">보기 고르기 →</button></div>
-    </div>`,
-    `<div class="frame">
-      <div class="slabel"><span>${c.id} · 보기</span><span>${a ? "채점 완료" : "하나를 고르세요"}</span></div>
-      <div class="opts">${optsHtml}</div>
-      <div class="foot">${koToggle}${a ? `<button class="btn primary" data-slide="2">정답 보기 →</button>` : ""}</div>
-    </div>`,
-    `<div class="frame">
-      <div class="slabel"><span>${c.id} · 정답</span></div>
-      ${a ? `
-      <div class="verdict"><span class="big ${a.ok ? "ok" : "no"}">${a.ok ? "맞았어요" : "틀렸어요"}</span><span class="mine">정답 ${LETTERS[c.answer]} · 내 답 ${LETTERS[a.pick]}</span></div>
-      <p class="point">${fmt(c.point_ko)}</p>
-      <ul class="explain">${c.explain_ko.map(x => `<li>${fmt(x)}</li>`).join("")}</ul>
-      <h3 class="sub">지문 단서</h3>
-      <dl class="clues">${c.clues.map(x => `<div><dt><mark>${fmt(x.en)}</mark></dt><dd>→ ${esc(x.ko)}</dd></div>`).join("")}</dl>
-      ${c.check === "doubt" && c.checkNote ? `<p class="note"><b>정답 확인 필요.</b> ${fmt(c.checkNote)}</p>` : ""}
-      <div class="foot"><span></span><button class="btn primary" data-slide="3">보기별 이유 →</button></div>` : lock}
-    </div>`,
-    `<div class="frame">
-      <div class="slabel"><span>${c.id} · 이유와 토론</span></div>
-      ${a ? `
-      <ul class="whys">${c.options.map((o, i) => `<li class="${i === c.answer ? "ans" : ""}"><span class="oval">${LETTERS[i]}</span><span>${fmt(o.why)}</span></li>`).join("")}</ul>
-      <div class="discuss">
-        <p>${esc(c.discuss_ko)}</p>
-        <textarea id="discuss-text" rows="3" readonly>${esc(discussText)}</textarea>
-        <div><button class="btn" data-copy>토론 요청 복사</button></div>
+  const ok = pick === c.answer;
+  const discussText = `CCAF ${c.id} 토론하자 — ${c.discuss_ko} (내 답 ${pick != null ? L[pick] : "없음"}, 정답 ${L[c.answer]})`;
+  const result = reveal ? `
+    <section class="result" aria-live="polite">
+      <h3 class="${ok ? "ok" : "no"}">${pick == null ? "답하지 않음" : ok ? "정답" : "오답"} — 정답 ${L[c.answer]}${pick != null ? ` · 내 답 ${L[pick]}` : ""}</h3>
+      <div class="body">
+        <p class="point">${fmt(c.point_ko)}</p>
+        <ul>${c.explain_ko.map(x => `<li>${fmt(x)}</li>`).join("")}</ul>
+        <div><h4>지문 단서</h4><dl class="clues">${c.clues.map(x => `<div><dt><mark>${fmt(x.en)}</mark></dt><dd>${esc(x.ko)}</dd></div>`).join("")}</dl></div>
+        ${c.check === "doubt" && c.checkNote ? `<p class="note"><b>정답 확인 필요:</b> ${fmt(c.checkNote)}</p>` : ""}
+        <div class="discuss"><h4>토론 거리</h4><p>${esc(c.discuss_ko)}</p>
+          <textarea id="discuss-text" rows="2" readonly>${esc(discussText)}</textarea>
+          <button class="btn" data-copy>토론 요청 복사</button></div>
+        <div><h4>이 문항의 단어</h4><div class="wlist-inline">${c.words.map(w => `<button class="wbtn" data-word="${esc(w.word.toLowerCase())}">${esc(w.word)}</button><span>${esc(w.ko)}</span>`).join("")}</div></div>
       </div>
-      <h3 class="sub">이 문제의 단어</h3>
-      <div class="wchips">${c.words.map(w => { const k = w.word.toLowerCase(); return `<button class="wchip ${state.words[k] === "known" ? "known" : ""}" data-word="${esc(k)}"><b>${esc(w.word)}</b><span>${esc(w.ko)}</span></button>`; }).join("")}</div>
-      <div class="foot"><button class="btn" data-retry>다시 풀기</button><button class="btn primary" data-next>다음 문제 →</button></div>` : lock}
-    </div>`,
-  ];
+    </section>` : "";
 
   $("#app").innerHTML = `
-  <div class="layout">
-    ${sheet}
-    <section class="deck" aria-label="문제 카드">
-      <div class="deck-nav">
-        <span class="qid">${c.id}</span><span class="scn">${esc(c.scenario)}</span>
-        <button class="btn" data-prev aria-label="이전 문제">←</button>
-        <button class="btn" data-next aria-label="다음 문제">→</button>
-      </div>
-      <div class="track" id="track">${slides.map((s, i) => `<article class="slide" aria-label="${["지문", "보기", "정답", "이유와 토론"][i]}">${s}</article>`).join("")}</div>
-      <nav class="dots">${["지문", "보기", "정답", "이유와 토론"].map((l, i) => `<button class="dot" data-slide="${i}" aria-current="${i === ui.slide}">${l}</button>`).join("")}</nav>
-    </section>
-  </div>`;
-  const track = $("#track");
-  track.scrollLeft = ui.slide * (track.clientWidth + 14);
-  let t;
-  track.addEventListener("scroll", () => {
-    clearTimeout(t);
-    t = setTimeout(() => {
-      const s = Math.round(track.scrollLeft / (track.clientWidth + 14));
-      if (s !== ui.slide) { ui.slide = s; saveLocal(); document.querySelectorAll(".dot").forEach((d, i) => d.setAttribute("aria-current", i === s)); }
-    }, 80);
+    ${c.check === "doubt" && reveal ? `<span class="doubt">정답 확인 필요</span>` : ""}
+    <p class="stem">${rich(c.q_en, c.words, reveal ? c.clues : null)}</p>
+    ${ui.ko ? `<p class="stem-ko">${fmt(c.q_ko)}</p>` : ""}
+    <fieldset class="opts"><legend>보기</legend>${opts}</fieldset>
+    ${s.mode === "practice" ? `<div class="check-row">${reveal
+      ? `<button class="btn" data-retry>다시 풀기</button>`
+      : `<button class="btn primary" data-check ${pick == null ? "disabled" : ""}>정답 확인</button>`}</div>` : ""}
+    ${result}`;
+
+  const last = s.i === s.ids.length - 1;
+  $("#bottombar").innerHTML = `
+    <button class="btn" data-move="-1" ${s.i === 0 ? "disabled" : ""}>◀ 이전</button>
+    <span class="mid">
+      ${s.mode === "exam" && !s.submitted ? `<button class="btn flag" data-flag aria-pressed="${!!s.marks[c.id]}">${s.marks[c.id] ? "검토 표시됨" : "검토 표시"}</button>` : ""}
+      <button class="btn" data-screen="review">검토 화면</button>
+    </span>
+    ${last ? (s.mode === "exam" && !s.submitted ? `<button class="btn primary" data-screen="review">검토 후 종료</button>` : `<button class="btn primary" data-screen="${s.mode === "exam" ? "result" : "review"}">끝</button>`) : `<button class="btn primary" data-move="1">다음 ▶</button>`}`;
+}
+
+/* ---------- 검토 화면 ---------- */
+function renderReview() {
+  const s = ui.session;
+  const unans = s.ids.filter(id => s.picks[id] == null).length;
+  const flagged = s.ids.filter(id => s.marks[id]).length;
+  $("#subbar").innerHTML = `<span class="where"><b>검토 화면</b> · 답한 문항 ${s.ids.length - unans} · 답하지 않은 문항 ${unans}${s.mode === "exam" ? ` · 검토 표시 ${flagged}` : ""}</span>`;
+  $("#app").innerHTML = `
+    <p class="lead">문항을 누르면 그 문항으로 가요.</p>
+    <div class="review">${s.ids.map((id, i) => {
+      const p = s.picks[id];
+      let st, cls;
+      if (s.mode === "practice" && s.checked[id]) { st = p === byId[id].answer ? "정답" : "오답"; cls = p === byId[id].answer ? "ok" : "unans"; }
+      else if (s.marks[id]) { st = "검토 표시"; cls = "flagged"; }
+      else if (p == null) { st = "미답"; cls = "unans"; }
+      else { st = "답함 " + L[p]; cls = ""; }
+      return `<button data-jump="${i}"><span>${i + 1}. ${id}</span><span class="st ${cls}">${st}</span></button>`;
+    }).join("")}</div>`;
+  $("#bottombar").innerHTML = `
+    <button class="btn" data-screen="q">◀ 문항으로 돌아가기</button>
+    <span class="mid">${s.mode === "exam" && !s.submitted ? `<button class="btn" data-jumpflag ${flagged ? "" : "disabled"}>검토 표시 문항만 보기</button>` : ""}</span>
+    ${s.mode === "exam" ? (s.submitted ? `<button class="btn primary" data-screen="result">성적표</button>` : `<button class="btn primary" data-submit>시험 종료</button>`) : `<button class="btn primary" data-home>연습 끝내기</button>`}`;
+}
+
+/* ---------- 성적표 ---------- */
+function renderResult() {
+  const s = ui.session;
+  const per = domainStats(s.ids, c => s.picks[c.id]);
+  const ok = s.ids.filter(id => s.picks[id] === byId[id].answer).length;
+  const r = weighted(DATA.domains.map((d, k) => ({ ...per[k], done: per[k].total }))) || 0;
+  const score = scaled(r);
+  $("#subbar").innerHTML = `<span class="where"><b>성적표</b> · 모의고사</span>`;
+  $("#app").innerHTML = `
+    <h1 class="title">환산 점수 ${score} / 1000</h1>
+    <p class="lead">${score >= 720 ? `<span class="pass-ok">합격선 720을 넘었어요.</span>` : `<span class="pass-no">합격선 720에 ${720 - score}점 모자라요.</span>`} 맞힌 문제 ${ok} / ${s.ids.length} · 영역 비중으로 가중한 점수예요.</p>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>영역</th><th class="num">비중</th><th class="num">맞힘</th><th class="num">정답률</th></tr></thead>
+      <tbody>${per.map(x => `<tr><td>D${x.d.id} ${esc(x.d.ko)}</td><td class="num">${x.d.weight}%</td><td class="num">${x.ok} / ${x.total}</td><td class="num"><span class="${x.total && x.ok / x.total >= PASS ? "pass-ok" : "pass-no"}">${x.total ? Math.round(x.ok / x.total * 100) : 0}%</span></td></tr>`).join("")}</tbody>
+    </table></div>
+    <h2>틀린 문항</h2>
+    <div class="review">${s.ids.map((id, i) => [id, i]).filter(([id]) => s.picks[id] !== byId[id].answer).map(([id, i]) => `<button data-jump="${i}"><span>${i + 1}. ${id}</span><span class="st unans">${s.picks[id] == null ? "미답" : L[s.picks[id]] + " → " + L[byId[id].answer]}</span></button>`).join("") || `<p class="lead">없어요.</p>`}</div>`;
+  $("#bottombar").innerHTML = `<button class="btn" data-screen="review">전체 문항 풀이</button><span class="mid"></span><button class="btn primary" data-home>처음 화면</button>`;
+}
+
+function submitExam() {
+  const s = ui.session;
+  s.submitted = true;
+  const patchAns = {}, patchTries = {};
+  s.ids.forEach(id => {
+    if (s.picks[id] == null) return;
+    const n = (state.tries[id] || 0) + 1;
+    state.tries[id] = n; patchTries[id] = n;
+    state.answers[id] = patchAns[id] = { pick: s.picks[id], ok: s.picks[id] === byId[id].answer, at: new Date().toISOString(), n };
   });
+  const per = domainStats(s.ids, c => s.picks[c.id]);
+  const r = weighted(per.map(x => ({ ...x, done: x.total }))) || 0;
+  state.exams.push({ at: new Date().toISOString(), ok: s.ids.filter(id => s.picks[id] === byId[id].answer).length, total: s.ids.length, score: scaled(r), secs: Math.round((Date.now() - s.startedAt) / 1000) });
+  persist({ answers: patchAns, tries: patchTries, exams: state.exams });
+  ui.screen = "result"; render(); window.scrollTo(0, 0);
 }
 
-function goSlide(i) {
-  ui.slide = Math.max(0, Math.min(3, i));
-  const track = $("#track");
-  if (track) track.scrollTo({ left: ui.slide * (track.clientWidth + 14), behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-  document.querySelectorAll(".dot").forEach((d, k) => d.setAttribute("aria-current", k === ui.slide));
-  saveLocal();
-}
-
-function goCard(i, slide = 0) {
-  ui.idx = (i + cards.length) % cards.length; ui.slide = slide; saveLocal(); render();
-  $("#track")?.closest(".deck")?.scrollIntoView({ block: "nearest" });
-}
-function step(dir) {
-  for (let k = 1; k <= cards.length; k++) {
-    const i = (ui.idx + dir * k + cards.length) % cards.length;
-    if (visible(cards[i])) return goCard(i);
-  }
-  goCard(ui.idx + dir);
-}
-
-function pick(i) {
-  const c = cards[ui.idx];
-  if (state.answers[c.id]) return;
-  const prev = state.tries?.[c.id] || 0;
-  const rec = { pick: i, ok: i === c.answer, at: new Date().toISOString(), n: prev + 1 };
-  state.answers[c.id] = rec;
-  state.tries = Object.assign(state.tries || {}, { [c.id]: prev + 1 });
-  persist({ answers: { [c.id]: rec }, tries: { [c.id]: prev + 1 } });
-  render();
-  setTimeout(() => goSlide(2), 650);
-}
-
-function retry() {
-  const c = cards[ui.idx];
-  delete state.answers[c.id];
-  saveLocal();
-  if (dbRef) dbRef.get().then(s => { const d = s.data() || {}; const ans = Object.assign({}, d.answers); delete ans[c.id]; return dbRef.set(Object.assign({}, d, { answers: ans })); }).catch(() => {});
-  ui.slide = 0; render();
-}
-
-/* 단어장 */
+/* ---------- 단어장 ---------- */
 function wordList() {
   let ws = DATA.words.slice();
   if (ui.vfilter === "learn") ws = ws.filter(w => state.words[w.word] !== "known");
@@ -460,151 +441,193 @@ function wordList() {
   if (ui.vsort === "abc") ws.sort((a, b) => a.word.localeCompare(b.word));
   return ws;
 }
-function exampleHtml(w, withLinks = true) {
+function exHtml(w, links) {
   return w.examples.slice(0, 2).map(ex => {
-    const m = stemRe(w.word).exec(ex.text);
-    const body = m ? esc(ex.text.slice(0, m.index)) + "<mark>" + esc(m[0]) + "</mark>" + esc(ex.text.slice(m.index + m[0].length)) : esc(ex.text);
-    return `<div class="wex">${withLinks ? `<button data-card="${ex.id}">${ex.id}</button>` : ""}${body.replace(/`([^`]+)`/g, "$1")}</div>`;
+    const t = ex.text.replace(/`/g, "");
+    const mm = stemRe(w.word).exec(t);
+    const body = mm ? esc(t.slice(0, mm.index)) + "<mark>" + esc(mm[0]) + "</mark>" + esc(t.slice(mm.index + mm[0].length)) : esc(t);
+    return `<div class="ex">${links ? `<button data-card="${ex.id}">${ex.id}</button>` : ""}${body}</div>`;
   }).join("");
 }
 function renderWords() {
   const all = DATA.words.length, known = DATA.words.filter(w => state.words[w.word] === "known").length;
   const ws = wordList();
-  const maxF = Math.max(...DATA.words.map(w => w.freq), 1);
-  const head = `
-  <div class="vhead">
-    <span class="vstat">단어 <b>${all}</b> · 외운 단어 <b>${known}</b> · 남은 단어 <b>${all - known}</b></span>
-    <div class="seg" role="group" aria-label="보는 방식">${[["list", "목록"], ["flash", "암기 카드"]].map(([k, l]) => `<button data-vmode="${k}" aria-pressed="${ui.vmode === k}">${l}</button>`).join("")}</div>
-    <div class="seg" role="group" aria-label="거르기">${[["all", "전체"], ["learn", "외울 것"], ["known", "외운 것"]].map(([k, l]) => `<button data-vfilter="${k}" aria-pressed="${ui.vfilter === k}">${l}</button>`).join("")}</div>
-    <div class="seg" role="group" aria-label="정렬">${[["freq", "빈출순"], ["abc", "ABC순"]].map(([k, l]) => `<button data-vsort="${k}" aria-pressed="${ui.vsort === k}">${l}</button>`).join("")}</div>
-  </div>`;
+  $("#subbar").innerHTML = `<span class="where"><b>단어장</b> · 전체 ${all} · 외운 단어 ${known} · 남은 단어 ${all - known}</span>`;
+  const tools = `
+    <div class="vtools">
+      <span class="count">${ws.length}개 표시</span>
+      <label>보기 <select id="v-mode"><option value="list" ${ui.vmode === "list" ? "selected" : ""}>표</option><option value="flash" ${ui.vmode === "flash" ? "selected" : ""}>암기 카드</option></select></label>
+      <label>거르기 <select id="v-filter">${[["all", "전체"], ["learn", "외울 것"], ["known", "외운 것"]].map(([k, l]) => `<option value="${k}" ${ui.vfilter === k ? "selected" : ""}>${l}</option>`).join("")}</select></label>
+      <label>정렬 <select id="v-sort"><option value="freq" ${ui.vsort === "freq" ? "selected" : ""}>빈출순</option><option value="abc" ${ui.vsort === "abc" ? "selected" : ""}>ABC순</option></select></label>
+    </div>`;
   let body;
-  if (!ws.length) body = `<div class="wlist"><div class="empty">${ui.vfilter === "known" ? "아직 외운 단어가 없어요. 목록에서 '외웠어요'를 눌러 보세요." : "남은 단어가 없어요. 전부 외웠어요."}</div></div>`;
+  if (!ws.length) body = `<p class="lead">${ui.vfilter === "known" ? "아직 외운 단어가 없어요." : "남은 단어가 없어요."}</p>`;
   else if (ui.vmode === "list") {
-    body = `<div class="wlist">${ws.map(w => `
-      <div class="wrow">
-        <div><div class="wword">${esc(w.word)}<small>${esc(w.pos)}</small></div>
-          <div class="freq"><i style="width:${Math.max(6, Math.round(w.freq / maxF * 64))}px"></i>지문 ${w.freq}회</div></div>
-        <div class="wmid"><div class="wko">${esc(w.ko)}</div>${exampleHtml(w)}</div>
-        <button class="know" data-know="${esc(w.word)}" aria-pressed="${state.words[w.word] === "known"}">${state.words[w.word] === "known" ? "외웠어요 ✓" : "외웠어요"}</button>
-      </div>`).join("")}</div>`;
+    body = `<div class="tbl-wrap"><table>
+      <thead><tr><th>외움</th><th>단어</th><th>뜻과 예문</th><th class="num">빈출</th></tr></thead>
+      <tbody>${ws.map(w => `<tr>
+        <td><input type="checkbox" id="k-${esc(w.word).replace(/\s/g, "_")}" data-know="${esc(w.word)}" ${state.words[w.word] === "known" ? "checked" : ""} aria-label="${esc(w.word)} 외움"></td>
+        <td class="word">${esc(w.word)}<small>${esc(w.pos)}</small></td>
+        <td>${esc(w.ko)}${exHtml(w, true)}</td>
+        <td class="num">${w.freq}회</td></tr>`).join("")}</tbody>
+    </table></div>`;
   } else {
     ui.fi = Math.min(ui.fi, ws.length - 1);
     const w = ws[ui.fi];
-    body = `
-    <div class="flash">
-      <div class="count">${ui.fi + 1} / ${ws.length} · 지문 ${w.freq}회</div>
-      <article class="slide"><div class="frame">
-        <div class="fword">${esc(w.word)}</div><div class="fpos">${esc(w.pos)}</div>
-        ${ui.flip ? `<div class="fko">${esc(w.ko)}</div>${exampleHtml(w)}` : `<button class="btn" data-flip>뜻 보기</button>`}
-      </div></article>
-      <div class="row">
-        <button class="btn" data-fprev>← 이전</button>
-        <button class="btn" data-fnext="learn">아직 헷갈려요</button>
-        <button class="btn primary" data-fnext="known">외웠어요</button>
-      </div>
+    body = `<div class="flash">
+      <div class="fp">${ui.fi + 1} / ${ws.length} · 지문 ${w.freq}회</div>
+      <div class="fw">${esc(w.word)}</div><div class="fp">${esc(w.pos)}</div>
+      ${ui.flip ? `<div class="fk">${esc(w.ko)}</div>${exHtml(w, false)}` : `<button class="btn" data-flip>뜻 보기</button>`}
     </div>`;
   }
-  $("#app").innerHTML = head + body;
+  $("#app").innerHTML = tools + body;
+  $("#bottombar").innerHTML = ui.vmode === "flash" && ws.length
+    ? `<button class="btn" data-fprev>◀ 이전</button><span class="mid"><button class="btn" data-fnext="learn">아직 헷갈려요</button></span><button class="btn primary" data-fnext="known">외웠어요 ▶</button>`
+    : `<span></span><span class="mid"></span><button class="btn primary" data-home>처음 화면</button>`;
 }
 
+/* ---------- 공통 ---------- */
 function render() {
-  document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === ui.view));
-  ui.view === "cards" ? renderCards() : renderWords();
+  const s = ui.session;
+  if (["q", "review", "result"].includes(ui.screen) && !s) ui.screen = "home";
+  $("#subbar").hidden = ui.screen === "home";
+  $("#bottombar").hidden = ui.screen === "home";
+  $("#home-btn").hidden = ui.screen === "home";
+  $("#meta").textContent = s && ui.screen !== "home" && ui.screen !== "words" ? (s.mode === "exam" ? "모의고사" : "연습 모드") : "";
+  $("#pop").hidden = true;
+  if (ui.screen === "home") renderHome();
+  else if (ui.screen === "q") renderQuestion();
+  else if (ui.screen === "review") renderReview();
+  else if (ui.screen === "result") renderResult();
+  else renderWords();
+  tick();
 }
+
+function tick() {
+  const s = ui.session, t = $("#timer");
+  if (!s || s.mode !== "exam" || s.submitted || ui.screen === "home" || ui.screen === "words") { t.hidden = true; return; }
+  const left = Math.max(0, Math.round((s.endsAt - Date.now()) / 1000));
+  t.hidden = false;
+  t.textContent = `남은 시간 ${Math.floor(left / 3600)}:${String(Math.floor(left / 60) % 60).padStart(2, "0")}:${String(left % 60).padStart(2, "0")}`;
+  t.classList.toggle("low", left < 600);
+  if (left === 0) { toast("시간이 끝나 자동으로 제출했어요"); submitExam(); }
+}
+setInterval(tick, 1000);
 
 function showWord(key) {
   const w = wordMap[key];
   if (!w) return;
   const known = state.words[key] === "known";
   const pop = $("#pop");
-  pop.innerHTML = `<div class="pw">${esc(w.word)}<small>${esc(w.pos)} · 지문 ${w.freq}회</small></div><div>${esc(w.ko)}</div>
+  pop.innerHTML = `<div class="pw">${esc(w.word)}<small>${esc(w.pos)} · 전체 지문 ${w.freq}회</small></div><div>${esc(w.ko)}</div>
     <div class="row"><button class="btn" data-know="${esc(key)}">${known ? "외울 단어로 되돌리기" : "외웠어요"}</button><button class="btn" data-close>닫기</button></div>`;
   pop.hidden = false;
 }
-function setKnown(key) {
-  const next = state.words[key] === "known" ? "learn" : "known";
+function setKnown(key, on) {
+  const next = (on ?? state.words[key] !== "known") ? "known" : "learn";
   state.words[key] = next;
   persist({ words: { [key]: next } });
 }
 function toast(msg) {
   const t = $("#toast"); t.textContent = msg; t.hidden = false;
-  clearTimeout(toast.t); toast.t = setTimeout(() => { t.hidden = true; }, 2200);
+  clearTimeout(toast.t); toast.t = setTimeout(() => { t.hidden = true; }, 2600);
 }
+function go(screen) { ui.screen = screen; saveLocal(); render(); window.scrollTo(0, 0); }
 
 document.addEventListener("click", e => {
-  const el = e.target.closest("button, input");
-  if (!el) { if (!e.target.closest("#pop")) $("#pop").hidden = true; return; }
-  const d = el.dataset;
-  if (d.view) { ui.view = d.view; saveLocal(); render(); return; }
-  if (d.go) return goCard(+d.go, state.answers[cards[+d.go].id] ? 2 : 0);
-  if (d.filter) { ui.filter = d.filter; saveLocal(); render(); return; }
-  if (d.slide) return goSlide(+d.slide);
-  if (d.pick) return pick(+d.pick);
-  if ("prev" in d) return step(-1);
-  if ("next" in d) return step(1);
-  if ("retry" in d) return retry();
+  const el = e.target.closest("button");
+  if (!el) { if (!e.target.closest("#pop, input, label")) $("#pop").hidden = true; return; }
+  const d = el.dataset, s = ui.session;
+  if ("home" in d) { if (s && s.submitted) ui.session = null; return go("home"); }
+  if (d.start) return start(d.start);
+  if ("resume" in d) return go("q");
+  if (d.screen) return go(d.screen);
+  if (d.move) { s.i = Math.max(0, Math.min(s.ids.length - 1, s.i + +d.move)); return go("q"); }
+  if (d.jump) { s.i = +d.jump; return go("q"); }
+  if ("jumpflag" in d) { const i = s.ids.findIndex(id => s.marks[id]); if (i >= 0) { s.i = i; go("q"); } return; }
+  if ("flag" in d) { const id = s.ids[s.i]; s.marks[id] = !s.marks[id]; saveLocal(); return render(); }
+  if ("submit" in d) {
+    const unans = s.ids.filter(id => s.picks[id] == null).length;
+    if (!confirm(unans ? `답하지 않은 문항이 ${unans}개 있어요. 시험을 종료할까요?` : "시험을 종료하고 채점할까요?")) return;
+    return submitExam();
+  }
+  if ("check" in d) {
+    const id = s.ids[s.i], pick = s.picks[id];
+    if (pick == null) return;
+    s.checked[id] = true;
+    const n = (state.tries[id] || 0) + 1;
+    state.tries[id] = n;
+    state.answers[id] = { pick, ok: pick === byId[id].answer, at: new Date().toISOString(), n };
+    persist({ answers: { [id]: state.answers[id] }, tries: { [id]: n } });
+    return render();
+  }
+  if ("retry" in d) { const id = s.ids[s.i]; delete s.checked[id]; delete s.picks[id]; saveLocal(); return render(); }
   if ("copy" in d) {
     const ta = $("#discuss-text");
-    const done = () => toast("복사했어요. Claude Code 채팅에 붙여 넣으세요");
-    if (navigator.clipboard?.writeText) navigator.clipboard.writeText(ta.value).then(done, () => { ta.select(); toast("글자를 선택해 두었어요. 복사해서 붙여 넣으세요"); });
-    else { ta.select(); toast("글자를 선택해 두었어요. 복사해서 붙여 넣으세요"); }
+    const fallback = () => { ta.select(); toast("글자를 선택해 두었어요. 복사해서 붙여 넣으세요"); };
+    if (navigator.clipboard?.writeText) navigator.clipboard.writeText(ta.value).then(() => toast("복사했어요. Claude Code 채팅에 붙여 넣으세요"), fallback);
+    else fallback();
     return;
   }
-  if (d.know) {
-    setKnown(d.know);
-    if (!$("#pop").hidden) showWord(d.know);
-    render();
-    return;
-  }
+  if (d.know) { setKnown(d.know); showWord(d.know); return; }
   if ("close" in d) { $("#pop").hidden = true; return; }
   if (d.word) return showWord(d.word);
-  if (d.card) { ui.view = "cards"; goCard(byId[d.card], 0); return; }
-  if (d.vmode) { ui.vmode = d.vmode; ui.fi = 0; ui.flip = false; saveLocal(); render(); return; }
-  if (d.vfilter) { ui.vfilter = d.vfilter; ui.fi = 0; ui.flip = false; saveLocal(); render(); return; }
-  if (d.vsort) { ui.vsort = d.vsort; saveLocal(); render(); return; }
-  if ("flip" in d) { ui.flip = true; render(); return; }
-  if ("fprev" in d) { ui.fi = Math.max(0, ui.fi - 1); ui.flip = false; render(); return; }
+  if (d.card) { ui.session = { mode: "practice", ids: [d.card], i: 0, picks: {}, marks: {}, checked: {}, startedAt: Date.now(), endsAt: null, submitted: false }; return go("q"); }
+  if ("flip" in d) { ui.flip = true; return render(); }
+  if ("fprev" in d) { ui.fi = Math.max(0, ui.fi - 1); ui.flip = false; return render(); }
   if (d.fnext) {
     const ws = wordList(), w = ws[ui.fi];
-    if (w && (state.words[w.word] === "known") !== (d.fnext === "known")) setKnown(w.word);
+    if (w) setKnown(w.word, d.fnext === "known");
     const after = wordList();
-    if (after.length === ws.length) ui.fi = (ui.fi + 1) % Math.max(1, after.length);
-    else ui.fi = after.length ? ui.fi % after.length : 0;
-    ui.flip = false; saveLocal(); render(); return;
+    ui.fi = after.length === ws.length ? (ui.fi + 1) % Math.max(1, after.length) : (after.length ? ui.fi % after.length : 0);
+    ui.flip = false; saveLocal(); return render();
   }
 });
+
 document.addEventListener("change", e => {
-  if (e.target.id === "ko-toggle") { ui.ko = e.target.checked; saveLocal(); render(); }
+  const t = e.target, s = ui.session;
+  if (t.name === "opt") { s.picks[s.ids[s.i]] = +t.value; saveLocal(); return render(); }
+  if (t.id === "t-ko") { ui.ko = t.checked; saveLocal(); return render(); }
+  if (t.id === "t-words") { ui.wordsOn = t.checked; saveLocal(); return render(); }
+  if (t.id === "f-filter") { ui.filter = t.value; return saveLocal(); }
+  if (t.id === "f-domain") { ui.domain = t.value; return saveLocal(); }
+  if (t.id === "v-mode") { ui.vmode = t.value; ui.fi = 0; ui.flip = false; saveLocal(); return render(); }
+  if (t.id === "v-filter") { ui.vfilter = t.value; ui.fi = 0; ui.flip = false; saveLocal(); return render(); }
+  if (t.id === "v-sort") { ui.vsort = t.value; saveLocal(); return render(); }
+  if (t.dataset.know) { setKnown(t.dataset.know, t.checked); return render(); }
 });
+
 document.addEventListener("keydown", e => {
-  if (e.target.matches("input, textarea") || ui.view !== "cards") return;
-  if (e.key === "ArrowRight") goSlide(ui.slide + 1);
-  else if (e.key === "ArrowLeft") goSlide(ui.slide - 1);
-  else if (/^[1-4]$/.test(e.key) && ui.slide === 1) pick(+e.key - 1);
+  if (e.target.matches("textarea, select") || ui.screen !== "q") return;
+  const s = ui.session, c = byId[s.ids[s.i]];
+  const locked = s.mode === "practice" ? s.checked[c.id] : s.submitted;
+  if (/^[1-4]$/.test(e.key) && !locked) { s.picks[c.id] = +e.key - 1; saveLocal(); render(); }
+  else if (e.key === "ArrowRight" && s.i < s.ids.length - 1) { s.i++; go("q"); }
+  else if (e.key === "ArrowLeft" && s.i > 0) { s.i--; go("q"); }
   else if (e.key === "Escape") $("#pop").hidden = true;
 });
 
-$("#src").innerHTML = `문제 원문: <a href="${DATA.source.url}" target="_blank" rel="noopener">${DATA.source.name}</a> (${DATA.source.license}, 커뮤니티 연습 문제 · 실제 시험 문항 아님). 한국어 해석·풀이·단어장은 Claude 가 만들었고, <b>정답 확인 필요</b> 표시는 공식 문서와 어긋나 보이는 문제예요.`;
-if (!cards[ui.idx]) ui.idx = 0;
 render();
 
 (async () => {
   try {
-    db = window.claude?.use ? await window.claude.use("db") : null;
+    const db = window.claude?.use ? await window.claude.use("db") : null;
     if (!db) return;
     dbRef = db.doc("progress/miji");
     const snap = await dbRef.get();
     if (snap.exists) {
       const d = snap.data();
-      state = { answers: Object.assign({}, state.answers, d.answers), words: Object.assign({}, state.words, d.words), tries: Object.assign({}, state.tries, d.tries) };
+      state = {
+        answers: Object.assign({}, state.answers, d.answers),
+        words: Object.assign({}, state.words, d.words),
+        tries: Object.assign({}, state.tries, d.tries),
+        exams: (d.exams && d.exams.length >= state.exams.length) ? d.exams : state.exams,
+      };
     } else {
-      await dbRef.set({ answers: state.answers, words: state.words, tries: state.tries || {} });
+      await dbRef.set(state);
     }
     saveLocal();
-    $("#sync").textContent = "휴대폰과 PC에 같이 저장돼요";
-    if (!$("#pop").hidden) return;
-    render();
-  } catch (e) { $("#sync").textContent = "이 브라우저에만 저장 중"; }
+    if ($("#pop").hidden && ui.screen !== "q") render();
+  } catch (e) {}
 })();
 </script>
