@@ -1,0 +1,185 @@
+{
+  "no": 2,
+  "name_en": "Code Generation with Claude Code",
+  "name_ko": "Claude Code 로 코드 생성하기",
+  "domains": [3, 5],
+  "oneline_ko": "팀에 AI 개발자 한 명을 들인다. 이 동료가 팀 규칙을 어디서 읽고, 큰일은 설계부터 하고, 작은 일은 바로 고치게 만드는 것이 핵심.",
+  "description": [
+    {"en": "You are using Claude Code to accelerate software development.", "ko": "여러분은 소프트웨어 개발 속도를 높이려고 Claude Code 를 쓰고 있다."},
+    {"en": "Your team uses it for code generation, refactoring, debugging, and documentation.", "ko": "팀은 이것을 코드 생성, 리팩터링, 디버깅, 문서화에 쓴다."},
+    {"en": "You need to integrate it into your development workflow with custom slash commands, CLAUDE.md configurations, and understand when to use plan mode vs direct execution.", "ko": "custom slash command(직접 만든 / 명령)와 CLAUDE.md 설정으로 개발 흐름에 녹여 넣어야 하고, plan mode(계획 모드)와 direct execution(바로 실행)을 언제 쓰는지도 알아야 한다."}
+  ],
+  "primary_en": "Primary domains: Claude Code Configuration & Workflows, Context Management & Reliability",
+  "story_ko": [
+    "팀에 아주 빠른 AI 개발자 한 명이 새로 들어왔다고 생각하면 된다. 이 동료는 매번 출근할 때마다 책상 위 규칙 노트(CLAUDE.md)를 읽고 일을 시작한다.",
+    "그런데 규칙 노트를 어디에 두느냐가 중요하다. 내 집 책상(~/.claude)에 두면 나만 보고, 회사 저장소(프로젝트 폴더)에 두면 팀 전체가 본다. 새 팀원이 규칙을 못 받는 사고는 대부분 여기서 난다.",
+    "팀이 자주 쓰는 작업은 버튼으로 만든다. 저장소의 .claude/commands/ 에 넣으면 clone 한 모든 사람이 같은 /review 명령을 쓴다. 특정 파일에만 적용할 규칙은 .claude/rules/ 에 glob 패턴으로 묶는다.",
+    "일의 크기에 따라 방식도 달라진다. 수십 개 파일을 바꾸는 구조 변경은 plan mode 로 먼저 둘러보고 설계한다. 스택 트레이스가 분명한 한 파일 버그는 바로 고친다.",
+    "세션이 길어지면 이 동료도 앞에서 본 내용을 잊고 '보통은 이렇다'는 식으로 대답한다. 그래서 탐색은 Explore subagent 에 맡기고, 중요한 발견은 scratchpad 파일에 적어 둔다."
+  ],
+  "flow": [
+    {"en": "Developer request / slash command", "ko": "개발자 요청 또는 / 명령", "note_ko": "예: /review. 팀 공용이면 .claude/commands/ 에 있다."},
+    {"en": "Load CLAUDE.md hierarchy + .claude/rules/", "ko": "규칙 노트 읽기", "note_ko": "user → project → directory 순으로 쌓이고, paths 가 맞는 rule 파일만 추가로 로드된다."},
+    {"en": "Plan mode / Direct execution", "ko": "계획부터 / 바로 실행", "note_ko": "큰 구조 변경·여러 방법·수십 파일이면 plan mode, 범위가 분명한 작은 수정이면 direct execution."},
+    {"en": "Explore codebase (Explore subagent)", "ko": "코드 둘러보기", "note_ko": "긴 탐색 결과는 subagent 가 요약만 돌려줘 main context 를 지킨다."},
+    {"en": "Edit code", "ko": "코드 수정", "note_ko": "계획이 섰으면 실행은 direct execution 으로 이어 간다."},
+    {"en": "Test & refine", "ko": "테스트하고 다듬기", "note_ko": "테스트 실패, 입력/출력 예시 2~3개를 보여 주며 반복 개선한다."}
+  ],
+  "flow_note_ko": "시험은 2단계(규칙과 명령을 어디에 두나)와 3단계(plan mode 냐 direct execution 이냐)를 가장 많이 묻는다. 샘플 문제 4·5·6번이 전부 이 두 지점이다.",
+  "cast": [
+    {"term": "CLAUDE.md", "ko": "항상 읽히는 규칙 노트", "what_ko": "프로젝트 규칙·표준을 적는 파일. 위치(user / project / directory)에 따라 누구에게 적용되는지가 달라진다."},
+    {"term": "~/.claude/CLAUDE.md", "ko": "사용자 수준 규칙 노트", "what_ko": "내 컴퓨터에만 있어 버전 관리로 팀원에게 공유되지 않는다. 팀 규칙을 여기 두면 새 팀원이 못 받는다."},
+    {"term": ".claude/commands/", "ko": "팀 공용 slash command 폴더", "what_ko": "저장소 안에 있어 clone·pull 하면 모두가 같은 명령을 쓴다. ~/.claude/commands/ 는 개인용."},
+    {"term": ".claude/skills/ (SKILL.md)", "ko": "필요할 때 부르는 작업 절차", "what_ko": "frontmatter(파일 맨 위 설정)로 context: fork, allowed-tools, argument-hint 를 정한다."},
+    {"term": "context: fork", "ko": "분리된 방에서 skill 실행", "what_ko": "긴 출력이나 브레인스토밍이 main 대화를 어지럽히지 않게 격리한다."},
+    {"term": ".claude/rules/ + paths", "ko": "파일 패턴별 조건부 규칙", "what_ko": "YAML frontmatter 의 paths 에 glob 패턴(예: **/*.test.tsx)을 적으면 맞는 파일을 편집할 때만 로드된다."},
+    {"term": "@import", "ko": "다른 파일 불러오기", "what_ko": "CLAUDE.md 안에서 필요한 표준 파일만 골라 넣어 모듈식으로 유지한다."},
+    {"term": "/memory", "ko": "로드된 메모리 파일 확인 명령", "what_ko": "어떤 CLAUDE.md 가 실제로 읽혔는지 확인해 세션마다 행동이 다른 원인을 찾는다."},
+    {"term": "plan mode", "ko": "계획 모드", "what_ko": "바꾸기 전에 코드를 안전하게 둘러보고 설계한다. 대규모·다중 파일·아키텍처 결정에 쓴다."},
+    {"term": "direct execution", "ko": "바로 실행", "what_ko": "한 함수에 검증 하나 추가처럼 범위가 분명한 작은 수정에 쓴다."},
+    {"term": "Explore subagent", "ko": "탐색 전담 보조 에이전트", "what_ko": "장황한 탐색 결과를 따로 처리하고 요약만 돌려줘 context window 가 꽉 차는 것을 막는다."},
+    {"term": "/compact · scratchpad file", "ko": "대화 압축 · 메모 파일", "what_ko": "긴 탐색 세션에서 context 사용량을 줄이고, 핵심 발견을 파일에 남겨 나중 질문에 참조한다."}
+  ],
+  "patterns": [
+    {
+      "title_ko": "팀 전체가 쓸 명령은 저장소의 .claude/commands/",
+      "signal_en": ["available to every developer", "when they clone or pull the repository", "team's standard"],
+      "signal_ko": "버전 관리로 모두에게 공유되어야 한다는 뜻. 개인 폴더가 아니라 프로젝트 폴더를 고르라는 신호다.",
+      "answer_ko": "프로젝트 저장소 안의 `.claude/commands/` 디렉터리에 명령 파일을 만드는 보기가 정답이다.",
+      "answer_en": "In the .claude/commands/ directory in the project repository",
+      "trap_ko": [
+        "`~/.claude/commands/`: 각자 홈 폴더에 있는 개인용이라 버전 관리로 공유되지 않는다.",
+        "루트 `CLAUDE.md` 에 적기: CLAUDE.md 는 지시와 맥락을 적는 곳이지 명령 정의 파일이 아니다.",
+        "`.claude/config.json` 의 commands 배열: Claude Code 에 존재하지 않는 설정이다."
+      ],
+      "ts": "3.2",
+      "guide_en": "Creating project-scoped slash commands in .claude/commands/ for team-wide availability via version control",
+      "guide_ko": "버전 관리로 팀 전체가 쓸 수 있도록 `.claude/commands/` 에 프로젝트 범위 slash command 를 만든다."
+    },
+    {
+      "title_ko": "구조를 크게 바꾸는 일은 plan mode 로 시작한다",
+      "signal_en": ["restructure into microservices", "dozens of files", "decisions about service boundaries"],
+      "signal_ko": "대규모 변경, 여러 가능한 방법, 아키텍처 결정이 이미 문제에 적혀 있다는 뜻. 복잡도가 처음부터 드러나 있다.",
+      "answer_ko": "plan mode 에 들어가 코드베이스를 둘러보고 의존성을 파악한 뒤 구현 방식을 설계하고 나서 바꾸는 보기가 정답이다. 설계 후 실행은 direct execution 으로 이어 가도 된다.",
+      "answer_en": "Enter plan mode to explore the codebase, understand dependencies, and design an implementation approach before making changes",
+      "trap_ko": [
+        "바로 실행하며 조금씩 바꾸다 경계를 발견: 의존성을 늦게 발견해 비싼 재작업이 생긴다.",
+        "처음부터 자세한 지시를 주고 바로 실행: 코드를 둘러보지도 않고 정답 구조를 안다고 가정한다.",
+        "바로 실행하다 복잡해지면 plan mode 로 전환: 복잡도는 요구사항에 이미 적혀 있다."
+      ],
+      "ts": "3.4",
+      "guide_en": "Selecting plan mode for tasks with architectural implications (e.g., microservice restructuring, library migrations affecting 45+ files, choosing between integration approaches with different infrastructure requirements)",
+      "guide_ko": "아키텍처에 영향이 있는 작업(예: 마이크로서비스 재구성, 45개 이상 파일에 걸친 라이브러리 이전, 인프라 요구가 다른 통합 방식 중 선택)에는 plan mode 를 고른다."
+    },
+    {
+      "title_ko": "범위가 분명한 작은 수정은 바로 실행한다",
+      "signal_en": ["single-file bug fix", "clear stack trace", "adding a date validation conditional"],
+      "signal_ko": "무엇을 어디서 고칠지 이미 알고 있다는 뜻. 계획 단계는 시간 낭비다.",
+      "answer_ko": "direct execution 으로 바로 고치는 보기가 정답이다. plan mode 는 여러 방법 중 골라야 하거나 여러 파일에 걸칠 때 쓴다.",
+      "answer_en": "Selecting direct execution for well-understood changes with clear scope",
+      "trap_ko": [
+        "안전하니까 무조건 plan mode: 작은 수정에는 과한 절차다.",
+        "먼저 Explore subagent 로 전체 코드베이스 탐색: 위치가 이미 분명한데 탐색 비용만 든다.",
+        "변경 전 팀 리뷰용 설계 문서 작성: 한 줄짜리 조건 추가에 비례하지 않는 대응이다."
+      ],
+      "ts": "3.4",
+      "guide_en": "Selecting direct execution for well-understood changes with clear scope (e.g., a single-file bug fix with a clear stack trace, adding a date validation conditional)",
+      "guide_ko": "범위가 분명하고 잘 이해된 변경(예: 스택 트레이스가 분명한 한 파일 버그 수정, 날짜 검증 조건 추가)에는 direct execution 을 고른다."
+    },
+    {
+      "title_ko": "곳곳에 흩어진 파일의 규칙은 .claude/rules/ + glob",
+      "signal_en": ["spread throughout the codebase", "regardless of location", "automatically applies"],
+      "signal_ko": "규칙을 폴더가 아니라 파일 종류(패턴)로 걸어야 하고, 사람이 부르지 않아도 자동으로 적용돼야 한다는 뜻이다.",
+      "answer_ko": "`.claude/rules/` 에 rule 파일을 만들고 YAML frontmatter 의 paths 에 glob 패턴(예: `**/*.test.tsx`)을 적어 파일 경로에 따라 조건부로 적용하는 보기가 정답이다.",
+      "answer_en": "rule files in .claude/rules/ with YAML frontmatter specifying glob patterns to conditionally apply conventions based on file paths",
+      "trap_ko": [
+        "루트 CLAUDE.md 에 영역별 제목으로 모두 적기: 어느 부분이 맞는지 모델의 추측에 맡겨 불안정하다.",
+        "`.claude/skills/` 에 코드 종류별 skill: 직접 부르거나 모델이 골라야 해서 '자동'이 보장되지 않는다.",
+        "하위 폴더마다 CLAUDE.md: 폴더에 묶여 있어 여러 폴더에 흩어진 테스트 파일을 다루기 어렵다."
+      ],
+      "ts": "3.3",
+      "guide_en": "Choosing path-specific rules over subdirectory CLAUDE.md files when conventions must apply to files spread across the codebase",
+      "guide_ko": "규칙이 코드베이스 곳곳에 흩어진 파일에 적용되어야 할 때는 하위 폴더 CLAUDE.md 보다 경로 기반 rule 을 고른다."
+    },
+    {
+      "title_ko": "새 팀원만 규칙을 못 받으면 user-level 에 있는지 의심한다",
+      "signal_en": ["a new team member", "not following the team's conventions", "works on my machine"],
+      "signal_ko": "규칙이 한 사람 컴퓨터(`~/.claude/CLAUDE.md`)에만 있고 저장소에는 없다는 뜻이다.",
+      "answer_ko": "규칙을 프로젝트 수준(루트 `CLAUDE.md` 또는 `.claude/CLAUDE.md`)으로 옮겨 버전 관리로 공유하는 보기가 정답이다. 무엇이 로드됐는지는 `/memory` 로 확인한다.",
+      "answer_en": "move the instructions from user-level to project-level configuration",
+      "trap_ko": [
+        "새 팀원에게 규칙 파일을 따로 복사해 주기: 공유가 안 되는 원인은 그대로다.",
+        "system prompt 나 매 요청에 규칙을 붙여 넣기: 사람이 매번 기억해야 해 일관성이 없다.",
+        "새 팀원 홈 폴더 설정을 고치기: 다음 팀원에게 같은 문제가 반복된다."
+      ],
+      "ts": "3.1",
+      "guide_en": "Diagnosing configuration hierarchy issues (e.g., a new team member not receiving instructions because they're in user-level rather than project-level configuration)",
+      "guide_ko": "설정 계층 문제를 진단한다(예: 규칙이 프로젝트 수준이 아니라 사용자 수준에 있어서 새 팀원이 지시를 받지 못하는 경우)."
+    },
+    {
+      "title_ko": "출력이 긴 skill 은 context: fork 로 격리하고 도구를 제한한다",
+      "signal_en": ["verbose output", "pollutes the main conversation", "prevent destructive actions"],
+      "signal_ko": "skill 결과가 main 대화를 어지럽히거나, skill 실행 중 위험한 도구를 쓸 수 있다는 뜻이다.",
+      "answer_ko": "SKILL.md frontmatter 에 `context: fork` 를 넣어 분리된 sub-agent context 에서 돌리고, `allowed-tools` 로 쓸 도구를 제한하는 보기가 정답이다. 인자를 빠뜨리면 `argument-hint` 가 안내한다.",
+      "answer_en": "context: fork to isolate skills that produce verbose output",
+      "trap_ko": [
+        "skill 끝에 '결과를 짧게 요약하라' 지시만 추가: 긴 탐색 과정은 여전히 main context 에 쌓인다.",
+        "그 절차를 CLAUDE.md 에 넣기: CLAUDE.md 는 항상 로드되는 공통 표준용이라 context 만 더 먹는다.",
+        "위험한 명령을 쓰지 말라고 prompt 로 부탁: allowed-tools 처럼 실제로 막지 못한다."
+      ],
+      "ts": "3.2",
+      "guide_en": "Using context: fork to isolate skills that produce verbose output (e.g., codebase analysis) or exploratory context (e.g., brainstorming alternatives) from the main session",
+      "guide_ko": "출력이 긴 skill(예: 코드베이스 분석)이나 탐색성 context(예: 대안 브레인스토밍)를 `context: fork` 로 main 세션에서 분리한다."
+    },
+    {
+      "title_ko": "말로 설명해도 결과가 들쭉날쭉하면 입력/출력 예시 2~3개",
+      "signal_en": ["interpreted inconsistently", "natural language descriptions", "transformation"],
+      "signal_ko": "글 설명만으로는 원하는 변환을 정확히 전달하지 못한다는 뜻이다.",
+      "answer_ko": "구체적인 입력/출력 예시 2~3개를 보여 주는 보기가 정답이다. 테스트를 먼저 쓰고 실패를 공유하는 반복, 낯선 분야에서는 Claude 가 먼저 질문하게 하는 interview pattern 도 같은 계열의 정답이다.",
+      "answer_en": "Providing 2-3 concrete input/output examples to clarify transformation requirements",
+      "trap_ko": [
+        "설명을 더 길고 자세하게 다시 쓰기: 이미 글 설명이 일관되게 해석되지 않는 게 문제다.",
+        "'정확하게 해 달라'고 강조: 무엇이 정확한지 기준을 주지 못한다.",
+        "서로 얽힌 여러 문제를 하나씩 따로 요청: 수정끼리 영향을 주면 한 메시지에 모두 담아야 한다."
+      ],
+      "ts": "3.5",
+      "guide_en": "Providing 2-3 concrete input/output examples to clarify transformation requirements when natural language descriptions produce inconsistent results",
+      "guide_ko": "자연어 설명이 일관되지 않은 결과를 낼 때는 구체적인 입력/출력 예시 2~3개로 변환 요구사항을 분명히 한다."
+    },
+    {
+      "title_ko": "긴 세션에서 기억이 흐려지면 scratchpad·Explore·/compact",
+      "signal_en": ["extended session", "inconsistent answers", "referencing typical patterns"],
+      "signal_ko": "context 가 장황한 탐색 결과로 차서, 앞에서 찾은 구체적 클래스 대신 일반론으로 답하기 시작했다는 뜻이다.",
+      "answer_ko": "핵심 발견을 scratchpad 파일에 기록하고 다음 질문에서 그 파일을 참조하는 보기가 정답이다. 장황한 탐색은 Explore subagent 에 맡기고, context 가 차면 `/compact` 로 줄인다.",
+      "answer_en": "maintain scratchpad files recording key findings, referencing them for subsequent questions",
+      "trap_ko": [
+        "시작할 때 모든 파일을 한꺼번에 읽게 하기: context 를 더 빨리 채운다.",
+        "같은 세션에서 계속 질문하며 '앞 내용을 기억하라'고 지시: context 저하 자체는 해결되지 않는다.",
+        "더 큰 context window 로 바꾸기만 하기: 쌓인 장황한 출력과 주의력 분산은 그대로다."
+      ],
+      "ts": "5.4",
+      "guide_en": "Having agents maintain scratchpad files recording key findings, referencing them for subsequent questions to counteract context degradation",
+      "guide_ko": "에이전트가 핵심 발견을 scratchpad 파일에 기록하고 이후 질문에서 참조하게 해 context 저하를 막는다."
+    }
+  ],
+  "compare": {
+    "title_ko": "규칙과 명령을 어디에 두나",
+    "cols_ko": ["위치", "누구에게 / 언제 적용", "시험에서 고르는 때"],
+    "rows": [
+      ["`~/.claude/CLAUDE.md`", "나 혼자, 항상 로드", "개인 취향. 팀원에게 공유 안 됨 (새 팀원이 규칙을 못 받는 원인)"],
+      ["루트 `CLAUDE.md` 또는 `.claude/CLAUDE.md`", "팀 전체, 항상 로드", "모든 작업에 적용할 공통 표준"],
+      ["하위 폴더 `CLAUDE.md`", "그 폴더 안 작업", "한 폴더에 모인 규칙. 여러 폴더에 흩어진 파일에는 약함"],
+      ["`.claude/rules/` + `paths` glob", "패턴에 맞는 파일을 편집할 때만", "테스트 파일처럼 곳곳에 흩어진 파일의 규칙 (Q6)"],
+      ["`.claude/commands/` / `~/.claude/commands/`", "팀 공유(버전 관리) / 나 혼자", "팀 공용 slash command 는 앞쪽 (Q4)"],
+      ["`.claude/skills/` (SKILL.md)", "필요할 때 호출", "특정 작업 절차. 긴 출력은 `context: fork`, 도구 제한은 `allowed-tools`"]
+    ]
+  },
+  "checklist_ko": [
+    "팀 모두가 써야 한다 = 저장소 안(`.claude/...`, 루트 `CLAUDE.md`). 홈 폴더(`~/.claude/...`)는 나 혼자.",
+    "흩어진 파일에 자동 적용 = `.claude/rules/` + glob paths. 폴더별 CLAUDE.md 나 skill 은 오답.",
+    "구조 변경·수십 파일·여러 방법 = plan mode 부터. 한 파일·분명한 원인 = direct execution.",
+    "항상 필요한 공통 표준은 CLAUDE.md, 가끔 쓰는 작업 절차는 skill. 긴 출력 skill 은 `context: fork`.",
+    "설명이 안 먹히면 입력/출력 예시 2~3개, 테스트 먼저, 얽힌 문제는 한 메시지에.",
+    "긴 세션에서 답이 흐려지면 scratchpad 기록, Explore subagent, `/compact`."
+  ]
+}

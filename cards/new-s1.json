@@ -1,0 +1,789 @@
+[
+ {
+  "id": "C1-01",
+  "domain": 1,
+  "scenario": "Customer Support Resolution Agent",
+  "source": "claude",
+  "ts": [
+   "1.5"
+  ],
+  "guide_en": "Implementing PostToolUse hooks to normalize heterogeneous data formats (Unix timestamps, ISO 8601, numeric status codes) from different MCP tools before the agent processes them",
+  "q_en": "Your support agent pulls data from three MCP tools: `get_customer` returns dates as Unix timestamps, `lookup_order` returns ISO 8601 dates, and a shipping tool returns numeric status codes such as `3` and `7`. Logs show that in 9% of return requests the agent miscalculates whether an order is still inside the 30-day return window, and it sometimes tells customers an order is \"in transit\" when the status code actually means \"delivered.\" Changing the backend services is not an option this quarter. What's the most effective fix?",
+  "q_ko": "지원 에이전트는 MCP tool 세 개에서 데이터를 가져온다. `get_customer` 는 날짜를 Unix timestamp 로, `lookup_order` 는 ISO 8601 날짜로, 배송 tool 은 `3`, `7` 같은 숫자 상태 코드로 돌려준다. 로그를 보면 반품 요청의 9%에서 에이전트가 주문이 30일 반품 기간 안에 있는지 잘못 계산하고, 상태 코드가 실제로는 \"배송 완료\"인데 고객에게 \"배송 중\"이라고 말하기도 한다. 이번 분기에는 백엔드 서비스를 바꿀 수 없다. 가장 효과적인 해결책은?",
+  "options": [
+   {
+    "en": "Implement a `PostToolUse` hook that converts all dates to one consistent format and maps numeric status codes to readable labels before the agent processes the tool results.",
+    "ko": "에이전트가 tool 결과를 처리하기 전에, 모든 날짜를 한 형식으로 바꾸고 숫자 상태 코드를 읽을 수 있는 이름으로 바꿔 주는 `PostToolUse` hook 을 만든다.",
+    "why": "형식이 제각각인 게 원인이므로, 결과가 모델에 닿기 전에 코드로 정규화하면 매번 확실하게 고쳐진다. 정답."
+   },
+   {
+    "en": "Add a table to the system prompt that explains each date format and lists what every numeric status code means, with instructions to convert them carefully.",
+    "ko": "system prompt 에 날짜 형식별 설명과 숫자 상태 코드의 뜻을 표로 넣고, 신중하게 변환하라고 지시한다.",
+    "why": "변환을 여전히 모델이 매번 머릿속으로 해야 해서 확률적으로 틀린다."
+   },
+   {
+    "en": "Build a data warehouse that replicates all three backends nightly into a unified schema, and point the MCP tools at it instead.",
+    "ko": "세 백엔드를 매일 밤 통합 스키마로 복제하는 데이터 웨어하우스를 만들고 MCP tool 이 그쪽을 보게 한다.",
+    "why": "형식 차이 하나 때문에 인프라를 크게 짓는 과한 해법이고, 하루 늦은 데이터가 생긴다."
+   },
+   {
+    "en": "Set `tool_choice` to `\"any\"` so the agent always calls a tool to verify dates and status codes before it replies.",
+    "ko": "`tool_choice` 를 `\"any\"` 로 설정해 에이전트가 답하기 전에 항상 tool 을 호출해 날짜와 상태 코드를 확인하게 한다.",
+    "why": "tool 을 더 부른다고 형식이 통일되지는 않는다. 다른 문제를 푸는 설정이다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "tool 마다 형식이 다르면 PostToolUse 로 정규화",
+  "explain_ko": [
+   "**Unix timestamps / ISO 8601 / numeric status codes** 처럼 tool 마다 형식이 다른 것이 오류의 뿌리다.",
+   "`PostToolUse` hook 은 tool 결과를 모델이 보기 **전에** 가로채 바꿀 수 있으니, 에이전트는 늘 같은 형식만 받는다.",
+   "백엔드를 못 바꾸는 조건에서도 에이전트 쪽에서 해결되고, 프롬프트 설명과 달리 코드라서 매번 똑같이 동작한다."
+  ],
+  "clues": [
+   {
+    "en": "returns dates as Unix timestamps",
+    "ko": "tool 마다 날짜 형식이 다름"
+   },
+   {
+    "en": "numeric status codes",
+    "ko": "사람이 못 읽는 숫자 코드"
+   },
+   {
+    "en": "Changing the backend services is not an option",
+    "ko": "원천은 못 고침, 중간에서 변환"
+   }
+  ],
+  "discuss_ko": "{B} 처럼 system prompt 에 변환표를 넣어도 대부분은 맞힐 텐데, 그래도 hook 이 더 나은 이유는 무엇일까?",
+  "words": [
+   {
+    "word": "miscalculate",
+    "pos": "v.",
+    "ko": "잘못 계산하다",
+    "example": "the agent miscalculates whether an order is still inside the 30-day return window"
+   },
+   {
+    "word": "in transit",
+    "pos": "phr.",
+    "ko": "운송 중, 배송 중",
+    "example": "an order is \"in transit\""
+   },
+   {
+    "word": "replicate",
+    "pos": "v.",
+    "ko": "복제하다",
+    "example": "replicates all three backends nightly"
+   },
+   {
+    "word": "unified",
+    "pos": "adj.",
+    "ko": "통합된, 하나로 맞춘",
+    "example": "into a unified schema"
+   },
+   {
+    "word": "consistent",
+    "pos": "adj.",
+    "ko": "일관된, 한결같은",
+    "example": "one consistent format"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C1-02",
+  "domain": 1,
+  "scenario": "Customer Support Resolution Agent",
+  "source": "claude",
+  "ts": [
+   "1.5",
+   "1.4"
+  ],
+  "guide_en": "Implementing tool call interception hooks that block policy-violating actions (e.g., refunds exceeding $500) and redirect to alternative workflows (e.g., human escalation)",
+  "q_en": "Company policy requires human approval for any refund above $500. The system prompt states this rule in bold, yet an audit of 4,000 conversations finds 11 refunds between $620 and $1,480 issued directly through `process_refund`, usually after long conversations with persistent customers. Finance wants a guarantee that this never happens again, without slowing down legitimate refunds under the limit. What should you implement?",
+  "q_ko": "회사 정책상 $500 가 넘는 환불은 반드시 사람이 승인해야 한다. system prompt 에 이 규칙을 굵게 적어 두었는데도, 대화 4,000건을 감사해 보니 $620~$1,480 환불 11건이 `process_refund` 로 바로 처리되었고, 대개 끈질긴 고객과 긴 대화를 나눈 뒤였다. 재무팀은 한도 이하의 정상 환불은 늦추지 않으면서 이런 일이 다시는 없도록 보장해 달라고 한다. 무엇을 구현해야 하는가?",
+  "options": [
+   {
+    "en": "Repeat the $500 rule at the end of the system prompt and add few-shot examples of the agent declining large refunds, so the rule stays salient in long conversations.",
+    "ko": "system prompt 끝에 $500 규칙을 한 번 더 적고 큰 환불을 거절하는 few-shot 예시를 넣어, 긴 대화에서도 규칙이 눈에 띄게 한다.",
+    "why": "이미 굵게 적어도 뚫린 규칙이다. 프롬프트를 강화해도 여전히 확률적이라 '보장'이 안 된다."
+   },
+   {
+    "en": "Add a hook that intercepts outgoing `process_refund` calls, blocks any amount above $500, and redirects the case to `escalate_to_human` with the refund details.",
+    "ko": "나가는 `process_refund` 호출을 가로채 $500 초과 금액은 막고, 환불 정보와 함께 `escalate_to_human` 으로 돌리는 hook 을 추가한다.",
+    "why": "코드가 호출 자체를 막으니 대화가 아무리 길어도 예외가 없고, 막힌 건은 사람 승인 흐름으로 이어진다. 정답."
+   },
+   {
+    "en": "Remove `process_refund` from the agent entirely and route every refund, regardless of amount, to a human agent.",
+    "ko": "에이전트에서 `process_refund` 를 아예 빼고 금액과 상관없이 모든 환불을 사람 상담원에게 보낸다.",
+    "why": "한도 이하의 정상 환불까지 막아 지문의 조건(정상 환불은 늦추지 않기)과 첫 상담 해결률을 해친다."
+   },
+   {
+    "en": "Have the agent self-report its confidence before each refund and require human approval when confidence falls below 8 out of 10.",
+    "ko": "환불 전마다 에이전트가 스스로 확신도를 보고하게 하고, 10점 중 8점 미만이면 사람 승인을 받게 한다.",
+    "why": "스스로 매긴 확신도는 믿을 수 없고, 금액 한도라는 명확한 규칙과도 관계가 없다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "금액 한도 = hook 이 호출을 막고 사람에게 넘김",
+  "explain_ko": [
+   "**states this rule in bold, yet** 11건이 뚫렸다는 건 프롬프트 지시만으로는 실패율이 0이 아니라는 증거다.",
+   "**wants a guarantee** 는 확률이 아닌 확정적인 보장을 요구한다는 신호다. 그러려면 hook 같은 코드가 필요하다.",
+   "나가는 `process_refund` 호출을 가로채 $500 초과만 막고 `escalate_to_human` 으로 돌리면, 한도 이하 환불은 그대로 빠르게 처리된다."
+  ],
+  "clues": [
+   {
+    "en": "states this rule in bold, yet",
+    "ko": "프롬프트로는 이미 실패"
+   },
+   {
+    "en": "after long conversations with persistent customers",
+    "ko": "압박에 규칙이 흐려짐"
+   },
+   {
+    "en": "wants a guarantee that this never happens again",
+    "ko": "확정적 보장 = 코드로 강제"
+   },
+   {
+    "en": "without slowing down legitimate refunds under the limit",
+    "ko": "전부 막는 해법은 탈락"
+   }
+  ],
+  "discuss_ko": "{C} 처럼 환불을 전부 사람에게 넘기면 사고는 확실히 0건이 되는데, 왜 hook 으로 초과분만 막는 쪽이 정답일까?",
+  "words": [
+   {
+    "word": "audit",
+    "pos": "n.",
+    "ko": "감사, 점검",
+    "example": "an audit of 4,000 conversations"
+   },
+   {
+    "word": "persistent",
+    "pos": "adj.",
+    "ko": "끈질긴, 집요한",
+    "example": "persistent customers"
+   },
+   {
+    "word": "legitimate",
+    "pos": "adj.",
+    "ko": "정당한, 적법한",
+    "example": "legitimate refunds under the limit"
+   },
+   {
+    "word": "intercept",
+    "pos": "v.",
+    "ko": "가로채다",
+    "example": "intercepts outgoing `process_refund` calls"
+   },
+   {
+    "word": "salient",
+    "pos": "adj.",
+    "ko": "눈에 띄는, 두드러진",
+    "example": "so the rule stays salient in long conversations"
+   },
+   {
+    "word": "regardless of",
+    "pos": "phr.",
+    "ko": "~와 상관없이",
+    "example": "regardless of amount"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C1-03",
+  "domain": 1,
+  "scenario": "Customer Support Resolution Agent",
+  "source": "claude",
+  "ts": [
+   "1.4"
+  ],
+  "guide_en": "Compiling structured handoff summaries (customer ID, root cause, refund amount, recommended action) when escalating to human agents who lack access to the conversation transcript",
+  "q_en": "When the agent escalates with `escalate_to_human`, it passes only a short note such as \"Customer needs help with a refund.\" Human agents work in a separate ticketing tool and cannot see the conversation transcript. Surveys show that 68% of escalated customers are asked to repeat their whole story, and average handling time after escalation is 14 minutes. What's the most effective change?",
+  "q_ko": "에이전트가 `escalate_to_human` 으로 넘길 때 \"고객이 환불 관련 도움이 필요함\" 같은 짧은 메모만 전달한다. 사람 상담원은 별도의 티켓 도구에서 일하고 대화 기록을 볼 수 없다. 설문 결과 에스컬레이션된 고객의 68%가 처음부터 사정을 다시 설명해야 했고, 에스컬레이션 후 평균 처리 시간은 14분이다. 가장 효과적인 변경은?",
+  "options": [
+   {
+    "en": "Attach the full raw conversation transcript, including every tool result, to each escalation ticket so human agents have all the information.",
+    "ko": "모든 tool 결과를 포함한 원본 대화 기록 전체를 티켓마다 첨부해 사람 상담원이 정보를 전부 갖게 한다.",
+    "why": "정보는 넘어가지만 상담원이 긴 기록을 처음부터 읽어야 해서 처리 시간이 줄지 않는다. 핵심이 정리돼 있지 않다."
+   },
+   {
+    "en": "Instruct the agent to ask customers to restate their issue clearly and briefly right before the handoff.",
+    "ko": "넘기기 직전에 고객에게 문제를 간단하고 분명하게 다시 말해 달라고 요청하게 한다.",
+    "why": "고객에게 반복시키는 불편을 한 단계 앞으로 옮겼을 뿐이다."
+   },
+   {
+    "en": "Have the agent compile a structured handoff summary with the customer ID, root cause, refund amount, and recommended action, and pass it in the `escalate_to_human` call.",
+    "ko": "에이전트가 고객 ID, 근본 원인, 환불 금액, 권장 조치를 담은 구조화된 인계 요약을 만들어 `escalate_to_human` 호출에 함께 넘기게 한다.",
+    "why": "기록을 못 보는 상담원이 필요한 사실만 바로 받으니 되묻기와 처리 시간이 함께 준다. 정답."
+   },
+   {
+    "en": "Raise the agent's autonomy limits so that fewer cases need to be escalated to human agents in the first place.",
+    "ko": "에이전트의 자율 처리 한도를 높여 애초에 사람에게 넘기는 건수를 줄인다.",
+    "why": "넘어간 건의 인계 품질이라는 실제 문제는 그대로 남고, 넘겨야 할 건까지 잡을 위험이 생긴다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "기록 못 보는 상담원 = 구조화된 인계 요약",
+  "explain_ko": [
+   "**cannot see the conversation transcript** 이니 사람 상담원은 에이전트가 넘긴 내용만으로 일을 시작해야 한다.",
+   "**repeat their whole story** 는 인계 내용이 너무 빈약하다는 증상이다.",
+   "그래서 고객 ID·근본 원인·환불 금액·권장 조치처럼 **바로 행동할 수 있는 항목**을 구조화해 넘기는 게 정답이다. 원본 기록 통째로는 양만 많고 정리가 안 돼 있다."
+  ],
+  "clues": [
+   {
+    "en": "passes only a short note",
+    "ko": "인계 정보가 빈약함"
+   },
+   {
+    "en": "cannot see the conversation transcript",
+    "ko": "넘긴 내용이 전부"
+   },
+   {
+    "en": "asked to repeat their whole story",
+    "ko": "필요한 사실이 안 넘어감"
+   }
+  ],
+  "discuss_ko": "{A} 처럼 원본 대화 기록을 통째로 넘기면 빠지는 정보가 없는데, 구조화된 요약이 더 나은 이유는 무엇일까?",
+  "words": [
+   {
+    "word": "escalate",
+    "pos": "v.",
+    "ko": "(상위 담당자에게) 넘기다, 올리다",
+    "example": "When the agent escalates with `escalate_to_human`"
+   },
+   {
+    "word": "transcript",
+    "pos": "n.",
+    "ko": "대화 기록, 녹취록",
+    "example": "cannot see the conversation transcript"
+   },
+   {
+    "word": "restate",
+    "pos": "v.",
+    "ko": "다시 말하다",
+    "example": "ask customers to restate their issue"
+   },
+   {
+    "word": "handoff",
+    "pos": "n.",
+    "ko": "인계, 넘겨주기",
+    "example": "a structured handoff summary"
+   },
+   {
+    "word": "root cause",
+    "pos": "n.",
+    "ko": "근본 원인",
+    "example": "root cause, refund amount, and recommended action"
+   },
+   {
+    "word": "in the first place",
+    "pos": "phr.",
+    "ko": "애초에",
+    "example": "fewer cases need to be escalated to human agents in the first place"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C1-04",
+  "domain": 1,
+  "scenario": "Customer Support Resolution Agent",
+  "source": "claude",
+  "ts": [
+   "1.4"
+  ],
+  "guide_en": "Decomposing multi-concern customer requests into distinct items, then investigating each in parallel using shared context before synthesizing a unified resolution",
+  "q_en": "A customer writes in a single message: \"My blender arrived cracked, I was charged twice for order #4471, and I need to change the shipping address for next week's order.\" Logs show that for messages like this, the agent resolves only the first issue and closes the conversation 57% of the time, and the remaining issues come back as new tickets. What's the most effective way to handle these requests?",
+  "q_ko": "고객이 한 메시지에 이렇게 쓴다. \"블렌더가 깨진 채로 왔고, 주문 #4471 에서 두 번 결제됐고, 다음 주 주문의 배송지를 바꿔야 해요.\" 로그를 보면 이런 메시지에서 에이전트가 57%의 경우 첫 번째 문제만 해결하고 대화를 끝내며, 나머지 문제는 새 티켓으로 다시 들어온다. 이런 요청을 처리하는 가장 효과적인 방법은?",
+  "options": [
+   {
+    "en": "Have the agent decompose the message into distinct issues, investigate each one in parallel using the shared customer context, and then synthesize a single unified resolution.",
+    "ko": "에이전트가 메시지를 서로 다른 문제로 나누고, 같은 고객 맥락을 공유하며 각각을 병렬로 조사한 뒤, 하나의 통합된 해결안으로 묶게 한다.",
+    "why": "빠지는 문제 없이 모두 다루고 답도 한 번에 정리되므로 재문의가 사라진다. 정답."
+   },
+   {
+    "en": "Ask the customer to submit a separate ticket for each issue so the agent can handle them one at a time.",
+    "ko": "에이전트가 하나씩 처리할 수 있게 고객에게 문제마다 티켓을 따로 내 달라고 요청한다.",
+    "why": "지금 새 티켓이 생기는 문제를 고객에게 떠넘겨 공식화한 것이라 첫 상담 해결률이 오히려 떨어진다."
+   },
+   {
+    "en": "Escalate every message that contains more than one issue to a human agent, since multi-issue cases are complex.",
+    "ko": "문제가 여러 개인 경우는 복잡하니, 두 개 이상이 담긴 메시지는 모두 사람 상담원에게 넘긴다.",
+    "why": "각 문제는 에이전트가 풀 수 있는 일이다. 복잡해 보인다는 이유만으로 넘기는 건 잘못된 에스컬레이션이다."
+   },
+   {
+    "en": "Deploy three specialized agents for returns, billing, and account changes, forward the full message to all three, and let each one reply to the customer independently.",
+    "ko": "반품·결제·계정 담당 전문 에이전트 셋을 두고 메시지 전체를 셋 모두에게 보내, 각자 고객에게 따로 답하게 한다.",
+    "why": "구조가 과하고, 맥락을 공유하지 않은 답 세 개가 따로 가서 겹치거나 서로 어긋날 수 있다. 통합된 해결안이 없다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "문의 여러 개 = 나눠 병렬 조사 후 한 답으로",
+  "explain_ko": [
+   "**resolves only the first issue** 와 **come back as new tickets** 는 메시지 속 문제를 따로따로 인식하지 못했다는 신호다.",
+   "먼저 메시지를 깨진 제품·이중 결제·배송지 변경처럼 **개별 항목으로 분해**하고, 같은 고객 정보를 공유하며 각각 조사한다.",
+   "마지막에 결과를 **하나의 답으로 합쳐** 고객에게 전하면, 누락도 중복 답변도 없다."
+  ],
+  "clues": [
+   {
+    "en": "in a single message",
+    "ko": "여러 문제가 한 메시지에 섞임"
+   },
+   {
+    "en": "resolves only the first issue",
+    "ko": "나머지를 놓침 = 분해 실패"
+   },
+   {
+    "en": "the remaining issues come back as new tickets",
+    "ko": "첫 상담 해결 실패"
+   }
+  ],
+  "discuss_ko": "{D} 처럼 전문 에이전트 셋에게 나눠 맡기는 것도 '분해'인데, 이게 정답이 못 되는 이유는 무엇일까?",
+  "words": [
+   {
+    "word": "remaining",
+    "pos": "adj.",
+    "ko": "나머지의, 남은",
+    "example": "the remaining issues come back as new tickets"
+   },
+   {
+    "word": "decompose",
+    "pos": "v.",
+    "ko": "분해하다, 나누다",
+    "example": "decompose the message into distinct issues"
+   },
+   {
+    "word": "distinct",
+    "pos": "adj.",
+    "ko": "별개의, 뚜렷이 구별되는",
+    "example": "into distinct issues"
+   },
+   {
+    "word": "synthesize",
+    "pos": "v.",
+    "ko": "종합하다, 합치다",
+    "example": "synthesize a single unified resolution"
+   },
+   {
+    "word": "resolution",
+    "pos": "n.",
+    "ko": "해결(안)",
+    "example": "a single unified resolution"
+   },
+   {
+    "word": "independently",
+    "pos": "adv.",
+    "ko": "각자 따로, 독립적으로",
+    "example": "let each one reply to the customer independently"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C1-05",
+  "domain": 2,
+  "scenario": "Customer Support Resolution Agent",
+  "source": "claude",
+  "ts": [
+   "2.2"
+  ],
+  "guide_en": "Returning structured error metadata including errorCategory (transient/validation/permission), isRetryable boolean, and human-readable descriptions",
+  "select": 2,
+  "q_en": "Your `process_refund` MCP tool returns `isError: true` with the same message, \"Operation failed,\" for every failure. Logs show two very different causes behind it: payment gateway timeouts, which usually succeed on a second attempt, and refunds rejected because the 30-day return window has expired. The agent retries both kinds up to three times, and after expired-window rejections it tells customers \"we're having a technical issue, please try again later,\" so they contact support again. Which TWO changes most effectively fix this? (Choose TWO.)",
+  "q_ko": "`process_refund` MCP tool 은 어떤 실패든 `isError: true` 와 똑같은 메시지 \"Operation failed\" 를 돌려준다. 로그를 보면 그 뒤에 전혀 다른 원인 두 가지가 있다. 대개 두 번째 시도에서 성공하는 결제 게이트웨이 timeout, 그리고 30일 반품 기간이 지나 거절된 환불이다. 에이전트는 두 경우 모두 최대 세 번 재시도하고, 반품 기간 만료로 거절된 뒤에는 고객에게 \"기술적 문제가 있으니 나중에 다시 시도해 주세요\"라고 말해 고객이 다시 문의한다. 가장 효과적인 변경 두 가지는? (2개 고르시오.)",
+  "options": [
+   {
+    "en": "Return structured error metadata with an `errorCategory` (for example, `transient` for gateway timeouts) and an `isRetryable` boolean so the agent can decide whether a retry makes sense.",
+    "ko": "`errorCategory`(예: 게이트웨이 timeout 은 `transient`)와 `isRetryable` boolean 을 담은 구조화된 오류 메타데이터를 돌려줘, 에이전트가 재시도할 만한지 판단하게 한다.",
+    "why": "원인을 구분할 정보가 생기니 timeout 만 재시도하고 나머지는 헛된 재시도를 멈춘다. 정답."
+   },
+   {
+    "en": "Cap retries at one attempt for every `process_refund` error to reduce wasted retries.",
+    "ko": "헛된 재시도를 줄이려고 `process_refund` 의 모든 오류에 재시도를 한 번으로 제한한다.",
+    "why": "여전히 원인을 모르니 만료 건도 한 번은 재시도하고, 고객에게는 계속 '기술 문제'라고 말한다."
+   },
+   {
+    "en": "For business-rule violations such as an expired return window, return `isRetryable: false` along with a customer-friendly explanation the agent can relay.",
+    "ko": "반품 기간 만료 같은 업무 규칙 위반에는 `isRetryable: false` 와 함께 에이전트가 고객에게 그대로 전할 수 있는 쉬운 설명을 돌려준다.",
+    "why": "재시도를 막고 고객에게 진짜 이유를 알려 줄 수 있어 재문의가 사라진다. 정답."
+   },
+   {
+    "en": "Add a system prompt instruction telling the agent to infer from the conversation whether an \"Operation failed\" error was a timeout or a policy rejection.",
+    "ko": "\"Operation failed\" 오류가 timeout 인지 정책 거절인지 대화 맥락으로 추측하라는 지시를 system prompt 에 넣는다.",
+    "why": "tool 이 정보를 안 주는데 모델에게 추측을 시키는 것이라 근본 원인이 그대로다."
+   },
+   {
+    "en": "Return an empty successful result for policy rejections so that the agent never retries them.",
+    "ko": "정책 거절은 빈 성공 결과로 돌려줘 에이전트가 절대 재시도하지 않게 한다.",
+    "why": "실패를 성공처럼 숨기는 안티패턴이다. 에이전트가 환불이 된 줄 알고 고객에게 잘못 안내할 수 있다."
+   }
+  ],
+  "answer": [
+   0,
+   2
+  ],
+  "point_ko": "똑같은 실패 메시지 = 분류·재시도 여부·설명을 담아 반환",
+  "explain_ko": [
+   "**the same message, \"Operation failed,\"** 로는 에이전트가 timeout 과 정책 거절을 구분할 수 없다. 그래서 둘 다 재시도하고 둘 다 '기술 문제'라고 말한다.",
+   "`errorCategory` 와 `isRetryable` 을 주면 **일시적 오류만 재시도**하는 판단이 가능해진다.",
+   "업무 규칙 위반에는 `isRetryable: false` 와 **고객용 설명**을 붙여야 에이전트가 \"반품 기간이 지났습니다\"라고 정확히 안내할 수 있다."
+  ],
+  "clues": [
+   {
+    "en": "the same message, \"Operation failed,\" for every failure",
+    "ko": "원인 정보가 없음"
+   },
+   {
+    "en": "usually succeed on a second attempt",
+    "ko": "일시적(transient) 오류 = 재시도 가치 있음"
+   },
+   {
+    "en": "the 30-day return window has expired",
+    "ko": "업무 규칙 위반 = 재시도해도 소용없음"
+   },
+   {
+    "en": "so they contact support again",
+    "ko": "고객에게 진짜 이유를 못 전함"
+   }
+  ],
+  "discuss_ko": "{B} 처럼 재시도를 한 번으로 줄이면 낭비는 확실히 줄어드는데, 이것만으로 부족한 이유는 무엇일까?",
+  "words": [
+   {
+    "word": "expire",
+    "pos": "v.",
+    "ko": "만료되다",
+    "example": "the 30-day return window has expired"
+   },
+   {
+    "word": "attempt",
+    "pos": "n.",
+    "ko": "시도",
+    "example": "usually succeed on a second attempt"
+   },
+   {
+    "word": "cap",
+    "pos": "v.",
+    "ko": "상한을 두다, 제한하다",
+    "example": "Cap retries at one attempt"
+   },
+   {
+    "word": "violation",
+    "pos": "n.",
+    "ko": "위반",
+    "example": "business-rule violations"
+   },
+   {
+    "word": "relay",
+    "pos": "v.",
+    "ko": "전달하다",
+    "example": "a customer-friendly explanation the agent can relay"
+   },
+   {
+    "word": "infer",
+    "pos": "v.",
+    "ko": "추론하다, 짐작하다",
+    "example": "to infer from the conversation"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C1-06",
+  "domain": 5,
+  "scenario": "Customer Support Resolution Agent",
+  "source": "claude",
+  "ts": [
+   "5.1"
+  ],
+  "guide_en": "Trimming verbose tool outputs to only relevant fields before they accumulate in context (e.g., keeping only return-relevant fields from order lookups)",
+  "q_en": "In multi-order sessions, the agent calls `lookup_order` for every order the customer mentions. Each result contains more than 40 fields, such as warehouse bin codes, carrier routing IDs, tax breakdowns, and marketing flags, but return decisions use only five of them: order date, delivery date, item condition, amount paid, and return status. After four or five lookups, the conversation exceeds 60K tokens and the agent starts overlooking the return status of earlier orders. What's the most effective fix?",
+  "q_ko": "주문이 여러 건인 세션에서 에이전트는 고객이 말하는 주문마다 `lookup_order` 를 호출한다. 결과마다 창고 선반 코드, 택배 경로 ID, 세금 내역, 마케팅 플래그 등 40개가 넘는 필드가 있지만, 반품 판단에 쓰이는 건 주문일·배송일·상품 상태·결제 금액·반품 상태 다섯 개뿐이다. 조회가 네다섯 번 쌓이면 대화가 60K 토큰을 넘고, 에이전트가 앞선 주문들의 반품 상태를 놓치기 시작한다. 가장 효과적인 해결책은?",
+  "options": [
+   {
+    "en": "Switch to a model with a larger context window so that all order fields fit comfortably.",
+    "ko": "주문 필드가 넉넉히 다 들어가도록 context window 가 더 큰 모델로 바꾼다.",
+    "why": "쓸모없는 필드 35개가 핵심 정보를 묻어 버리는 문제는 그대로다. 공간만 늘릴 뿐이다."
+   },
+   {
+    "en": "Trim each `lookup_order` result to the return-relevant fields before it is added to the conversation context.",
+    "ko": "`lookup_order` 결과를 대화 context 에 넣기 전에 반품에 필요한 필드만 남기고 잘라 낸다.",
+    "why": "쌓이는 양 자체가 줄고 핵심 필드만 남아 앞선 주문 정보도 놓치지 않는다. 정답."
+   },
+   {
+    "en": "Summarize the conversation history every three turns to keep total token usage under a fixed budget.",
+    "ko": "세 턴마다 대화 기록을 요약해 전체 토큰 사용량을 정해진 예산 아래로 유지한다.",
+    "why": "요약하면서 금액·날짜·상태 같은 구체적 사실이 흐려질 위험이 크다. 원인인 긴 tool 결과도 계속 들어온다."
+   },
+   {
+    "en": "Add a system prompt instruction telling the agent to ignore irrelevant fields in order lookup results.",
+    "ko": "주문 조회 결과에서 관련 없는 필드는 무시하라고 system prompt 에 지시한다.",
+    "why": "무시하라고 해도 필드는 context 에 그대로 쌓여 토큰을 먹고 주의를 흩뜨린다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "긴 tool 결과 = 필요한 필드만 남기고 context 에",
+  "explain_ko": [
+   "**more than 40 fields** 중 **only five** 만 쓰인다는 건, context 대부분이 필요 없는 데이터라는 뜻이다.",
+   "조회가 쌓일수록 불필요한 필드가 토큰을 차지해 **overlooking the return status of earlier orders** 같은 누락이 생긴다.",
+   "그래서 결과가 context 에 **쌓이기 전에** 반품 관련 필드만 남기는 게 근본 해결이다. 창을 키우거나 무시하라고 말하는 건 쓰레기를 그대로 둔다."
+  ],
+  "clues": [
+   {
+    "en": "more than 40 fields",
+    "ko": "tool 결과가 지나치게 장황함"
+   },
+   {
+    "en": "use only five of them",
+    "ko": "필요한 건 일부뿐"
+   },
+   {
+    "en": "After four or five lookups",
+    "ko": "조회가 반복되며 쌓임"
+   },
+   {
+    "en": "overlooking the return status of earlier orders",
+    "ko": "쌓인 잡음에 핵심이 묻힘"
+   }
+  ],
+  "discuss_ko": "{C} 처럼 주기적으로 요약하면 토큰은 확실히 줄어드는데, 고객 지원에서 이 방법이 특히 위험한 이유는 무엇일까?",
+  "words": [
+   {
+    "word": "breakdown",
+    "pos": "n.",
+    "ko": "세부 내역, 분류",
+    "example": "tax breakdowns"
+   },
+   {
+    "word": "exceed",
+    "pos": "v.",
+    "ko": "넘다, 초과하다",
+    "example": "the conversation exceeds 60K tokens"
+   },
+   {
+    "word": "overlook",
+    "pos": "v.",
+    "ko": "놓치다, 간과하다",
+    "example": "the agent starts overlooking the return status of earlier orders"
+   },
+   {
+    "word": "comfortably",
+    "pos": "adv.",
+    "ko": "넉넉하게, 여유 있게",
+    "example": "so that all order fields fit comfortably"
+   },
+   {
+    "word": "trim",
+    "pos": "v.",
+    "ko": "잘라 내다, 다듬다",
+    "example": "Trim each `lookup_order` result"
+   },
+   {
+    "word": "irrelevant",
+    "pos": "adj.",
+    "ko": "관련 없는",
+    "example": "ignore irrelevant fields"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C1-07",
+  "domain": 5,
+  "scenario": "Customer Support Resolution Agent",
+  "source": "claude",
+  "ts": [
+   "5.2"
+  ],
+  "guide_en": "Appropriate escalation triggers: customer requests for a human, policy exceptions/gaps (not just complex cases), and inability to make meaningful progress",
+  "select": 2,
+  "q_en": "You are writing escalation criteria for the support agent and reviewing five logged cases. First-contact resolution is currently 61% against an 80% target, so the agent must escalate only when escalation is truly warranted. None of these customers asked for a human agent. Which TWO cases should the agent escalate? (Choose TWO.)",
+  "q_ko": "지원 에이전트의 에스컬레이션 기준을 쓰면서 기록된 사례 다섯 개를 검토하고 있다. 첫 상담 해결률은 목표 80%에 못 미치는 61%라서, 에이전트는 정말 필요할 때만 사람에게 넘겨야 한다. 이 고객들 중 사람 상담원을 요청한 사람은 없다. 에이전트가 에스컬레이션해야 하는 사례 두 개는? (2개 고르시오.)",
+  "options": [
+   {
+    "en": "A customer asks the agent to match a competitor's lower price, but the policy only covers price adjustments when the price drops on your own site.",
+    "ko": "고객이 경쟁사의 더 낮은 가격에 맞춰 달라고 하는데, 정책은 자사 사이트에서 가격이 내려간 경우의 가격 조정만 다룬다.",
+    "why": "정책이 이 요청에 대해 아무 말도 하지 않는 공백이라 에이전트가 임의로 정하면 안 된다. 정답."
+   },
+   {
+    "en": "A customer uses angry language about a cracked mug, and the replacement is a standard case with photo evidence that the policy clearly covers.",
+    "ko": "고객이 깨진 머그컵 때문에 화난 말투를 쓰지만, 사진 증거가 있고 정책이 분명히 다루는 표준 교체 건이다.",
+    "why": "감정은 난이도의 척도가 아니다. 불편에 공감하고 바로 해결해 주면 된다."
+   },
+   {
+    "en": "The agent self-reports a confidence score of 5 out of 10 while processing a routine return that meets every policy condition.",
+    "ko": "모든 정책 조건을 충족하는 일상적인 반품을 처리하면서 에이전트가 스스로 확신도를 10점 중 5점이라고 보고한다.",
+    "why": "스스로 매긴 확신도는 실제 복잡도와 잘 맞지 않는다. 조건을 다 갖춘 건은 처리하면 된다."
+   },
+   {
+    "en": "The customer has provided an email address, account number, and order number, yet every `get_customer` and `lookup_order` call returns no matching record, and the agent cannot make any further progress.",
+    "ko": "고객이 이메일·계정 번호·주문 번호를 다 줬는데도 `get_customer` 와 `lookup_order` 가 모두 일치하는 기록이 없다고 돌려주고, 에이전트는 더 이상 진전할 수 없다.",
+    "why": "쓸 수 있는 식별 정보를 다 써도 막혔으니 '의미 있는 진전 불가'에 해당한다. 정답."
+   },
+   {
+    "en": "A customer has questions about four different orders, and each question is covered by the standard return policy.",
+    "ko": "고객이 서로 다른 주문 네 건에 대해 묻는데, 모두 표준 반품 정책이 다루는 내용이다.",
+    "why": "건수가 많아 복잡할 뿐 정책 안의 일이다. 복잡함 자체는 에스컬레이션 사유가 아니다."
+   }
+  ],
+  "answer": [
+   0,
+   3
+  ],
+  "point_ko": "넘길 때 = 정책 공백 · 진전 불가 (감정·복잡함 X)",
+  "explain_ko": [
+   "에스컬레이션 신호는 세 가지다. **고객이 사람을 요청**, **정책 예외·공백**, **의미 있는 진전 불가**. 이 지문은 첫째를 빼 두었다.",
+   "경쟁사 가격 맞추기는 정책이 **자사 사이트 가격만** 다루니 공백이다. 식별 정보를 다 줬는데도 기록을 못 찾는 건은 진전이 불가능하다.",
+   "화난 말투(감정), 확신도 5점(자기 보고), 주문 네 건(단순히 많음)은 모두 에이전트가 풀 수 있는 일이라 넘기면 해결률만 떨어진다."
+  ],
+  "clues": [
+   {
+    "en": "61% against an 80% target",
+    "ko": "불필요한 에스컬레이션을 줄여야 함"
+   },
+   {
+    "en": "only when escalation is truly warranted",
+    "ko": "진짜 사유만 골라야 함"
+   },
+   {
+    "en": "None of these customers asked for a human agent",
+    "ko": "'사람 요청' 신호는 제외"
+   }
+  ],
+  "discuss_ko": "{E} 처럼 주문이 네 건이나 되는 복잡한 상담은 실수할 확률이 높은데, 그래도 넘기지 않는 게 맞는 이유는 무엇일까?",
+  "words": [
+   {
+    "word": "warranted",
+    "pos": "adj.",
+    "ko": "정당한 이유가 있는, 필요한",
+    "example": "only when escalation is truly warranted"
+   },
+   {
+    "word": "criteria",
+    "pos": "n.",
+    "ko": "기준 (criterion 의 복수)",
+    "example": "writing escalation criteria"
+   },
+   {
+    "word": "competitor",
+    "pos": "n.",
+    "ko": "경쟁사",
+    "example": "match a competitor's lower price"
+   },
+   {
+    "word": "adjustment",
+    "pos": "n.",
+    "ko": "조정",
+    "example": "price adjustments"
+   },
+   {
+    "word": "routine",
+    "pos": "adj.",
+    "ko": "일상적인, 흔한",
+    "example": "a routine return"
+   },
+   {
+    "word": "make progress",
+    "pos": "phr.",
+    "ko": "진전을 이루다",
+    "example": "cannot make any further progress"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C1-08",
+  "domain": 1,
+  "scenario": "Customer Support Resolution Agent",
+  "source": "claude",
+  "ts": [
+   "1.1"
+  ],
+  "guide_en": "Implementing agentic loop control flow that continues when stop_reason is \"tool_use\" and terminates when stop_reason is \"end_turn\"",
+  "q_en": "Your agentic loop stops and sends Claude's reply to the customer as soon as a response contains any text. Logs show that 23% of refund conversations end with a message like \"Let me check that order for you.\" and nothing more. In those responses, Claude wrote a short sentence alongside a `tool_use` block for `lookup_order`, but the tool was never executed. What's the most effective fix?",
+  "q_ko": "에이전트 루프는 응답에 텍스트가 조금이라도 있으면 즉시 멈추고 Claude 의 답을 고객에게 보낸다. 로그를 보면 환불 대화의 23%가 \"주문을 확인해 볼게요.\" 같은 메시지로 끝나고 그 뒤에 아무것도 없다. 그 응답들에서 Claude 는 `lookup_order` 를 부르는 `tool_use` 블록과 함께 짧은 문장을 썼는데, tool 은 끝내 실행되지 않았다. 가장 효과적인 해결책은?",
+  "options": [
+   {
+    "en": "Instruct Claude in the system prompt never to include text in a response that calls a tool.",
+    "ko": "tool 을 호출하는 응답에는 절대 텍스트를 넣지 말라고 system prompt 로 지시한다.",
+    "why": "잘못된 종료 조건은 그대로 두고 모델 행동을 프롬프트로 막으려는 것이라 확률적으로 또 실패한다."
+   },
+   {
+    "en": "Control the loop with `stop_reason`: while it is `\"tool_use\"`, execute the requested tools and append their results, and end the loop only when it is `\"end_turn\"`.",
+    "ko": "루프를 `stop_reason` 으로 제어한다. `\"tool_use\"` 인 동안은 요청된 tool 을 실행하고 결과를 이어 붙이며, `\"end_turn\"` 일 때만 루프를 끝낸다.",
+    "why": "API 가 알려 주는 공식 종료 신호를 쓰니 텍스트가 섞여도 tool 이 실행되고 대화가 이어진다. 정답."
+   },
+   {
+    "en": "Scan each reply for phrases such as \"let me check\" or \"one moment\" and keep the loop running whenever they appear.",
+    "ko": "답에 \"let me check\", \"one moment\" 같은 문구가 있는지 살펴 보이면 루프를 계속 돌린다.",
+    "why": "자연어 문구로 종료를 판단하는 안티패턴이다. 표현이 조금만 달라도 놓친다."
+   },
+   {
+    "en": "Always run the loop for a fixed 10 iterations before returning a reply to the customer.",
+    "ko": "고객에게 답을 보내기 전에 항상 루프를 정해진 10회만큼 돌린다.",
+    "why": "임의의 반복 횟수를 주된 종료 기준으로 쓰는 안티패턴이다. 일이 끝나도 계속 돌거나 덜 끝나도 멈춘다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "루프 계속·종료는 stop_reason 으로만",
+  "explain_ko": [
+   "**as soon as a response contains any text** 는 '텍스트가 있으면 끝'이라는 잘못된 종료 조건이다.",
+   "Claude 는 **alongside a `tool_use` block** 처럼 텍스트와 tool 호출을 한 응답에 같이 낼 수 있다. 이때 `stop_reason` 은 `\"tool_use\"` 다.",
+   "그래서 `\"tool_use\"` 면 tool 을 실행하고 결과를 붙여 다시 보내고, `\"end_turn\"` 일 때만 멈추는 것이 정석이다. 문구 탐지나 고정 횟수는 모두 안티패턴이다."
+  ],
+  "clues": [
+   {
+    "en": "as soon as a response contains any text",
+    "ko": "텍스트 유무로 종료 = 잘못된 신호"
+   },
+   {
+    "en": "alongside a `tool_use` block",
+    "ko": "텍스트와 tool 호출이 한 응답에"
+   },
+   {
+    "en": "the tool was never executed",
+    "ko": "tool_use 인데 루프가 멈춤"
+   }
+  ],
+  "discuss_ko": "{C} 처럼 \"let me check\" 같은 문구를 잡으면 지금 로그의 사례는 대부분 고칠 수 있을 텐데, 왜 안티패턴으로 분류될까?",
+  "words": [
+   {
+    "word": "as soon as",
+    "pos": "phr.",
+    "ko": "~하자마자",
+    "example": "as soon as a response contains any text"
+   },
+   {
+    "word": "alongside",
+    "pos": "prep.",
+    "ko": "~와 함께, 나란히",
+    "example": "alongside a `tool_use` block"
+   },
+   {
+    "word": "execute",
+    "pos": "v.",
+    "ko": "실행하다",
+    "example": "the tool was never executed"
+   },
+   {
+    "word": "append",
+    "pos": "v.",
+    "ko": "덧붙이다, 뒤에 추가하다",
+    "example": "append their results"
+   },
+   {
+    "word": "iteration",
+    "pos": "n.",
+    "ko": "반복 (1회)",
+    "example": "a fixed 10 iterations"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ }
+]

@@ -1,0 +1,187 @@
+{
+  "no": 6,
+  "name_en": "Structured Data Extraction",
+  "name_ko": "구조화 데이터 추출",
+  "domains": [4, 5],
+  "oneline_ko": "뒤죽박죽 서류 더미에서 필요한 값만 뽑아 정해진 양식에 옮겨 적는 AI 서기를 만든다. 없는 값은 지어내지 않고, 틀리면 스스로 고치고, 애매하면 사람에게 넘기는 게 핵심.",
+  "description": [
+    {"en": "You are building a structured data extraction system using Claude.", "ko": "여러분은 Claude 로 구조화 데이터 추출 시스템을 만들고 있다."},
+    {"en": "The system extracts information from unstructured documents, validates the output using JavaScript Object Notation (JSON) schemas, and maintains high accuracy.", "ko": "이 시스템은 비정형 문서에서 정보를 뽑고, JSON(JavaScript Object Notation) schema 로 출력을 검증하며, 높은 정확도를 유지한다."},
+    {"en": "It must handle edge cases gracefully and integrate with downstream systems.", "ko": "예외적인 경우도 매끄럽게 처리하고, 결과를 받아 쓰는 다음 시스템과도 연결되어야 한다."}
+  ],
+  "primary_en": "Primary domains: Prompt Engineering & Structured Output, Context Management & Reliability",
+  "story_ko": [
+    "회사에 송장, 계약서, 논문 같은 문서가 쏟아진다. 모양도 제각각이다.",
+    "Claude 는 서기처럼 문서를 읽고 정해진 양식(JSON schema, 데이터 모양 설계도)의 칸을 채운다. 채운 결과는 사람보다 먼저 다른 프로그램(downstream system)이 받아 쓴다.",
+    "양식에 '필수' 칸이 있는데 문서에 그 정보가 없으면, 서기는 칸을 비울 수 없어 그럴듯한 값을 지어낸다. 그래서 없을 수도 있는 칸은 비워도 되게(nullable) 만든다.",
+    "양식을 지켜도 내용은 틀릴 수 있다. 품목 금액을 더한 값이 합계와 안 맞는 경우처럼, 문법 검사로는 못 잡는 의미 오류는 따로 검사한다.",
+    "틀렸을 때 '어디가 틀렸는지' 알려 주고 다시 시키면 형식 문제는 대부분 고쳐진다. 하지만 문서에 아예 없는 정보는 몇 번을 다시 시켜도 안 나온다.",
+    "전체 정확도 97% 같은 평균 숫자는 특정 문서 종류의 약점을 가린다. 문서 종류·칸별로 쪼개 보고, 자신 없는 결과는 사람 검토로 보낸다."
+  ],
+  "flow": [
+    {"en": "Unstructured documents", "ko": "비정형 문서 입력", "note_ko": "모양이 제각각. 급하지 않은 대량 처리는 Message Batches API"},
+    {"en": "Claude + extraction tool (JSON schema) with tool_choice", "ko": "추출 도구 호출", "note_ko": "`tool_choice` 로 도구 호출을 강제한다"},
+    {"en": "tool_use response → structured data", "ko": "구조화 데이터 받기", "note_ko": "JSON 문법 오류 없음. null, \"other\", \"unclear\" 값이 들어올 수 있다"},
+    {"en": "Semantic validation (calculated_total vs stated_total)", "ko": "의미 검증", "note_ko": "스키마가 못 잡는 합계 불일치·잘못된 칸 배치를 검사"},
+    {"en": "Retry with error feedback / Keep null (information absent)", "ko": "오류를 알려 주고 재시도 / 정보가 없으면 null 유지", "note_ko": "형식 오류는 재시도로 고쳐지고, 없는 정보는 안 고쳐진다"},
+    {"en": "Downstream system / Human review (low confidence, conflicting source)", "ko": "다음 시스템으로 / 사람 검토로", "note_ko": "칸별 confidence 를 정답 데이터로 보정해서 나눈다"}
+  ],
+  "flow_note_ko": "시험은 2단계(`tool_choice`), 3단계(nullable·enum 설계), 4~5단계(의미 오류와 재시도의 한계), 6단계(사람 검토 라우팅)에서 자주 묻는다. '스키마를 통과했으니 맞다'는 생각이 가장 흔한 함정이다.",
+  "cast": [
+    {"term": "tool_use + JSON schema", "ko": "도구 호출 형식으로 구조화 출력 받기", "what_ko": "추출 도구의 입력 파라미터를 JSON schema 로 정의하면 스키마를 지키는 출력을 가장 확실하게 받고 JSON 문법 오류가 사라진다."},
+    {"term": "tool_choice: \"auto\"", "ko": "도구를 쓸지 모델이 결정", "what_ko": "모델이 도구 대신 텍스트로 답할 수 있어서 구조화 출력이 보장되지 않는다."},
+    {"term": "tool_choice: \"any\"", "ko": "도구는 반드시, 어느 도구인지는 모델이 선택", "what_ko": "추출 스키마가 여러 개이고 문서 종류를 모를 때 구조화 출력을 보장한다."},
+    {"term": "tool_choice: {\"type\": \"tool\", \"name\": \"extract_metadata\"}", "ko": "특정 도구 강제 호출", "what_ko": "특정 추출을 enrichment(보강) 단계보다 먼저 반드시 실행하게 할 때 쓴다."},
+    {"term": "optional (nullable) field", "ko": "비워도 되는 칸", "what_ko": "문서에 없을 수 있는 정보를 필수 칸으로 두면 모델이 값을 지어낸다. null 을 허용해서 막는다."},
+    {"term": "enum \"other\" + detail", "ko": "'기타' 값 + 설명 문자열 칸", "what_ko": "정해진 분류에 안 맞는 값을 억지로 끼우지 않고 '기타'로 받은 뒤 내용을 따로 적게 한다."},
+    {"term": "\"unclear\"", "ko": "'애매함' enum 값", "what_ko": "원문이 애매할 때 억지로 하나를 고르지 않게 해 준다."},
+    {"term": "semantic error vs syntax error", "ko": "의미 오류 vs 문법 오류", "what_ko": "tool use 는 문법 오류만 없앤다. 합계가 안 맞거나 값이 다른 칸에 들어간 의미 오류는 따로 검증해야 한다."},
+    {"term": "calculated_total / stated_total / conflict_detected", "ko": "계산한 합계 / 문서에 적힌 합계 / 원문 모순 표시", "what_ko": "두 합계를 함께 뽑아 비교하고, 원문끼리 맞지 않으면 boolean 으로 표시해 스스로 검증하게 한다."},
+    {"term": "retry-with-error-feedback", "ko": "오류를 알려 주고 다시 시키기", "what_ko": "원래 문서, 실패한 추출, 구체적인 검증 오류를 함께 보낸다. 형식 오류에는 효과, 원문에 없는 정보에는 무효."},
+    {"term": "Pydantic", "ko": "Python 데이터 검증 라이브러리", "what_ko": "추출 결과가 스키마를 지키는지 검사하고, 실패하면 그 오류를 retry 요청에 넣는다."},
+    {"term": "Message Batches API / custom_id", "ko": "묶음 처리 API / 요청 이름표", "what_ko": "50% 저렴, 최대 24시간, 지연 보장 없음. 실패한 문서는 `custom_id` 로 찾아 그것만 다시 보낸다."},
+    {"term": "field-level confidence", "ko": "칸별 자신감 점수", "what_ko": "labeled validation set(정답이 달린 검증 데이터)으로 보정해서 사람 검토로 보낼 기준을 정한다."},
+    {"term": "stratified random sampling", "ko": "층별 무작위 표본 검사", "what_ko": "confidence 가 높은 추출도 골고루 뽑아 검사해 오류율을 계속 재고 새 오류 패턴을 찾는다."}
+  ],
+  "patterns": [
+    {
+      "title_ko": "구조화 출력은 tool_use + JSON schema, 호출 보장은 `tool_choice`",
+      "signal_en": ["JSON syntax errors", "returns text instead of calling the tool", "document type is unknown"],
+      "signal_ko": "출력 모양이 깨지거나, 모델이 도구를 안 부르고 글로 답하거나, 어떤 스키마로 뽑을지 미리 모른다는 뜻.",
+      "answer_ko": "추출 도구를 JSON schema 로 정의하고 `tool_use` 응답에서 데이터를 꺼낸다. 스키마가 여러 개이고 문서 종류를 모르면 `tool_choice: \"any\"`, 특정 추출을 먼저 반드시 돌려야 하면 `{\"type\": \"tool\", \"name\": \"extract_metadata\"}` 로 강제한다.",
+      "answer_en": "Setting tool_choice: \"any\" to guarantee structured output",
+      "trap_ko": [
+        "프롬프트에 'JSON 형식으로만 답하라'고 강조: 부탁일 뿐 스키마 준수가 보장되지 않는다.",
+        "`tool_choice: \"auto\"` 그대로 두기: 모델이 도구 대신 텍스트로 답할 수 있다.",
+        "문서 종류를 모르는데 한 도구를 강제: 다른 종류 문서를 맞지 않는 스키마로 뽑게 된다."
+      ],
+      "ts": "4.3",
+      "guide_en": "Setting tool_choice: \"any\" to guarantee structured output when multiple extraction schemas exist and the document type is unknown",
+      "guide_ko": "추출 스키마가 여러 개이고 문서 종류를 모를 때 `tool_choice: \"any\"` 로 구조화 출력을 보장한다."
+    },
+    {
+      "title_ko": "문서에 없을 수 있는 칸은 nullable: 필수 칸은 값을 지어내게 만든다",
+      "signal_en": ["fabricated values", "not present in the source document", "required fields"],
+      "signal_ko": "원문에 없는 정보를 모델이 그럴듯하게 채워 넣고 있다는 뜻(hallucination, 환각).",
+      "answer_ko": "원문에 없을 수 있는 칸을 optional(nullable) 로 바꿔서, 정보가 없으면 null 을 돌려주게 한다.",
+      "answer_en": "Designing schema fields as optional (nullable)",
+      "trap_ko": [
+        "프롬프트에만 '모르면 지어내지 마'라고 쓰기: 칸이 필수로 남아 있으면 스키마가 계속 값을 요구한다.",
+        "빈 칸을 기본값(0, 빈 문자열)으로 채우게 하기: 진짜 값과 '정보 없음'을 구분할 수 없다.",
+        "값이 나올 때까지 재시도: 원문에 없는 정보는 재시도로 생기지 않는다."
+      ],
+      "ts": "4.3",
+      "guide_en": "Designing schema fields as optional (nullable) when source documents may not contain the information, preventing the model from fabricating values to satisfy required fields",
+      "guide_ko": "원문에 정보가 없을 수 있는 칸은 optional(nullable) 로 설계해, 필수 칸을 채우려고 모델이 값을 지어내는 것을 막는다."
+    },
+    {
+      "title_ko": "분류 칸은 enum + `\"other\"` + detail, 애매하면 `\"unclear\"`",
+      "signal_en": ["doesn't fit the predefined categories", "ambiguous cases", "inconsistent source formatting"],
+      "signal_ko": "정해진 선택지 밖의 값이 들어오거나, 원문이 애매하거나, 원문 표기가 제각각이라는 뜻.",
+      "answer_ko": "enum 에 `\"other\"` 를 두고 실제 내용은 detail 문자열 칸에 적게 한다. 애매한 경우를 위한 `\"unclear\"` 값을 추가한다. 표기가 제각각인 값은 엄격한 스키마와 함께 프롬프트에 형식 정규화(normalization) 규칙을 적는다.",
+      "answer_en": "\"other\" + detail fields for extensible categorization",
+      "trap_ko": [
+        "enum 을 없애고 자유 문자열로 받기: 다음 시스템이 어떤 값이 올지 예측할 수 없다.",
+        "새 분류가 보일 때마다 enum 에 계속 추가: 끝이 없고 그때마다 스키마를 고쳐야 한다.",
+        "애매해도 가장 가까운 분류를 고르게 강제: 틀린 값이 확신에 찬 모습으로 들어간다."
+      ],
+      "ts": "4.3",
+      "guide_en": "Adding enum values like \"unclear\" for ambiguous cases and \"other\" + detail fields for extensible categorization",
+      "guide_ko": "애매한 경우를 위한 \"unclear\" 같은 enum 값과, 확장 가능한 분류를 위한 \"other\" + detail 칸을 추가한다."
+    },
+    {
+      "title_ko": "스키마를 통과해도 내용은 틀릴 수 있다: 의미 검증을 따로 붙인다",
+      "signal_en": ["line items don't sum to the total", "values in wrong fields", "passes schema validation"],
+      "signal_ko": "JSON 모양은 맞는데 숫자나 칸 배치가 틀렸다는 뜻. 문법 오류가 아니라 의미 오류다.",
+      "answer_ko": "`calculated_total`(품목을 더한 값)을 `stated_total`(문서에 적힌 합계)과 함께 뽑아 비교하고, 원문끼리 모순이면 `conflict_detected` 를 true 로 표시하게 한다.",
+      "answer_en": "extracting \"calculated_total\" alongside \"stated_total\" to flag discrepancies",
+      "trap_ko": [
+        "스키마를 더 엄격하게(strict) 만들기: strict schema 는 문법 오류만 막고 의미 오류는 못 막는다.",
+        "tool use 방식으로 바꾸기: 이미 스키마는 통과한 상황이라 원인이 아니다.",
+        "원문 값이 서로 다르면 하나를 골라 조용히 넣기: 모순을 표시해야 다음 단계가 판단할 수 있다."
+      ],
+      "ts": "4.4",
+      "guide_en": "Designing self-correction validation flows: extracting \"calculated_total\" alongside \"stated_total\" to flag discrepancies, adding \"conflict_detected\" booleans for inconsistent source data",
+      "guide_ko": "스스로 고치는 검증 흐름을 설계한다. \"stated_total\" 과 함께 \"calculated_total\" 을 뽑아 불일치를 표시하고, 원문 데이터가 모순이면 \"conflict_detected\" boolean 을 추가한다."
+    },
+    {
+      "title_ko": "재시도는 구체적인 오류를 붙여서, 단 원문에 없는 정보엔 소용없다",
+      "signal_en": ["validation fails", "retry", "exists only in an external document"],
+      "signal_ko": "재시도가 효과 있을지 판단하라는 뜻. 형식 문제인지, 정보 자체가 없는지를 가른다.",
+      "answer_ko": "원래 문서 + 실패한 추출 결과 + 구체적인 검증 오류를 함께 보내 스스로 고치게 한다. 형식 불일치·구조 오류는 이렇게 고쳐지지만, 제공하지 않은 외부 문서에만 있는 정보는 재시도해도 안 나온다.",
+      "answer_en": "follow-up requests that include the original document, the failed extraction, and specific validation errors",
+      "trap_ko": [
+        "같은 요청을 그대로 여러 번 반복: 무엇이 틀렸는지 모르니 같은 실수를 한다.",
+        "원문에 없는 값인데 재시도 횟수만 늘리기: 없는 정보는 몇 번을 해도 생기지 않는다.",
+        "검증 오류만 보내고 원래 문서는 빼기: 고칠 근거가 없다."
+      ],
+      "ts": "4.4",
+      "guide_en": "Identifying when retries will be ineffective (e.g., information exists only in an external document not provided) versus when they will succeed (format mismatches, structural output errors)",
+      "guide_ko": "재시도가 효과 없을 때(예: 제공하지 않은 외부 문서에만 정보가 있음)와 효과 있을 때(형식 불일치, 출력 구조 오류)를 구별한다."
+    },
+    {
+      "title_ko": "정보가 있는데 문서 모양이 달라 칸이 비면 few-shot 예시",
+      "signal_en": ["varied document formats", "required fields come back empty", "informal measurements"],
+      "signal_ko": "문서에 정보는 있는데 낯선 구조라서 값을 못 찾는다는 뜻. 정보 자체가 없는 경우(nullable)와 헷갈리지 말 것.",
+      "answer_ko": "형식이 다른 문서(본문 속 인용 vs 참고문헌 목록, 서술형 vs 표)에서 올바르게 추출한 few-shot 예시를 넣는다.",
+      "answer_en": "few-shot examples showing correct extraction from documents with varied formats",
+      "trap_ko": [
+        "지시문에 '꼼꼼히 찾아라'만 추가: 어떤 구조에서 어떻게 찾는지 보여 주지 못한다.",
+        "문서 형식마다 별도 추출 파이프라인 만들기: 첫 조치로는 과하다.",
+        "칸을 nullable 로 바꾸기: 정보가 있는데 못 찾는 문제는 그대로이고 null 만 늘어난다."
+      ],
+      "ts": "4.2",
+      "guide_en": "Adding few-shot examples showing correct extraction from documents with varied formats to address empty/null extraction of required fields",
+      "guide_ko": "형식이 다양한 문서에서 올바르게 추출하는 few-shot 예시를 추가해 필수 칸이 비거나 null 로 나오는 문제를 해결한다."
+    },
+    {
+      "title_ko": "대량 추출은 Message Batches API, 실패분만 `custom_id` 로 다시",
+      "signal_en": ["large volume of documents", "50% cost savings", "exceeded context limits"],
+      "signal_ko": "기다려도 되는 대량 작업을 싸게 처리하고, 일부 실패를 효율적으로 다루라는 뜻.",
+      "answer_ko": "지연을 견딜 수 있는 작업은 Message Batches API(50% 절감, 최대 24시간, 지연 보장 없음)로 보낸다. 실패한 문서만 `custom_id` 로 찾아 고쳐서(예: 너무 긴 문서는 쪼개서) 다시 보낸다. 대량 제출 전에는 샘플로 프롬프트를 다듬어 첫 통과율을 높인다.",
+      "answer_en": "resubmitting only failed documents (identified by custom_id)",
+      "trap_ko": [
+        "batch 전체를 처음부터 다시 제출: 성공한 문서까지 비용을 또 낸다.",
+        "요청 중간에 도구를 실행하고 결과를 돌려받는 추출을 batch 로: batch API 는 한 요청 안의 multi-turn tool calling 을 지원하지 않는다.",
+        "결과를 바로 기다리는 흐름에 batch 쓰기: 처리 시간이 보장되지 않는다."
+      ],
+      "ts": "4.5",
+      "guide_en": "Handling batch failures: resubmitting only failed documents (identified by custom_id) with appropriate modifications (e.g., chunking documents that exceeded context limits)",
+      "guide_ko": "batch 실패 처리: 실패한 문서만 `custom_id` 로 찾아 알맞게 고쳐(예: context 한도를 넘은 문서를 쪼개서) 다시 제출한다."
+    },
+    {
+      "title_ko": "97% 평균을 믿지 말고, 문서 종류·칸별로 확인한 뒤 사람 검토를 줄인다",
+      "signal_en": ["97% overall accuracy", "reduce human review", "confidence scores"],
+      "signal_ko": "평균 정확도만 보고 자동화를 늘리려 한다는 뜻. 특정 문서 종류나 칸에 약점이 숨어 있을 수 있다.",
+      "answer_ko": "문서 종류·칸별로 정확도를 나눠 확인한 뒤에야 사람 검토를 줄인다. 칸별 confidence 는 labeled validation set 으로 보정해 기준을 정하고, confidence 가 낮거나 원문이 애매·모순인 건 사람에게 보낸다. confidence 높은 결과도 층별 무작위 표본으로 계속 검사한다.",
+      "answer_en": "Analyzing accuracy by document type and field to verify consistent performance across all segments",
+      "trap_ko": [
+        "전체 정확도 97% 를 근거로 사람 검토 없애기: 특정 문서 종류·칸의 낮은 성능이 평균에 가려진다.",
+        "모델이 매긴 confidence 를 보정 없이 기준으로 쓰기: 정답 데이터로 보정해야 믿을 수 있다.",
+        "confidence 높은 추출은 검사하지 않기: 오류율 측정과 새 오류 패턴 발견을 놓친다."
+      ],
+      "ts": "5.5",
+      "guide_en": "Analyzing accuracy by document type and field to verify consistent performance across all segments before reducing human review",
+      "guide_ko": "사람 검토를 줄이기 전에 문서 종류와 칸별로 정확도를 분석해 모든 구간에서 성능이 고른지 확인한다."
+    }
+  ],
+  "compare": {
+    "title_ko": "구조화 출력 방법: 무엇을 보장하고 무엇을 못 막나",
+    "cols_ko": ["방법", "보장하는 것", "언제 쓰나"],
+    "rows": [
+      ["프롬프트로 'JSON 으로 답해'", "스키마 준수 보장 없음", "추출 파이프라인의 정답 보기로는 거의 안 나온다"],
+      ["`tool_choice: \"auto\"`", "도구 대신 텍스트로 답할 수 있음", "구조화 출력이 꼭 필요한 추출에는 부적합"],
+      ["`tool_choice: \"any\"`", "어떤 도구든 반드시 호출", "추출 스키마가 여러 개이고 문서 종류를 모를 때"],
+      ["`tool_choice: {\"type\": \"tool\", \"name\": \"extract_metadata\"}`", "지정한 그 도구를 반드시 호출", "특정 추출을 enrichment 전에 꼭 돌려야 할 때"],
+      ["strict JSON schema (tool use)", "문법 오류 없음, 의미 오류는 못 막음", "기본으로 쓰고 합계 비교 같은 의미 검증을 따로 붙인다"]
+    ]
+  },
+  "checklist_ko": [
+    "구조화 출력 → `tool_use` + JSON schema. 문서 종류를 모르면 `tool_choice: \"any\"`, 특정 추출을 먼저 돌리려면 도구 이름 지정.",
+    "값을 지어낸다 → 그 칸을 nullable 로. 정보는 있는데 못 찾는다 → 다양한 형식의 few-shot 예시.",
+    "분류가 안 맞는다 → enum + `\"other\"` + detail, 애매하면 `\"unclear\"`. 표기가 제각각이면 정규화 규칙.",
+    "스키마는 통과했는데 숫자가 틀리다 → 의미 오류. `calculated_total` vs `stated_total`, `conflict_detected`.",
+    "재시도 → 원래 문서 + 실패 결과 + 구체 오류. 원문에 없는 정보는 재시도해도 무효.",
+    "대량·안 급함 → Batch API, 실패분만 `custom_id` 로. 사람 검토를 줄이기 전에 문서 종류·칸별 정확도 확인."
+  ]
+}

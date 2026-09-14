@@ -1,0 +1,181 @@
+{
+  "no": 3,
+  "name_en": "Multi-Agent Research System",
+  "name_ko": "멀티에이전트 리서치 시스템",
+  "domains": [1, 2, 5],
+  "oneline_ko": "팀장 한 명이 조사원·자료 분석가·정리 담당·보고서 작성자에게 일을 나눠 주는 리서치 회사를 AI로 만든다. 팀장이 일을 잘못 나누거나 전달을 빼먹으면 모두가 열심히 해도 보고서가 틀린다.",
+  "description": [
+    {"en": "You are building a multi-agent research system using the Claude Agent SDK.", "ko": "Claude Agent SDK로 멀티에이전트 리서치 시스템을 만들고 있다."},
+    {"en": "A coordinator agent delegates to specialized subagents: one searches the web, one analyzes documents, one synthesizes findings, and one generates reports.", "ko": "coordinator(총괄) 에이전트가 전문 subagent(하위 에이전트)들에게 일을 맡긴다. 하나는 웹을 검색하고, 하나는 문서를 분석하고, 하나는 조사 결과를 종합하고, 하나는 보고서를 만든다."},
+    {"en": "The system researches topics and produces comprehensive, cited reports.", "ko": "이 시스템은 주제를 조사해서 빠짐없고 출처가 달린 보고서를 만든다."}
+  ],
+  "primary_en": "Primary domains: Agentic Architecture & Orchestration, Tool Design & MCP Integration, Context Management & Reliability",
+  "story_ko": [
+    "리서치 회사를 떠올려 보자. 팀장(coordinator)이 주제를 받아 조사원(web search), 자료 분석가(document analysis), 정리 담당(synthesis), 보고서 작성자(report)에게 일을 나눠 준다.",
+    "팀원들은 서로 직접 대화하지 않는다. 모든 전달은 팀장을 거친다. 이것을 hub-and-spoke(바퀴살) 구조라고 한다.",
+    "팀원은 팀장의 머릿속을 모른다. subagent는 coordinator의 대화 기록을 자동으로 물려받지 않으니, 필요한 자료는 지시문(prompt)에 직접 넣어 줘야 한다.",
+    "잘못되기 쉬운 곳은 세 군데다. 팀장이 주제를 너무 좁게 나누면 팀원이 각자 잘해도 보고서에 구멍이 난다. 조사원이 실패를 숨기거나 '안 됨'이라고만 말하면 팀장이 대책을 못 세운다. 정리 과정에서 '누가 한 말인지'(출처)가 사라지기 쉽다.",
+    "시험은 대개 '각 subagent는 정상인데 결과가 이상하다'는 로그를 보여 주고, 진짜 원인이 어느 단계에 있는지 고르게 한다."
+  ],
+  "flow": [
+    {"en": "Research topic", "ko": "조사 주제 입력", "note_ko": "예: impact of AI on creative industries"},
+    {"en": "Coordinator decomposes the topic", "ko": "coordinator가 주제를 하위 과제로 나눔", "note_ko": "나누는 범위가 좁으면 여기서 이미 구멍이 생긴다"},
+    {"en": "Parallel Task calls: web search subagent / document analysis subagent", "ko": "Task 호출 여러 개를 한 번에: 웹 검색 / 문서 분석", "note_ko": "allowedTools에 Task가 있어야 하고, 한 응답에 여러 Task를 내면 병렬 실행"},
+    {"en": "Structured findings or structured error back to coordinator", "ko": "구조화된 결과(주장·출처·날짜) 또는 구조화된 오류가 coordinator로 돌아옴", "note_ko": "실패 종류·시도한 쿼리·부분 결과를 함께 보고"},
+    {"en": "Synthesis subagent (verify_fact for simple checks)", "ko": "종합 subagent가 결과를 합침 (간단한 사실 확인은 verify_fact)", "note_ko": "앞 단계 결과를 prompt에 통째로 넣어 줘야 한다"},
+    {"en": "Coordinator checks gaps / re-delegates", "ko": "coordinator가 빠진 곳을 점검하고 필요하면 다시 맡김", "note_ko": "iterative refinement(반복 보완) 루프"},
+    {"en": "Report subagent produces cited report", "ko": "보고서 subagent가 출처 달린 보고서 작성", "note_ko": "확실한 결과와 논란 있는 결과를 구분하고 부족한 부분을 표시"}
+  ],
+  "flow_note_ko": "시험에 가장 많이 나오는 지점은 2단계(주제를 너무 좁게 나눔), 4단계(오류를 어떻게 돌려보내나), 5단계(종합 담당에게 어떤 도구를 줄까)다. 로그에서 문제가 처음 생긴 단계를 찾으면 답이 보인다.",
+  "cast": [
+    {"term": "coordinator", "ko": "총괄 에이전트", "what_ko": "주제 쪼개기, 일 맡기기, 결과 모으기, 오류 처리를 모두 맡는 중심점이라 원인 찾기 문제에서 가장 먼저 의심할 곳이다."},
+    {"term": "subagent", "ko": "하위 전문 에이전트", "what_ko": "자기 context가 따로 있어서 coordinator의 대화 기록을 모른다. 필요한 자료는 prompt에 직접 넣어 줘야 한다."},
+    {"term": "Task tool", "ko": "subagent를 띄우는 도구", "what_ko": "coordinator의 `allowedTools`에 \"Task\"가 있어야 subagent를 부를 수 있고, 한 응답에서 Task를 여러 번 호출하면 병렬로 돈다."},
+    {"term": "AgentDefinition", "ko": "subagent 설정서", "what_ko": "subagent마다 설명(description), system prompt, 쓸 수 있는 도구 제한을 적는 설정이다."},
+    {"term": "verify_fact", "ko": "간단한 사실 확인 도구", "what_ko": "종합 담당에게만 따로 주는 좁은 범위의 도구다. 흔한 간단 확인은 직접 하고 복잡한 조사는 coordinator를 거친다."},
+    {"term": "structured error context", "ko": "구조화된 오류 정보", "what_ko": "실패 종류, 시도한 쿼리, 부분 결과, 대안을 담아 보내는 오류 보고로, coordinator가 복구 방법을 고를 수 있게 한다."},
+    {"term": "claim-source mapping", "ko": "주장-출처 짝 목록", "what_ko": "주장마다 출처 URL, 문서 이름, 발췌문을 붙여 두는 구조로, 요약하는 동안 출처가 사라지지 않게 한다."},
+    {"term": "coverage annotations", "ko": "조사 범위 표시", "what_ko": "보고서에서 근거가 탄탄한 부분과 자료가 없어 비어 있는 부분을 표시하는 방법이다."}
+  ],
+  "patterns": [
+    {
+      "title_ko": "결과가 한쪽으로 치우쳤으면 범인은 coordinator의 과제 나누기",
+      "signal_en": ["each subagent completes successfully", "cover only visual arts", "coordinator's logs", "most likely root cause"],
+      "signal_ko": "subagent들은 맡은 일을 다 잘했는데 보고서가 주제의 일부만 다룬다. 로그에 coordinator가 나눈 하위 과제 목록이 나오면, 그 목록 자체가 좁은지 보라는 뜻이다.",
+      "answer_ko": "coordinator가 주제를 너무 좁게 나눠서 subagent에게 준 과제가 주제 전체를 덮지 못했다는 보기가 정답이다.",
+      "answer_en": "The coordinator agent's task decomposition is too narrow",
+      "trap_ko": [
+        "종합 담당이 빈 곳을 못 찾아서라는 보기: 종합 담당은 받은 재료로 제대로 일했다. 재료 자체가 좁게 배정된 것이 원인이다.",
+        "웹 검색 쿼리가 부족해서라는 보기: 검색 담당은 받은 과제 범위 안에서는 정상 작동했다.",
+        "문서 분석 담당이 관련 자료를 걸러 내서라는 보기: 로그에 그런 증거가 없고, 과제 목록에 음악·글쓰기·영화가 애초에 없었다."
+      ],
+      "ts": "1.2",
+      "guide_en": "Risks of overly narrow task decomposition by the coordinator, leading to incomplete coverage of broad research topics",
+      "guide_ko": "coordinator가 과제를 너무 좁게 나누면 넓은 조사 주제를 빠짐없이 다루지 못하는 위험"
+    },
+    {
+      "title_ko": "subagent가 실패하면 실패 내용을 구조화해서 coordinator에게 보고",
+      "signal_en": ["times out", "error propagation approach", "best enables intelligent recovery"],
+      "signal_ko": "subagent가 시간 초과 같은 실패를 겪었고, 그 사실을 coordinator에게 어떤 모양으로 전할지 묻는다.",
+      "answer_ko": "실패 종류, 시도한 쿼리, 얻어 둔 부분 결과, 가능한 대안을 담은 구조화된 오류 정보를 coordinator에게 돌려준다. 그래야 coordinator가 다시 시도할지, 다른 방법을 쓸지, 부분 결과로 진행할지 고를 수 있다.",
+      "answer_en": "Return structured error context to the coordinator including the failure type, the attempted query, any partial results, and potential alternative approaches",
+      "trap_ko": [
+        "재시도를 다 한 뒤 \"search unavailable\" 같은 뭉뚱그린 상태만 보내기: coordinator가 판단할 정보를 숨긴다.",
+        "시간 초과를 잡아서 빈 결과를 '성공'으로 보내기: 실패를 숨겨서 복구할 기회가 사라지고, 보고서에 구멍이 생긴다.",
+        "예외를 맨 위로 던져서 조사 전체를 중단하기: 복구할 수 있는데도 작업 전체를 버린다."
+      ],
+      "ts": "5.3",
+      "guide_en": "Returning structured error context including failure type, what was attempted, partial results, and potential alternatives to enable coordinator recovery",
+      "guide_ko": "실패 종류, 시도한 것, 부분 결과, 가능한 대안을 담은 구조화된 오류 정보를 돌려줘서 coordinator가 복구할 수 있게 한다"
+    },
+    {
+      "title_ko": "자주 쓰는 간단한 일만 좁은 도구로 직접, 복잡한 일은 coordinator를 거쳐",
+      "signal_en": ["85% of these verifications are simple fact-checks", "2-3 round trips", "reduce overhead while maintaining system reliability"],
+      "signal_ko": "왕복이 많아 느린데, 대부분(85%)은 간단한 일이고 일부(15%)만 복잡하다. 흔한 경우만 빠르게 만들고 나머지는 기존 구조를 지키라는 신호다.",
+      "answer_ko": "종합 담당에게 간단한 확인용 verify_fact 도구 하나만 주고, 복잡한 확인은 지금처럼 coordinator를 통해 웹 검색 담당에게 넘긴다. 필요한 만큼만 권한을 주는 least privilege(최소 권한) 원칙이다.",
+      "answer_en": "Give the synthesis agent a scoped verify_fact tool for simple lookups, while complex verifications continue delegating",
+      "trap_ko": [
+        "종합 담당에게 웹 검색 도구를 전부 주기: 권한을 너무 많이 줘서 역할 분리가 깨지고 도구를 잘못 쓰게 된다.",
+        "확인할 것을 모아 두었다가 마지막에 한꺼번에 보내기: 뒤 단계가 앞에서 확인한 사실에 기대므로 기다리는 병목이 생긴다.",
+        "검색 담당이 미리 여분 자료를 캐시해 두기: 종합 담당이 무엇을 확인할지 미리 알 수 없어서 믿을 수 없다."
+      ],
+      "ts": "2.3",
+      "guide_en": "Providing scoped cross-role tools for high-frequency needs (e.g., a verify_fact tool for the synthesis agent) while routing complex cases through the coordinator",
+      "guide_ko": "자주 필요한 일에는 범위를 좁힌 역할 간 도구(예: 종합 에이전트용 verify_fact)를 주고, 복잡한 경우는 coordinator를 거치게 한다"
+    },
+    {
+      "title_ko": "subagent는 기억을 물려받지 않는다: 앞 결과를 prompt에 직접, 출처와 함께",
+      "signal_en": ["synthesis agent lacks", "does not have access to earlier findings", "attribution is lost"],
+      "signal_ko": "종합 담당이 앞 단계 결과를 모르거나, 결과는 받았는데 어느 출처에서 온 주장인지 사라졌다.",
+      "answer_ko": "웹 검색 결과와 문서 분석 결과를 종합 담당의 prompt에 통째로 넣어 준다. 이때 내용과 메타데이터(출처 URL, 문서 이름, 페이지 번호)를 구조화된 형식으로 나눠 담아 출처를 지킨다.",
+      "answer_en": "Including complete findings from prior agents directly in the subagent's prompt",
+      "trap_ko": [
+        "subagent가 coordinator의 대화 기록을 자동으로 본다고 가정하는 보기: subagent의 context는 따로 떨어져 있다.",
+        "결과를 짧게 요약한 문장만 넘기기: 요약하면서 주장과 출처의 연결이 끊어진다.",
+        "subagent끼리 직접 결과를 주고받게 하기: 모든 전달은 coordinator를 거쳐야 관찰하고 오류를 처리하기 쉽다."
+      ],
+      "ts": "1.3",
+      "guide_en": "Including complete findings from prior agents directly in the subagent's prompt (e.g., passing web search results and document analysis outputs to the synthesis subagent)",
+      "guide_ko": "앞선 에이전트의 결과 전체를 subagent의 prompt에 직접 넣는다(예: 웹 검색 결과와 문서 분석 결과를 종합 subagent에게 전달)"
+    },
+    {
+      "title_ko": "병렬로 돌리려면 한 응답에서 Task를 여러 번",
+      "signal_en": ["sequentially", "latency", "in parallel", "allowedTools"],
+      "signal_ko": "subagent들이 하나씩 차례로 돌아서 느리거나, coordinator가 subagent를 아예 못 부른다.",
+      "answer_ko": "coordinator가 한 번의 응답에서 Task 호출을 여러 개 낸다. coordinator가 subagent를 부르려면 `allowedTools`에 \"Task\"가 들어 있어야 한다.",
+      "answer_en": "emitting multiple Task tool calls in a single coordinator response",
+      "trap_ko": [
+        "턴마다 Task를 하나씩 부르기: 순서대로 돌아서 병렬이 되지 않는다.",
+        "subagent를 부르지 못하는 문제를 prompt 문구로 고치려는 보기: `allowedTools`에 \"Task\"가 없으면 도구 자체를 쓸 수 없다.",
+        "coordinator prompt에 단계별 절차를 자세히 적기: 가이드는 조사 목표와 품질 기준을 주라고 한다. 그래야 subagent가 상황에 맞게 움직인다."
+      ],
+      "ts": "1.3",
+      "guide_en": "Spawning parallel subagents by emitting multiple Task tool calls in a single coordinator response rather than across separate turns",
+      "guide_ko": "여러 턴에 나눠 부르지 않고, coordinator의 한 응답에서 Task 호출을 여러 개 내서 subagent들을 병렬로 띄운다"
+    },
+    {
+      "title_ko": "믿을 만한 출처끼리 숫자가 다르면 하나만 고르지 말고 둘 다 출처와 함께",
+      "signal_en": ["conflicting statistics", "two credible sources", "different values"],
+      "signal_ko": "신뢰할 만한 두 자료가 서로 다른 통계를 말한다. 어느 쪽을 버릴지가 아니라 어떻게 보존할지를 묻는 문제다.",
+      "answer_ko": "두 값을 모두 남기고 각각 출처를 붙여 충돌을 표시한다. 보고서는 확실한 결과와 논란 있는 결과를 나눠 적는다. 발행일이나 수집일을 함께 받으면 시기 차이를 모순으로 잘못 보는 일을 막을 수 있다.",
+      "answer_en": "annotating conflicts with source attribution rather than arbitrarily selecting one value",
+      "trap_ko": [
+        "더 최근 값이나 더 유명한 출처 하나만 고르기: 근거 없이 하나를 버리면 정보가 사라진다.",
+        "두 값의 평균을 내기: 어느 출처에도 없는 새 숫자를 지어낸다.",
+        "충돌하는 항목을 보고서에서 빼기: 조사 범위에 말없이 구멍을 낸다."
+      ],
+      "ts": "5.6",
+      "guide_en": "How to handle conflicting statistics from credible sources: annotating conflicts with source attribution rather than arbitrarily selecting one value",
+      "guide_ko": "신뢰할 만한 출처들의 통계가 서로 다를 때: 하나를 임의로 고르지 말고 출처를 붙여 충돌을 표시한다"
+    },
+    {
+      "title_ko": "도구를 잘못 고르면 설명을 분명히 하고, 역할에 맞는 도구만 준다",
+      "signal_en": ["near-identical descriptions", "misrouting", "18 tools", "synthesis agent attempting web searches"],
+      "signal_ko": "비슷한 이름·설명의 도구 사이에서 엉뚱한 것을 부르거나, 도구가 너무 많아 선택이 불안정하거나, 전문 분야가 아닌 도구를 잘못 쓴다.",
+      "answer_ko": "도구 이름과 설명을 고쳐 기능이 겹치지 않게 한다(예: analyze_content를 웹 전용 설명을 단 extract_web_results로 바꿈). 각 subagent에는 역할에 필요한 도구만 준다.",
+      "answer_en": "Restricting each subagent's tool set to those relevant to its role",
+      "trap_ko": [
+        "모든 에이전트에게 모든 도구를 주기: 도구가 많을수록(예: 4~5개가 아니라 18개) 선택이 불안정해진다.",
+        "설명은 그대로 두고 system prompt에 키워드 지시를 추가하기: 키워드에 민감한 지시는 오히려 의도하지 않은 도구 연결을 만든다.",
+        "fetch_url 같은 범용 도구를 그대로 두기: 문서 URL을 검증하는 load_document 같은 좁은 도구로 바꾸는 것이 가이드의 방향이다."
+      ],
+      "ts": "2.3",
+      "guide_en": "Restricting each subagent's tool set to those relevant to its role, preventing cross-specialization misuse",
+      "guide_ko": "각 subagent의 도구를 역할에 맞는 것으로만 제한해서 전문 분야 밖의 도구를 잘못 쓰지 않게 한다"
+    },
+    {
+      "title_ko": "뒤 단계의 context가 모자라면 앞 단계가 구조화된 핵심만 넘긴다",
+      "signal_en": ["limited context budgets", "verbose content", "findings from middle sections"],
+      "signal_ko": "종합 담당이 받는 입력이 너무 길어서 중간 부분의 결과를 빠뜨리거나(lost in the middle, 긴 입력의 가운데를 놓치는 현상), context가 넘친다.",
+      "answer_ko": "앞 단계 에이전트가 장황한 글과 추론 과정 대신 핵심 사실, 인용, 관련도 점수 같은 구조화된 데이터를 돌려주게 바꾼다. 모은 입력의 맨 앞에 핵심 요약을 두고 섹션 제목으로 정리한다.",
+      "answer_en": "return structured data (key facts, citations, relevance scores) instead of verbose content",
+      "trap_ko": [
+        "더 큰 context window 모델로 바꾸기: 긴 입력의 가운데를 놓치는 문제는 창 크기로 해결되지 않는다.",
+        "결과를 짧은 문장으로 계속 요약해 넘기기: 숫자·날짜·출처가 흐릿해진다.",
+        "중요한 결과를 입력 중간에 섞어 두기: 모델은 입력의 처음과 끝을 더 잘 처리한다."
+      ],
+      "ts": "5.1",
+      "guide_en": "Modifying upstream agents to return structured data (key facts, citations, relevance scores) instead of verbose content and reasoning chains when downstream agents have limited context budgets",
+      "guide_ko": "뒤 단계 에이전트의 context 여유가 적을 때, 앞 단계 에이전트가 장황한 내용과 추론 과정 대신 구조화된 데이터(핵심 사실, 인용, 관련도 점수)를 돌려주도록 바꾼다"
+    }
+  ],
+  "compare": {
+    "title_ko": "subagent가 실패했을 때 coordinator에게 무엇을 돌려보내나",
+    "cols_ko": ["방법", "coordinator가 받는 것", "판정"],
+    "rows": [
+      ["구조화된 오류 정보 반환 (실패 종류·시도한 쿼리·부분 결과·대안)", "복구 판단에 필요한 정보 전부", "정답. 다시 시도, 다른 방법, 부분 결과로 진행 중에서 고를 수 있다"],
+      ["subagent 안에서 일시적 오류만 스스로 재시도, 못 풀면 시도 내역과 부분 결과를 올림", "스스로 못 푼 오류와 그 맥락", "좋음. 가이드가 권하는 지역 복구 방식"],
+      ["재시도 후 \"search unavailable\" 같은 뭉뚱그린 상태만 반환", "실패했다는 사실만", "오답. 판단에 필요한 맥락을 숨긴다"],
+      ["빈 결과를 성공으로 표시", "성공처럼 보이는 빈 결과", "오답. 실패를 숨겨서 복구할 기회가 없다"],
+      ["예외를 던져 전체 워크플로 중단", "아무것도 못 받고 작업 종료", "오답. 오류 하나로 전체를 버린다"]
+    ]
+  },
+  "checklist_ko": [
+    "모든 subagent가 성공했는데 결과가 이상하면, coordinator가 과제를 어떻게 나눴는지부터 본다.",
+    "subagent는 기억을 물려받지 않는다. 필요한 자료는 prompt에 직접, 출처 메타데이터와 함께 넣는다.",
+    "실패는 숨기지도, 뭉뚱그리지도, 전체를 멈추지도 않는다. 실패 종류·시도한 쿼리·부분 결과·대안을 구조화해서 올린다.",
+    "'대부분 간단, 일부만 복잡'이면 간단한 쪽만 좁은 도구로 직접 하고 복잡한 쪽은 coordinator를 거친다.",
+    "출처끼리 값이 다르면 둘 다 출처를 붙여 남기고, 확실한 결과와 논란 있는 결과를 나눠 적는다.",
+    "병렬 실행은 한 응답에 Task 여러 개, 그리고 `allowedTools`에 \"Task\"."
+  ]
+}

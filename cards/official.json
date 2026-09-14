@@ -1,0 +1,1188 @@
+[
+ {
+  "id": "G-01",
+  "domain": 1,
+  "scenario": "Customer Support Resolution Agent",
+  "source": "official",
+  "ts": [
+   "1.4"
+  ],
+  "guide_en": "Implementing programmatic prerequisites that block downstream tool calls until prerequisite steps have completed (e.g., blocking process_refund until get_customer has returned a verified customer ID)",
+  "q_en": "Production data shows that in 12% of cases, your agent skips `get_customer` entirely and calls `lookup_order` using only the customer's stated name, occasionally leading to misidentified accounts and incorrect refunds. What change would most effectively address this reliability issue?",
+  "q_ko": "운영 데이터를 보니 12%의 경우 에이전트가 `get_customer`를 아예 건너뛰고, 고객이 말한 이름만으로 `lookup_order`를 호출한다. 그래서 가끔 계정을 잘못 식별하고 엉뚱한 환불이 나간다. 이 신뢰성 문제를 가장 효과적으로 해결하는 변경은?",
+  "options": [
+   {
+    "en": "Add a programmatic prerequisite that blocks `lookup_order` and `process_refund` calls until `get_customer` has returned a verified customer ID.",
+    "ko": "`get_customer`가 확인된 고객 ID를 돌려주기 전까지 `lookup_order`와 `process_refund` 호출을 막는 코드상의 선행 조건을 추가한다.",
+    "why": "정답. 코드로 순서를 강제하면 프롬프트로는 줄 수 없는 확정적인 보장이 생긴다."
+   },
+   {
+    "en": "Enhance the system prompt to state that customer verification via `get_customer` is mandatory before any order operations.",
+    "ko": "모든 주문 작업 전에 `get_customer`로 고객 확인이 필수라고 system prompt에 적는다.",
+    "why": "프롬프트 지시는 LLM이 따를 확률에 기대는 방법이라, 돈이 걸린 실수를 막기엔 부족하다."
+   },
+   {
+    "en": "Add few-shot examples showing the agent always calling `get_customer` first, even when customers volunteer order details.",
+    "ko": "고객이 주문 정보를 먼저 말해도 에이전트가 항상 `get_customer`부터 부르는 few-shot 예시를 추가한다.",
+    "why": "few-shot 예시도 결국 확률적인 준수라서, 금전 피해가 나는 상황에서는 충분하지 않다."
+   },
+   {
+    "en": "Implement a routing classifier that analyzes each request and enables only the subset of tools appropriate for that request type.",
+    "ko": "요청마다 분석해서 그 요청 유형에 맞는 도구 묶음만 켜 주는 라우팅 분류기를 만든다.",
+    "why": "어떤 도구를 쓸 수 있느냐(가용성)를 다룰 뿐, 실제 문제인 호출 순서는 건드리지 못한다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "돈이 걸린 호출 순서는 코드로 강제",
+  "explain_ko": [
+   "**in 12% of cases**, **incorrect refunds** 는 \"가끔 순서를 어기는데, 어기면 돈이 잘못 나간다\"는 뜻이다.",
+   "고객 확인 후 환불처럼 **꼭 지켜야 하는 도구 순서**가 있을 때는, 코드로 막는 방법(programmatic enforcement)만 매번 확실하게 보장한다.",
+   "{B}(프롬프트)와 {C}(few-shot)는 LLM이 알아서 따라 주길 바라는 확률적 방법이라 금전 사고 앞에서는 부족하다.",
+   "{D}는 \"어떤 도구를 켤지\"를 정하는 것이지 \"어떤 순서로 부를지\"를 정하지 않으니 문제와 어긋난다."
+  ],
+  "clues": [
+   {
+    "en": "in 12% of cases",
+    "ko": "가끔 어김 = 확률적 실패"
+   },
+   {
+    "en": "skips `get_customer` entirely",
+    "ko": "문제는 호출 순서"
+   },
+   {
+    "en": "incorrect refunds",
+    "ko": "금전 피해, 확실한 보장 필요"
+   },
+   {
+    "en": "most effectively address this reliability issue",
+    "ko": "신뢰성 = 확정적 해법을 고르라"
+   }
+  ],
+  "discuss_ko": "프롬프트와 few-shot 을 함께 넣어 12%를 1% 미만으로 줄일 수 있다면, 그래도 코드로 막아야 하는 이유는 무엇일까?",
+  "words": [
+   {
+    "word": "prerequisite",
+    "pos": "n.",
+    "ko": "선행 조건, 전제 조건",
+    "example": "Add a programmatic prerequisite"
+   },
+   {
+    "word": "programmatic",
+    "pos": "adj.",
+    "ko": "코드(프로그램)로 처리하는",
+    "example": "Add a programmatic prerequisite"
+   },
+   {
+    "word": "misidentify",
+    "pos": "v.",
+    "ko": "잘못 식별하다",
+    "example": "occasionally leading to misidentified accounts"
+   },
+   {
+    "word": "mandatory",
+    "pos": "adj.",
+    "ko": "필수의, 의무적인",
+    "example": "is mandatory before any order operations"
+   },
+   {
+    "word": "volunteer",
+    "pos": "v.",
+    "ko": "(묻기 전에) 자진해서 말하다",
+    "example": "even when customers volunteer order details"
+   },
+   {
+    "word": "stated",
+    "pos": "adj.",
+    "ko": "(본인이) 말한, 진술된",
+    "example": "using only the customer's stated name"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "G-02",
+  "domain": 2,
+  "scenario": "Customer Support Resolution Agent",
+  "source": "official",
+  "ts": [
+   "2.1"
+  ],
+  "guide_en": "Tool descriptions as the primary mechanism LLMs use for tool selection; minimal descriptions lead to unreliable selection among similar tools",
+  "q_en": "Production logs show the agent frequently calls `get_customer` when users ask about orders (e.g., \"check my order #12345\"), instead of calling `lookup_order`. Both tools have minimal descriptions (\"Retrieves customer information\" / \"Retrieves order details\") and accept similar identifier formats. What's the most effective first step to improve tool selection reliability?",
+  "q_ko": "운영 로그를 보니 사용자가 주문을 물을 때(예: \"check my order #12345\") 에이전트가 `lookup_order` 대신 `get_customer`를 자주 호출한다. 두 도구 모두 설명이 아주 짧고(\"Retrieves customer information\" / \"Retrieves order details\") 비슷한 식별자 형식을 받는다. 도구 선택의 신뢰성을 높이는 가장 효과적인 첫 단계는?",
+  "options": [
+   {
+    "en": "Add few-shot examples to the system prompt demonstrating correct tool selection patterns, with 5-8 examples showing order-related queries routing to `lookup_order`.",
+    "ko": "주문 관련 질문이 `lookup_order`로 가는 예시 5~8개로, 올바른 도구 선택 패턴을 보여 주는 few-shot 예시를 system prompt에 넣는다.",
+    "why": "토큰만 더 쓰고, 설명이 부실하다는 근본 원인은 그대로 둔다."
+   },
+   {
+    "en": "Expand each tool's description to include input formats it handles, example queries, edge cases, and boundaries explaining when to use it versus similar tools.",
+    "ko": "각 도구 설명을 늘려서 받는 입력 형식, 예시 질문, edge case, 그리고 비슷한 도구 대신 언제 이걸 써야 하는지 경계를 적는다.",
+    "why": "정답. 도구 설명은 LLM이 도구를 고르는 1차 근거라서, 부실한 설명이라는 근본 원인을 적은 노력으로 바로 고친다."
+   },
+   {
+    "en": "Implement a routing layer that parses user input before each turn and pre-selects the appropriate tool based on detected keywords and identifier patterns.",
+    "ko": "매 턴 전에 사용자 입력을 파싱해서 키워드와 식별자 패턴으로 알맞은 도구를 미리 골라 주는 라우팅 계층을 만든다.",
+    "why": "과한 설계이고, LLM의 자연어 이해를 우회해 버린다."
+   },
+   {
+    "en": "Consolidate both tools into a single `lookup_entity` tool that accepts any identifier and internally determines which backend to query.",
+    "ko": "두 도구를 어떤 식별자든 받아 내부에서 조회할 백엔드를 정하는 `lookup_entity` 하나로 합친다.",
+    "why": "설계상 가능한 선택이지만, 설명 부족이 문제인 지금 \"첫 단계\"로는 노력이 너무 크다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "도구를 헷갈리면 먼저 도구 설명을 자세히",
+  "explain_ko": [
+   "**minimal descriptions** 가 핵심 단서다. 모델은 도구 설명을 보고 어떤 도구를 부를지 고르는데, 설명이 한 줄뿐이면 비슷한 두 도구를 구별할 재료가 없다.",
+   "{B}는 입력 형식·예시 질문·edge case·경계를 설명에 적어 이 근본 원인을 직접 고친다. 노력은 적고 효과는 크다.",
+   "{A}(few-shot)는 토큰만 늘고 원인은 남는다. {C}(라우팅 계층)는 과한 설계이고 LLM의 언어 이해를 건너뛴다.",
+   "{D}(도구 합치기)는 틀린 설계는 아니지만 **first step** 으로는 너무 큰 공사다."
+  ],
+  "clues": [
+   {
+    "en": "calls `get_customer` when users ask about orders",
+    "ko": "도구를 잘못 고름 = 선택 문제"
+   },
+   {
+    "en": "minimal descriptions",
+    "ko": "근본 원인: 설명이 부실"
+   },
+   {
+    "en": "accept similar identifier formats",
+    "ko": "두 도구가 겉보기에 비슷함"
+   },
+   {
+    "en": "most effective first step",
+    "ko": "적은 노력으로 원인부터 고치라"
+   }
+  ],
+  "discuss_ko": "두 도구를 lookup_entity 하나로 합치면 선택 실수 자체가 사라지는데, 왜 이것이 \"첫 단계\"로는 오답일까?",
+  "words": [
+   {
+    "word": "retrieve",
+    "pos": "v.",
+    "ko": "(정보를) 가져오다, 조회하다",
+    "example": "\"Retrieves customer information\""
+   },
+   {
+    "word": "identifier",
+    "pos": "n.",
+    "ko": "식별자 (ID처럼 대상을 구별하는 값)",
+    "example": "accept similar identifier formats"
+   },
+   {
+    "word": "reliability",
+    "pos": "n.",
+    "ko": "신뢰성, 믿을 만함",
+    "example": "improve tool selection reliability"
+   },
+   {
+    "word": "edge case",
+    "pos": "n.",
+    "ko": "드문 예외 상황, 경계 사례",
+    "example": "example queries, edge cases, and boundaries"
+   },
+   {
+    "word": "consolidate",
+    "pos": "v.",
+    "ko": "하나로 합치다, 통합하다",
+    "example": "Consolidate both tools into a single `lookup_entity` tool"
+   },
+   {
+    "word": "internally",
+    "pos": "adv.",
+    "ko": "내부적으로",
+    "example": "internally determines which backend to query"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "G-03",
+  "domain": 5,
+  "scenario": "Customer Support Resolution Agent",
+  "source": "official",
+  "ts": [
+   "5.2"
+  ],
+  "guide_en": "Adding explicit escalation criteria with few-shot examples to the system prompt demonstrating when to escalate versus resolve autonomously",
+  "q_en": "Your agent achieves 55% first-contact resolution, well below the 80% target. Logs show it escalates straightforward cases (standard damage replacements with photo evidence) while attempting to autonomously handle complex situations requiring policy exceptions. What's the most effective way to improve escalation calibration?",
+  "q_ko": "에이전트의 첫 응대 해결률이 55%로, 목표 80%에 한참 못 미친다. 로그를 보니 쉬운 건(사진 증거가 있는 일반 파손 교환)은 사람에게 넘기고, 정책 예외가 필요한 복잡한 상황은 혼자 처리하려 한다. 에스컬레이션 판단을 바로잡는 가장 효과적인 방법은?",
+  "options": [
+   {
+    "en": "Add explicit escalation criteria to your system prompt with few-shot examples demonstrating when to escalate versus resolve autonomously.",
+    "ko": "system prompt에 명확한 에스컬레이션 기준을 적고, 언제 넘기고 언제 혼자 해결하는지 보여 주는 few-shot 예시를 함께 넣는다.",
+    "why": "정답. 원인인 \"판단 경계가 불분명함\"을 직접 고치고, 인프라를 더하기 전에 해 볼 적당한 첫 대응이다."
+   },
+   {
+    "en": "Have the agent self-report a confidence score (1-10) before each response and automatically route requests to humans when confidence falls below a threshold.",
+    "ko": "에이전트가 매 응답 전에 자신감 점수(1~10)를 스스로 매기고, 기준보다 낮으면 자동으로 사람에게 넘긴다.",
+    "why": "LLM이 스스로 매긴 자신감은 잘 맞지 않는다. 이미 어려운 건에서 틀리게 자신만만한 상태다."
+   },
+   {
+    "en": "Deploy a separate classifier model trained on historical tickets to predict which requests need escalation before the main agent begins processing.",
+    "ko": "과거 티켓으로 학습한 별도 분류 모델을 두어, 메인 에이전트가 처리하기 전에 에스컬레이션이 필요한 요청을 예측한다.",
+    "why": "라벨 데이터와 ML 인프라가 필요한 과한 설계다. 프롬프트 개선도 아직 안 해 봤다."
+   },
+   {
+    "en": "Implement sentiment analysis to detect customer frustration levels and automatically escalate when negative sentiment exceeds a threshold.",
+    "ko": "감정 분석으로 고객의 불만 정도를 감지해, 부정 감정이 기준을 넘으면 자동으로 에스컬레이션한다.",
+    "why": "전혀 다른 문제를 푼다. 감정은 사건의 복잡도와 관계가 없다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "넘기는 기준이 흐리면 기준 + few-shot 부터",
+  "explain_ko": [
+   "쉬운 건은 넘기고 어려운 건은 붙잡는다 = 에이전트가 **언제 넘겨야 하는지 경계를 모른다**는 뜻이다.",
+   "{A}는 명확한 기준과 few-shot 예시로 그 경계를 직접 알려 준다. 인프라를 더하기 전에 먼저 해 볼 알맞은 크기의 해법이다.",
+   "{B}의 자기 보고 자신감은 믿을 수 없다(이미 어려운 건에 자신만만). {C}는 데이터·ML 인프라가 필요한 과한 해법이다.",
+   "{D}의 감정 점수는 사건이 복잡한지와 무관하니 다른 문제를 푸는 셈이다."
+  ],
+  "clues": [
+   {
+    "en": "escalates straightforward cases",
+    "ko": "쉬운 건을 괜히 넘김"
+   },
+   {
+    "en": "autonomously handle complex situations requiring policy exceptions",
+    "ko": "넘겨야 할 건을 붙잡음"
+   },
+   {
+    "en": "improve escalation calibration",
+    "ko": "판단 기준(경계)을 바로잡으라"
+   }
+  ],
+  "discuss_ko": "과거 티켓이 충분히 쌓여 있다면 분류 모델({C})이 더 정확할 수도 있는데, 왜 먼저 프롬프트 기준부터 손봐야 할까?",
+  "words": [
+   {
+    "word": "escalate",
+    "pos": "v.",
+    "ko": "(상급자·사람에게) 넘기다, 올려 보내다",
+    "example": "it escalates straightforward cases"
+   },
+   {
+    "word": "straightforward",
+    "pos": "adj.",
+    "ko": "간단한, 복잡하지 않은",
+    "example": "escalates straightforward cases"
+   },
+   {
+    "word": "autonomously",
+    "pos": "adv.",
+    "ko": "자율적으로, 스스로",
+    "example": "attempting to autonomously handle complex situations"
+   },
+   {
+    "word": "calibration",
+    "pos": "n.",
+    "ko": "(판단·기준의) 보정, 눈금 맞추기",
+    "example": "improve escalation calibration"
+   },
+   {
+    "word": "threshold",
+    "pos": "n.",
+    "ko": "기준값, 문턱",
+    "example": "when confidence falls below a threshold"
+   },
+   {
+    "word": "sentiment",
+    "pos": "n.",
+    "ko": "감정, 정서",
+    "example": "when negative sentiment exceeds a threshold"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "G-04",
+  "domain": 3,
+  "scenario": "Code Generation with Claude Code",
+  "source": "official",
+  "ts": [
+   "3.2"
+  ],
+  "guide_en": "Creating project-scoped slash commands in .claude/commands/ for team-wide availability via version control",
+  "q_en": "You want to create a custom `/review` slash command that runs your team's standard code review checklist. This command should be available to every developer when they clone or pull the repository. Where should you create this command file?",
+  "q_ko": "팀의 표준 코드 리뷰 체크리스트를 실행하는 custom `/review` slash command를 만들려고 한다. 개발자 누구든 저장소를 clone 하거나 pull 하면 이 명령을 쓸 수 있어야 한다. 명령 파일을 어디에 만들어야 하나?",
+  "options": [
+   {
+    "en": "In the `.claude/commands/` directory in the project repository",
+    "ko": "프로젝트 저장소 안의 `.claude/commands/` 디렉터리",
+    "why": "정답. 저장소에 들어 있어 버전 관리되고, clone·pull 하면 모든 개발자가 자동으로 쓸 수 있다."
+   },
+   {
+    "en": "In `~/.claude/commands/` in each developer's home directory",
+    "ko": "각 개발자 홈 디렉터리의 `~/.claude/commands/`",
+    "why": "개인용 명령 위치라서 버전 관리로 팀에 공유되지 않는다."
+   },
+   {
+    "en": "In the `CLAUDE.md` file at the project root",
+    "ko": "프로젝트 루트의 `CLAUDE.md` 파일",
+    "why": "`CLAUDE.md` 는 프로젝트 지시와 맥락을 적는 곳이지 명령을 정의하는 곳이 아니다."
+   },
+   {
+    "en": "In a `.claude/config.json` file with a commands array",
+    "ko": "commands 배열을 담은 `.claude/config.json` 파일",
+    "why": "Claude Code에 존재하지 않는 설정 방식이다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "팀 공유 명령 = 저장소 안 .claude/commands/",
+  "explain_ko": [
+   "**available to every developer when they clone or pull** 는 \"저장소에 들어 있어야 한다(버전 관리)\"는 뜻이다.",
+   "프로젝트 범위 slash command 는 저장소 안 `.claude/commands/` 에 둔다. 그러면 git 으로 함께 관리되어 누구나 자동으로 쓴다.",
+   "{B} `~/.claude/commands/` 는 내 컴퓨터에만 있는 개인용이다. {C} `CLAUDE.md` 는 지시·맥락용이고, {D} `.claude/config.json` 의 commands 배열은 없는 기능이다."
+  ],
+  "clues": [
+   {
+    "en": "available to every developer",
+    "ko": "팀 전체 공유"
+   },
+   {
+    "en": "when they clone or pull the repository",
+    "ko": "저장소에 커밋 = 프로젝트 범위"
+   },
+   {
+    "en": "Where should you create this command file?",
+    "ko": "위치(범위)를 묻는 문제"
+   }
+  ],
+  "discuss_ko": "각 개발자가 ~/.claude/commands/ 에 같은 파일을 복사해 두면 결과는 같아 보이는데, 팀 운영에서는 무엇이 문제가 될까?",
+  "words": [
+   {
+    "word": "custom",
+    "pos": "adj.",
+    "ko": "직접 만든, 맞춤형의",
+    "example": "create a custom `/review` slash command"
+   },
+   {
+    "word": "checklist",
+    "pos": "n.",
+    "ko": "점검 목록",
+    "example": "standard code review checklist"
+   },
+   {
+    "word": "clone",
+    "pos": "v.",
+    "ko": "(저장소를) 복제해 받다",
+    "example": "when they clone or pull the repository"
+   },
+   {
+    "word": "repository",
+    "pos": "n.",
+    "ko": "저장소 (코드를 모아 두는 곳)",
+    "example": "when they clone or pull the repository"
+   },
+   {
+    "word": "array",
+    "pos": "n.",
+    "ko": "배열, 여러 값의 목록",
+    "example": "with a commands array"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "G-05",
+  "domain": 3,
+  "scenario": "Code Generation with Claude Code",
+  "source": "official",
+  "ts": [
+   "3.4"
+  ],
+  "guide_en": "Selecting plan mode for tasks with architectural implications (e.g., microservice restructuring, library migrations affecting 45+ files, choosing between integration approaches with different infrastructure requirements)",
+  "q_en": "You've been assigned to restructure the team's monolithic application into microservices. This will involve changes across dozens of files and requires decisions about service boundaries and module dependencies. Which approach should you take?",
+  "q_ko": "팀의 monolith(한 덩어리) 애플리케이션을 microservices로 재구성하는 일을 맡았다. 수십 개 파일을 고쳐야 하고, 서비스 경계와 모듈 의존성에 대한 결정이 필요하다. 어떤 방식으로 진행해야 하나?",
+  "options": [
+   {
+    "en": "Enter plan mode to explore the codebase, understand dependencies, and design an implementation approach before making changes.",
+    "ko": "plan mode에 들어가 코드베이스를 살펴보고 의존성을 파악한 뒤, 변경하기 전에 구현 방식을 설계한다.",
+    "why": "정답. 대규모 변경·여러 가능한 방식·설계 결정이 걸린 작업이 바로 plan mode 용도다."
+   },
+   {
+    "en": "Start with direct execution and make changes incrementally, letting the implementation reveal the natural service boundaries.",
+    "ko": "바로 실행으로 시작해 조금씩 고치면서, 구현 과정에서 자연스러운 서비스 경계가 드러나게 한다.",
+    "why": "의존성을 늦게 발견하면 비싼 재작업이 생긴다."
+   },
+   {
+    "en": "Use direct execution with comprehensive upfront instructions detailing exactly how each service should be structured.",
+    "ko": "각 서비스를 정확히 어떻게 구성할지 미리 자세히 적은 지시와 함께 바로 실행한다.",
+    "why": "코드를 살펴보지도 않고 이미 올바른 구조를 안다고 가정한다."
+   },
+   {
+    "en": "Begin in direct execution mode and only switch to plan mode if you encounter unexpected complexity during implementation.",
+    "ko": "바로 실행 모드로 시작하고, 구현 중 예상 못 한 복잡함을 만날 때만 plan mode로 바꾼다.",
+    "why": "복잡함은 이미 요구사항에 적혀 있다. 나중에 생길지 모르는 것이 아니다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "구조를 바꾸는 큰 작업 = 처음부터 plan mode",
+  "explain_ko": [
+   "**dozens of files**(파일 수십 개)와 **decisions about service boundaries**(설계 결정)는 plan mode 가 필요하다는 신호다.",
+   "plan mode 는 대규모 변경, 여러 가지 가능한 방식, 아키텍처 결정이 걸린 작업을 위한 것이다. 고치기 전에 코드를 안전하게 살펴보고 설계할 수 있다.",
+   "{B}는 의존성을 뒤늦게 발견해 재작업 비용이 크다. {C}는 탐색 없이 정답 구조를 안다고 가정한다.",
+   "{D}는 복잡함이 **이미 요구사항에 드러나 있는데** \"생기면 바꾸자\"고 미룬다."
+  ],
+  "clues": [
+   {
+    "en": "restructure the team's monolithic application into microservices",
+    "ko": "아키텍처 변경"
+   },
+   {
+    "en": "changes across dozens of files",
+    "ko": "대규모 여러 파일 수정"
+   },
+   {
+    "en": "requires decisions about service boundaries and module dependencies",
+    "ko": "설계 결정 필요 = plan mode"
+   }
+  ],
+  "discuss_ko": "{D}처럼 바로 실행하다가 복잡해지면 plan mode 로 바꾸는 것도 유연해 보이는데, 이 지문에서는 왜 오답일까?",
+  "words": [
+   {
+    "word": "restructure",
+    "pos": "v.",
+    "ko": "구조를 다시 짜다, 재구성하다",
+    "example": "restructure the team's monolithic application"
+   },
+   {
+    "word": "monolithic",
+    "pos": "adj.",
+    "ko": "한 덩어리로 된 (기능이 분리되지 않은)",
+    "example": "monolithic application into microservices"
+   },
+   {
+    "word": "dependency",
+    "pos": "n.",
+    "ko": "의존성, 서로 기대는 관계",
+    "example": "module dependencies"
+   },
+   {
+    "word": "incrementally",
+    "pos": "adv.",
+    "ko": "조금씩, 점진적으로",
+    "example": "make changes incrementally"
+   },
+   {
+    "word": "upfront",
+    "pos": "adj.",
+    "ko": "미리 하는, 사전의",
+    "example": "comprehensive upfront instructions"
+   },
+   {
+    "word": "comprehensive",
+    "pos": "adj.",
+    "ko": "포괄적인, 빠짐없는",
+    "example": "comprehensive upfront instructions"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "G-06",
+  "domain": 3,
+  "scenario": "Code Generation with Claude Code",
+  "source": "official",
+  "ts": [
+   "3.3"
+  ],
+  "guide_en": "Choosing path-specific rules over subdirectory CLAUDE.md files when conventions must apply to files spread across the codebase",
+  "q_en": "Your codebase has distinct areas with different coding conventions: React components use functional style with hooks, API handlers use async/await with specific error handling, and database models follow a repository pattern. Test files are spread throughout the codebase alongside the code they test (e.g., `Button.test.tsx` next to `Button.tsx`), and you want all tests to follow the same conventions regardless of location. What's the most maintainable way to ensure Claude automatically applies the correct conventions when generating code?",
+  "q_ko": "코드베이스가 영역마다 코딩 규칙이 다르다. React 컴포넌트는 hooks를 쓰는 함수형, API 핸들러는 정해진 에러 처리와 async/await, 데이터베이스 모델은 repository 패턴을 따른다. 테스트 파일은 테스트 대상 코드 옆에 코드베이스 곳곳에 흩어져 있고(예: `Button.tsx` 옆의 `Button.test.tsx`), 위치와 상관없이 모든 테스트가 같은 규칙을 따르게 하고 싶다. Claude가 코드를 만들 때 알맞은 규칙을 자동으로 적용하게 하는, 가장 유지보수하기 좋은 방법은?",
+  "options": [
+   {
+    "en": "Create rule files in `.claude/rules/` with YAML frontmatter specifying glob patterns to conditionally apply conventions based on file paths",
+    "ko": "`.claude/rules/` 에 규칙 파일을 만들고, YAML frontmatter에 glob 패턴을 적어 파일 경로에 따라 규칙을 조건부로 적용한다",
+    "why": "정답. glob 패턴(예: `**/*.test.tsx`)으로 디렉터리 위치와 상관없이 파일 경로만 보고 자동 적용된다."
+   },
+   {
+    "en": "Consolidate all conventions in the root `CLAUDE.md` file under headers for each area, relying on Claude to infer which section applies",
+    "ko": "모든 규칙을 루트 `CLAUDE.md` 에 영역별 제목으로 모아 두고, 어느 부분이 해당하는지는 Claude가 추론하게 한다",
+    "why": "명시적인 매칭이 아니라 추론에 기대므로 믿을 수 없다."
+   },
+   {
+    "en": "Create skills in `.claude/skills/` for each code type that include the relevant conventions in their `SKILL.md` files",
+    "ko": "코드 종류마다 `.claude/skills/` 에 skill을 만들고 각 `SKILL.md` 에 해당 규칙을 넣는다",
+    "why": "skill 은 직접 불러야 하거나 Claude가 골라야 로드되므로, 경로에 따른 \"자동\" 적용과 맞지 않는다."
+   },
+   {
+    "en": "Place a separate `CLAUDE.md` file in each subdirectory containing that area's specific conventions",
+    "ko": "하위 디렉터리마다 그 영역의 규칙을 담은 `CLAUDE.md` 를 따로 둔다",
+    "why": "`CLAUDE.md` 는 디렉터리에 묶여 있어, 여러 디렉터리에 흩어진 파일을 다루기 어렵다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "흩어진 파일에 같은 규칙 = rules + glob",
+  "explain_ko": [
+   "**spread throughout the codebase** + **regardless of location** 은 \"폴더 기준으로는 못 묶는다\"는 뜻이다.",
+   "`.claude/rules/` 파일의 YAML frontmatter 에 glob 패턴(예: `**/*.test.tsx`)을 적으면, 어느 폴더에 있든 경로가 맞는 파일에 규칙이 **자동으로** 적용된다.",
+   "{B}는 Claude의 추론에 맡겨 불안정하다. {C}의 skill 은 직접 부르거나 Claude가 골라야 로드되니 \"자동\"과 어긋난다.",
+   "{D}의 하위 폴더 `CLAUDE.md` 는 폴더에 묶여 있어 곳곳에 흩어진 테스트 파일을 한 번에 다루지 못한다."
+  ],
+  "clues": [
+   {
+    "en": "Test files are spread throughout the codebase",
+    "ko": "폴더로 못 묶음"
+   },
+   {
+    "en": "regardless of location",
+    "ko": "경로 패턴으로 매칭해야 함"
+   },
+   {
+    "en": "automatically applies the correct conventions",
+    "ko": "직접 호출 없이 자동 = skill 아님"
+   },
+   {
+    "en": "most maintainable",
+    "ko": "추론 말고 명시적 규칙"
+   }
+  ],
+  "discuss_ko": "skill 도 description 이 좋으면 Claude가 알아서 불러올 텐데, 왜 이 문제에서는 rules 보다 못한 선택일까?",
+  "words": [
+   {
+    "word": "distinct",
+    "pos": "adj.",
+    "ko": "뚜렷이 구별되는",
+    "example": "distinct areas with different coding conventions"
+   },
+   {
+    "word": "convention",
+    "pos": "n.",
+    "ko": "관례, (코딩) 규칙",
+    "example": "different coding conventions"
+   },
+   {
+    "word": "alongside",
+    "pos": "prep.",
+    "ko": "~와 나란히, ~옆에",
+    "example": "alongside the code they test"
+   },
+   {
+    "word": "regardless of",
+    "pos": "phr.",
+    "ko": "~와 상관없이",
+    "example": "regardless of location"
+   },
+   {
+    "word": "maintainable",
+    "pos": "adj.",
+    "ko": "유지보수하기 쉬운",
+    "example": "What's the most maintainable way"
+   },
+   {
+    "word": "conditionally",
+    "pos": "adv.",
+    "ko": "조건에 따라",
+    "example": "to conditionally apply conventions"
+   },
+   {
+    "word": "infer",
+    "pos": "v.",
+    "ko": "추론하다",
+    "example": "relying on Claude to infer which section applies"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "G-07",
+  "domain": 1,
+  "scenario": "Multi-Agent Research System",
+  "source": "official",
+  "ts": [
+   "1.2"
+  ],
+  "guide_en": "Risks of overly narrow task decomposition by the coordinator, leading to incomplete coverage of broad research topics",
+  "q_en": "After running the system on the topic \"impact of AI on creative industries,\" you observe that each subagent completes successfully: the web search agent finds relevant articles, the document analysis agent summarizes papers correctly, and the synthesis agent produces coherent output. However, the final reports cover only visual arts, completely missing music, writing, and film production. When you examine the coordinator's logs, you see it decomposed the topic into three subtasks: \"AI in digital art creation,\" \"AI in graphic design,\" and \"AI in photography.\" What is the most likely root cause?",
+  "q_ko": "\"impact of AI on creative industries(AI가 창작 산업에 미치는 영향)\" 주제로 시스템을 돌렸더니, subagent는 모두 제 일을 잘 끝냈다. 웹 검색 에이전트는 관련 기사를 찾고, 문서 분석 에이전트는 논문을 정확히 요약하고, 종합 에이전트는 일관된 결과를 냈다. 그런데 최종 보고서는 시각 예술만 다루고 음악·글쓰기·영화 제작은 완전히 빠졌다. coordinator 로그를 보니 주제를 \"AI in digital art creation\", \"AI in graphic design\", \"AI in photography\" 세 하위 작업으로 나눴다. 가장 그럴듯한 근본 원인은?",
+  "options": [
+   {
+    "en": "The synthesis agent lacks instructions for identifying coverage gaps in the findings it receives from other agents.",
+    "ko": "종합 에이전트에게 다른 에이전트가 넘긴 결과에서 빠진 범위를 찾으라는 지시가 없다.",
+    "why": "종합 에이전트는 받은 범위 안에서 제대로 일했다. 하류 에이전트 탓이 아니다."
+   },
+   {
+    "en": "The coordinator agent's task decomposition is too narrow, resulting in subagent assignments that don't cover all relevant domains of the topic.",
+    "ko": "coordinator의 작업 분해가 너무 좁아서, subagent에게 준 일이 주제의 관련 분야를 다 덮지 못했다.",
+    "why": "정답. 로그가 \"창작 산업\"을 시각 예술 세 개로만 나눈 것을 직접 보여 준다. 문제는 무엇을 맡겼느냐다."
+   },
+   {
+    "en": "The web search agent's queries are not comprehensive enough and need to be expanded to cover more creative industry sectors.",
+    "ko": "웹 검색 에이전트의 검색어가 충분히 넓지 않아 더 많은 창작 산업 분야로 넓혀야 한다.",
+    "why": "검색 에이전트는 맡은 하위 작업을 정확히 수행했다. 애초에 음악·영화를 맡지 않았다."
+   },
+   {
+    "en": "The document analysis agent is filtering out sources related to non-visual creative industries due to overly restrictive relevance criteria.",
+    "ko": "문서 분석 에이전트가 관련성 기준이 너무 엄격해 시각 예술이 아닌 창작 산업 자료를 걸러 낸다.",
+    "why": "문서 분석 에이전트도 정확히 요약했다고 지문에 나온다. 원인은 그 앞 단계다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "다들 잘했는데 범위가 좁다 = coordinator 분해 탓",
+  "explain_ko": [
+   "**each subagent completes successfully** 로 하류 에이전트는 모두 제대로 일했다는 게 확인된다.",
+   "**coordinator's logs** 에 답이 그대로 있다. \"창작 산업\"을 디지털 아트·그래픽 디자인·사진, 즉 시각 예술로만 나눠 음악·글쓰기·영화를 통째로 빠뜨렸다.",
+   "subagent 들은 맡은 일을 정확히 했고, 문제는 **무엇을 맡았느냐**다. 그래서 {A}·{C}·{D}처럼 하류 에이전트를 탓하는 보기는 모두 틀렸다."
+  ],
+  "clues": [
+   {
+    "en": "each subagent completes successfully",
+    "ko": "하류 에이전트는 정상"
+   },
+   {
+    "en": "completely missing music, writing, and film production",
+    "ko": "범위(coverage)가 빠짐"
+   },
+   {
+    "en": "it decomposed the topic into three subtasks",
+    "ko": "분해 단계를 보라"
+   },
+   {
+    "en": "most likely root cause",
+    "ko": "증상 말고 출발점을 고르라"
+   }
+  ],
+  "discuss_ko": "종합 에이전트가 빠진 범위를 알아채도록 지시하는 {A}도 결과를 좋게 만들 수 있을 텐데, 왜 근본 원인은 아닐까?",
+  "words": [
+   {
+    "word": "coherent",
+    "pos": "adj.",
+    "ko": "일관성 있는, 앞뒤가 맞는",
+    "example": "produces coherent output"
+   },
+   {
+    "word": "decompose",
+    "pos": "v.",
+    "ko": "(작은 부분으로) 나누다, 분해하다",
+    "example": "it decomposed the topic into three subtasks"
+   },
+   {
+    "word": "root cause",
+    "pos": "n.",
+    "ko": "근본 원인",
+    "example": "the most likely root cause"
+   },
+   {
+    "word": "coverage gap",
+    "pos": "n.",
+    "ko": "빠진 범위, 다루지 못한 부분",
+    "example": "identifying coverage gaps"
+   },
+   {
+    "word": "restrictive",
+    "pos": "adj.",
+    "ko": "제한적인, 너무 엄격한",
+    "example": "overly restrictive relevance criteria"
+   },
+   {
+    "word": "criteria",
+    "pos": "n.",
+    "ko": "기준 (criterion 의 복수)",
+    "example": "overly restrictive relevance criteria"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "G-08",
+  "domain": 5,
+  "scenario": "Multi-Agent Research System",
+  "source": "official",
+  "ts": [
+   "5.3"
+  ],
+  "guide_en": "Returning structured error context including failure type, what was attempted, partial results, and potential alternatives to enable coordinator recovery",
+  "q_en": "The web search subagent times out while researching a complex topic. You need to design how this failure information flows back to the coordinator agent. Which error propagation approach best enables intelligent recovery?",
+  "q_ko": "웹 검색 subagent가 복잡한 주제를 조사하다 시간 초과(timeout)가 났다. 이 실패 정보가 coordinator 에이전트에게 어떻게 전달될지 설계해야 한다. 똑똑한 복구를 가장 잘 가능하게 하는 에러 전파 방식은?",
+  "options": [
+   {
+    "en": "Return structured error context to the coordinator including the failure type, the attempted query, any partial results, and potential alternative approaches.",
+    "ko": "실패 유형, 시도한 검색어, 일부 얻은 결과, 가능한 대안을 담은 구조화된 에러 정보를 coordinator에게 돌려준다.",
+    "why": "정답. coordinator가 다시 시도할지, 다른 방법을 쓸지, 일부 결과로 진행할지 판단할 재료를 준다."
+   },
+   {
+    "en": "Implement automatic retry logic with exponential backoff within the subagent, returning a generic \"search unavailable\" status only after all retries are exhausted.",
+    "ko": "subagent 안에 exponential backoff 자동 재시도를 넣고, 재시도를 다 써도 안 되면 그때 일반적인 \"search unavailable\" 상태만 돌려준다.",
+    "why": "뭉뚱그린 상태 메시지가 중요한 맥락을 숨겨 coordinator가 제대로 판단할 수 없다."
+   },
+   {
+    "en": "Catch the timeout within the subagent and return an empty result set marked as successful.",
+    "ko": "subagent 안에서 timeout을 잡고, 빈 결과를 성공으로 표시해 돌려준다.",
+    "why": "실패를 성공으로 속여 에러를 숨긴다. 복구가 불가능해지고 조사 결과가 불완전해진다."
+   },
+   {
+    "en": "Propagate the timeout exception directly to a top-level handler that terminates the entire research workflow.",
+    "ko": "timeout 예외를 최상위 핸들러로 바로 올려 전체 조사 워크플로를 종료한다.",
+    "why": "복구할 수 있는 상황인데 전체 작업을 괜히 멈춘다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "실패는 숨기지도 뭉개지도 말고 구조화해 전달",
+  "explain_ko": [
+   "**best enables intelligent recovery** 는 \"coordinator가 판단할 수 있게 정보를 넘겨라\"는 뜻이다.",
+   "{A}처럼 실패 유형·시도한 검색어·일부 결과·대안을 구조화해 넘기면, coordinator 가 검색어를 바꿔 재시도할지, 다른 방법을 쓸지, 일부 결과로 진행할지 고를 수 있다.",
+   "{B}의 \"search unavailable\" 같은 일반 메시지는 중요한 맥락을 가린다. {C}는 실패를 성공으로 위장해 복구 기회를 없앤다.",
+   "{D}는 복구할 수 있는데도 전체 워크플로를 불필요하게 끝내 버린다."
+  ],
+  "clues": [
+   {
+    "en": "times out",
+    "ko": "일시적 실패, 복구 가능성 있음"
+   },
+   {
+    "en": "flows back to the coordinator agent",
+    "ko": "판단은 coordinator 몫"
+   },
+   {
+    "en": "best enables intelligent recovery",
+    "ko": "판단 재료(맥락)를 넘기라"
+   }
+  ],
+  "discuss_ko": "subagent 안에서 재시도를 먼저 해 보는 것 자체는 좋은 습관인데, {B}는 정확히 어느 부분 때문에 오답일까?",
+  "words": [
+   {
+    "word": "time out",
+    "pos": "v. phr.",
+    "ko": "시간 초과가 나다",
+    "example": "The web search subagent times out"
+   },
+   {
+    "word": "propagation",
+    "pos": "n.",
+    "ko": "전파, (위로) 전달",
+    "example": "Which error propagation approach"
+   },
+   {
+    "word": "partial",
+    "pos": "adj.",
+    "ko": "일부의, 부분적인",
+    "example": "any partial results"
+   },
+   {
+    "word": "exponential backoff",
+    "pos": "n.",
+    "ko": "지수 백오프 (재시도 간격을 점점 늘리는 방식)",
+    "example": "automatic retry logic with exponential backoff"
+   },
+   {
+    "word": "exhausted",
+    "pos": "adj.",
+    "ko": "다 써 버린, 소진된",
+    "example": "after all retries are exhausted"
+   },
+   {
+    "word": "terminate",
+    "pos": "v.",
+    "ko": "종료하다, 끝내다",
+    "example": "terminates the entire research workflow"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "G-09",
+  "domain": 2,
+  "scenario": "Multi-Agent Research System",
+  "source": "official",
+  "ts": [
+   "2.3"
+  ],
+  "guide_en": "Providing scoped cross-role tools for high-frequency needs (e.g., a verify_fact tool for the synthesis agent) while routing complex cases through the coordinator",
+  "q_en": "During testing, you observe that the synthesis agent frequently needs to verify specific claims while combining findings. Currently, when verification is needed, the synthesis agent returns control to the coordinator, which invokes the web search agent, then re-invokes synthesis with results. This adds 2-3 round trips per task and increases latency by 40%. Your evaluation shows that 85% of these verifications are simple fact-checks (dates, names, statistics) while 15% require deeper investigation. What's the most effective approach to reduce overhead while maintaining system reliability?",
+  "q_ko": "테스트 중 보니 종합 에이전트가 결과를 합치면서 특정 주장을 확인해야 할 때가 많다. 지금은 확인이 필요하면 종합 에이전트가 제어권을 coordinator에게 돌려주고, coordinator가 웹 검색 에이전트를 부른 뒤 결과를 들고 종합 에이전트를 다시 부른다. 그래서 작업마다 왕복이 2~3번 늘고 지연 시간이 40% 늘었다. 평가해 보니 이런 확인의 85%는 단순 사실 확인(날짜, 이름, 통계)이고 15%만 깊은 조사가 필요하다. 시스템 신뢰성을 유지하면서 부담을 줄이는 가장 효과적인 방법은?",
+  "options": [
+   {
+    "en": "Give the synthesis agent a scoped `verify_fact` tool for simple lookups, while complex verifications continue delegating to the web search agent through the coordinator.",
+    "ko": "종합 에이전트에게 단순 조회용으로 범위를 좁힌 `verify_fact` 도구를 주고, 복잡한 확인은 계속 coordinator를 거쳐 웹 검색 에이전트에게 맡긴다.",
+    "why": "정답. 최소 권한 원칙대로 흔한 85%에 필요한 것만 주고, 복잡한 경우는 기존 조정 흐름을 유지한다."
+   },
+   {
+    "en": "Have the synthesis agent accumulate all verification needs and return them as a batch to the coordinator at the end of its pass, which then sends them all to the web search agent at once.",
+    "ko": "종합 에이전트가 확인할 것을 모두 모아 작업 끝에 한꺼번에 coordinator에게 넘기고, coordinator가 그것을 웹 검색 에이전트에게 한 번에 보낸다.",
+    "why": "종합 단계가 앞서 확인된 사실에 기대야 할 수 있어, 모아서 처리하면 막히는 의존 관계가 생긴다."
+   },
+   {
+    "en": "Give the synthesis agent access to all web search tools so it can handle any verification need directly without round-trips through the coordinator.",
+    "ko": "종합 에이전트에게 웹 검색 도구 전부를 줘서 coordinator를 거치지 않고 모든 확인을 직접 처리하게 한다.",
+    "why": "종합 에이전트에게 권한을 너무 많이 줘서 역할 분리를 깨뜨린다."
+   },
+   {
+    "en": "Have the web search agent proactively cache extra context around each source during initial research, anticipating what the synthesis agent might need to verify.",
+    "ko": "웹 검색 에이전트가 처음 조사할 때 종합 에이전트가 확인할 만한 것을 예상해 출처마다 추가 맥락을 미리 캐시해 둔다.",
+    "why": "무엇을 확인해야 할지 미리 정확히 예측할 수 없어 믿을 만한 방법이 아니다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "흔한 85%만 좁은 도구로, 나머지는 기존 경로로",
+  "explain_ko": [
+   "**85% ... simple fact-checks** 와 **15% require deeper investigation** 이 핵심 단서다. 흔한 쉬운 일과 드문 어려운 일을 나눠 처리하라는 신호다.",
+   "{A}는 **최소 권한 원칙**(필요한 것만 준다)을 따른다. 흔한 85%에는 좁은 `verify_fact` 도구를 주고, 복잡한 15%는 지금처럼 coordinator 를 거친다.",
+   "{B}의 모아 보내기는 앞서 확인한 사실에 기대는 종합 단계를 막아 버린다. {C}는 도구를 너무 많이 줘 역할 분리를 깬다.",
+   "{D}의 미리 캐시하기는 무엇이 필요할지 예측에 기대므로 확실하지 않다."
+  ],
+  "clues": [
+   {
+    "en": "adds 2-3 round trips per task and increases latency by 40%",
+    "ko": "문제는 왕복 부담"
+   },
+   {
+    "en": "85% of these verifications are simple fact-checks",
+    "ko": "흔한 경우는 단순 = 좁은 도구로 충분"
+   },
+   {
+    "en": "15% require deeper investigation",
+    "ko": "드문 복잡한 건은 기존 경로 유지"
+   },
+   {
+    "en": "while maintaining system reliability",
+    "ko": "권한을 막 늘리지 말라"
+   }
+  ],
+  "discuss_ko": "종합 에이전트에게 웹 검색 도구를 다 주면({C}) 왕복이 100% 사라지는데, 그래도 좁은 verify_fact 가 더 나은 이유는 무엇일까?",
+  "words": [
+   {
+    "word": "invoke",
+    "pos": "v.",
+    "ko": "(에이전트·함수를) 호출하다",
+    "example": "which invokes the web search agent"
+   },
+   {
+    "word": "round trip",
+    "pos": "n.",
+    "ko": "왕복 (요청을 보내고 돌아오는 한 번)",
+    "example": "adds 2-3 round trips per task"
+   },
+   {
+    "word": "latency",
+    "pos": "n.",
+    "ko": "지연 시간",
+    "example": "increases latency by 40%"
+   },
+   {
+    "word": "overhead",
+    "pos": "n.",
+    "ko": "추가 부담, 부가 비용",
+    "example": "reduce overhead while maintaining system reliability"
+   },
+   {
+    "word": "accumulate",
+    "pos": "v.",
+    "ko": "모으다, 쌓다",
+    "example": "accumulate all verification needs"
+   },
+   {
+    "word": "proactively",
+    "pos": "adv.",
+    "ko": "미리, 선제적으로",
+    "example": "proactively cache extra context"
+   },
+   {
+    "word": "anticipate",
+    "pos": "v.",
+    "ko": "예상하다, 내다보다",
+    "example": "anticipating what the synthesis agent might need to verify"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "G-10",
+  "domain": 3,
+  "scenario": "Claude Code for Continuous Integration",
+  "source": "official",
+  "ts": [
+   "3.6"
+  ],
+  "guide_en": "Running Claude Code in CI with the -p flag to prevent interactive input hangs",
+  "q_en": "Your pipeline script runs `claude \"Analyze this pull request for security issues\"` but the job hangs indefinitely. Logs indicate Claude Code is waiting for interactive input. What's the correct approach to run Claude Code in an automated pipeline?",
+  "q_ko": "파이프라인 스크립트가 `claude \"Analyze this pull request for security issues\"` 를 실행하는데, 작업이 끝없이 멈춰 있다. 로그를 보면 Claude Code가 사용자 입력을 기다리고 있다. 자동화 파이프라인에서 Claude Code를 실행하는 올바른 방법은?",
+  "options": [
+   {
+    "en": "Add the `-p` flag: `claude -p \"Analyze this pull request for security issues\"`",
+    "ko": "`-p` 플래그를 붙인다: `claude -p \"Analyze this pull request for security issues\"`",
+    "why": "정답. `-p`(`--print`)는 문서에 있는 비대화형 실행 방식으로, 결과를 stdout에 내고 입력을 기다리지 않고 끝난다."
+   },
+   {
+    "en": "Set the environment variable `CLAUDE_HEADLESS=true` before running the command",
+    "ko": "명령 실행 전에 환경 변수 `CLAUDE_HEADLESS=true` 를 설정한다",
+    "why": "존재하지 않는 환경 변수다."
+   },
+   {
+    "en": "Redirect stdin from `/dev/null`: `claude \"Analyze this pull request for security issues\" < /dev/null`",
+    "ko": "stdin을 `/dev/null` 에서 받게 한다: `claude \"Analyze this pull request for security issues\" < /dev/null`",
+    "why": "Unix 우회 방법일 뿐, Claude Code의 명령 문법에 맞는 해결이 아니다."
+   },
+   {
+    "en": "Add the `--batch` flag: `claude --batch \"Analyze this pull request for security issues\"`",
+    "ko": "`--batch` 플래그를 붙인다: `claude --batch \"Analyze this pull request for security issues\"`",
+    "why": "존재하지 않는 플래그다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "CI에서 멈춤 = claude -p (비대화형)",
+  "explain_ko": [
+   "**hangs indefinitely** + **waiting for interactive input** 은 \"대화형 모드로 실행돼 사람 입력을 기다린다\"는 뜻이다.",
+   "`-p`(또는 `--print`) 플래그가 문서에 나온 비대화형 실행 방법이다. 프롬프트를 처리해 결과를 stdout 으로 내보내고, 입력을 기다리지 않고 바로 끝난다. CI/CD 에 딱 필요한 동작이다.",
+   "{B}의 `CLAUDE_HEADLESS` 환경 변수와 {D}의 `--batch` 플래그는 **없는 기능**이다. {C}의 `< /dev/null` 은 Unix 우회책이라 Claude Code 명령 문법에 맞는 해결이 아니다."
+  ],
+  "clues": [
+   {
+    "en": "the job hangs indefinitely",
+    "ko": "끝나지 않고 멈춤"
+   },
+   {
+    "en": "waiting for interactive input",
+    "ko": "대화형 모드가 원인"
+   },
+   {
+    "en": "in an automated pipeline",
+    "ko": "비대화형 실행 = `-p`"
+   }
+  ],
+  "discuss_ko": "stdin 을 /dev/null 로 막아도 입력 대기는 풀릴 것 같은데, 시험에서는 왜 이것을 올바른 방법으로 치지 않을까?",
+  "words": [
+   {
+    "word": "pipeline",
+    "pos": "n.",
+    "ko": "(CI) 자동 처리 흐름",
+    "example": "Your pipeline script runs"
+   },
+   {
+    "word": "hang",
+    "pos": "v.",
+    "ko": "(프로그램이) 멈춰 버리다",
+    "example": "the job hangs indefinitely"
+   },
+   {
+    "word": "indefinitely",
+    "pos": "adv.",
+    "ko": "무기한으로, 끝없이",
+    "example": "the job hangs indefinitely"
+   },
+   {
+    "word": "interactive",
+    "pos": "adj.",
+    "ko": "대화형의, 사용자 입력을 주고받는",
+    "example": "waiting for interactive input"
+   },
+   {
+    "word": "redirect",
+    "pos": "v.",
+    "ko": "(입출력 방향을) 돌리다",
+    "example": "Redirect stdin from `/dev/null`"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "G-11",
+  "domain": 4,
+  "scenario": "Claude Code for Continuous Integration",
+  "source": "official",
+  "ts": [
+   "4.5"
+  ],
+  "guide_en": "Matching API approach to workflow latency requirements: synchronous API for blocking pre-merge checks, batch API for overnight/weekly analysis",
+  "q_en": "Your team wants to reduce API costs for automated analysis. Currently, real-time Claude calls power two workflows: (1) a blocking pre-merge check that must complete before developers can merge, and (2) a technical debt report generated overnight for review the next morning. Your manager proposes switching both to the Message Batches API for its 50% cost savings. How should you evaluate this proposal?",
+  "q_ko": "팀이 자동 분석의 API 비용을 줄이려 한다. 지금은 실시간 Claude 호출이 두 워크플로를 돌린다. (1) 개발자가 merge 하기 전에 반드시 끝나야 하는 막는(blocking) pre-merge 검사, (2) 밤새 만들어 다음 날 아침 검토하는 기술 부채 보고서. 매니저가 50% 비용 절감을 이유로 둘 다 Message Batches API로 바꾸자고 한다. 이 제안을 어떻게 평가해야 하나?",
+  "options": [
+   {
+    "en": "Use batch processing for the technical debt reports only; keep real-time calls for pre-merge checks.",
+    "ko": "기술 부채 보고서에만 batch 처리를 쓰고, pre-merge 검사는 실시간 호출을 유지한다.",
+    "why": "정답. 최대 24시간·지연 보장 없음이라 기다리는 pre-merge 검사엔 안 맞고, 밤샘 보고서엔 딱 맞다."
+   },
+   {
+    "en": "Switch both workflows to batch processing with status polling to check for completion.",
+    "ko": "두 워크플로 모두 batch 처리로 바꾸고, 상태 polling으로 완료 여부를 확인한다.",
+    "why": "\"보통은 더 빨리 끝난다\"에 기대는 것은 개발자가 기다리는 blocking 작업에서 받아들일 수 없다."
+   },
+   {
+    "en": "Keep real-time calls for both workflows to avoid batch result ordering issues.",
+    "ko": "batch 결과 순서 문제를 피하려고 두 워크플로 모두 실시간 호출을 유지한다.",
+    "why": "오해다. batch 결과는 `custom_id` 로 요청과 짝지을 수 있다."
+   },
+   {
+    "en": "Switch both to batch processing with a timeout fallback to real-time if batches take too long.",
+    "ko": "둘 다 batch 처리로 바꾸고, 너무 오래 걸리면 실시간으로 넘어가는 timeout 대비책을 둔다.",
+    "why": "각 API를 알맞은 용도에 맞추면 되는데 불필요하게 복잡하다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "기다리는 작업 = 실시간, 밤샘 작업 = Batch",
+  "explain_ko": [
+   "Message Batches API 는 비용이 50% 싸지만 **처리에 최대 24시간**이 걸릴 수 있고 **지연 시간 보장(SLA)이 없다**.",
+   "그래서 개발자가 결과를 기다려야 merge 할 수 있는 **blocking pre-merge check** 에는 안 맞고, 다음 날 아침에 보는 **overnight** 보고서에는 딱 맞다.",
+   "{B}는 \"대개 빨리 끝난다\"에 기대는데 기다리는 작업에서는 용납할 수 없다. {C}는 결과를 `custom_id` 로 짝지을 수 있다는 걸 모르는 오해다.",
+   "{D}는 각 작업에 맞는 API를 고르면 끝날 일을 괜히 복잡하게 만든다."
+  ],
+  "clues": [
+   {
+    "en": "a blocking pre-merge check that must complete before developers can merge",
+    "ko": "기다려야 함 = 실시간"
+   },
+   {
+    "en": "generated overnight for review the next morning",
+    "ko": "늦어도 됨 = Batch 적합"
+   },
+   {
+    "en": "switching both",
+    "ko": "둘 다 바꾸는 게 함정"
+   }
+  ],
+  "discuss_ko": "실제로 batch 가 몇 분 안에 끝나는 경우가 많다면, timeout 대비책({D})을 붙여 둘 다 batch 로 돌리는 게 왜 여전히 좋은 설계가 아닐까?",
+  "words": [
+   {
+    "word": "blocking",
+    "pos": "adj.",
+    "ko": "(끝날 때까지 다음 단계를) 막는",
+    "example": "a blocking pre-merge check"
+   },
+   {
+    "word": "technical debt",
+    "pos": "n.",
+    "ko": "기술 부채 (미뤄 둔 코드 품질 문제)",
+    "example": "a technical debt report"
+   },
+   {
+    "word": "propose",
+    "pos": "v.",
+    "ko": "제안하다",
+    "example": "Your manager proposes switching both"
+   },
+   {
+    "word": "evaluate",
+    "pos": "v.",
+    "ko": "평가하다",
+    "example": "How should you evaluate this proposal?"
+   },
+   {
+    "word": "polling",
+    "pos": "n.",
+    "ko": "주기적으로 상태를 물어보는 것",
+    "example": "with status polling to check for completion"
+   },
+   {
+    "word": "fallback",
+    "pos": "n.",
+    "ko": "대비책, 실패 시 대체 수단",
+    "example": "with a timeout fallback to real-time"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "G-12",
+  "domain": 4,
+  "scenario": "Claude Code for Continuous Integration",
+  "source": "official",
+  "ts": [
+   "4.6",
+   "1.6"
+  ],
+  "guide_en": "Splitting large multi-file reviews into focused per-file passes for local issues plus separate integration passes for cross-file data flow analysis",
+  "q_en": "A pull request modifies 14 files across the stock tracking module. Your single-pass review analyzing all files together produces inconsistent results: detailed feedback for some files but superficial comments for others, obvious bugs missed, and contradictory feedback—flagging a pattern as problematic in one file while approving identical code elsewhere in the same PR. How should you restructure the review?",
+  "q_ko": "pull request 하나가 재고 추적 모듈의 파일 14개를 고친다. 모든 파일을 한 번에 분석하는 단일 패스 리뷰가 들쭉날쭉한 결과를 낸다. 어떤 파일은 자세히, 어떤 파일은 겉핥기로 코멘트하고, 뻔한 버그를 놓치며, 서로 모순된 피드백을 준다. 한 파일에서는 문제라고 지적한 패턴을 같은 PR의 다른 곳에서는 똑같은 코드인데 통과시킨다. 리뷰를 어떻게 재구성해야 하나?",
+  "options": [
+   {
+    "en": "Split into focused passes: analyze each file individually for local issues, then run a separate integration-focused pass examining cross-file data flow.",
+    "ko": "집중된 패스로 나눈다. 파일마다 따로 분석해 그 파일 안의 문제를 찾고, 이어서 파일 사이 데이터 흐름을 보는 별도 통합 패스를 돌린다.",
+    "why": "정답. 한꺼번에 볼 때 주의가 흩어지는 근본 원인을 고친다. 파일별로 깊이가 고르고, 통합 패스가 파일 간 문제를 잡는다."
+   },
+   {
+    "en": "Require developers to split large PRs into smaller submissions of 3-4 files before the automated review runs.",
+    "ko": "자동 리뷰 전에 개발자가 큰 PR을 파일 3~4개짜리 작은 PR로 나눠 올리게 한다.",
+    "why": "시스템은 그대로 두고 부담만 개발자에게 넘긴다."
+   },
+   {
+    "en": "Switch to a higher-tier model with a larger context window to give all 14 files adequate attention in one pass.",
+    "ko": "더 큰 context window를 가진 상위 모델로 바꿔 한 번에 14개 파일 모두에 충분한 주의를 준다.",
+    "why": "context window가 커져도 주의(attention)의 질 문제는 해결되지 않는다."
+   },
+   {
+    "en": "Run three independent review passes on the full PR and only flag issues that appear in at least two of the three runs.",
+    "ko": "전체 PR에 독립 리뷰를 세 번 돌리고, 세 번 중 두 번 이상 나온 문제만 지적한다.",
+    "why": "가끔만 잡히는 진짜 버그를 합의 조건 때문에 오히려 걸러 버린다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "파일 많아 들쭉날쭉 = 파일별 패스 + 통합 패스",
+  "explain_ko": [
+   "**14 files**, **detailed ... but superficial**, **contradictory feedback** 은 한 번에 너무 많이 봐서 **주의가 흩어졌다(attention dilution)** 는 신호다.",
+   "{A}처럼 파일마다 따로 보면 모든 파일을 같은 깊이로 보고, 따로 도는 통합 패스가 파일 사이에 걸친 문제를 잡는다.",
+   "{B}는 시스템을 고치지 않고 개발자에게 짐을 넘긴다. {C}는 context window 가 커도 주의의 질 문제는 그대로라는 점을 놓친다.",
+   "{D}는 두 번 이상 나온 것만 남기므로, 가끔만 잡히는 진짜 버그를 오히려 지워 버린다."
+  ],
+  "clues": [
+   {
+    "en": "modifies 14 files",
+    "ko": "한 번에 보기엔 많음"
+   },
+   {
+    "en": "detailed feedback for some files but superficial comments for others",
+    "ko": "주의가 고르지 않음"
+   },
+   {
+    "en": "contradictory feedback",
+    "ko": "파일 간 판단이 흔들림"
+   },
+   {
+    "en": "How should you restructure the review?",
+    "ko": "리뷰 구조(패스)를 바꾸라"
+   }
+  ],
+  "discuss_ko": "세 번 돌려 두 번 이상 나온 것만 남기면({D}) 오탐이 줄어 신뢰도가 오를 것 같은데, 이 지문에서는 왜 오히려 해가 될까?",
+  "words": [
+   {
+    "word": "inconsistent",
+    "pos": "adj.",
+    "ko": "일관성 없는, 들쭉날쭉한",
+    "example": "produces inconsistent results"
+   },
+   {
+    "word": "superficial",
+    "pos": "adj.",
+    "ko": "피상적인, 겉핥기의",
+    "example": "superficial comments for others"
+   },
+   {
+    "word": "contradictory",
+    "pos": "adj.",
+    "ko": "모순되는, 서로 어긋나는",
+    "example": "contradictory feedback"
+   },
+   {
+    "word": "flag",
+    "pos": "v.",
+    "ko": "(문제로) 표시하다, 지적하다",
+    "example": "flagging a pattern as problematic"
+   },
+   {
+    "word": "identical",
+    "pos": "adj.",
+    "ko": "똑같은, 동일한",
+    "example": "approving identical code elsewhere"
+   },
+   {
+    "word": "adequate",
+    "pos": "adj.",
+    "ko": "충분한, 적절한",
+    "example": "give all 14 files adequate attention"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ }
+]

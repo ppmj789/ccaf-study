@@ -6,7 +6,8 @@
 
 ## 구조
 
-- `cards/dN.json` — 영역(D1~D5)별 문제 카드. 필드 규격은 아래.
+- `cards/*.json` — 문제 카드. `d1~d5.json` 커뮤니티(MIT) 문제, `official.json` 공식 가이드 9장 샘플 G-01~12, `new-sN.json` Claude 가 가이드 Task Statement 근거로 쓴 문제(C{시나리오}-nn). 공식 샘플과 겹치는 커뮤니티 문제 6개는 build.py 의 `REPLACED` 로 뺀다.
+- `guide/sN.json` — 시나리오 1~6 공부 자료(공식 설명 영어 원문·한국어, 쉽게 풀기, 흐름, 용어, 판단 포인트와 가이드 원문 근거, 비교표, 체크리스트). 앱의 `시나리오 공부` 화면이 그린다. 근거 원문은 공식 시험 가이드 PDF(CCAR-F, 2026-07).
 - `template.html` — 앱 화면. **실제 컴퓨터 시험(CBT) 화면처럼**: 지문과 보기를 한 화면에, 상단 바(문항 번호·남은 시간), 하단 바(이전·검토 표시·검토 화면·다음). 처음 화면에서 연습 모드(바로 채점, 풀이·보기별 해설·토론 거리가 아래에) / 모의고사(문항당 2분, 끝나고 성적표·환산 점수) / 단어장(표·암기 카드). 사용자가 카드뉴스·OMR 같은 꾸밈 디자인은 불편하다고 해서 뺐으니 다시 넣지 않는다. 디자인은 여기서만 고친다.
 - `build.py` — 카드를 모아 검증(빠진 필드, 단서가 지문에 있는지), 보기 순서를 id 기준으로 섞고(원본 정답이 B·C 에 몰려 있음), 단어 빈도(전체 지문·보기에서 몇 번 나오는지)를 세어 `dist/index.html` 을 만든다.
 - 아티팩트: https://claude.ai/code/artifact/543b273b-06c4-4823-88f0-0fee3b3fb520 — `dist/index.html` 을 이 `url` 로 재발행, capabilities `{"db": {}}`. 진도는 db 문서 `progress/miji` (`answers{id:{pick, ok, at, n}}`, `words{word:"known"|"learn"}`, `tries`), 없으면 localStorage.
@@ -19,7 +20,8 @@
 
 ## 카드 필드
 
-`id`(D3-01), `domain`(1~5), `scenario`, `q_en`, `q_ko`, `options[4]{en, ko, why}`, `answer`(0-based, 원본 순서), `point_ko`(정답을 가르는 한 줄), `explain_ko[]`, `clues[{en(지문의 부분 문자열), ko}]`, `discuss_ko`(토론 거리), `words[{word, pos, ko, example}]`, `check`, `checkNote`.
+`id`, `domain`(1~5), `scenario`(공식 6개 이름, 옛 이름은 build 가 맞춤), `source`(official/community/claude), `ts`·`guide_en`(가이드 근거), `select`(여러 개 고르는 문항이면 2, `answer` 는 배열), `q_en`, `q_ko`, `options[4]{en, ko, why}`, `answer`(0-based, 원본 순서), `point_ko`(정답을 가르는 한 줄), `explain_ko[]`, `clues[{en(지문의 부분 문자열), ko}]`, `discuss_ko`(토론 거리), `words[{word, pos, ko, example}]`, `check`, `checkNote`.
+- 한국어 해설에서 보기를 가리키는 글자는 반드시 `{A}`~`{E}` 토큰으로 쓴다(원래 options 순서 기준). build 가 보기를 섞은 뒤 글자로 바꾼다. 맨 글자 A/B 를 쓰면 섞인 뒤 어긋난다.
 - 코드·경로·명령어는 `백틱`. 이모지 금지. 한국어는 짧고 쉬운 말, 기술 용어는 영어 그대로.
 - words 는 한국인 학습자가 막힐 시험 영어(misroute, idempotent, discrepancy …) 4~7개. 쉬운 단어·순수 식별자는 넣지 않는다.
 

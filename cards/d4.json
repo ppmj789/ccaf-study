@@ -6,31 +6,86 @@
   "q_en": "Your code review agent produces too many false positives on style issues. You add the instruction: \"Only report high-confidence findings.\" False-positive rate stays unchanged. Why does this fail, and what is the correct fix?",
   "q_ko": "코드 리뷰 에이전트가 스타일 문제에서 오탐(false positive)을 너무 많이 낸다. \"확신이 높은 결과만 보고하라\" 는 지시를 추가했지만 오탐률은 그대로다. 왜 실패했고, 올바른 해결책은 무엇인가?",
   "options": [
-   {"en": "Fails because the model has no calibrated confidence metric. Fix: reduce temperature to 0 to eliminate low-confidence outputs.", "ko": "모델에 보정된 확신도 지표가 없어서 실패한다. 해결: temperature 를 0으로 낮춰 확신 낮은 출력을 없앤다.", "why": "temperature 는 무작위성만 줄일 뿐 무엇을 지적할지 기준은 그대로라, 같은 오탐이 더 일관되게 반복된다."},
-   {"en": "Fails because confidence-based instructions are vague and don't change what gets flagged. Fix: define explicit categorical criteria — which issue types to report and which to skip.", "ko": "확신도 기반 지시는 모호해서 무엇을 지적할지 바꾸지 못하기 때문이다. 해결: 보고할 이슈 유형과 건너뛸 유형을 명시적인 범주 기준으로 정한다.", "why": "정답. '높은 확신' 은 실행 가능한 정의가 없고, 보고·생략 범주를 정해 줘야 지적 대상이 실제로 바뀐다."},
-   {"en": "Fails because the instruction is in the wrong position. Fix: move it to the beginning of the system prompt.", "ko": "지시 위치가 잘못됐기 때문이다. 해결: system prompt 맨 앞으로 옮긴다.", "why": "위치를 옮겨도 지시 자체가 모호하다는 근본 문제는 그대로다."},
-   {"en": "Fails because style and security reviews require separate prompt passes.", "ko": "스타일 리뷰와 보안 리뷰는 별도의 프롬프트 패스가 필요하기 때문이다.", "why": "해결책이 없고, 패스를 나눠도 스타일 지적 기준이 모호한 건 그대로다."}
+   {
+    "en": "Fails because the model has no calibrated confidence metric. Fix: reduce temperature to 0 to eliminate low-confidence outputs.",
+    "ko": "모델에 보정된 확신도 지표가 없어서 실패한다. 해결: temperature 를 0으로 낮춰 확신 낮은 출력을 없앤다.",
+    "why": "temperature 는 무작위성만 줄일 뿐 무엇을 지적할지 기준은 그대로라, 같은 오탐이 더 일관되게 반복된다."
+   },
+   {
+    "en": "Fails because confidence-based instructions are vague and don't change what gets flagged. Fix: define explicit categorical criteria — which issue types to report and which to skip.",
+    "ko": "확신도 기반 지시는 모호해서 무엇을 지적할지 바꾸지 못하기 때문이다. 해결: 보고할 이슈 유형과 건너뛸 유형을 명시적인 범주 기준으로 정한다.",
+    "why": "정답. '높은 확신' 은 실행 가능한 정의가 없고, 보고·생략 범주를 정해 줘야 지적 대상이 실제로 바뀐다."
+   },
+   {
+    "en": "Fails because the instruction is in the wrong position. Fix: move it to the beginning of the system prompt.",
+    "ko": "지시 위치가 잘못됐기 때문이다. 해결: system prompt 맨 앞으로 옮긴다.",
+    "why": "위치를 옮겨도 지시 자체가 모호하다는 근본 문제는 그대로다."
+   },
+   {
+    "en": "Fails because style and security reviews require separate prompt passes.",
+    "ko": "스타일 리뷰와 보안 리뷰는 별도의 프롬프트 패스가 필요하기 때문이다.",
+    "why": "해결책이 없고, 패스를 나눠도 스타일 지적 기준이 모호한 건 그대로다."
+   }
   ],
   "answer": 1,
   "point_ko": "'확신 높은 것만' 은 모호 → 보고·생략 범주를 명시",
   "explain_ko": [
    "지시를 넣었는데 **False-positive rate stays unchanged** — 지시가 모델의 행동을 전혀 바꾸지 못했다는 단서다.",
    "모델에게 '높은 확신' 은 구체적인 기준이 아니라서, 원래 하던 판단을 그대로 계속한다.",
-   "그래서 **무엇을 지적하고(버그·보안) 무엇을 건너뛸지(사소한 스타일)** 범주로 못 박아야 결과가 바뀐다. 이것이 B 다."
+   "그래서 **무엇을 지적하고(버그·보안) 무엇을 건너뛸지(사소한 스타일)** 범주로 못 박아야 결과가 바뀐다. 이것이 {B} 다."
   ],
   "clues": [
-   {"en": "too many false positives on style issues", "ko": "스타일 오탐이 문제"},
-   {"en": "Only report high-confidence findings.", "ko": "정의 없는 모호한 확신도 지시"},
-   {"en": "False-positive rate stays unchanged", "ko": "모호한 지시는 행동을 못 바꿈"}
+   {
+    "en": "too many false positives on style issues",
+    "ko": "스타일 오탐이 문제"
+   },
+   {
+    "en": "Only report high-confidence findings.",
+    "ko": "정의 없는 모호한 확신도 지시"
+   },
+   {
+    "en": "False-positive rate stays unchanged",
+    "ko": "모호한 지시는 행동을 못 바꿈"
+   }
   ],
   "discuss_ko": "temperature 를 0으로 낮추면 출력이 일관돼지는데, 왜 그것으로 오탐은 줄지 않을까?",
   "words": [
-   {"word": "false positive", "pos": "n.", "ko": "오탐, 거짓 양성", "example": "too many false positives on style issues"},
-   {"word": "calibrated", "pos": "adj.", "ko": "보정된, 눈금이 맞춰진", "example": "the model has no calibrated confidence metric"},
-   {"word": "vague", "pos": "adj.", "ko": "모호한, 막연한", "example": "confidence-based instructions are vague"},
-   {"word": "flag", "pos": "v.", "ko": "지적하다, 표시하다", "example": "don't change what gets flagged"},
-   {"word": "categorical", "pos": "adj.", "ko": "범주별의, 명확히 구분된", "example": "define explicit categorical criteria"},
-   {"word": "criterion", "pos": "n.", "ko": "기준 (복수형 criteria)", "example": "define explicit categorical criteria"}
+   {
+    "word": "false positive",
+    "pos": "n.",
+    "ko": "오탐, 거짓 양성",
+    "example": "too many false positives on style issues"
+   },
+   {
+    "word": "calibrated",
+    "pos": "adj.",
+    "ko": "보정된, 눈금이 맞춰진",
+    "example": "the model has no calibrated confidence metric"
+   },
+   {
+    "word": "vague",
+    "pos": "adj.",
+    "ko": "모호한, 막연한",
+    "example": "confidence-based instructions are vague"
+   },
+   {
+    "word": "flag",
+    "pos": "v.",
+    "ko": "지적하다, 표시하다",
+    "example": "don't change what gets flagged"
+   },
+   {
+    "word": "categorical",
+    "pos": "adj.",
+    "ko": "범주별의, 명확히 구분된",
+    "example": "define explicit categorical criteria"
+   },
+   {
+    "word": "criterion",
+    "pos": "n.",
+    "ko": "기준 (복수형 criteria)",
+    "example": "define explicit categorical criteria"
+   }
   ],
   "check": "ok",
   "checkNote": ""
@@ -42,30 +97,80 @@
   "q_en": "One category — 'potential performance issues' — has a very high false-positive rate, causing developers to dismiss all review output including accurate security findings. The counterintuitive but correct short-term fix is:",
   "q_ko": "'잠재적 성능 문제' 라는 한 범주의 오탐률이 매우 높아서, 개발자들이 정확한 보안 지적까지 포함해 리뷰 결과 전체를 무시하게 됐다. 직관에 반하지만 올바른 단기 해결책은?",
   "options": [
-   {"en": "Lower the confidence threshold specifically for the performance category to reduce noise in that category.", "ko": "성능 범주에만 확신도 임계값을 낮춰 그 범주의 노이즈를 줄인다.", "why": "확신도 조정은 모호한 기준이라는 원인을 못 고치고, 그동안 노이즈는 계속 흘러나간다."},
-   {"en": "Add more detailed prompt instructions specifically for the performance category.", "ko": "성능 범주에 더 자세한 프롬프트 지시를 추가한다.", "why": "장기적으로는 필요하지만, 고치는 동안에도 노이즈가 계속 나가 신뢰가 더 무너진다."},
-   {"en": "Temporarily disable the performance category entirely while improving its prompt, restoring developer trust in the remaining categories.", "ko": "프롬프트를 개선하는 동안 성능 범주를 일시적으로 완전히 끄고, 나머지 범주에 대한 개발자 신뢰를 회복한다.", "why": "정답. 시끄러운 범주를 빼야 나머지(보안 등) 결과를 다시 믿게 되고, 고친 뒤 다시 켜면 된다."},
-   {"en": "Run the performance category as a separate pass so its noise doesn't appear alongside security findings.", "ko": "성능 범주를 별도 패스로 돌려서 그 노이즈가 보안 지적과 함께 보이지 않게 한다.", "why": "범주 프롬프트는 그대로라 노이즈가 여전히 개발자에게 가고, 결과를 무시하는 습관도 계속된다."}
+   {
+    "en": "Lower the confidence threshold specifically for the performance category to reduce noise in that category.",
+    "ko": "성능 범주에만 확신도 임계값을 낮춰 그 범주의 노이즈를 줄인다.",
+    "why": "확신도 조정은 모호한 기준이라는 원인을 못 고치고, 그동안 노이즈는 계속 흘러나간다."
+   },
+   {
+    "en": "Add more detailed prompt instructions specifically for the performance category.",
+    "ko": "성능 범주에 더 자세한 프롬프트 지시를 추가한다.",
+    "why": "장기적으로는 필요하지만, 고치는 동안에도 노이즈가 계속 나가 신뢰가 더 무너진다."
+   },
+   {
+    "en": "Temporarily disable the performance category entirely while improving its prompt, restoring developer trust in the remaining categories.",
+    "ko": "프롬프트를 개선하는 동안 성능 범주를 일시적으로 완전히 끄고, 나머지 범주에 대한 개발자 신뢰를 회복한다.",
+    "why": "정답. 시끄러운 범주를 빼야 나머지(보안 등) 결과를 다시 믿게 되고, 고친 뒤 다시 켜면 된다."
+   },
+   {
+    "en": "Run the performance category as a separate pass so its noise doesn't appear alongside security findings.",
+    "ko": "성능 범주를 별도 패스로 돌려서 그 노이즈가 보안 지적과 함께 보이지 않게 한다.",
+    "why": "범주 프롬프트는 그대로라 노이즈가 여전히 개발자에게 가고, 결과를 무시하는 습관도 계속된다."
+   }
   ],
   "answer": 2,
   "point_ko": "한 범주가 신뢰를 망치면 → 일단 끄고, 고친 뒤 재개",
   "explain_ko": [
    "**dismiss all review output including accurate security findings** — 한 범주의 오탐이 결과 전체의 신뢰를 무너뜨리고 있다.",
    "**short-term fix** 를 물으므로, 지금 당장 신뢰를 되살리는 조치가 답이다.",
-   "가장 빠른 방법은 문제 범주를 **잠시 꺼서** 정확한 결과만 보이게 하고, 그동안 프롬프트를 고쳐 다시 켜는 것(C)이다."
+   "가장 빠른 방법은 문제 범주를 **잠시 꺼서** 정확한 결과만 보이게 하고, 그동안 프롬프트를 고쳐 다시 켜는 것({C})이다."
   ],
   "clues": [
-   {"en": "very high false-positive rate", "ko": "한 범주가 노이즈의 근원"},
-   {"en": "dismiss all review output including accurate security findings", "ko": "신뢰 붕괴가 전체로 번짐"},
-   {"en": "counterintuitive but correct short-term fix", "ko": "고치기보다 일단 빼기"}
+   {
+    "en": "very high false-positive rate",
+    "ko": "한 범주가 노이즈의 근원"
+   },
+   {
+    "en": "dismiss all review output including accurate security findings",
+    "ko": "신뢰 붕괴가 전체로 번짐"
+   },
+   {
+    "en": "counterintuitive but correct short-term fix",
+    "ko": "고치기보다 일단 빼기"
+   }
   ],
-  "discuss_ko": "별도 패스로 분리하면(D) 보안 지적과 섞이지 않는데, 왜 그것만으로는 개발자 신뢰가 돌아오지 않을까?",
+  "discuss_ko": "별도 패스로 분리하면({D}) 보안 지적과 섞이지 않는데, 왜 그것만으로는 개발자 신뢰가 돌아오지 않을까?",
   "words": [
-   {"word": "dismiss", "pos": "v.", "ko": "무시하다, 묵살하다", "example": "causing developers to dismiss all review output"},
-   {"word": "counterintuitive", "pos": "adj.", "ko": "직관에 반하는", "example": "The counterintuitive but correct short-term fix"},
-   {"word": "threshold", "pos": "n.", "ko": "임계값, 기준선", "example": "Lower the confidence threshold"},
-   {"word": "restore", "pos": "v.", "ko": "회복시키다, 되돌리다", "example": "restoring developer trust in the remaining categories"},
-   {"word": "alongside", "pos": "prep.", "ko": "~와 나란히, ~와 함께", "example": "doesn't appear alongside security findings"}
+   {
+    "word": "dismiss",
+    "pos": "v.",
+    "ko": "무시하다, 묵살하다",
+    "example": "causing developers to dismiss all review output"
+   },
+   {
+    "word": "counterintuitive",
+    "pos": "adj.",
+    "ko": "직관에 반하는",
+    "example": "The counterintuitive but correct short-term fix"
+   },
+   {
+    "word": "threshold",
+    "pos": "n.",
+    "ko": "임계값, 기준선",
+    "example": "Lower the confidence threshold"
+   },
+   {
+    "word": "restore",
+    "pos": "v.",
+    "ko": "회복시키다, 되돌리다",
+    "example": "restoring developer trust in the remaining categories"
+   },
+   {
+    "word": "alongside",
+    "pos": "prep.",
+    "ko": "~와 나란히, ~와 함께",
+    "example": "doesn't appear alongside security findings"
+   }
   ],
   "check": "ok",
   "checkNote": ""
@@ -77,31 +182,86 @@
   "q_en": "Your pipeline frequently returns `null` for `methodology_section` even when the methodology is clearly described inline in document prose (not in a dedicated section header). Most effective fix:",
   "q_ko": "파이프라인이 `methodology_section` 에 자주 `null` 을 돌려준다. 방법론이 별도 섹션 제목이 아니라 문서 본문 안에 분명히 서술돼 있는데도 그렇다. 가장 효과적인 해결책은?",
   "options": [
-   {"en": "Make `methodology_section` a required field — the model won't skip it.", "ko": "`methodology_section` 을 required 필드로 만든다 — 모델이 건너뛰지 못한다.", "why": "필수로 만들면 못 찾았을 때 없는 내용을 지어낼 위험만 커지고, 본문 속 방법론을 알아보는 능력은 그대로다."},
-   {"en": "Add more `max_tokens` headroom so the model has space to extract all fields.", "ko": "`max_tokens` 여유를 늘려 모델이 모든 필드를 추출할 공간을 준다.", "why": "출력이 잘린 게 아니라 추출 판단이 틀린 것이라 max_tokens 와는 무관하다."},
-   {"en": "Add 2–4 few-shot examples showing correct extraction from inline methodology descriptions versus dedicated section headers.", "ko": "본문 속 방법론 서술과 별도 섹션 제목, 두 경우 각각에서 올바르게 추출하는 few-shot 예시 2~4개를 추가한다.", "why": "정답. 문서 구조가 제각각이라 실패할 때는 두 형태를 모두 보여 주는 예시가 모델에게 추출 모양을 가르친다."},
-   {"en": "Use `tool_choice: \"any\"` to force a tool call instead of conversational text.", "ko": "`tool_choice: \"any\"` 로 대화형 텍스트 대신 tool 호출을 강제한다.", "why": "이미 구조화된 결과(null)가 나오고 있으므로 tool 호출 강제는 문제와 상관없다."}
+   {
+    "en": "Make `methodology_section` a required field — the model won't skip it.",
+    "ko": "`methodology_section` 을 required 필드로 만든다 — 모델이 건너뛰지 못한다.",
+    "why": "필수로 만들면 못 찾았을 때 없는 내용을 지어낼 위험만 커지고, 본문 속 방법론을 알아보는 능력은 그대로다."
+   },
+   {
+    "en": "Add more `max_tokens` headroom so the model has space to extract all fields.",
+    "ko": "`max_tokens` 여유를 늘려 모델이 모든 필드를 추출할 공간을 준다.",
+    "why": "출력이 잘린 게 아니라 추출 판단이 틀린 것이라 max_tokens 와는 무관하다."
+   },
+   {
+    "en": "Add 2–4 few-shot examples showing correct extraction from inline methodology descriptions versus dedicated section headers.",
+    "ko": "본문 속 방법론 서술과 별도 섹션 제목, 두 경우 각각에서 올바르게 추출하는 few-shot 예시 2~4개를 추가한다.",
+    "why": "정답. 문서 구조가 제각각이라 실패할 때는 두 형태를 모두 보여 주는 예시가 모델에게 추출 모양을 가르친다."
+   },
+   {
+    "en": "Use `tool_choice: \"any\"` to force a tool call instead of conversational text.",
+    "ko": "`tool_choice: \"any\"` 로 대화형 텍스트 대신 tool 호출을 강제한다.",
+    "why": "이미 구조화된 결과(null)가 나오고 있으므로 tool 호출 강제는 문제와 상관없다."
+   }
   ],
   "answer": 2,
   "point_ko": "문서 구조가 제각각 → 두 형태를 보여 주는 few-shot",
   "explain_ko": [
    "단서는 **inline in document prose** 와 **not in a dedicated section header** — 섹션 제목이 없는 다른 구조의 문서에서만 실패한다.",
-   "모델이 '방법론 = 제목 달린 섹션' 으로 좁게 이해하고 있으니, **본문형·섹션형 두 모양을 예시로** 보여 주면 된다(C).",
-   "required 로 만들면(A) null 은 사라져도 없는 방법론을 지어낼 수 있어 오히려 위험하다."
+   "모델이 '방법론 = 제목 달린 섹션' 으로 좁게 이해하고 있으니, **본문형·섹션형 두 모양을 예시로** 보여 주면 된다({C}).",
+   "required 로 만들면({A}) null 은 사라져도 없는 방법론을 지어낼 수 있어 오히려 위험하다."
   ],
   "clues": [
-   {"en": "frequently returns `null` for `methodology_section`", "ko": "빈 필드 추출 실패"},
-   {"en": "clearly described inline in document prose", "ko": "정보는 있음, 모양이 다를 뿐"},
-   {"en": "not in a dedicated section header", "ko": "구조 변형 → 예시로 가르칠 것"}
+   {
+    "en": "frequently returns `null` for `methodology_section`",
+    "ko": "빈 필드 추출 실패"
+   },
+   {
+    "en": "clearly described inline in document prose",
+    "ko": "정보는 있음, 모양이 다를 뿐"
+   },
+   {
+    "en": "not in a dedicated section header",
+    "ko": "구조 변형 → 예시로 가르칠 것"
+   }
   ],
-  "discuss_ko": "required 필드로 만들면(A) 적어도 null 은 사라지는데, 왜 이것이 더 나쁜 선택일까?",
+  "discuss_ko": "required 필드로 만들면({A}) 적어도 null 은 사라지는데, 왜 이것이 더 나쁜 선택일까?",
   "words": [
-   {"word": "methodology", "pos": "n.", "ko": "방법론", "example": "the methodology is clearly described"},
-   {"word": "inline", "pos": "adv.", "ko": "본문 안에, 줄 안에", "example": "clearly described inline in document prose"},
-   {"word": "prose", "pos": "n.", "ko": "산문, 일반 서술문", "example": "inline in document prose"},
-   {"word": "dedicated", "pos": "adj.", "ko": "전용의, 따로 마련된", "example": "not in a dedicated section header"},
-   {"word": "headroom", "pos": "n.", "ko": "여유 공간, 여유분", "example": "Add more `max_tokens` headroom"},
-   {"word": "versus", "pos": "prep.", "ko": "~와 대비하여", "example": "versus dedicated section headers"}
+   {
+    "word": "methodology",
+    "pos": "n.",
+    "ko": "방법론",
+    "example": "the methodology is clearly described"
+   },
+   {
+    "word": "inline",
+    "pos": "adv.",
+    "ko": "본문 안에, 줄 안에",
+    "example": "clearly described inline in document prose"
+   },
+   {
+    "word": "prose",
+    "pos": "n.",
+    "ko": "산문, 일반 서술문",
+    "example": "inline in document prose"
+   },
+   {
+    "word": "dedicated",
+    "pos": "adj.",
+    "ko": "전용의, 따로 마련된",
+    "example": "not in a dedicated section header"
+   },
+   {
+    "word": "headroom",
+    "pos": "n.",
+    "ko": "여유 공간, 여유분",
+    "example": "Add more `max_tokens` headroom"
+   },
+   {
+    "word": "versus",
+    "pos": "prep.",
+    "ko": "~와 대비하여",
+    "example": "versus dedicated section headers"
+   }
   ],
   "check": "ok",
   "checkNote": ""
@@ -113,32 +273,92 @@
   "q_en": "Using `tool_use` with a strict JSON schema, your validation still catches errors: invoice line items don't sum to the stated total, and dates appear in the wrong fields. Why does this happen despite the strict schema?",
   "q_ko": "엄격한 JSON schema 로 `tool_use` 를 쓰는데도 검증 단계에서 오류가 잡힌다. 청구서 항목 금액의 합이 적힌 총액과 맞지 않고, 날짜가 엉뚱한 필드에 들어간다. 엄격한 schema 인데도 왜 이런 일이 생기나?",
   "options": [
-   {"en": "The JSON schema isn't being applied to nested array fields correctly.", "ko": "JSON schema 가 중첩 배열 필드에 제대로 적용되지 않고 있다.", "why": "형식 문제가 아니라 값의 의미(합계·필드 위치) 문제라서 schema 적용 범위와는 상관없다."},
-   {"en": "`tool_use` with strict schemas eliminates syntax errors but does not prevent semantic errors like arithmetic inconsistency or wrong-field placement.", "ko": "엄격한 schema 를 쓴 `tool_use` 는 문법 오류는 없애지만, 계산 불일치나 필드 오배치 같은 의미 오류는 막지 못한다.", "why": "정답. schema 는 구조와 타입만 보장하고, 합계가 맞는지·값이 맞는 칸에 들어갔는지는 애플리케이션에서 검증해야 한다."},
-   {"en": "The schema needs `tool_choice: \"any\"` to enforce full validation end-to-end.", "ko": "전체 검증을 끝까지 강제하려면 schema 에 `tool_choice: \"any\"` 가 필요하다.", "why": "tool_choice 는 tool 을 부를지 여부를 정할 뿐, 값의 논리적 정합성을 검사하지 않는다."},
-   {"en": "`strict: true` must be explicitly set — JSON schemas are advisory by default.", "ko": "`strict: true` 를 명시해야 한다 — JSON schema 는 기본적으로 권고일 뿐이다.", "why": "strict 가 기본값이 아닌 건 사실이지만, 지문은 이미 strict schema 를 쓰고 있고 strict 로도 합계 불일치·필드 뒤바뀜은 못 막는다."}
+   {
+    "en": "The JSON schema isn't being applied to nested array fields correctly.",
+    "ko": "JSON schema 가 중첩 배열 필드에 제대로 적용되지 않고 있다.",
+    "why": "형식 문제가 아니라 값의 의미(합계·필드 위치) 문제라서 schema 적용 범위와는 상관없다."
+   },
+   {
+    "en": "`tool_use` with strict schemas eliminates syntax errors but does not prevent semantic errors like arithmetic inconsistency or wrong-field placement.",
+    "ko": "엄격한 schema 를 쓴 `tool_use` 는 문법 오류는 없애지만, 계산 불일치나 필드 오배치 같은 의미 오류는 막지 못한다.",
+    "why": "정답. schema 는 구조와 타입만 보장하고, 합계가 맞는지·값이 맞는 칸에 들어갔는지는 애플리케이션에서 검증해야 한다."
+   },
+   {
+    "en": "The schema needs `tool_choice: \"any\"` to enforce full validation end-to-end.",
+    "ko": "전체 검증을 끝까지 강제하려면 schema 에 `tool_choice: \"any\"` 가 필요하다.",
+    "why": "tool_choice 는 tool 을 부를지 여부를 정할 뿐, 값의 논리적 정합성을 검사하지 않는다."
+   },
+   {
+    "en": "`strict: true` must be explicitly set — JSON schemas are advisory by default.",
+    "ko": "`strict: true` 를 명시해야 한다 — JSON schema 는 기본적으로 권고일 뿐이다.",
+    "why": "strict 가 기본값이 아닌 건 사실이지만, 지문은 이미 strict schema 를 쓰고 있고 strict 로도 합계 불일치·필드 뒤바뀜은 못 막는다."
+   }
   ],
   "answer": 1,
   "point_ko": "schema = 문법 보장, 의미(합계·필드 위치)는 따로 검증",
   "explain_ko": [
    "**despite the strict schema** — 형식(JSON 구조·타입)은 이미 보장된 상태라는 뜻이다.",
    "잡힌 오류는 **don't sum to the stated total**, **dates appear in the wrong fields** 로 모두 **의미 오류**다.",
-   "schema 는 계산 관계나 어떤 값이 어느 칸에 맞는지 알지 못한다. 그래서 애플리케이션 쪽 검증이 필요하다는 B 가 답이다."
+   "schema 는 계산 관계나 어떤 값이 어느 칸에 맞는지 알지 못한다. 그래서 애플리케이션 쪽 검증이 필요하다는 {B} 가 답이다."
   ],
   "clues": [
-   {"en": "with a strict JSON schema", "ko": "문법·구조는 이미 보장됨"},
-   {"en": "line items don't sum to the stated total", "ko": "계산 관계 오류 = 의미 오류"},
-   {"en": "dates appear in the wrong fields", "ko": "필드 오배치 = 의미 오류"}
+   {
+    "en": "with a strict JSON schema",
+    "ko": "문법·구조는 이미 보장됨"
+   },
+   {
+    "en": "line items don't sum to the stated total",
+    "ko": "계산 관계 오류 = 의미 오류"
+   },
+   {
+    "en": "dates appear in the wrong fields",
+    "ko": "필드 오배치 = 의미 오류"
+   }
   ],
-  "discuss_ko": "실제 API 에서 `strict: true` 가 기본값이 아닌 건 맞는데, 그래도 D 가 이 상황의 답이 될 수 없는 이유는 무엇일까?",
+  "discuss_ko": "실제 API 에서 `strict: true` 가 기본값이 아닌 건 맞는데, 그래도 {D} 가 이 상황의 답이 될 수 없는 이유는 무엇일까?",
   "words": [
-   {"word": "sum to", "pos": "phr.", "ko": "합계가 ~이 되다", "example": "don't sum to the stated total"},
-   {"word": "stated", "pos": "adj.", "ko": "명시된, 적혀 있는", "example": "the stated total"},
-   {"word": "despite", "pos": "prep.", "ko": "~에도 불구하고", "example": "despite the strict schema"},
-   {"word": "semantic", "pos": "adj.", "ko": "의미상의", "example": "does not prevent semantic errors"},
-   {"word": "inconsistency", "pos": "n.", "ko": "불일치, 모순", "example": "arithmetic inconsistency"},
-   {"word": "placement", "pos": "n.", "ko": "배치, 놓는 위치", "example": "wrong-field placement"},
-   {"word": "advisory", "pos": "adj.", "ko": "권고의, 참고용의", "example": "JSON schemas are advisory by default"}
+   {
+    "word": "sum to",
+    "pos": "phr.",
+    "ko": "합계가 ~이 되다",
+    "example": "don't sum to the stated total"
+   },
+   {
+    "word": "stated",
+    "pos": "adj.",
+    "ko": "명시된, 적혀 있는",
+    "example": "the stated total"
+   },
+   {
+    "word": "despite",
+    "pos": "prep.",
+    "ko": "~에도 불구하고",
+    "example": "despite the strict schema"
+   },
+   {
+    "word": "semantic",
+    "pos": "adj.",
+    "ko": "의미상의",
+    "example": "does not prevent semantic errors"
+   },
+   {
+    "word": "inconsistency",
+    "pos": "n.",
+    "ko": "불일치, 모순",
+    "example": "arithmetic inconsistency"
+   },
+   {
+    "word": "placement",
+    "pos": "n.",
+    "ko": "배치, 놓는 위치",
+    "example": "wrong-field placement"
+   },
+   {
+    "word": "advisory",
+    "pos": "adj.",
+    "ko": "권고의, 참고용의",
+    "example": "JSON schemas are advisory by default"
+   }
   ],
   "check": "ok",
   "checkNote": ""
@@ -150,31 +370,86 @@
   "q_en": "You're building a schema to extract contractor information from invoices. About 40% of invoices include a `tax_id` field; 60% do not. You define `tax_id` as a required string. What happens on the 60% that lack it?",
   "q_ko": "청구서에서 계약자 정보를 뽑는 schema 를 만들고 있다. 청구서의 약 40% 에는 `tax_id` 필드가 있고 60% 에는 없다. `tax_id` 를 required 문자열로 정의했다. 이 값이 없는 60% 에서는 무슨 일이 생기나?",
   "options": [
-   {"en": "The model returns an error indicating the field is absent.", "ko": "모델이 필드가 없다는 오류를 돌려준다.", "why": "모델은 required 제약을 채우려 할 뿐, 오류를 내며 멈추지 않는다."},
-   {"en": "The model skips the field and returns the schema without it.", "ko": "모델이 그 필드를 건너뛰고 필드 없이 결과를 돌려준다.", "why": "required 필드라서 빠뜨리는 선택지가 허용되지 않는다."},
-   {"en": "The model fabricates a value to satisfy the required field constraint.", "ko": "모델이 required 필드 제약을 만족시키려고 값을 지어낸다.", "why": "정답. 원문에 없는 값을 반드시 채우라고 하면 그럴듯한 가짜 값을 만들어 내게 된다."},
-   {"en": "The extraction fails and returns null for the entire document.", "ko": "추출이 실패하고 문서 전체에 null 을 돌려준다.", "why": "필드 하나 때문에 문서 전체가 null 이 되는 동작은 없다."}
+   {
+    "en": "The model returns an error indicating the field is absent.",
+    "ko": "모델이 필드가 없다는 오류를 돌려준다.",
+    "why": "모델은 required 제약을 채우려 할 뿐, 오류를 내며 멈추지 않는다."
+   },
+   {
+    "en": "The model skips the field and returns the schema without it.",
+    "ko": "모델이 그 필드를 건너뛰고 필드 없이 결과를 돌려준다.",
+    "why": "required 필드라서 빠뜨리는 선택지가 허용되지 않는다."
+   },
+   {
+    "en": "The model fabricates a value to satisfy the required field constraint.",
+    "ko": "모델이 required 필드 제약을 만족시키려고 값을 지어낸다.",
+    "why": "정답. 원문에 없는 값을 반드시 채우라고 하면 그럴듯한 가짜 값을 만들어 내게 된다."
+   },
+   {
+    "en": "The extraction fails and returns null for the entire document.",
+    "ko": "추출이 실패하고 문서 전체에 null 을 돌려준다.",
+    "why": "필드 하나 때문에 문서 전체가 null 이 되는 동작은 없다."
+   }
   ],
   "answer": 2,
   "point_ko": "없을 수 있는 값을 required 로 → 지어냄. 해법은 nullable",
   "explain_ko": [
    "**60% do not** 인데 **as a required string** — 절반이 넘는 문서에 없는 값을 반드시 채우라고 요구한 셈이다.",
-   "모델은 schema 를 맞추려고 그럴듯한 값을 **지어낸다(fabricate)**. 그래서 C 가 답이다.",
+   "모델은 schema 를 맞추려고 그럴듯한 값을 **지어낸다(fabricate)**. 그래서 {C} 가 답이다.",
    "해결은 `tax_id` 를 optional/nullable 로 두어, 없으면 null 을 솔직하게 돌려주게 하는 것이다."
   ],
   "clues": [
-   {"en": "60% do not", "ko": "대부분 문서에 값이 없음"},
-   {"en": "as a required string", "ko": "없어도 반드시 채워야 함"},
-   {"en": "the 60% that lack it", "ko": "지어낼 수밖에 없는 경우"}
+   {
+    "en": "60% do not",
+    "ko": "대부분 문서에 값이 없음"
+   },
+   {
+    "en": "as a required string",
+    "ko": "없어도 반드시 채워야 함"
+   },
+   {
+    "en": "the 60% that lack it",
+    "ko": "지어낼 수밖에 없는 경우"
+   }
   ],
-  "discuss_ko": "필드를 건너뛰는 편(B)이 더 자연스러워 보이는데, 왜 모델은 빈칸 대신 값을 지어내는 쪽으로 가게 될까?",
+  "discuss_ko": "필드를 건너뛰는 편({B})이 더 자연스러워 보이는데, 왜 모델은 빈칸 대신 값을 지어내는 쪽으로 가게 될까?",
   "words": [
-   {"word": "contractor", "pos": "n.", "ko": "계약자, 하청업자", "example": "extract contractor information from invoices"},
-   {"word": "invoice", "pos": "n.", "ko": "청구서, 송장", "example": "extract contractor information from invoices"},
-   {"word": "lack", "pos": "v.", "ko": "~이 없다, 결여되다", "example": "the 60% that lack it"},
-   {"word": "absent", "pos": "adj.", "ko": "없는, 빠진", "example": "indicating the field is absent"},
-   {"word": "fabricate", "pos": "v.", "ko": "지어내다, 날조하다", "example": "The model fabricates a value"},
-   {"word": "constraint", "pos": "n.", "ko": "제약 조건", "example": "the required field constraint"}
+   {
+    "word": "contractor",
+    "pos": "n.",
+    "ko": "계약자, 하청업자",
+    "example": "extract contractor information from invoices"
+   },
+   {
+    "word": "invoice",
+    "pos": "n.",
+    "ko": "청구서, 송장",
+    "example": "extract contractor information from invoices"
+   },
+   {
+    "word": "lack",
+    "pos": "v.",
+    "ko": "~이 없다, 결여되다",
+    "example": "the 60% that lack it"
+   },
+   {
+    "word": "absent",
+    "pos": "adj.",
+    "ko": "없는, 빠진",
+    "example": "indicating the field is absent"
+   },
+   {
+    "word": "fabricate",
+    "pos": "v.",
+    "ko": "지어내다, 날조하다",
+    "example": "The model fabricates a value"
+   },
+   {
+    "word": "constraint",
+    "pos": "n.",
+    "ko": "제약 조건",
+    "example": "the required field constraint"
+   }
   ],
   "check": "ok",
   "checkNote": ""
@@ -186,31 +461,86 @@
   "q_en": "Your team runs two workflows: (1) a blocking pre-merge code review developers wait on, and (2) a nightly technical debt audit reviewed next morning. Your manager proposes switching both to the Message Batches API for 50% cost savings. How should you evaluate this?",
   "q_ko": "팀은 두 가지 워크플로를 운영한다. (1) 개발자가 끝나기를 기다리는, 머지를 막는 머지 전 코드 리뷰와 (2) 다음 날 아침에 검토하는 야간 기술 부채 점검이다. 매니저가 50% 비용 절감을 위해 둘 다 Message Batches API 로 바꾸자고 제안한다. 어떻게 판단해야 하나?",
   "options": [
-   {"en": "Switch both — the 50% savings applies to all workloads and batches often complete in minutes.", "ko": "둘 다 바꾼다 — 50% 절감은 모든 작업에 적용되고 배치는 몇 분 안에 끝나는 경우가 많다.", "why": "'자주 빨리 끝남' 은 보장이 아니고 최대 24시간 걸릴 수 있어, 개발자가 기다리는 작업에는 못 쓴다."},
-   {"en": "Keep both on real-time to avoid batch result ordering complexity.", "ko": "배치 결과 순서의 복잡성을 피하려고 둘 다 실시간으로 둔다.", "why": "결과 순서는 custom_id 로 짝지으면 되는 사소한 문제이고, 야간 점검의 절감 기회를 버린다."},
-   {"en": "Use Message Batches API for the nightly audit only; keep real-time for pre-merge checks.", "ko": "야간 점검에만 Message Batches API 를 쓰고, 머지 전 검사는 실시간으로 둔다.", "why": "정답. 기다리는 작업은 실시간, 늦어도 되는 야간 작업은 배치로, 지연 허용도에 맞춰 나눈다."},
-   {"en": "Switch both with a 10-minute polling fallback to real-time if batches take too long.", "ko": "둘 다 바꾸되, 배치가 오래 걸리면 10분 폴링 뒤 실시간으로 넘어가는 대비책을 둔다.", "why": "완료 시간 보장이 없어 대비책이 자주 발동하고, 기다림과 이중 비용만 생긴다."}
+   {
+    "en": "Switch both — the 50% savings applies to all workloads and batches often complete in minutes.",
+    "ko": "둘 다 바꾼다 — 50% 절감은 모든 작업에 적용되고 배치는 몇 분 안에 끝나는 경우가 많다.",
+    "why": "'자주 빨리 끝남' 은 보장이 아니고 최대 24시간 걸릴 수 있어, 개발자가 기다리는 작업에는 못 쓴다."
+   },
+   {
+    "en": "Keep both on real-time to avoid batch result ordering complexity.",
+    "ko": "배치 결과 순서의 복잡성을 피하려고 둘 다 실시간으로 둔다.",
+    "why": "결과 순서는 custom_id 로 짝지으면 되는 사소한 문제이고, 야간 점검의 절감 기회를 버린다."
+   },
+   {
+    "en": "Use Message Batches API for the nightly audit only; keep real-time for pre-merge checks.",
+    "ko": "야간 점검에만 Message Batches API 를 쓰고, 머지 전 검사는 실시간으로 둔다.",
+    "why": "정답. 기다리는 작업은 실시간, 늦어도 되는 야간 작업은 배치로, 지연 허용도에 맞춰 나눈다."
+   },
+   {
+    "en": "Switch both with a 10-minute polling fallback to real-time if batches take too long.",
+    "ko": "둘 다 바꾸되, 배치가 오래 걸리면 10분 폴링 뒤 실시간으로 넘어가는 대비책을 둔다.",
+    "why": "완료 시간 보장이 없어 대비책이 자주 발동하고, 기다림과 이중 비용만 생긴다."
+   }
   ],
   "answer": 2,
   "point_ko": "기다리는 작업 = 실시간, 밤새 돌아도 되는 작업 = 배치",
   "explain_ko": [
    "**a blocking pre-merge code review developers wait on** — 사람이 기다리므로 지연을 허용하지 않는다.",
    "**a nightly technical debt audit reviewed next morning** — 몇 시간 걸려도 괜찮은 작업이다.",
-   "Message Batches API 는 50% 싸지만 **최대 24시간, 지연 보장 없음**. 그래서 야간 점검만 배치로 옮기는 C 가 답이다."
+   "Message Batches API 는 50% 싸지만 **최대 24시간, 지연 보장 없음**. 그래서 야간 점검만 배치로 옮기는 {C} 가 답이다."
   ],
   "clues": [
-   {"en": "a blocking pre-merge code review developers wait on", "ko": "지연 불가 → 실시간"},
-   {"en": "a nightly technical debt audit reviewed next morning", "ko": "지연 허용 → 배치"},
-   {"en": "switching both to the Message Batches API", "ko": "일괄 전환은 함정"}
+   {
+    "en": "a blocking pre-merge code review developers wait on",
+    "ko": "지연 불가 → 실시간"
+   },
+   {
+    "en": "a nightly technical debt audit reviewed next morning",
+    "ko": "지연 허용 → 배치"
+   },
+   {
+    "en": "switching both to the Message Batches API",
+    "ko": "일괄 전환은 함정"
+   }
   ],
-  "discuss_ko": "대부분의 배치가 1시간 안에 끝난다면, 10분 폴링 뒤 실시간으로 넘어가는 D 방식이 실무에서는 그럴듯하지 않을까?",
+  "discuss_ko": "대부분의 배치가 1시간 안에 끝난다면, 10분 폴링 뒤 실시간으로 넘어가는 {D} 방식이 실무에서는 그럴듯하지 않을까?",
   "words": [
-   {"word": "blocking", "pos": "adj.", "ko": "(진행을) 막는, 대기시키는", "example": "a blocking pre-merge code review"},
-   {"word": "technical debt", "pos": "n.", "ko": "기술 부채", "example": "a nightly technical debt audit"},
-   {"word": "audit", "pos": "n.", "ko": "점검, 감사", "example": "a nightly technical debt audit"},
-   {"word": "propose", "pos": "v.", "ko": "제안하다", "example": "Your manager proposes switching both"},
-   {"word": "fallback", "pos": "n.", "ko": "대비책, 예비 수단", "example": "a 10-minute polling fallback to real-time"},
-   {"word": "evaluate", "pos": "v.", "ko": "평가하다, 판단하다", "example": "How should you evaluate this?"}
+   {
+    "word": "blocking",
+    "pos": "adj.",
+    "ko": "(진행을) 막는, 대기시키는",
+    "example": "a blocking pre-merge code review"
+   },
+   {
+    "word": "technical debt",
+    "pos": "n.",
+    "ko": "기술 부채",
+    "example": "a nightly technical debt audit"
+   },
+   {
+    "word": "audit",
+    "pos": "n.",
+    "ko": "점검, 감사",
+    "example": "a nightly technical debt audit"
+   },
+   {
+    "word": "propose",
+    "pos": "v.",
+    "ko": "제안하다",
+    "example": "Your manager proposes switching both"
+   },
+   {
+    "word": "fallback",
+    "pos": "n.",
+    "ko": "대비책, 예비 수단",
+    "example": "a 10-minute polling fallback to real-time"
+   },
+   {
+    "word": "evaluate",
+    "pos": "v.",
+    "ko": "평가하다, 판단하다",
+    "example": "How should you evaluate this?"
+   }
   ],
   "check": "ok",
   "checkNote": ""
@@ -222,31 +552,86 @@
   "q_en": "A PR spanning 14 files produces inconsistent review depth — detailed on some files, superficial on others, and contradictory findings (flagging an identical pattern as problematic in one file, acceptable in another). Root cause and fix:",
   "q_ko": "14개 파일에 걸친 PR 에서 리뷰 깊이가 들쭉날쭉하다. 어떤 파일은 자세하고 어떤 파일은 겉핥기이며, 지적도 서로 모순된다(똑같은 패턴을 한 파일에서는 문제로, 다른 파일에서는 괜찮다고 함). 근본 원인과 해결책은?",
   "options": [
-   {"en": "Root cause: context window too small. Fix: switch to a higher-tier model with a larger context window.", "ko": "원인: context window 가 작다. 해결: 더 큰 context window 를 가진 상위 모델로 바꾼다.", "why": "창을 키워도 주의가 흩어지는 문제는 그대로이고, 흩어질 내용만 더 늘어난다."},
-   {"en": "Root cause: attention dilution from processing many files simultaneously. Fix: split into per-file local analysis passes plus a separate cross-file integration pass.", "ko": "원인: 여러 파일을 한꺼번에 처리해 주의가 희석된다. 해결: 파일별 로컬 분석 패스와 별도의 파일 간 통합 패스로 나눈다.", "why": "정답. 파일마다 따로 보면 깊이가 고르고, 파일 사이의 데이터 흐름은 통합 패스가 따로 챙긴다."},
-   {"en": "Root cause: inconsistent file formatting. Fix: auto-format all files before the review runs.", "ko": "원인: 파일 서식이 제각각이다. 해결: 리뷰 전에 모든 파일을 자동 포맷한다.", "why": "서식은 같은 패턴을 다르게 판단하는 이유가 아니며 리뷰 깊이와도 무관하다."},
-   {"en": "Root cause: overly broad scope. Fix: restrict the prompt to security issues only.", "ko": "원인: 범위가 너무 넓다. 해결: 프롬프트를 보안 문제로만 제한한다.", "why": "다른 버그를 놓치게 되고, 많은 파일을 한 번에 보는 구조 문제는 그대로 남는다."}
+   {
+    "en": "Root cause: context window too small. Fix: switch to a higher-tier model with a larger context window.",
+    "ko": "원인: context window 가 작다. 해결: 더 큰 context window 를 가진 상위 모델로 바꾼다.",
+    "why": "창을 키워도 주의가 흩어지는 문제는 그대로이고, 흩어질 내용만 더 늘어난다."
+   },
+   {
+    "en": "Root cause: attention dilution from processing many files simultaneously. Fix: split into per-file local analysis passes plus a separate cross-file integration pass.",
+    "ko": "원인: 여러 파일을 한꺼번에 처리해 주의가 희석된다. 해결: 파일별 로컬 분석 패스와 별도의 파일 간 통합 패스로 나눈다.",
+    "why": "정답. 파일마다 따로 보면 깊이가 고르고, 파일 사이의 데이터 흐름은 통합 패스가 따로 챙긴다."
+   },
+   {
+    "en": "Root cause: inconsistent file formatting. Fix: auto-format all files before the review runs.",
+    "ko": "원인: 파일 서식이 제각각이다. 해결: 리뷰 전에 모든 파일을 자동 포맷한다.",
+    "why": "서식은 같은 패턴을 다르게 판단하는 이유가 아니며 리뷰 깊이와도 무관하다."
+   },
+   {
+    "en": "Root cause: overly broad scope. Fix: restrict the prompt to security issues only.",
+    "ko": "원인: 범위가 너무 넓다. 해결: 프롬프트를 보안 문제로만 제한한다.",
+    "why": "다른 버그를 놓치게 되고, 많은 파일을 한 번에 보는 구조 문제는 그대로 남는다."
+   }
   ],
   "answer": 1,
   "point_ko": "파일 많아 들쭉날쭉 → 파일별 패스 + 통합 패스",
   "explain_ko": [
    "**A PR spanning 14 files** 와 **detailed on some files, superficial on others** — 한 번에 너무 많은 파일을 보느라 주의가 흩어졌다는 신호다.",
    "같은 패턴을 파일마다 다르게 판단하는 것도 기준이 흔들린다는 증거다.",
-   "해결은 **파일별 패스**로 깊이를 고르게 하고, 파일 간 연결은 **통합 패스**에서 따로 보는 B 다. context window 를 키우는 건(A) 주의 품질과 무관하다."
+   "해결은 **파일별 패스**로 깊이를 고르게 하고, 파일 간 연결은 **통합 패스**에서 따로 보는 {B} 다. context window 를 키우는 건({A}) 주의 품질과 무관하다."
   ],
   "clues": [
-   {"en": "A PR spanning 14 files", "ko": "한 번에 처리할 양이 많음"},
-   {"en": "detailed on some files, superficial on others", "ko": "주의 희석의 증상"},
-   {"en": "flagging an identical pattern as problematic in one file, acceptable in another", "ko": "파일마다 기준이 흔들림"}
+   {
+    "en": "A PR spanning 14 files",
+    "ko": "한 번에 처리할 양이 많음"
+   },
+   {
+    "en": "detailed on some files, superficial on others",
+    "ko": "주의 희석의 증상"
+   },
+   {
+    "en": "flagging an identical pattern as problematic in one file, acceptable in another",
+    "ko": "파일마다 기준이 흔들림"
+   }
   ],
-  "discuss_ko": "요즘 모델은 context window 가 매우 커서 14개 파일이 다 들어가는데, 왜 더 큰 모델(A)로는 해결되지 않을까?",
+  "discuss_ko": "요즘 모델은 context window 가 매우 커서 14개 파일이 다 들어가는데, 왜 더 큰 모델({A})로는 해결되지 않을까?",
   "words": [
-   {"word": "span", "pos": "v.", "ko": "~에 걸치다, 걸쳐 있다", "example": "A PR spanning 14 files"},
-   {"word": "superficial", "pos": "adj.", "ko": "피상적인, 겉핥기의", "example": "superficial on others"},
-   {"word": "contradictory", "pos": "adj.", "ko": "모순되는", "example": "contradictory findings"},
-   {"word": "dilution", "pos": "n.", "ko": "희석, 약해짐", "example": "attention dilution"},
-   {"word": "simultaneously", "pos": "adv.", "ko": "동시에", "example": "processing many files simultaneously"},
-   {"word": "restrict", "pos": "v.", "ko": "제한하다", "example": "restrict the prompt to security issues only"}
+   {
+    "word": "span",
+    "pos": "v.",
+    "ko": "~에 걸치다, 걸쳐 있다",
+    "example": "A PR spanning 14 files"
+   },
+   {
+    "word": "superficial",
+    "pos": "adj.",
+    "ko": "피상적인, 겉핥기의",
+    "example": "superficial on others"
+   },
+   {
+    "word": "contradictory",
+    "pos": "adj.",
+    "ko": "모순되는",
+    "example": "contradictory findings"
+   },
+   {
+    "word": "dilution",
+    "pos": "n.",
+    "ko": "희석, 약해짐",
+    "example": "attention dilution"
+   },
+   {
+    "word": "simultaneously",
+    "pos": "adv.",
+    "ko": "동시에",
+    "example": "processing many files simultaneously"
+   },
+   {
+    "word": "restrict",
+    "pos": "v.",
+    "ko": "제한하다",
+    "example": "restrict the prompt to security issues only"
+   }
   ],
   "check": "ok",
   "checkNote": ""
@@ -258,31 +643,86 @@
   "q_en": "Your automated reviews identify valid issues but developers report the feedback isn't actionable. Findings say things like 'complex ticket allocation logic' or 'potential null pointer' without specifying what to change. When you add detailed instructions like 'always include specific fix suggestions,' the model still produces inconsistent output — sometimes detailed, sometimes vague. What prompting technique would most reliably produce consistently actionable feedback?",
   "q_ko": "자동 리뷰가 타당한 문제는 찾아내지만, 개발자들은 피드백을 보고 바로 조치할 수 없다고 한다. 지적이 '복잡한 티켓 할당 로직', '잠재적 null pointer' 처럼 무엇을 고칠지 말하지 않는다. '항상 구체적인 수정 제안을 넣어라' 같은 자세한 지시를 추가해도 출력은 여전히 들쭉날쭉하다 — 어떤 때는 자세하고 어떤 때는 모호하다. 일관되게 조치 가능한 피드백을 가장 확실하게 끌어내는 프롬프팅 기법은?",
   "options": [
-   {"en": "Add more detailed step-by-step instructions covering every possible finding type and how to suggest fixes for each.", "ko": "가능한 모든 지적 유형과 유형별 수정 제안 방법을 다루는, 더 자세한 단계별 지시를 추가한다.", "why": "이미 실패한 '지시 늘리기' 의 반복이고, 글로 된 지시는 해석의 여지가 남아 모든 경우를 덮지 못한다."},
-   {"en": "Reduce temperature to 0 to get deterministic, consistently detailed output.", "ko": "temperature 를 0으로 낮춰 결정적이고 일관되게 자세한 출력을 얻는다.", "why": "temperature 는 무작위성을 조절할 뿐, 출력이 얼마나 완전하고 자세한지를 정하지 않는다."},
-   {"en": "Add 2–4 few-shot examples demonstrating complete, actionable finding entries — each showing location, issue description, root cause, and a specific suggested fix with example corrected code.", "ko": "완전하고 조치 가능한 지적 항목을 보여 주는 few-shot 예시 2~4개를 추가한다 — 각각 위치, 문제 설명, 근본 원인, 수정 코드 예시가 딸린 구체적 수정 제안을 담는다.", "why": "정답. 지시만으로 들쭉날쭉할 때 정확한 출력 모양을 예시로 보여 주면 모델이 그 모양을 그대로 따라 한다."},
-   {"en": "Run a second validation pass that filters out any findings without a suggested fix before returning results.", "ko": "결과를 돌려주기 전에 수정 제안이 없는 지적을 걸러 내는 두 번째 검증 패스를 돌린다.", "why": "들쭉날쭉함을 고치는 게 아니라 숨기는 것이고, 타당한 지적까지 버리게 된다."}
+   {
+    "en": "Add more detailed step-by-step instructions covering every possible finding type and how to suggest fixes for each.",
+    "ko": "가능한 모든 지적 유형과 유형별 수정 제안 방법을 다루는, 더 자세한 단계별 지시를 추가한다.",
+    "why": "이미 실패한 '지시 늘리기' 의 반복이고, 글로 된 지시는 해석의 여지가 남아 모든 경우를 덮지 못한다."
+   },
+   {
+    "en": "Reduce temperature to 0 to get deterministic, consistently detailed output.",
+    "ko": "temperature 를 0으로 낮춰 결정적이고 일관되게 자세한 출력을 얻는다.",
+    "why": "temperature 는 무작위성을 조절할 뿐, 출력이 얼마나 완전하고 자세한지를 정하지 않는다."
+   },
+   {
+    "en": "Add 2–4 few-shot examples demonstrating complete, actionable finding entries — each showing location, issue description, root cause, and a specific suggested fix with example corrected code.",
+    "ko": "완전하고 조치 가능한 지적 항목을 보여 주는 few-shot 예시 2~4개를 추가한다 — 각각 위치, 문제 설명, 근본 원인, 수정 코드 예시가 딸린 구체적 수정 제안을 담는다.",
+    "why": "정답. 지시만으로 들쭉날쭉할 때 정확한 출력 모양을 예시로 보여 주면 모델이 그 모양을 그대로 따라 한다."
+   },
+   {
+    "en": "Run a second validation pass that filters out any findings without a suggested fix before returning results.",
+    "ko": "결과를 돌려주기 전에 수정 제안이 없는 지적을 걸러 내는 두 번째 검증 패스를 돌린다.",
+    "why": "들쭉날쭉함을 고치는 게 아니라 숨기는 것이고, 타당한 지적까지 버리게 된다."
+   }
   ],
   "answer": 2,
   "point_ko": "지시해도 들쭉날쭉 → 원하는 출력 모양의 few-shot",
   "explain_ko": [
    "**the model still produces inconsistent output** — 자세한 지시를 넣는 방법은 이미 실패했다는 단서다.",
    "이럴 때는 말로 더 설명하는 대신 **완성된 결과물 예시 2~4개**(위치 → 문제 → 원인 → 수정 제안 → 수정 코드)를 보여 준다.",
-   "모델은 예시의 형태를 따라 하므로 매번 같은 수준의 구체성이 나온다. 그래서 C 가 답이다."
+   "모델은 예시의 형태를 따라 하므로 매번 같은 수준의 구체성이 나온다. 그래서 {C} 가 답이다."
   ],
   "clues": [
-   {"en": "the feedback isn't actionable", "ko": "출력의 구체성이 부족"},
-   {"en": "without specifying what to change", "ko": "수정 제안이 빠진 모양"},
-   {"en": "the model still produces inconsistent output", "ko": "지시 추가는 실패 → 예시로"}
+   {
+    "en": "the feedback isn't actionable",
+    "ko": "출력의 구체성이 부족"
+   },
+   {
+    "en": "without specifying what to change",
+    "ko": "수정 제안이 빠진 모양"
+   },
+   {
+    "en": "the model still produces inconsistent output",
+    "ko": "지시 추가는 실패 → 예시로"
+   }
   ],
-  "discuss_ko": "수정 제안 없는 지적을 걸러 내면(D) 개발자는 조치 가능한 피드백만 받게 되는데, 왜 이것이 정답이 아닐까?",
+  "discuss_ko": "수정 제안 없는 지적을 걸러 내면({D}) 개발자는 조치 가능한 피드백만 받게 되는데, 왜 이것이 정답이 아닐까?",
   "words": [
-   {"word": "actionable", "pos": "adj.", "ko": "바로 조치할 수 있는, 실행 가능한", "example": "the feedback isn't actionable"},
-   {"word": "allocation", "pos": "n.", "ko": "할당, 배분", "example": "complex ticket allocation logic"},
-   {"word": "specify", "pos": "v.", "ko": "구체적으로 명시하다", "example": "without specifying what to change"},
-   {"word": "reliably", "pos": "adv.", "ko": "확실하게, 믿을 만하게", "example": "would most reliably produce consistently actionable feedback"},
-   {"word": "deterministic", "pos": "adj.", "ko": "결정적인(매번 같은 결과가 나오는)", "example": "to get deterministic, consistently detailed output"},
-   {"word": "filter out", "pos": "phr.", "ko": "걸러 내다", "example": "filters out any findings without a suggested fix"}
+   {
+    "word": "actionable",
+    "pos": "adj.",
+    "ko": "바로 조치할 수 있는, 실행 가능한",
+    "example": "the feedback isn't actionable"
+   },
+   {
+    "word": "allocation",
+    "pos": "n.",
+    "ko": "할당, 배분",
+    "example": "complex ticket allocation logic"
+   },
+   {
+    "word": "specify",
+    "pos": "v.",
+    "ko": "구체적으로 명시하다",
+    "example": "without specifying what to change"
+   },
+   {
+    "word": "reliably",
+    "pos": "adv.",
+    "ko": "확실하게, 믿을 만하게",
+    "example": "would most reliably produce consistently actionable feedback"
+   },
+   {
+    "word": "deterministic",
+    "pos": "adj.",
+    "ko": "결정적인(매번 같은 결과가 나오는)",
+    "example": "to get deterministic, consistently detailed output"
+   },
+   {
+    "word": "filter out",
+    "pos": "phr.",
+    "ko": "걸러 내다",
+    "example": "filters out any findings without a suggested fix"
+   }
   ],
   "check": "ok",
   "checkNote": ""
@@ -294,32 +734,92 @@
   "q_en": "Your automated code review averages 15 findings per pull request, with developers reporting a 40% false positive rate. The bottleneck is investigation time: developers must click into each finding to read Claude's reasoning before deciding whether to address or dismiss it. Your CLAUDE.md already contains comprehensive rules for acceptable patterns, and stakeholders have rejected any approach that filters findings before developer review. What change would best address the investigation time bottleneck?",
   "q_ko": "자동 코드 리뷰가 PR 당 평균 15개를 지적하고, 개발자들은 오탐률이 40% 라고 한다. 병목은 조사 시간이다. 개발자는 각 지적을 고칠지 무시할지 정하기 전에 하나하나 클릭해 들어가 Claude 의 추론을 읽어야 한다. CLAUDE.md 에는 이미 허용 패턴 규칙이 빠짐없이 들어 있고, 이해관계자들은 개발자 검토 전에 지적을 걸러 내는 방식은 모두 거부했다. 조사 시간 병목을 가장 잘 해결하는 변경은?",
   "options": [
-   {"en": "Add a confidence score (1–10) to each finding so developers can sort by confidence and skip low-scoring items.", "ko": "각 지적에 확신도 점수(1~10)를 붙여, 개발자가 점수로 정렬하고 낮은 항목은 건너뛰게 한다.", "why": "점수가 맞는지 확인하려면 결국 들어가서 추론을 읽어야 하고, 낮은 점수 건너뛰기는 사실상 걸러 내기다."},
-   {"en": "Require Claude to include a brief inline rationale with each finding — the specific rule violated and why this instance isn't a known-acceptable pattern.", "ko": "각 지적에 짧은 인라인 근거를 붙이게 한다 — 어긴 구체적 규칙과, 이 경우가 허용된 패턴이 아닌 이유.", "why": "정답. 목록에서 바로 근거를 읽으니 클릭할 필요가 없고, 지적은 하나도 걸러지지 않는다."},
-   {"en": "Reduce the review scope to only security and correctness issues, eliminating the categories most prone to false positives.", "ko": "리뷰 범위를 보안과 정확성 문제로만 줄여, 오탐이 가장 잦은 범주를 없앤다.", "why": "범주를 빼는 것도 검토 전 걸러 내기라 이해관계자 조건에 어긋난다."},
-   {"en": "Run two independent review instances and surface only findings that appear in both.", "ko": "독립된 리뷰 인스턴스 두 개를 돌려 양쪽에 모두 나온 지적만 보여 준다.", "why": "합의 필터링도 검토 전 걸러 내기이고, 비용도 두 배로 든다."}
+   {
+    "en": "Add a confidence score (1–10) to each finding so developers can sort by confidence and skip low-scoring items.",
+    "ko": "각 지적에 확신도 점수(1~10)를 붙여, 개발자가 점수로 정렬하고 낮은 항목은 건너뛰게 한다.",
+    "why": "점수가 맞는지 확인하려면 결국 들어가서 추론을 읽어야 하고, 낮은 점수 건너뛰기는 사실상 걸러 내기다."
+   },
+   {
+    "en": "Require Claude to include a brief inline rationale with each finding — the specific rule violated and why this instance isn't a known-acceptable pattern.",
+    "ko": "각 지적에 짧은 인라인 근거를 붙이게 한다 — 어긴 구체적 규칙과, 이 경우가 허용된 패턴이 아닌 이유.",
+    "why": "정답. 목록에서 바로 근거를 읽으니 클릭할 필요가 없고, 지적은 하나도 걸러지지 않는다."
+   },
+   {
+    "en": "Reduce the review scope to only security and correctness issues, eliminating the categories most prone to false positives.",
+    "ko": "리뷰 범위를 보안과 정확성 문제로만 줄여, 오탐이 가장 잦은 범주를 없앤다.",
+    "why": "범주를 빼는 것도 검토 전 걸러 내기라 이해관계자 조건에 어긋난다."
+   },
+   {
+    "en": "Run two independent review instances and surface only findings that appear in both.",
+    "ko": "독립된 리뷰 인스턴스 두 개를 돌려 양쪽에 모두 나온 지적만 보여 준다.",
+    "why": "합의 필터링도 검토 전 걸러 내기이고, 비용도 두 배로 든다."
+   }
   ],
   "answer": 1,
   "point_ko": "클릭이 병목 + 필터 금지 → 지적마다 인라인 근거",
   "explain_ko": [
    "병목은 **click into each finding to read Claude's reasoning** — 근거를 보러 들어가는 동작 자체다.",
-   "**rejected any approach that filters findings** — 범위 축소(C)·합의(D)처럼 지적 수를 줄이는 방법은 모두 탈락이다.",
-   "남는 답은 **근거를 목록에 바로 보여 주는 것**(어긴 규칙 + 허용 패턴이 아닌 이유), 즉 B 다."
+   "**rejected any approach that filters findings** — 범위 축소({C})·합의({D})처럼 지적 수를 줄이는 방법은 모두 탈락이다.",
+   "남는 답은 **근거를 목록에 바로 보여 주는 것**(어긴 규칙 + 허용 패턴이 아닌 이유), 즉 {B} 다."
   ],
   "clues": [
-   {"en": "The bottleneck is investigation time", "ko": "줄여야 할 것은 조사 시간"},
-   {"en": "click into each finding to read Claude's reasoning", "ko": "근거가 목록에 없음"},
-   {"en": "rejected any approach that filters findings before developer review", "ko": "걸러 내는 보기는 전부 오답"}
+   {
+    "en": "The bottleneck is investigation time",
+    "ko": "줄여야 할 것은 조사 시간"
+   },
+   {
+    "en": "click into each finding to read Claude's reasoning",
+    "ko": "근거가 목록에 없음"
+   },
+   {
+    "en": "rejected any approach that filters findings before developer review",
+    "ko": "걸러 내는 보기는 전부 오답"
+   }
   ],
-  "discuss_ko": "확신도 점수(A)는 지적을 지우지 않고 정렬만 하는데, 왜 이것도 조사 시간을 줄이지 못할까?",
+  "discuss_ko": "확신도 점수({A})는 지적을 지우지 않고 정렬만 하는데, 왜 이것도 조사 시간을 줄이지 못할까?",
   "words": [
-   {"word": "bottleneck", "pos": "n.", "ko": "병목, 발목 잡는 지점", "example": "The bottleneck is investigation time"},
-   {"word": "address", "pos": "v.", "ko": "(문제를) 처리하다, 다루다", "example": "whether to address or dismiss it"},
-   {"word": "comprehensive", "pos": "adj.", "ko": "포괄적인, 빠짐없는", "example": "comprehensive rules for acceptable patterns"},
-   {"word": "stakeholder", "pos": "n.", "ko": "이해관계자", "example": "stakeholders have rejected any approach"},
-   {"word": "rationale", "pos": "n.", "ko": "근거, 이유", "example": "a brief inline rationale with each finding"},
-   {"word": "prone to", "pos": "phr.", "ko": "~하기 쉬운, ~에 취약한", "example": "the categories most prone to false positives"},
-   {"word": "surface", "pos": "v.", "ko": "드러내다, 표면에 보여 주다", "example": "surface only findings that appear in both"}
+   {
+    "word": "bottleneck",
+    "pos": "n.",
+    "ko": "병목, 발목 잡는 지점",
+    "example": "The bottleneck is investigation time"
+   },
+   {
+    "word": "address",
+    "pos": "v.",
+    "ko": "(문제를) 처리하다, 다루다",
+    "example": "whether to address or dismiss it"
+   },
+   {
+    "word": "comprehensive",
+    "pos": "adj.",
+    "ko": "포괄적인, 빠짐없는",
+    "example": "comprehensive rules for acceptable patterns"
+   },
+   {
+    "word": "stakeholder",
+    "pos": "n.",
+    "ko": "이해관계자",
+    "example": "stakeholders have rejected any approach"
+   },
+   {
+    "word": "rationale",
+    "pos": "n.",
+    "ko": "근거, 이유",
+    "example": "a brief inline rationale with each finding"
+   },
+   {
+    "word": "prone to",
+    "pos": "phr.",
+    "ko": "~하기 쉬운, ~에 취약한",
+    "example": "the categories most prone to false positives"
+   },
+   {
+    "word": "surface",
+    "pos": "v.",
+    "ko": "드러내다, 표면에 보여 주다",
+    "example": "surface only findings that appear in both"
+   }
   ],
   "check": "ok",
   "checkNote": ""
@@ -331,31 +831,86 @@
   "q_en": "Your CI pipeline includes two Claude-powered code review modes: a pre-merge commit hook that blocks PR merging until complete, and a 'deep analysis' mode that runs overnight, polls for batch completion, then posts detailed suggestions to the PR. You want to reduce API costs using the Message Batches API, which offers 50% cost savings but requires polling and may take up to 24 hours to complete. Which mode should use batch processing?",
   "q_ko": "CI 파이프라인에 Claude 기반 코드 리뷰 모드가 두 가지 있다. 완료될 때까지 PR 머지를 막는 머지 전 commit hook, 그리고 밤새 돌면서 배치 완료를 폴링한 뒤 PR 에 자세한 제안을 올리는 '심층 분석' 모드다. Message Batches API 로 API 비용을 줄이려 한다. 이 API 는 50% 절감을 주지만 폴링이 필요하고 완료까지 최대 24시간이 걸릴 수 있다. 어떤 모드에 배치 처리를 써야 하나?",
   "options": [
-   {"en": "Both modes — the 50% savings applies equally and batch processing often completes in minutes.", "ko": "두 모드 모두 — 50% 절감은 똑같이 적용되고 배치는 몇 분 안에 끝나는 경우가 많다.", "why": "'자주 빨리 끝남' 은 보장이 아니어서, 머지를 막는 hook 이 최대 24시간 멈춰 있을 수 있다."},
-   {"en": "The pre-merge hook only — it already has polling infrastructure and can absorb the latency.", "ko": "머지 전 hook 만 — 이미 폴링 기반이 있어 지연을 감당할 수 있다.", "why": "거꾸로다. 폴링 기반이 있는 건 심층 분석 모드이고, hook 은 사람이 기다리는 작업이다."},
-   {"en": "The deep analysis only — it is latency-tolerant and already designed around async completion.", "ko": "심층 분석만 — 지연을 견딜 수 있고 이미 비동기 완료를 전제로 설계돼 있다.", "why": "정답. 밤새 돌며 폴링하는 작업은 배치에 딱 맞고, 머지를 막는 hook 은 실시간으로 둔다."},
-   {"en": "Neither — the Message Batches API doesn't support code review workflows.", "ko": "둘 다 아님 — Message Batches API 는 코드 리뷰 워크플로를 지원하지 않는다.", "why": "배치 API 는 일반 Messages 요청을 묶어 보내는 것이라 작업 종류에 제한이 없다."}
+   {
+    "en": "Both modes — the 50% savings applies equally and batch processing often completes in minutes.",
+    "ko": "두 모드 모두 — 50% 절감은 똑같이 적용되고 배치는 몇 분 안에 끝나는 경우가 많다.",
+    "why": "'자주 빨리 끝남' 은 보장이 아니어서, 머지를 막는 hook 이 최대 24시간 멈춰 있을 수 있다."
+   },
+   {
+    "en": "The pre-merge hook only — it already has polling infrastructure and can absorb the latency.",
+    "ko": "머지 전 hook 만 — 이미 폴링 기반이 있어 지연을 감당할 수 있다.",
+    "why": "거꾸로다. 폴링 기반이 있는 건 심층 분석 모드이고, hook 은 사람이 기다리는 작업이다."
+   },
+   {
+    "en": "The deep analysis only — it is latency-tolerant and already designed around async completion.",
+    "ko": "심층 분석만 — 지연을 견딜 수 있고 이미 비동기 완료를 전제로 설계돼 있다.",
+    "why": "정답. 밤새 돌며 폴링하는 작업은 배치에 딱 맞고, 머지를 막는 hook 은 실시간으로 둔다."
+   },
+   {
+    "en": "Neither — the Message Batches API doesn't support code review workflows.",
+    "ko": "둘 다 아님 — Message Batches API 는 코드 리뷰 워크플로를 지원하지 않는다.",
+    "why": "배치 API 는 일반 Messages 요청을 묶어 보내는 것이라 작업 종류에 제한이 없다."
+   }
   ],
   "answer": 2,
   "point_ko": "머지 막는 hook = 실시간, 밤샘 심층 분석 = 배치",
   "explain_ko": [
    "**blocks PR merging until complete** — 누군가 기다리는 차단형 작업이라 최대 24시간 지연을 견딜 수 없다.",
    "**runs overnight, polls for batch completion** — 이미 비동기로 설계된 작업이다.",
-   "그래서 배치(50% 절감)는 심층 분석에만 쓰는 C 가 답이다. D4-06 과 같은 공식: **지연 허용도에 API 를 맞춘다**."
+   "그래서 배치(50% 절감)는 심층 분석에만 쓰는 {C} 가 답이다. D4-06 과 같은 공식: **지연 허용도에 API 를 맞춘다**."
   ],
   "clues": [
-   {"en": "blocks PR merging until complete", "ko": "사람이 기다림 → 실시간"},
-   {"en": "runs overnight, polls for batch completion", "ko": "이미 비동기 → 배치 적합"},
-   {"en": "may take up to 24 hours to complete", "ko": "지연 보장 없음"}
+   {
+    "en": "blocks PR merging until complete",
+    "ko": "사람이 기다림 → 실시간"
+   },
+   {
+    "en": "runs overnight, polls for batch completion",
+    "ko": "이미 비동기 → 배치 적합"
+   },
+   {
+    "en": "may take up to 24 hours to complete",
+    "ko": "지연 보장 없음"
+   }
   ],
   "discuss_ko": "머지 전 hook 에 배치를 써도 대부분 1시간 안에 끝난다면, 개발자가 조금 기다리는 비용보다 50% 절감이 더 이득이지 않을까?",
   "words": [
-   {"word": "overnight", "pos": "adv.", "ko": "밤새, 하룻밤 사이에", "example": "runs overnight"},
-   {"word": "poll", "pos": "v.", "ko": "(상태를) 주기적으로 확인하다", "example": "polls for batch completion"},
-   {"word": "up to", "pos": "phr.", "ko": "최대 ~까지", "example": "may take up to 24 hours to complete"},
-   {"word": "absorb", "pos": "v.", "ko": "흡수하다, 감당하다", "example": "can absorb the latency"},
-   {"word": "latency-tolerant", "pos": "adj.", "ko": "지연을 견딜 수 있는", "example": "it is latency-tolerant"},
-   {"word": "async", "pos": "adj.", "ko": "비동기의", "example": "already designed around async completion"}
+   {
+    "word": "overnight",
+    "pos": "adv.",
+    "ko": "밤새, 하룻밤 사이에",
+    "example": "runs overnight"
+   },
+   {
+    "word": "poll",
+    "pos": "v.",
+    "ko": "(상태를) 주기적으로 확인하다",
+    "example": "polls for batch completion"
+   },
+   {
+    "word": "up to",
+    "pos": "phr.",
+    "ko": "최대 ~까지",
+    "example": "may take up to 24 hours to complete"
+   },
+   {
+    "word": "absorb",
+    "pos": "v.",
+    "ko": "흡수하다, 감당하다",
+    "example": "can absorb the latency"
+   },
+   {
+    "word": "latency-tolerant",
+    "pos": "adj.",
+    "ko": "지연을 견딜 수 있는",
+    "example": "it is latency-tolerant"
+   },
+   {
+    "word": "async",
+    "pos": "adj.",
+    "ko": "비동기의",
+    "example": "already designed around async completion"
+   }
   ],
   "check": "ok",
   "checkNote": ""
@@ -367,31 +922,86 @@
   "q_en": "Your automated reviews identify valid issues but developers report the feedback isn't actionable. Findings say things like 'complex ticket allocation logic' or 'potential null pointer' without specifying what to change. When you add detailed instructions like 'always include specific fix suggestions,' the model still produces inconsistent output — sometimes detailed, sometimes vague. What prompting technique would most reliably produce consistently actionable feedback?",
   "q_ko": "자동 리뷰가 타당한 문제는 찾아내지만, 개발자들은 피드백을 보고 바로 조치할 수 없다고 한다. 지적이 '복잡한 티켓 할당 로직', '잠재적 null pointer' 처럼 무엇을 고칠지 말하지 않는다. '항상 구체적인 수정 제안을 넣어라' 같은 자세한 지시를 추가해도 출력은 여전히 들쭉날쭉하다 — 어떤 때는 자세하고 어떤 때는 모호하다. 일관되게 조치 가능한 피드백을 가장 확실하게 끌어내는 프롬프팅 기법은?",
   "options": [
-   {"en": "Lower temperature to 0 to make output deterministic and consistently detailed.", "ko": "temperature 를 0으로 낮춰 출력을 결정적이고 일관되게 자세하게 만든다.", "why": "temperature 는 무작위성을 조절할 뿐, 출력이 얼마나 완전하고 자세한지를 정하지 않는다."},
-   {"en": "Add more step-by-step instructions covering every possible finding type and how to suggest fixes for each.", "ko": "가능한 모든 지적 유형과 유형별 수정 제안 방법을 다루는 단계별 지시를 더 추가한다.", "why": "이미 실패한 방법을 계속하는 것이고, 경우의 수는 지시보다 훨씬 빨리 늘어난다."},
-   {"en": "Add 2–4 few-shot examples showing complete, actionable findings — each demonstrating location, issue description, root cause, and a specific suggested fix with corrected code.", "ko": "완전하고 조치 가능한 지적을 보여 주는 few-shot 예시 2~4개를 추가한다 — 각각 위치, 문제 설명, 근본 원인, 수정 코드가 딸린 구체적 수정 제안을 보여 준다.", "why": "정답. 정확한 출력 모양을 예시로 주면 모델이 그 패턴을 일관되게 따라 한다."},
-   {"en": "Add a post-processing pass that filters out any findings without a suggested fix before returning results.", "ko": "결과를 돌려주기 전에 수정 제안이 없는 지적을 걸러 내는 후처리 패스를 추가한다.", "why": "들쭉날쭉함을 고치지 않고 숨길 뿐이며, 타당한 지적까지 버리게 된다."}
+   {
+    "en": "Lower temperature to 0 to make output deterministic and consistently detailed.",
+    "ko": "temperature 를 0으로 낮춰 출력을 결정적이고 일관되게 자세하게 만든다.",
+    "why": "temperature 는 무작위성을 조절할 뿐, 출력이 얼마나 완전하고 자세한지를 정하지 않는다."
+   },
+   {
+    "en": "Add more step-by-step instructions covering every possible finding type and how to suggest fixes for each.",
+    "ko": "가능한 모든 지적 유형과 유형별 수정 제안 방법을 다루는 단계별 지시를 더 추가한다.",
+    "why": "이미 실패한 방법을 계속하는 것이고, 경우의 수는 지시보다 훨씬 빨리 늘어난다."
+   },
+   {
+    "en": "Add 2–4 few-shot examples showing complete, actionable findings — each demonstrating location, issue description, root cause, and a specific suggested fix with corrected code.",
+    "ko": "완전하고 조치 가능한 지적을 보여 주는 few-shot 예시 2~4개를 추가한다 — 각각 위치, 문제 설명, 근본 원인, 수정 코드가 딸린 구체적 수정 제안을 보여 준다.",
+    "why": "정답. 정확한 출력 모양을 예시로 주면 모델이 그 패턴을 일관되게 따라 한다."
+   },
+   {
+    "en": "Add a post-processing pass that filters out any findings without a suggested fix before returning results.",
+    "ko": "결과를 돌려주기 전에 수정 제안이 없는 지적을 걸러 내는 후처리 패스를 추가한다.",
+    "why": "들쭉날쭉함을 고치지 않고 숨길 뿐이며, 타당한 지적까지 버리게 된다."
+   }
   ],
   "answer": 2,
   "point_ko": "지시로 안 되면 → 완성본 예시(few-shot) 2~4개",
   "explain_ko": [
    "D4-08 과 같은 문제에 보기 순서만 바뀌었다. **the model still produces inconsistent output** 이 핵심 단서다.",
-   "글로 된 지시는 해석의 여지가 남고, 예외 상황은 지시보다 빨리 늘어난다. 그래서 지시를 더 붙이는 B 는 같은 실패를 반복한다.",
-   "**2~4개의 완성된 예시**(위치 → 문제 → 원인 → 수정 → 수정 코드)가 모델에게 따라 할 모양을 준다. 그래서 C 가 답이다."
+   "글로 된 지시는 해석의 여지가 남고, 예외 상황은 지시보다 빨리 늘어난다. 그래서 지시를 더 붙이는 {B} 는 같은 실패를 반복한다.",
+   "**2~4개의 완성된 예시**(위치 → 문제 → 원인 → 수정 → 수정 코드)가 모델에게 따라 할 모양을 준다. 그래서 {C} 가 답이다."
   ],
   "clues": [
-   {"en": "without specifying what to change", "ko": "원하는 출력 모양이 안 나옴"},
-   {"en": "When you add detailed instructions", "ko": "지시 추가는 이미 시도함"},
-   {"en": "sometimes detailed, sometimes vague", "ko": "일관성 문제 → 예시로 해결"}
+   {
+    "en": "without specifying what to change",
+    "ko": "원하는 출력 모양이 안 나옴"
+   },
+   {
+    "en": "When you add detailed instructions",
+    "ko": "지시 추가는 이미 시도함"
+   },
+   {
+    "en": "sometimes detailed, sometimes vague",
+    "ko": "일관성 문제 → 예시로 해결"
+   }
   ],
-  "discuss_ko": "예시를 주면 모델이 예시 내용을 그대로 베끼는 부작용은 없을까? 그래도 지시를 더 붙이는 B 보다 C 가 나은 이유는?",
+  "discuss_ko": "예시를 주면 모델이 예시 내용을 그대로 베끼는 부작용은 없을까? 그래도 지시를 더 붙이는 {B} 보다 {C} 가 나은 이유는?",
   "words": [
-   {"word": "actionable", "pos": "adj.", "ko": "바로 조치할 수 있는", "example": "consistently actionable feedback"},
-   {"word": "inconsistent", "pos": "adj.", "ko": "일관성 없는, 들쭉날쭉한", "example": "the model still produces inconsistent output"},
-   {"word": "vague", "pos": "adj.", "ko": "모호한", "example": "sometimes detailed, sometimes vague"},
-   {"word": "demonstrate", "pos": "v.", "ko": "보여 주다, 시연하다", "example": "each demonstrating location, issue description, root cause"},
-   {"word": "root cause", "pos": "n.", "ko": "근본 원인", "example": "issue description, root cause, and a specific suggested fix"},
-   {"word": "post-processing", "pos": "n.", "ko": "후처리", "example": "Add a post-processing pass"}
+   {
+    "word": "actionable",
+    "pos": "adj.",
+    "ko": "바로 조치할 수 있는",
+    "example": "consistently actionable feedback"
+   },
+   {
+    "word": "inconsistent",
+    "pos": "adj.",
+    "ko": "일관성 없는, 들쭉날쭉한",
+    "example": "the model still produces inconsistent output"
+   },
+   {
+    "word": "vague",
+    "pos": "adj.",
+    "ko": "모호한",
+    "example": "sometimes detailed, sometimes vague"
+   },
+   {
+    "word": "demonstrate",
+    "pos": "v.",
+    "ko": "보여 주다, 시연하다",
+    "example": "each demonstrating location, issue description, root cause"
+   },
+   {
+    "word": "root cause",
+    "pos": "n.",
+    "ko": "근본 원인",
+    "example": "issue description, root cause, and a specific suggested fix"
+   },
+   {
+    "word": "post-processing",
+    "pos": "n.",
+    "ko": "후처리",
+    "example": "Add a post-processing pass"
+   }
   ],
   "check": "ok",
   "checkNote": ""
@@ -403,32 +1013,90 @@
   "q_en": "Your automated review analyzes comments and docstrings. The current prompt instructs Claude to 'check that comments are accurate and up-to-date.' Findings frequently flag acceptable patterns (TODO markers, straightforward descriptions) while missing comments that describe behavior the code no longer implements. What change addresses the root cause of this inconsistent analysis?",
   "q_ko": "자동 리뷰가 주석과 docstring 을 분석한다. 현재 프롬프트는 Claude 에게 '주석이 정확하고 최신인지 확인하라' 고 지시한다. 결과는 괜찮은 패턴(TODO 표시, 단순한 설명)을 자주 지적하면서, 코드가 더는 하지 않는 동작을 설명하는 주석은 놓친다. 이 들쭉날쭉한 분석의 근본 원인을 해결하는 변경은?",
   "options": [
-   {"en": "Add few-shot examples showing correctly flagged and correctly ignored comment patterns.", "ko": "올바르게 지적한 주석과 올바르게 무시한 주석 패턴을 보여 주는 few-shot 예시를 추가한다.", "why": "도움은 되지만 모호한 지시가 그대로 남아 증상만 다룬다. 근본 원인은 판단 기준이 없다는 것이다."},
-   {"en": "Replace the vague instruction with a specific categorical criterion: flag comments only when the described behavior contradicts what the code actually does; skip TODO markers, style preferences, and description-only comments.", "ko": "모호한 지시를 구체적인 범주 기준으로 바꾼다: 주석이 설명한 동작이 코드의 실제 동작과 어긋날 때만 지적하고, TODO 표시·스타일 선호·단순 설명 주석은 건너뛴다.", "why": "정답. '정확한지 확인' 을 '설명과 실제 동작이 모순될 때만' 이라는 판단 규칙으로 바꿔 원인을 없앤다."},
-   {"en": "Add a second review pass dedicated specifically to comment and docstring accuracy.", "ko": "주석·docstring 정확성만 따로 보는 두 번째 리뷰 패스를 추가한다.", "why": "망가진 지시를 그대로 둔 채 비용만 두 배로 늘린다."},
-   {"en": "Expand the review scope to include all inline comments, not just docstrings.", "ko": "docstring 뿐 아니라 모든 인라인 주석으로 리뷰 범위를 넓힌다.", "why": "범위를 넓히면 모호한 기준이 적용되는 곳만 늘어 오탐이 더 많아진다."}
+   {
+    "en": "Add few-shot examples showing correctly flagged and correctly ignored comment patterns.",
+    "ko": "올바르게 지적한 주석과 올바르게 무시한 주석 패턴을 보여 주는 few-shot 예시를 추가한다.",
+    "why": "도움은 되지만 모호한 지시가 그대로 남아 증상만 다룬다. 근본 원인은 판단 기준이 없다는 것이다."
+   },
+   {
+    "en": "Replace the vague instruction with a specific categorical criterion: flag comments only when the described behavior contradicts what the code actually does; skip TODO markers, style preferences, and description-only comments.",
+    "ko": "모호한 지시를 구체적인 범주 기준으로 바꾼다: 주석이 설명한 동작이 코드의 실제 동작과 어긋날 때만 지적하고, TODO 표시·스타일 선호·단순 설명 주석은 건너뛴다.",
+    "why": "정답. '정확한지 확인' 을 '설명과 실제 동작이 모순될 때만' 이라는 판단 규칙으로 바꿔 원인을 없앤다."
+   },
+   {
+    "en": "Add a second review pass dedicated specifically to comment and docstring accuracy.",
+    "ko": "주석·docstring 정확성만 따로 보는 두 번째 리뷰 패스를 추가한다.",
+    "why": "망가진 지시를 그대로 둔 채 비용만 두 배로 늘린다."
+   },
+   {
+    "en": "Expand the review scope to include all inline comments, not just docstrings.",
+    "ko": "docstring 뿐 아니라 모든 인라인 주석으로 리뷰 범위를 넓힌다.",
+    "why": "범위를 넓히면 모호한 기준이 적용되는 곳만 늘어 오탐이 더 많아진다."
+   }
   ],
   "answer": 1,
   "point_ko": "모호한 '정확한지 확인' → '모순될 때만' 판단 규칙",
   "explain_ko": [
    "지시 **check that comments are accurate and up-to-date** 는 정의 없는 형용사라 모델이 제멋대로 판단한다.",
    "그래서 TODO 같은 괜찮은 주석은 지적하고, 진짜 문제(**describe behavior the code no longer implements**)는 놓친다.",
-   "질문이 **root cause** 를 물으므로, 예시(A)로 증상을 달래기보다 지시 자체를 **범주 기준**으로 바꾸는 B 가 답이다."
+   "질문이 **root cause** 를 물으므로, 예시({A})로 증상을 달래기보다 지시 자체를 **범주 기준**으로 바꾸는 {B} 가 답이다."
   ],
   "clues": [
-   {"en": "check that comments are accurate and up-to-date", "ko": "정의 없는 모호한 지시"},
-   {"en": "flag acceptable patterns (TODO markers, straightforward descriptions)", "ko": "오탐 증상"},
-   {"en": "describe behavior the code no longer implements", "ko": "진짜 지적 대상 = 설명과 동작의 모순"},
-   {"en": "addresses the root cause", "ko": "증상 처방(few-shot)이 아닌 기준 교체"}
+   {
+    "en": "check that comments are accurate and up-to-date",
+    "ko": "정의 없는 모호한 지시"
+   },
+   {
+    "en": "flag acceptable patterns (TODO markers, straightforward descriptions)",
+    "ko": "오탐 증상"
+   },
+   {
+    "en": "describe behavior the code no longer implements",
+    "ko": "진짜 지적 대상 = 설명과 동작의 모순"
+   },
+   {
+    "en": "addresses the root cause",
+    "ko": "증상 처방(few-shot)이 아닌 기준 교체"
+   }
   ],
-  "discuss_ko": "few-shot 예시(A)도 무엇을 지적하고 무시할지 보여 주는데, 왜 '근본 원인' 을 묻는 이 질문에서는 B 가 더 나을까?",
+  "discuss_ko": "few-shot 예시({A})도 무엇을 지적하고 무시할지 보여 주는데, 왜 '근본 원인' 을 묻는 이 질문에서는 {B} 가 더 나을까?",
   "words": [
-   {"word": "up-to-date", "pos": "adj.", "ko": "최신의", "example": "accurate and up-to-date"},
-   {"word": "straightforward", "pos": "adj.", "ko": "단순한, 알기 쉬운", "example": "straightforward descriptions"},
-   {"word": "implement", "pos": "v.", "ko": "구현하다, 실행하다", "example": "behavior the code no longer implements"},
-   {"word": "contradict", "pos": "v.", "ko": "모순되다, 어긋나다", "example": "the described behavior contradicts what the code actually does"},
-   {"word": "criterion", "pos": "n.", "ko": "기준", "example": "a specific categorical criterion"},
-   {"word": "dedicated", "pos": "adj.", "ko": "전용의, ~만을 위한", "example": "dedicated specifically to comment and docstring accuracy"}
+   {
+    "word": "up-to-date",
+    "pos": "adj.",
+    "ko": "최신의",
+    "example": "accurate and up-to-date"
+   },
+   {
+    "word": "straightforward",
+    "pos": "adj.",
+    "ko": "단순한, 알기 쉬운",
+    "example": "straightforward descriptions"
+   },
+   {
+    "word": "implement",
+    "pos": "v.",
+    "ko": "구현하다, 실행하다",
+    "example": "behavior the code no longer implements"
+   },
+   {
+    "word": "contradict",
+    "pos": "v.",
+    "ko": "모순되다, 어긋나다",
+    "example": "the described behavior contradicts what the code actually does"
+   },
+   {
+    "word": "criterion",
+    "pos": "n.",
+    "ko": "기준",
+    "example": "a specific categorical criterion"
+   },
+   {
+    "word": "dedicated",
+    "pos": "adj.",
+    "ko": "전용의, ~만을 위한",
+    "example": "dedicated specifically to comment and docstring accuracy"
+   }
   ],
   "check": "ok",
   "checkNote": ""
@@ -440,31 +1108,86 @@
   "q_en": "Your automated code review averages 15 findings per pull request with a 40% developer-reported false positive rate. The bottleneck is investigation time: developers must click into each finding to read Claude's reasoning before deciding whether to act or dismiss. Your CLAUDE.md contains comprehensive rules for acceptable patterns, and stakeholders have rejected any approach that filters findings before developer review. What single change would most reduce investigation time?",
   "q_ko": "자동 코드 리뷰가 PR 당 평균 15개를 지적하고, 개발자들이 보고한 오탐률은 40% 다. 병목은 조사 시간이다. 개발자는 조치할지 무시할지 정하기 전에 각 지적을 클릭해 들어가 Claude 의 추론을 읽어야 한다. CLAUDE.md 에는 허용 패턴 규칙이 빠짐없이 들어 있고, 이해관계자들은 개발자 검토 전에 지적을 걸러 내는 방식은 모두 거부했다. 조사 시간을 가장 많이 줄이는 단 하나의 변경은?",
   "options": [
-   {"en": "Add a confidence score (1–10) to each finding so developers can triage by score without opening items.", "ko": "각 지적에 확신도 점수(1~10)를 붙여, 개발자가 항목을 열지 않고 점수로 분류하게 한다.", "why": "점수만 봐서는 그 점수가 맞는지 알 수 없어, 결국 열어서 근거를 확인해야 한다."},
-   {"en": "Require Claude to include a brief inline rationale with each finding — the specific rule violated and why this instance is not a known-acceptable pattern.", "ko": "각 지적에 짧은 인라인 근거를 붙이게 한다 — 어긴 구체적 규칙과, 이 경우가 허용된 패턴이 아닌 이유.", "why": "정답. 규칙과 이유를 목록에서 바로 읽으니 클릭이 필요 없고, 지적도 걸러지지 않는다."},
-   {"en": "Reduce the review scope to security and correctness issues only, removing the noisiest categories.", "ko": "리뷰 범위를 보안과 정확성 문제로만 줄여 가장 시끄러운 범주를 뺀다.", "why": "범주를 빼는 건 검토 전 걸러 내기라 이해관계자가 이미 거부한 방식이다."},
-   {"en": "Run two independent review instances and only surface findings that appear in both.", "ko": "독립된 리뷰 인스턴스 두 개를 돌려 양쪽에 다 나온 지적만 보여 준다.", "why": "합의 필터링도 검토 전 걸러 내기이고, 한쪽만 잡은 진짜 문제를 놓칠 수 있다."}
+   {
+    "en": "Add a confidence score (1–10) to each finding so developers can triage by score without opening items.",
+    "ko": "각 지적에 확신도 점수(1~10)를 붙여, 개발자가 항목을 열지 않고 점수로 분류하게 한다.",
+    "why": "점수만 봐서는 그 점수가 맞는지 알 수 없어, 결국 열어서 근거를 확인해야 한다."
+   },
+   {
+    "en": "Require Claude to include a brief inline rationale with each finding — the specific rule violated and why this instance is not a known-acceptable pattern.",
+    "ko": "각 지적에 짧은 인라인 근거를 붙이게 한다 — 어긴 구체적 규칙과, 이 경우가 허용된 패턴이 아닌 이유.",
+    "why": "정답. 규칙과 이유를 목록에서 바로 읽으니 클릭이 필요 없고, 지적도 걸러지지 않는다."
+   },
+   {
+    "en": "Reduce the review scope to security and correctness issues only, removing the noisiest categories.",
+    "ko": "리뷰 범위를 보안과 정확성 문제로만 줄여 가장 시끄러운 범주를 뺀다.",
+    "why": "범주를 빼는 건 검토 전 걸러 내기라 이해관계자가 이미 거부한 방식이다."
+   },
+   {
+    "en": "Run two independent review instances and only surface findings that appear in both.",
+    "ko": "독립된 리뷰 인스턴스 두 개를 돌려 양쪽에 다 나온 지적만 보여 준다.",
+    "why": "합의 필터링도 검토 전 걸러 내기이고, 한쪽만 잡은 진짜 문제를 놓칠 수 있다."
+   }
   ],
   "answer": 1,
   "point_ko": "근거 보러 클릭하는 게 병목 → 근거를 목록에 인라인으로",
   "explain_ko": [
    "D4-09 와 같은 문제다. 병목은 **click into each finding to read Claude's reasoning**, 즉 근거가 목록에 없다는 점이다.",
-   "**rejected any approach that filters findings** 때문에 범위 축소(C)와 합의(D)는 조건 위반으로 바로 탈락한다.",
-   "확신도 점수(A)는 점수의 타당성을 확인하러 여전히 들어가야 한다. 그래서 **어긴 규칙 + 이유를 인라인으로** 보여 주는 B 가 답이다."
+   "**rejected any approach that filters findings** 때문에 범위 축소({C})와 합의({D})는 조건 위반으로 바로 탈락한다.",
+   "확신도 점수({A})는 점수의 타당성을 확인하러 여전히 들어가야 한다. 그래서 **어긴 규칙 + 이유를 인라인으로** 보여 주는 {B} 가 답이다."
   ],
   "clues": [
-   {"en": "The bottleneck is investigation time", "ko": "줄일 대상은 조사 시간"},
-   {"en": "click into each finding to read Claude's reasoning", "ko": "근거를 앞으로 꺼내면 해결"},
-   {"en": "stakeholders have rejected any approach that filters findings", "ko": "필터형 보기는 모두 오답"}
+   {
+    "en": "The bottleneck is investigation time",
+    "ko": "줄일 대상은 조사 시간"
+   },
+   {
+    "en": "click into each finding to read Claude's reasoning",
+    "ko": "근거를 앞으로 꺼내면 해결"
+   },
+   {
+    "en": "stakeholders have rejected any approach that filters findings",
+    "ko": "필터형 보기는 모두 오답"
+   }
   ],
-  "discuss_ko": "이해관계자 조건이 없다면 두 인스턴스 합의(D)는 오탐 40% 를 줄이는 좋은 방법일까? 어떤 진짜 문제를 놓칠 수 있을까?",
+  "discuss_ko": "이해관계자 조건이 없다면 두 인스턴스 합의({D})는 오탐 40% 를 줄이는 좋은 방법일까? 어떤 진짜 문제를 놓칠 수 있을까?",
   "words": [
-   {"word": "average", "pos": "v.", "ko": "평균 ~이 되다", "example": "averages 15 findings per pull request"},
-   {"word": "bottleneck", "pos": "n.", "ko": "병목", "example": "The bottleneck is investigation time"},
-   {"word": "investigation", "pos": "n.", "ko": "조사, 확인 작업", "example": "The bottleneck is investigation time"},
-   {"word": "triage", "pos": "v.", "ko": "우선순위를 분류하다", "example": "triage by score without opening items"},
-   {"word": "rationale", "pos": "n.", "ko": "근거, 이유", "example": "a brief inline rationale with each finding"},
-   {"word": "noisy", "pos": "adj.", "ko": "잡음이 많은, 쓸데없는 결과가 많은", "example": "removing the noisiest categories"}
+   {
+    "word": "average",
+    "pos": "v.",
+    "ko": "평균 ~이 되다",
+    "example": "averages 15 findings per pull request"
+   },
+   {
+    "word": "bottleneck",
+    "pos": "n.",
+    "ko": "병목",
+    "example": "The bottleneck is investigation time"
+   },
+   {
+    "word": "investigation",
+    "pos": "n.",
+    "ko": "조사, 확인 작업",
+    "example": "The bottleneck is investigation time"
+   },
+   {
+    "word": "triage",
+    "pos": "v.",
+    "ko": "우선순위를 분류하다",
+    "example": "triage by score without opening items"
+   },
+   {
+    "word": "rationale",
+    "pos": "n.",
+    "ko": "근거, 이유",
+    "example": "a brief inline rationale with each finding"
+   },
+   {
+    "word": "noisy",
+    "pos": "adj.",
+    "ko": "잡음이 많은, 쓸데없는 결과가 많은",
+    "example": "removing the noisiest categories"
+   }
   ],
   "check": "ok",
   "checkNote": ""
@@ -476,33 +1199,88 @@
   "q_en": "Your invoice extraction pipeline returns structured JSON but validation catches that extracted dates are formatted as MM/DD/YYYY when your schema requires ISO 8601 (YYYY-MM-DD). The rest of the extraction looks correct. What's the most effective fix?",
   "q_ko": "청구서 추출 파이프라인이 구조화된 JSON 을 돌려주지만, 검증 단계에서 추출된 날짜가 schema 가 요구하는 ISO 8601(YYYY-MM-DD) 이 아니라 MM/DD/YYYY 형식이라는 게 잡혔다. 나머지 추출은 맞아 보인다. 가장 효과적인 해결책은?",
   "options": [
-   {"en": "Add 'return dates in ISO 8601 format' to the system prompt and re-run the full extraction.", "ko": "system prompt 에 'ISO 8601 형식으로 날짜를 돌려줘라' 를 넣고 전체 추출을 다시 돌린다.", "why": "무엇이 틀렸는지 구체적 오류를 주지 않은 채 전체를 다시 돌려, 비용은 크고 결과도 보장되지 않는다."},
-   {"en": "Add a post-processing step that reformats all date strings using a regex before validation.", "ko": "검증 전에 정규식으로 모든 날짜 문자열을 다시 포맷하는 후처리 단계를 둔다.", "why": "실무에서는 통하지만, 출제 의도상 모델의 추출을 고치지 않고 바깥에서 증상만 덮는 방법으로 본다."},
-   {"en": "Send a follow-up request including the original invoice, the failed extraction output, and the specific validation error ('date field must be YYYY-MM-DD, got MM/DD/YYYY'), and ask the model to correct it.", "ko": "원본 청구서, 실패한 추출 결과, 구체적 검증 오류('date 필드는 YYYY-MM-DD 여야 하는데 MM/DD/YYYY 가 옴')를 담은 후속 요청을 보내 모델에게 고치게 한다.", "why": "정답(출제 의도). 원문에 정보가 있는 형식 오류는 구체적 오류를 돌려주면 모델이 스스로 고친다."},
-   {"en": "Make the date field nullable and handle format normalisation in the application layer.", "ko": "date 필드를 nullable 로 만들고 형식 정규화는 애플리케이션 계층에서 처리한다.", "why": "nullable 은 원문에 없는 정보를 지어내는 문제의 해법이지, 형식이 틀린 문제와는 상관없다."}
+   {
+    "en": "Add 'return dates in ISO 8601 format' to the system prompt and re-run the full extraction.",
+    "ko": "system prompt 에 'ISO 8601 형식으로 날짜를 돌려줘라' 를 넣고 전체 추출을 다시 돌린다.",
+    "why": "무엇이 틀렸는지 구체적 오류를 주지 않은 채 전체를 다시 돌려, 비용은 크고 결과도 보장되지 않는다."
+   },
+   {
+    "en": "Add a post-processing step that reformats all date strings using a regex before validation.",
+    "ko": "검증 전에 정규식으로 모든 날짜 문자열을 다시 포맷하는 후처리 단계를 둔다.",
+    "why": "실무에서는 통하지만, 출제 의도상 모델의 추출을 고치지 않고 바깥에서 증상만 덮는 방법으로 본다."
+   },
+   {
+    "en": "Send a follow-up request including the original invoice, the failed extraction output, and the specific validation error ('date field must be YYYY-MM-DD, got MM/DD/YYYY'), and ask the model to correct it.",
+    "ko": "원본 청구서, 실패한 추출 결과, 구체적 검증 오류('date 필드는 YYYY-MM-DD 여야 하는데 MM/DD/YYYY 가 옴')를 담은 후속 요청을 보내 모델에게 고치게 한다.",
+    "why": "정답(출제 의도). 원문에 정보가 있는 형식 오류는 구체적 오류를 돌려주면 모델이 스스로 고친다."
+   },
+   {
+    "en": "Make the date field nullable and handle format normalisation in the application layer.",
+    "ko": "date 필드를 nullable 로 만들고 형식 정규화는 애플리케이션 계층에서 처리한다.",
+    "why": "nullable 은 원문에 없는 정보를 지어내는 문제의 해법이지, 형식이 틀린 문제와는 상관없다."
+   }
   ],
   "answer": 2,
   "point_ko": "정보는 있고 형식만 틀림 → 구체적 오류를 담아 재시도",
   "explain_ko": [
    "**The rest of the extraction looks correct** 이고 날짜 **형식만** 틀렸다 — 정보가 없는 게 아니라 출력 모양이 틀린 경우다.",
-   "이런 형식 오류에는 **원본 + 실패한 출력 + 구체적 검증 오류**를 돌려주는 validation-retry(오류 피드백 재시도)가 시험이 원하는 답이다(C).",
-   "nullable(D)은 원문에 정보가 없을 때 지어내기를 막는 도구라 여기에 맞지 않고, 막연한 지시 추가 후 전체 재실행(A)은 오류를 구체적으로 알려 주지 않는다."
+   "이런 형식 오류에는 **원본 + 실패한 출력 + 구체적 검증 오류**를 돌려주는 validation-retry(오류 피드백 재시도)가 시험이 원하는 답이다({C}).",
+   "nullable({D})은 원문에 정보가 없을 때 지어내기를 막는 도구라 여기에 맞지 않고, 막연한 지시 추가 후 전체 재실행({A})은 오류를 구체적으로 알려 주지 않는다."
   ],
   "clues": [
-   {"en": "validation catches that extracted dates are formatted as MM/DD/YYYY", "ko": "검증이 구체적 오류를 잡음"},
-   {"en": "your schema requires ISO 8601 (YYYY-MM-DD)", "ko": "틀린 건 형식, 정보는 있음"},
-   {"en": "The rest of the extraction looks correct.", "ko": "전체 재실행은 불필요"}
+   {
+    "en": "validation catches that extracted dates are formatted as MM/DD/YYYY",
+    "ko": "검증이 구체적 오류를 잡음"
+   },
+   {
+    "en": "your schema requires ISO 8601 (YYYY-MM-DD)",
+    "ko": "틀린 건 형식, 정보는 있음"
+   },
+   {
+    "en": "The rest of the extraction looks correct.",
+    "ko": "전체 재실행은 불필요"
+   }
   ],
-  "discuss_ko": "날짜 형식 변환은 정규식(B)으로 확실하고 거의 공짜로 할 수 있는데, 모델을 다시 부르는 C 를 '가장 효과적' 이라고 할 수 있을까?",
+  "discuss_ko": "날짜 형식 변환은 정규식({B})으로 확실하고 거의 공짜로 할 수 있는데, 모델을 다시 부르는 {C} 를 '가장 효과적' 이라고 할 수 있을까?",
   "words": [
-   {"word": "validation", "pos": "n.", "ko": "검증, 유효성 검사", "example": "validation catches that extracted dates are formatted as MM/DD/YYYY"},
-   {"word": "re-run", "pos": "v.", "ko": "다시 실행하다", "example": "re-run the full extraction"},
-   {"word": "reformat", "pos": "v.", "ko": "형식을 다시 맞추다", "example": "reformats all date strings using a regex"},
-   {"word": "follow-up", "pos": "adj.", "ko": "후속의, 이어지는", "example": "Send a follow-up request"},
-   {"word": "nullable", "pos": "adj.", "ko": "null 을 허용하는", "example": "Make the date field nullable"},
-   {"word": "normalisation", "pos": "n.", "ko": "정규화, 표준 형식으로 맞추기 (미국식 normalization)", "example": "handle format normalisation in the application layer"}
+   {
+    "word": "validation",
+    "pos": "n.",
+    "ko": "검증, 유효성 검사",
+    "example": "validation catches that extracted dates are formatted as MM/DD/YYYY"
+   },
+   {
+    "word": "re-run",
+    "pos": "v.",
+    "ko": "다시 실행하다",
+    "example": "re-run the full extraction"
+   },
+   {
+    "word": "reformat",
+    "pos": "v.",
+    "ko": "형식을 다시 맞추다",
+    "example": "reformats all date strings using a regex"
+   },
+   {
+    "word": "follow-up",
+    "pos": "adj.",
+    "ko": "후속의, 이어지는",
+    "example": "Send a follow-up request"
+   },
+   {
+    "word": "nullable",
+    "pos": "adj.",
+    "ko": "null 을 허용하는",
+    "example": "Make the date field nullable"
+   },
+   {
+    "word": "normalisation",
+    "pos": "n.",
+    "ko": "정규화, 표준 형식으로 맞추기 (미국식 normalization)",
+    "example": "handle format normalisation in the application layer"
+   }
   ],
   "check": "doubt",
-  "checkNote": "출제 의도(검증 오류를 돌려주는 validation-retry 루프)로는 C 가 맞다. 하지만 날짜 값은 이미 정확히 추출됐고 형식만 다르므로, 코드로 하는 결정적 후처리(B, 정규식·날짜 파서)가 더 싸고 확실해 실무에서는 B 도 충분히 '가장 효과적' 일 수 있다. 해설의 '전체 재실행보다 싸다' 도 C 가 원본 청구서를 다시 보내므로 비용 차이가 크지 않다. 시험에서는 C 를 고르되 애매한 문항으로 표시."
+  "checkNote": "출제 의도(검증 오류를 돌려주는 validation-retry 루프)로는 {C} 가 맞다. 하지만 날짜 값은 이미 정확히 추출됐고 형식만 다르므로, 코드로 하는 결정적 후처리({B}, 정규식·날짜 파서)가 더 싸고 확실해 실무에서는 {B} 도 충분히 '가장 효과적' 일 수 있다. 해설의 '전체 재실행보다 싸다' 도 {C} 가 원본 청구서를 다시 보내므로 비용 차이가 크지 않다. 시험에서는 {C} 를 고르되 애매한 문항으로 표시."
  }
 ]

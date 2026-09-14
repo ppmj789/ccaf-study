@@ -1,0 +1,976 @@
+[
+ {
+  "id": "C6-01",
+  "domain": 4,
+  "scenario": "Structured Data Extraction",
+  "source": "claude",
+  "ts": [
+   "4.3"
+  ],
+  "guide_en": "Setting tool_choice: \"any\" to guarantee structured output when multiple extraction schemas exist and the document type is unknown",
+  "q_en": "Your extraction pipeline receives a mixed inbound queue of invoices, receipts, and purchase orders, and the document type is not known in advance. You defined three extraction tools (`extract_invoice`, `extract_receipt`, `extract_purchase_order`) with JSON schemas and call the API with `tool_choice: \"auto\"`. Monitoring shows that 6% of responses contain a plain-text summary of the document instead of a tool call, which breaks the downstream JSON parser. What's the most effective fix?",
+  "q_ko": "추출 파이프라인에 송장(invoice)·영수증·발주서가 섞인 대기열이 들어오고, 문서 종류는 미리 알 수 없다. JSON schema 를 붙인 추출 도구 3개(`extract_invoice`, `extract_receipt`, `extract_purchase_order`)를 정의하고 `tool_choice: \"auto\"` 로 API 를 호출한다. 모니터링해 보니 응답의 6%가 도구 호출 대신 문서를 평문으로 요약해 돌려주고, 이 때문에 뒤쪽 JSON 파서가 깨진다. 가장 효과적인 해결책은?",
+  "options": [
+   {
+    "en": "Set `tool_choice: \"any\"` so the model must call one of the extraction tools while still choosing which schema fits the document.",
+    "ko": "`tool_choice: \"any\"` 로 바꿔, 모델이 반드시 추출 도구 중 하나를 호출하되 어떤 schema 가 문서에 맞는지는 스스로 고르게 한다.",
+    "why": "정답. any 는 도구 호출을 보장하면서도 문서 종류에 맞는 도구 선택은 모델에게 맡긴다."
+   },
+   {
+    "en": "Force `tool_choice: {\"type\": \"tool\", \"name\": \"extract_invoice\"}` on every request, since invoices are the most common document type.",
+    "ko": "송장이 가장 흔하니 모든 요청에 `tool_choice: {\"type\": \"tool\", \"name\": \"extract_invoice\"}` 를 강제한다.",
+    "why": "영수증·발주서까지 송장 schema 에 억지로 끼워 넣게 되어 잘못된 추출이 생긴다."
+   },
+   {
+    "en": "Add \"Always respond by calling a tool, never with plain text\" to the system prompt and keep `tool_choice: \"auto\"`.",
+    "ko": "system prompt 에 \"항상 도구를 호출해서 답하고 평문으로 답하지 마라\"를 넣고 `tool_choice: \"auto\"` 는 그대로 둔다.",
+    "why": "auto 는 여전히 텍스트 응답을 허용하므로 프롬프트 지시만으로는 6%가 0이 된다는 보장이 없다."
+   },
+   {
+    "en": "Add a fallback parser that uses a second Claude call to convert plain-text summaries into JSON when no `tool_use` block is present.",
+    "ko": "`tool_use` 블록이 없으면 Claude 를 한 번 더 호출해 평문 요약을 JSON 으로 바꾸는 대체 파서를 추가한다.",
+    "why": "원인(auto 설정)은 두고 증상만 덮는 방법이라 호출이 늘고, 요약문에서 빠진 정보는 되살릴 수 없다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "문서 종류 모름 + 추출 도구 여러 개 → tool_choice any",
+  "explain_ko": [
+   "**`tool_choice: \"auto\"`** 는 모델이 도구 대신 텍스트로 답해도 되는 설정이다. 6%의 평문 응답은 이 설정 때문이다.",
+   "그렇다고 도구 하나를 강제하면 안 된다. **the document type is not known in advance** 이므로 어떤 schema 를 쓸지는 모델이 골라야 한다.",
+   "\"도구는 반드시 부르되 어느 도구인지는 고른다\"가 바로 **`any`** 다."
+  ],
+  "clues": [
+   {
+    "en": "the document type is not known in advance",
+    "ko": "어떤 schema 를 쓸지 모델이 골라야 함"
+   },
+   {
+    "en": "`tool_choice: \"auto\"`",
+    "ko": "auto 는 텍스트 답도 허용"
+   },
+   {
+    "en": "6% of responses contain a plain-text summary of the document instead of a tool call",
+    "ko": "도구 호출이 보장되지 않음"
+   }
+  ],
+  "discuss_ko": "{C} 처럼 system prompt 에 '반드시 도구를 호출하라'고 적으면 6%가 꽤 줄 텐데, 왜 그것으로는 부족하다고 볼까?",
+  "words": [
+   {
+    "word": "inbound",
+    "pos": "adj.",
+    "ko": "들어오는, 수신되는",
+    "example": "a mixed inbound queue of invoices, receipts, and purchase orders"
+   },
+   {
+    "word": "in advance",
+    "pos": "phr.",
+    "ko": "미리, 사전에",
+    "example": "the document type is not known in advance"
+   },
+   {
+    "word": "downstream",
+    "pos": "adj.",
+    "ko": "(처리 흐름상) 뒤쪽의, 하류의",
+    "example": "breaks the downstream JSON parser"
+   },
+   {
+    "word": "fallback",
+    "pos": "n.",
+    "ko": "대체 수단, 비상용 방안",
+    "example": "Add a fallback parser"
+   },
+   {
+    "word": "purchase order",
+    "pos": "n.",
+    "ko": "발주서, 구매 주문서",
+    "example": "invoices, receipts, and purchase orders"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C6-02",
+  "domain": 4,
+  "scenario": "Structured Data Extraction",
+  "source": "claude",
+  "ts": [
+   "4.3"
+  ],
+  "guide_en": "Forcing a specific tool with tool_choice: {\"type\": \"tool\", \"name\": \"extract_metadata\"} to ensure a particular extraction runs before enrichment steps",
+  "q_en": "Your contract-processing pipeline gives Claude an `extract_metadata` tool (parties, effective date, governing law) plus enrichment tools such as `lookup_counterparty` and `classify_risk`. The enrichment tools depend on the extracted metadata. Logs show that in 18% of runs Claude calls `lookup_counterparty` first, using a party name it guessed from the document header, and the enrichment results are then built on incomplete metadata. What's the most effective way to guarantee that metadata extraction runs before enrichment?",
+  "q_ko": "계약서 처리 파이프라인은 Claude 에게 `extract_metadata` 도구(당사자, 발효일, 준거법)와 `lookup_counterparty`, `classify_risk` 같은 보강(enrichment) 도구를 준다. 보강 도구는 추출된 메타데이터에 의존한다. 로그를 보면 실행의 18%에서 Claude 가 문서 머리말에서 짐작한 당사자 이름으로 `lookup_counterparty` 를 먼저 호출하고, 보강 결과가 불완전한 메타데이터 위에 쌓인다. 메타데이터 추출이 보강보다 먼저 실행되도록 보장하는 가장 효과적인 방법은?",
+  "options": [
+   {
+    "en": "Set `tool_choice: \"any\"` so Claude is required to call a tool on every turn.",
+    "ko": "`tool_choice: \"any\"` 로 설정해 Claude 가 매 턴 반드시 도구를 호출하게 한다.",
+    "why": "any 는 도구 호출만 보장하고 어떤 도구를 부를지는 모델이 고르므로 `lookup_counterparty` 를 먼저 부르는 문제가 그대로다."
+   },
+   {
+    "en": "Force the first request with `tool_choice: {\"type\": \"tool\", \"name\": \"extract_metadata\"}`, then pass the extracted metadata into the subsequent enrichment requests.",
+    "ko": "첫 요청에 `tool_choice: {\"type\": \"tool\", \"name\": \"extract_metadata\"}` 를 강제하고, 추출된 메타데이터를 이어지는 보강 요청에 넘긴다.",
+    "why": "정답. 특정 도구 강제는 첫 단계를 확정적으로 고정하고, 보강은 완성된 메타데이터를 받아 진행한다."
+   },
+   {
+    "en": "Add \"You must call extract_metadata before any other tool\" to the system prompt and to the `lookup_counterparty` tool description.",
+    "ko": "system prompt 와 `lookup_counterparty` 도구 설명에 \"다른 도구보다 먼저 extract_metadata 를 호출하라\"를 넣는다.",
+    "why": "지시는 확률적으로만 따르므로 순서를 '보장'하지 못한다. 18%가 줄어도 0이 되지는 않는다."
+   },
+   {
+    "en": "Split enrichment into a separate microservice that polls a queue and retries `lookup_counterparty` until metadata becomes available.",
+    "ko": "보강을 별도 마이크로서비스로 떼어, 큐를 폴링하며 메타데이터가 생길 때까지 `lookup_counterparty` 를 재시도하게 한다.",
+    "why": "API 설정 하나로 풀리는 순서 문제에 인프라를 새로 얹는 과한 해법이다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "특정 추출을 먼저 = tool_choice 로 그 도구 강제",
+  "explain_ko": [
+   "**The enrichment tools depend on the extracted metadata** — 순서가 틀리면 결과가 망가지는 구조다.",
+   "**in 18% of runs Claude calls `lookup_counterparty` first** 는 순서를 모델 판단에 맡겨서 생긴 일이다. 지시문을 보태도 확률은 남는다.",
+   "질문이 **guarantee** 를 요구하므로, 첫 요청에서 `extract_metadata` 를 이름으로 강제하고 그 결과를 다음 단계에 넘기는 {B} 가 정답이다. `any` 는 '어느 도구든' 이라 순서를 못 정한다."
+  ],
+  "clues": [
+   {
+    "en": "The enrichment tools depend on the extracted metadata",
+    "ko": "순서가 중요한 구조"
+   },
+   {
+    "en": "in 18% of runs Claude calls `lookup_counterparty` first",
+    "ko": "모델이 순서를 정함 = 확률적"
+   },
+   {
+    "en": "guarantee that metadata extraction runs before enrichment",
+    "ko": "확정적 강제가 필요"
+   }
+  ],
+  "discuss_ko": "{A} 의 `tool_choice: \"any\"` 와 {B} 의 특정 도구 강제는 둘 다 '도구 호출을 강제'하는데, 이 상황에서 차이가 나는 지점은 정확히 어디일까?",
+  "words": [
+   {
+    "word": "enrichment",
+    "pos": "n.",
+    "ko": "(데이터) 보강, 부가 정보 추가",
+    "example": "plus enrichment tools such as `lookup_counterparty` and `classify_risk`"
+   },
+   {
+    "word": "counterparty",
+    "pos": "n.",
+    "ko": "(계약·거래의) 상대방",
+    "example": "`lookup_counterparty`"
+   },
+   {
+    "word": "governing law",
+    "pos": "n.",
+    "ko": "준거법",
+    "example": "parties, effective date, governing law"
+   },
+   {
+    "word": "subsequent",
+    "pos": "adj.",
+    "ko": "뒤이은, 그다음의",
+    "example": "the subsequent enrichment requests"
+   },
+   {
+    "word": "poll",
+    "pos": "v.",
+    "ko": "(주기적으로) 확인하다, 폴링하다",
+    "example": "a separate microservice that polls a queue"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C6-03",
+  "domain": 4,
+  "scenario": "Structured Data Extraction",
+  "source": "claude",
+  "ts": [
+   "4.3"
+  ],
+  "guide_en": "Adding enum values like \"unclear\" for ambiguous cases and \"other\" + detail fields for extensible categorization",
+  "q_en": "Your system classifies incoming contracts with a `contract_type` enum of `[\"NDA\", \"MSA\", \"SOW\", \"lease\"]` and routes each document to a legal team based on that value. A quarterly audit finds two problems: newer agreement types such as data processing addenda are being forced into `\"MSA\"`, and poorly scanned contracts whose type cannot be determined are confidently labeled `\"NDA\"`. Both errors send documents to the wrong team. What's the most effective schema change?",
+  "q_ko": "시스템은 들어오는 계약서를 `contract_type` enum `[\"NDA\", \"MSA\", \"SOW\", \"lease\"]` 로 분류하고, 그 값에 따라 문서를 법무팀에 배정한다. 분기 감사에서 두 가지 문제가 나왔다. 데이터 처리 부속서 같은 새 계약 유형이 `\"MSA\"` 로 억지로 분류되고, 스캔 상태가 나빠 유형을 알 수 없는 계약서가 자신 있게 `\"NDA\"` 로 붙는다. 두 오류 모두 문서를 엉뚱한 팀으로 보낸다. 가장 효과적인 schema 변경은?",
+  "options": [
+   {
+    "en": "Change `contract_type` to a free-text string so the model can describe any contract type in its own words.",
+    "ko": "`contract_type` 을 자유 텍스트 문자열로 바꿔 모델이 어떤 유형이든 자기 말로 적게 한다.",
+    "why": "값이 제각각이 되어 그 값으로 팀을 배정하는 뒤쪽 시스템이 일관되게 동작하지 못한다."
+   },
+   {
+    "en": "Make `contract_type` optional so the model can omit it whenever it is unsure.",
+    "ko": "`contract_type` 을 선택 필드로 만들어, 확실하지 않으면 모델이 비워 두게 한다.",
+    "why": "비어 있으면 '새 유형'인지 '판독 불가'인지 구분이 안 되고, 새 유형이 무엇인지 정보도 사라진다."
+   },
+   {
+    "en": "Add `\"other\"` with a companion `contract_type_detail` string for new categories, and an `\"unclear\"` value for documents whose type cannot be determined.",
+    "ko": "새 범주용으로 `\"other\"` 와 짝이 되는 `contract_type_detail` 문자열을 추가하고, 유형을 판단할 수 없는 문서용 `\"unclear\"` 값을 추가한다.",
+    "why": "정답. 목록 밖 유형은 other + 설명으로, 애매한 문서는 unclear 로 받아 각각 알맞은 경로로 보낼 수 있다."
+   },
+   {
+    "en": "Expand the enum to list every contract type the legal department has ever handled, and add few-shot examples for each.",
+    "ko": "법무팀이 다뤄 본 모든 계약 유형을 enum 에 나열하고 유형마다 few-shot 예시를 붙인다.",
+    "why": "앞으로 생길 새 유형은 여전히 억지로 끼워지고, 판독 불가 문서를 받을 칸도 없다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "목록 밖 = other + detail, 판단 불가 = unclear",
+  "explain_ko": [
+   "문제가 두 종류다. **newer agreement types ... forced into \"MSA\"** 는 enum 에 맞는 칸이 없는 경우, **type cannot be determined** 는 원본이 애매한 경우다.",
+   "칸이 없으면 모델은 가장 가까운 값을 **confidently** 골라 버린다. 그래서 빠져나갈 칸을 schema 에 만들어 줘야 한다.",
+   "새 범주는 `\"other\"` + 설명 문자열, 애매한 경우는 `\"unclear\"` — 두 문제를 각각 겨냥하는 {C} 가 정답이다."
+  ],
+  "clues": [
+   {
+    "en": "newer agreement types such as data processing addenda are being forced into",
+    "ko": "목록 밖 새 범주 → other + detail"
+   },
+   {
+    "en": "whose type cannot be determined",
+    "ko": "애매한 경우 → unclear"
+   },
+   {
+    "en": "confidently labeled",
+    "ko": "고를 칸이 없어 억지로 채움"
+   }
+  ],
+  "discuss_ko": "{B} 처럼 선택 필드로 두면 추측으로 틀린 값을 채우는 일은 막을 수 있는데, 팀 배정이라는 목적에서는 무엇이 모자랄까?",
+  "words": [
+   {
+    "word": "addendum",
+    "pos": "n.",
+    "ko": "부속서, 추가 조항 (복수형 addenda)",
+    "example": "data processing addenda"
+   },
+   {
+    "word": "quarterly",
+    "pos": "adj.",
+    "ko": "분기별의",
+    "example": "A quarterly audit finds two problems"
+   },
+   {
+    "word": "audit",
+    "pos": "n.",
+    "ko": "감사, 점검",
+    "example": "A quarterly audit finds two problems"
+   },
+   {
+    "word": "companion",
+    "pos": "adj.",
+    "ko": "짝을 이루는, 딸린",
+    "example": "a companion `contract_type_detail` string"
+   },
+   {
+    "word": "omit",
+    "pos": "v.",
+    "ko": "빼다, 생략하다",
+    "example": "the model can omit it whenever it is unsure"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C6-04",
+  "domain": 4,
+  "scenario": "Structured Data Extraction",
+  "source": "claude",
+  "ts": [
+   "4.4"
+  ],
+  "guide_en": "Identifying when retries will be ineffective (e.g., information exists only in an external document not provided) versus when they will succeed (format mismatches, structural output errors)",
+  "q_en": "Your validation step flagged 1,400 invoice extractions last week. Each failed extraction can be retried with the specific validation error appended to the prompt, but retries cost tokens and delay delivery. The failures fall into the five categories below. You want to send only the categories that a retry can actually fix to the retry-with-error-feedback loop and route the rest to a different handling path. Which categories should go to the retry loop? (Choose TWO.)",
+  "q_ko": "지난주 검증 단계에서 송장 추출 1,400건이 걸렸다. 실패한 추출은 구체적인 검증 오류를 프롬프트에 붙여 재시도할 수 있지만, 재시도는 토큰이 들고 납품을 늦춘다. 실패는 아래 다섯 범주로 나뉜다. 재시도로 실제로 고칠 수 있는 범주만 오류 피드백 재시도 루프로 보내고 나머지는 다른 처리 경로로 보내려 한다. 재시도 루프로 보내야 할 범주는? (2개 고르시오.)",
+  "options": [
+   {
+    "en": "Dates extracted as `03/07/2025` when the schema requires `YYYY-MM-DD`.",
+    "ko": "schema 는 `YYYY-MM-DD` 를 요구하는데 날짜가 `03/07/2025` 형식으로 추출됐다.",
+    "why": "정답. 형식 불일치는 원본에 정보가 있으니 오류를 알려 주면 고쳐진다."
+   },
+   {
+    "en": "The `payment_terms` field is empty because the invoice only says \"per Master Services Agreement #A-220\", and that agreement was not provided.",
+    "ko": "송장에 \"기본 서비스 계약 #A-220 에 따름\"이라고만 적혀 있고 그 계약서는 제공되지 않아 `payment_terms` 필드가 비었다.",
+    "why": "정보가 제공되지 않은 외부 문서에만 있으므로 몇 번을 재시도해도 채울 수 없다."
+   },
+   {
+    "en": "Line-item amounts were placed in the `tax` field and tax amounts in `line_items`, although both are clearly labeled on the invoice.",
+    "ko": "송장에 둘 다 분명히 표시돼 있는데도 품목 금액이 `tax` 필드에, 세금 금액이 `line_items` 에 들어갔다.",
+    "why": "정답. 원본에 명확히 있는 값을 엉뚱한 칸에 넣은 구조적 출력 오류라 오류 피드백으로 바로잡을 수 있다."
+   },
+   {
+    "en": "The `purchase_order_number` is missing because the vendor never printed one on the invoice.",
+    "ko": "공급업체가 송장에 발주 번호를 아예 인쇄하지 않아 `purchase_order_number` 가 없다.",
+    "why": "원본에 없는 정보라 재시도는 소용없고, 억지로 요구하면 값을 지어낼 위험만 커진다."
+   },
+   {
+    "en": "The invoice's own printed total differs from the sum of its printed line items because of a mistake by the vendor.",
+    "ko": "공급업체 실수로 송장에 인쇄된 합계가 인쇄된 품목 금액의 합과 다르다.",
+    "why": "원본 자체가 모순이라 재시도로 '맞출' 대상이 아니다. 불일치를 표시하고 사람 검토로 보내야 한다."
+   }
+  ],
+  "answer": [
+   0,
+   2
+  ],
+  "select": 2,
+  "point_ko": "재시도로 고쳐지는 것 = 형식·칸 오류, 원본에 없으면 소용없음",
+  "explain_ko": [
+   "**the specific validation error appended to the prompt** 방식의 재시도는 '원본에 답이 있는데 잘못 옮긴' 경우에만 효과가 있다.",
+   "{A}(날짜 형식)와 {C}(값을 다른 칸에 넣음)는 원본에 정보가 분명히 있으니 오류를 알려 주면 고쳐진다.",
+   "{B}(외부 계약서에만 있음)와 {D}(애초에 인쇄 안 됨)는 **정보가 원본에 없어서** 재시도가 헛돈다. {E} 는 원본이 스스로 모순이라 사람 검토 대상이다."
+  ],
+  "clues": [
+   {
+    "en": "the specific validation error appended to the prompt",
+    "ko": "재시도 = 오류를 알려 주고 다시 뽑기"
+   },
+   {
+    "en": "retries cost tokens and delay delivery",
+    "ko": "헛도는 재시도는 낭비"
+   },
+   {
+    "en": "only the categories that a retry can actually fix",
+    "ko": "원본에 정보가 있어야 고칠 수 있음"
+   }
+  ],
+  "discuss_ko": "{E} 처럼 원본 합계가 틀린 송장을 재시도 루프에 넣으면 검증은 통과할 수도 있는데, 그게 왜 오히려 위험할까?",
+  "words": [
+   {
+    "word": "fall into",
+    "pos": "phr.",
+    "ko": "(범주로) 나뉘다, 속하다",
+    "example": "The failures fall into the five categories below"
+   },
+   {
+    "word": "append",
+    "pos": "v.",
+    "ko": "덧붙이다, 뒤에 추가하다",
+    "example": "the specific validation error appended to the prompt"
+   },
+   {
+    "word": "per",
+    "pos": "prep.",
+    "ko": "~에 따라, ~에 의거하여",
+    "example": "per Master Services Agreement #A-220"
+   },
+   {
+    "word": "route",
+    "pos": "v.",
+    "ko": "(경로로) 보내다, 배정하다",
+    "example": "route the rest to a different handling path"
+   },
+   {
+    "word": "delay",
+    "pos": "v.",
+    "ko": "늦추다, 지연시키다",
+    "example": "retries cost tokens and delay delivery"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C6-05",
+  "domain": 4,
+  "scenario": "Structured Data Extraction",
+  "source": "claude",
+  "ts": [
+   "4.4",
+   "5.5"
+  ],
+  "guide_en": "Designing self-correction validation flows: extracting \"calculated_total\" alongside \"stated_total\" to flag discrepancies, adding \"conflict_detected\" booleans for inconsistent source data",
+  "q_en": "Your invoice pipeline validates that line items sum to the invoice total. When the check fails, the pipeline retries with the error message, and the retried output almost always passes. However, a finance audit of these retried invoices finds that in about half of them the vendor's printed total was actually wrong, and Claude had quietly adjusted line-item amounts so they would match it. What's the most effective change?",
+  "q_ko": "송장 파이프라인은 품목 금액의 합이 송장 합계와 같은지 검증한다. 검사에 실패하면 오류 메시지와 함께 재시도하고, 재시도한 출력은 거의 항상 통과한다. 그런데 재무 감사에서 이렇게 재시도된 송장을 보니 약 절반은 공급업체가 인쇄한 합계 자체가 틀렸고, Claude 가 그 합계에 맞도록 품목 금액을 슬그머니 고쳐 놓았다. 가장 효과적인 변경은?",
+  "options": [
+   {
+    "en": "Add an instruction that line items must always sum exactly to the stated total, with a few-shot example of a corrected invoice.",
+    "ko": "품목 금액은 항상 표기된 합계와 정확히 같아야 한다는 지시와, 수정된 송장 few-shot 예시를 추가한다.",
+    "why": "원본이 틀린 경우에도 합을 맞추라고 더 세게 요구하는 셈이라 값 조작이 늘어난다."
+   },
+   {
+    "en": "Increase the retry limit from one to three so the model has more chances to extract the correct line-item amounts.",
+    "ko": "재시도 한도를 1회에서 3회로 늘려 모델이 올바른 품목 금액을 뽑을 기회를 더 준다.",
+    "why": "원본이 모순인 송장은 재시도가 '맞추기'를 부추길 뿐이고, 원래 문제인 조작을 잡아내지 못한다."
+   },
+   {
+    "en": "Extract `stated_total` and `calculated_total` as separate fields, set a `conflict_detected` boolean when they differ, and route conflicts to human review instead of retrying.",
+    "ko": "`stated_total` 과 `calculated_total` 을 따로 추출하고, 둘이 다르면 `conflict_detected` boolean 을 켜서 재시도 대신 사람 검토로 보낸다.",
+    "why": "정답. 원본에 적힌 값과 계산값을 둘 다 보존해 원본 자체의 모순을 드러내고, 판단은 사람에게 맡긴다."
+   },
+   {
+    "en": "Remove the sum check from validation and recompute the invoice total in application code from the extracted line items.",
+    "ko": "검증에서 합계 검사를 빼고, 추출된 품목 금액으로 애플리케이션 코드에서 합계를 다시 계산한다.",
+    "why": "공급업체가 인쇄한 합계를 덮어써서, 재무팀이 알아야 할 원본 오류가 조용히 사라진다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "원본이 모순이면 맞추지 말고 calculated vs stated + conflict_detected",
+  "explain_ko": [
+   "**the retried output almost always passes** 는 좋은 신호가 아니다. 통과했다고 정확한 게 아니었다.",
+   "**the vendor's printed total was actually wrong** — 원본 자체가 모순인데 검증이 '합이 맞아야 한다'고만 요구하니, Claude 가 **quietly adjusted** 해서 맞춰 버렸다.",
+   "그래서 원본 값(`stated_total`)과 계산 값(`calculated_total`)을 나란히 뽑고 `conflict_detected` 로 표시해 사람에게 넘기는 {C} 가 정답이다."
+  ],
+  "clues": [
+   {
+    "en": "the retried output almost always passes",
+    "ko": "통과 ≠ 정확"
+   },
+   {
+    "en": "the vendor's printed total was actually wrong",
+    "ko": "원본 자체가 모순"
+   },
+   {
+    "en": "quietly adjusted line-item amounts so they would match it",
+    "ko": "합을 맞추려 값을 지어냄"
+   }
+  ],
+  "discuss_ko": "{D} 처럼 코드로 합계를 다시 계산하면 산수는 항상 맞는데, 재무 입장에서 무엇을 잃게 될까?",
+  "words": [
+   {
+    "word": "sum to",
+    "pos": "phr.",
+    "ko": "합계가 ~가 되다",
+    "example": "line items sum to the invoice total"
+   },
+   {
+    "word": "quietly",
+    "pos": "adv.",
+    "ko": "조용히, 슬그머니 (알리지 않고)",
+    "example": "Claude had quietly adjusted line-item amounts"
+   },
+   {
+    "word": "adjust",
+    "pos": "v.",
+    "ko": "조정하다, 고치다",
+    "example": "quietly adjusted line-item amounts"
+   },
+   {
+    "word": "stated",
+    "pos": "adj.",
+    "ko": "(문서에) 명시된, 표기된",
+    "example": "sum exactly to the stated total"
+   },
+   {
+    "word": "recompute",
+    "pos": "v.",
+    "ko": "다시 계산하다",
+    "example": "recompute the invoice total in application code"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C6-06",
+  "domain": 4,
+  "scenario": "Structured Data Extraction",
+  "source": "claude",
+  "ts": [
+   "4.5"
+  ],
+  "guide_en": "Calculating batch submission frequency based on SLA constraints (e.g., 4-hour windows to guarantee 30-hour SLA with 24-hour batch processing)",
+  "q_en": "Your team extracts data from supplier contracts under a contractual SLA: results must be delivered within 30 hours of a document's arrival. To cut costs, you moved the workload to the Message Batches API, which can take up to 24 hours to process a batch. You currently submit one batch per day at midnight, and documents that arrive shortly after midnight regularly miss the SLA. What's the most effective submission strategy?",
+  "q_ko": "팀은 공급업체 계약서에서 데이터를 추출하며, 계약상 SLA 는 '문서 도착 후 30시간 안에 결과 전달'이다. 비용을 줄이려고 작업을 Message Batches API 로 옮겼는데, 이 API 는 배치 하나를 처리하는 데 최대 24시간이 걸릴 수 있다. 지금은 매일 자정에 배치를 한 번 제출하고, 자정 직후에 도착한 문서는 SLA 를 자주 놓친다. 가장 효과적인 제출 전략은?",
+  "options": [
+   {
+    "en": "Keep the daily midnight batch and mark near-deadline documents as high priority inside the batch request.",
+    "ko": "매일 자정 배치는 유지하고, 마감이 가까운 문서는 배치 요청 안에서 높은 우선순위로 표시한다.",
+    "why": "Batches API 는 지연 시간을 보장하지 않으며 요청별 우선 처리 같은 기능도 없다."
+   },
+   {
+    "en": "Submit a batch every 12 hours so the worst-case wait is cut in half compared with the daily schedule.",
+    "ko": "12시간마다 배치를 제출해 최악의 대기 시간을 하루 한 번 제출 때의 절반으로 줄인다.",
+    "why": "최악의 경우 12시간 대기 + 24시간 처리 = 36시간이라 여전히 30시간 SLA 를 넘는다."
+   },
+   {
+    "en": "Submit a batch every 4 hours so the worst-case wait plus the 24-hour processing window stays within 30 hours.",
+    "ko": "4시간마다 배치를 제출해, 최악의 대기 시간과 24시간 처리 시간을 더해도 30시간 안에 들게 한다.",
+    "why": "정답. 4시간 대기 + 24시간 처리 = 28시간으로 SLA 를 지키면서 배치의 비용 절감도 유지한다."
+   },
+   {
+    "en": "Move all extraction back to the synchronous API, since the Message Batches API offers no latency guarantee.",
+    "ko": "Message Batches API 는 지연 시간을 보장하지 않으니 모든 추출을 동기 API 로 되돌린다.",
+    "why": "제출 주기만 바꾸면 SLA 를 맞출 수 있는데 50% 비용 절감을 통째로 포기하는 과한 선택이다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "최악 대기 + 24시간 ≤ SLA → 제출 주기 계산",
+  "explain_ko": [
+   "최악의 경우 = **제출을 기다리는 시간 + 처리 최대 24시간**. 하루 한 번 제출이면 자정 직후 도착 문서는 거의 24 + 24 = 48시간이 걸린다.",
+   "SLA 가 **within 30 hours** 이니 대기 시간은 6시간 이하여야 한다. 12시간 주기(36시간)는 부족하고, 4시간 주기(28시간)는 여유 있게 맞는다.",
+   "주기만 조정하면 되므로 비용 절감을 버리는 {D} 도, 없는 우선순위 기능을 기대하는 {A} 도 답이 아니다."
+  ],
+  "clues": [
+   {
+    "en": "within 30 hours of a document's arrival",
+    "ko": "허용 총시간 30시간"
+   },
+   {
+    "en": "up to 24 hours to process a batch",
+    "ko": "처리에 최대 24시간 → 대기는 6시간 이하"
+   },
+   {
+    "en": "one batch per day at midnight",
+    "ko": "최악 대기 약 24시간 = SLA 초과"
+   }
+  ],
+  "discuss_ko": "6시간마다 제출해도 계산상 6 + 24 = 30시간인데, 시험에서 4시간 주기가 더 나은 답으로 여겨지는 이유는 무엇일까?",
+  "words": [
+   {
+    "word": "contractual",
+    "pos": "adj.",
+    "ko": "계약상의",
+    "example": "under a contractual SLA"
+   },
+   {
+    "word": "cut costs",
+    "pos": "phr.",
+    "ko": "비용을 줄이다",
+    "example": "To cut costs, you moved the workload"
+   },
+   {
+    "word": "workload",
+    "pos": "n.",
+    "ko": "작업량, 처리할 작업",
+    "example": "you moved the workload to the Message Batches API"
+   },
+   {
+    "word": "worst-case",
+    "pos": "adj.",
+    "ko": "최악의 경우의",
+    "example": "the worst-case wait plus the 24-hour processing window"
+   },
+   {
+    "word": "latency",
+    "pos": "n.",
+    "ko": "지연 시간",
+    "example": "offers no latency guarantee"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C6-07",
+  "domain": 4,
+  "scenario": "Structured Data Extraction",
+  "source": "claude",
+  "ts": [
+   "4.5"
+  ],
+  "guide_en": "Handling batch failures: resubmitting only failed documents (identified by custom_id) with appropriate modifications (e.g., chunking documents that exceeded context limits)",
+  "q_en": "You launched a nightly Message Batches API job for 20,000 insurance claim documents using a prompt that had only been tested on a handful of examples. The results show 2,600 failures: 400 requests exceeded the context limit because the claim files were very long, and 2,200 extractions failed schema validation because of a prompt ambiguity that you have now fixed. A teammate plans to resubmit all 20,000 documents with the revised prompt. You expect 80,000 similar documents next month. Which TWO actions are most effective? (Choose TWO.)",
+  "q_ko": "보험 청구 문서 20,000건을 처리하는 야간 Message Batches API 작업을 돌렸는데, 프롬프트는 예시 몇 개로만 시험해 본 상태였다. 결과는 실패 2,600건이다. 400건은 청구 파일이 너무 길어 컨텍스트 한도를 넘었고, 2,200건은 프롬프트의 모호한 부분 때문에 schema 검증에 실패했다(이 모호함은 이제 고쳤다). 동료는 수정한 프롬프트로 20,000건 전체를 다시 제출하려 한다. 다음 달에는 비슷한 문서 80,000건이 들어올 예정이다. 가장 효과적인 조치 두 가지는? (2개 고르시오.)",
+  "options": [
+   {
+    "en": "Resubmit only the 2,600 failed documents, identified by their `custom_id`, splitting the 400 over-length claim files into smaller chunks.",
+    "ko": "`custom_id` 로 찾은 실패 문서 2,600건만 다시 제출하고, 너무 긴 청구 파일 400건은 작은 조각으로 나눈다.",
+    "why": "정답. 성공한 17,400건은 다시 돌릴 필요가 없고, 한도를 넘은 문서는 chunking 이라는 알맞은 수정을 거쳐 재제출한다."
+   },
+   {
+    "en": "Resubmit all 20,000 documents, because batch results are not returned in submission order and cannot be matched back to individual documents.",
+    "ko": "배치 결과는 제출 순서대로 오지 않아 개별 문서와 짝지을 수 없으니 20,000건 전체를 다시 제출한다.",
+    "why": "순서가 보장되지 않는 건 맞지만 `custom_id` 로 요청과 결과를 짝지을 수 있으므로 전체 재제출은 낭비다."
+   },
+   {
+    "en": "Before the 80,000-document run, refine the prompt on a representative sample set until first-pass success is high, then submit the full volume.",
+    "ko": "80,000건을 돌리기 전에 대표성 있는 표본으로 프롬프트를 다듬어 첫 시도 성공률을 높인 뒤 전체를 제출한다.",
+    "why": "정답. 이번 실패의 뿌리인 '예시 몇 개로만 시험'을 고쳐, 대량 배치의 재제출 비용을 줄인다."
+   },
+   {
+    "en": "Increase `max_tokens` on the 400 long requests so the claim files fit within the context limit.",
+    "ko": "긴 요청 400건의 `max_tokens` 를 늘려 청구 파일이 컨텍스트 한도 안에 들어가게 한다.",
+    "why": "`max_tokens` 는 출력 길이의 상한일 뿐 입력이 들어갈 컨텍스트 창을 넓혀 주지 않는다."
+   },
+   {
+    "en": "Enable multi-turn tool calling inside each batch request so Claude can fetch the remaining sections of long files mid-request.",
+    "ko": "각 배치 요청 안에서 여러 턴 도구 호출을 켜서, Claude 가 요청 도중에 긴 파일의 나머지 부분을 가져오게 한다.",
+    "why": "Batches API 는 한 요청 안에서 도구를 실행하고 결과를 돌려주는 여러 턴 도구 호출을 지원하지 않는다."
+   }
+  ],
+  "answer": [
+   0,
+   2
+  ],
+  "select": 2,
+  "point_ko": "실패분만 custom_id 로 재제출 + 대량 전에 표본으로 프롬프트 다듬기",
+  "explain_ko": [
+   "**resubmit all 20,000 documents** 는 이미 성공한 17,400건까지 다시 돈을 내는 일이다. 배치의 요청·결과는 **`custom_id`** 로 짝지으니 실패분만 골라 낼 수 있다.",
+   "**exceeded the context limit** 인 400건은 그대로 다시 내면 또 실패하므로 **chunking** 같은 수정이 함께 필요하다. 그래서 {A}.",
+   "**only been tested on a handful of examples** 가 이번 대량 실패의 원인이다. 80,000건 전에 표본으로 프롬프트를 다듬는 {C} 가 두 번째 정답이다."
+  ],
+  "clues": [
+   {
+    "en": "only been tested on a handful of examples",
+    "ko": "표본 검증 없이 대량 투입"
+   },
+   {
+    "en": "exceeded the context limit because the claim files were very long",
+    "ko": "쪼개서(chunking) 재제출"
+   },
+   {
+    "en": "resubmit all 20,000 documents",
+    "ko": "성공분까지 다시 = 낭비"
+   },
+   {
+    "en": "80,000 similar documents next month",
+    "ko": "다음 대량 배치 전에 프롬프트 다듬기"
+   }
+  ],
+  "discuss_ko": "{E} 처럼 배치 요청 안에서 도구를 불러 긴 파일을 나눠 읽을 수 있다면 편할 텐데, 배치 API 에서 이게 안 되는 구조적 이유는 무엇일까?",
+  "words": [
+   {
+    "word": "a handful of",
+    "pos": "phr.",
+    "ko": "몇 개의, 소수의",
+    "example": "tested on a handful of examples"
+   },
+   {
+    "word": "exceed",
+    "pos": "v.",
+    "ko": "넘다, 초과하다",
+    "example": "400 requests exceeded the context limit"
+   },
+   {
+    "word": "ambiguity",
+    "pos": "n.",
+    "ko": "모호함, 애매함",
+    "example": "because of a prompt ambiguity that you have now fixed"
+   },
+   {
+    "word": "resubmit",
+    "pos": "v.",
+    "ko": "다시 제출하다",
+    "example": "A teammate plans to resubmit all 20,000 documents"
+   },
+   {
+    "word": "representative",
+    "pos": "adj.",
+    "ko": "대표성 있는, 전형적인",
+    "example": "a representative sample set"
+   },
+   {
+    "word": "chunk",
+    "pos": "n.",
+    "ko": "덩어리, 조각",
+    "example": "splitting the 400 over-length claim files into smaller chunks"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C6-08",
+  "domain": 5,
+  "scenario": "Structured Data Extraction",
+  "source": "claude",
+  "ts": [
+   "5.5"
+  ],
+  "guide_en": "Having models output field-level confidence scores, then calibrating review thresholds using labeled validation sets",
+  "q_en": "Your pipeline asks Claude for a single confidence score per document and auto-approves every extraction scoring 0.9 or higher; only lower-scoring documents reach human reviewers. An audit of 500 auto-approved documents finds that `vendor_name` is wrong 1% of the time, while `renewal_date` is wrong 14% of the time, even on documents scored 0.95. Reviewer capacity is fixed. What's the most effective way to route review attention?",
+  "q_ko": "파이프라인은 Claude 에게 문서마다 확신도 점수 하나를 받고, 0.9 이상인 추출은 모두 자동 승인한다. 그보다 낮은 문서만 사람 검토자에게 간다. 자동 승인된 문서 500건을 감사해 보니 `vendor_name` 은 1%만 틀렸지만 `renewal_date` 는 0.95점을 받은 문서에서도 14%가 틀렸다. 검토 인력은 늘릴 수 없다. 검토 역량을 배분하는 가장 효과적인 방법은?",
+  "options": [
+   {
+    "en": "Raise the auto-approval threshold to 0.99 so that only near-certain documents skip human review.",
+    "ko": "자동 승인 기준을 0.99 로 올려 거의 확실한 문서만 사람 검토를 건너뛰게 한다.",
+    "why": "0.95에서도 14%가 틀리니 문서 단위 점수 자체가 보정되지 않았다. 기준만 올리면 검토량이 폭증하고 필드별 약점은 여전히 안 보인다."
+   },
+   {
+    "en": "Have Claude output a confidence score for each field, calibrate each field's review threshold against a labeled validation set, and keep stratified random sampling of auto-approved extractions.",
+    "ko": "Claude 가 필드마다 확신도 점수를 내게 하고, 라벨이 달린 검증 세트로 필드별 검토 기준을 보정하며, 자동 승인된 추출에 대한 층화 무작위 표본 검사를 계속한다.",
+    "why": "정답. 약한 필드에만 검토를 몰아 한정된 인력을 아끼고, 표본 검사로 새로운 오류 패턴도 계속 잡는다."
+   },
+   {
+    "en": "Add an instruction telling Claude to lower its confidence score whenever it is unsure about dates.",
+    "ko": "날짜가 확실하지 않으면 확신도 점수를 낮추라는 지시를 Claude 에게 추가한다.",
+    "why": "자기 보고 확신도를 지시로 조정할 뿐, 실제 정답률에 맞춰 보정한 것이 아니라 믿을 근거가 없다."
+   },
+   {
+    "en": "Send every document's `renewal_date` to human review permanently, and stop auditing auto-approved documents since the problem field is now covered.",
+    "ko": "모든 문서의 `renewal_date` 를 영구히 사람 검토로 보내고, 문제 필드를 막았으니 자동 승인 문서 감사는 중단한다.",
+    "why": "필드 하나를 통째로 사람에게 넘겨 인력을 낭비하고, 감사를 멈추면 다른 필드에서 새로 생기는 오류를 놓친다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "문서 점수 하나 X → 필드별 confidence 를 labeled set 으로 보정",
+  "explain_ko": [
+   "**a single confidence score per document** 는 필드별 차이를 뭉개 버린다. `vendor_name` 1% 와 `renewal_date` 14% 가 같은 점수 뒤에 숨었다.",
+   "**even on documents scored 0.95** — 점수가 실제 정답률과 맞지 않는다는 뜻이다. 그래서 정답이 표시된 **labeled validation set** 으로 필드별 기준을 맞춰야 한다.",
+   "**Reviewer capacity is fixed** 이니 약한 필드에만 검토를 보내고, 자동 승인분은 층화 표본 검사로 계속 지켜보는 {B} 가 정답이다."
+  ],
+  "clues": [
+   {
+    "en": "a single confidence score per document",
+    "ko": "문서 단위 점수는 필드 약점을 가림"
+   },
+   {
+    "en": "even on documents scored 0.95",
+    "ko": "점수가 보정되지 않음"
+   },
+   {
+    "en": "Reviewer capacity is fixed",
+    "ko": "검토를 약한 곳에 집중해야 함"
+   }
+  ],
+  "discuss_ko": "{D} 처럼 `renewal_date` 만 사람이 전부 보면 지금 드러난 문제는 확실히 막히는데, 장기적으로는 무엇이 빠져 있을까?",
+  "words": [
+   {
+    "word": "auto-approve",
+    "pos": "v.",
+    "ko": "자동 승인하다",
+    "example": "auto-approves every extraction scoring 0.9 or higher"
+   },
+   {
+    "word": "capacity",
+    "pos": "n.",
+    "ko": "처리 역량, 수용 능력",
+    "example": "Reviewer capacity is fixed"
+   },
+   {
+    "word": "calibrate",
+    "pos": "v.",
+    "ko": "(기준을) 보정하다, 눈금을 맞추다",
+    "example": "calibrate each field's review threshold against a labeled validation set"
+   },
+   {
+    "word": "threshold",
+    "pos": "n.",
+    "ko": "기준값, 문턱값",
+    "example": "Raise the auto-approval threshold to 0.99"
+   },
+   {
+    "word": "stratified",
+    "pos": "adj.",
+    "ko": "층화된 (집단별로 나눈)",
+    "example": "keep stratified random sampling of auto-approved extractions"
+   },
+   {
+    "word": "near-certain",
+    "pos": "adj.",
+    "ko": "거의 확실한",
+    "example": "only near-certain documents skip human review"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C3-01",
+  "domain": 1,
+  "scenario": "Multi-Agent Research System",
+  "source": "claude",
+  "ts": [
+   "1.3"
+  ],
+  "guide_en": "Including complete findings from prior agents directly in the subagent's prompt (e.g., passing web search results and document analysis outputs to the synthesis subagent)",
+  "q_en": "Your coordinator's `allowedTools` includes `\"Task\"`, and logs confirm that it spawns subagents. Two problems remain. First, the coordinator issues its four web search Task calls for different source categories one per turn, so research takes about four times longer than expected. Second, the synthesis subagent's prompt says \"Synthesize the findings gathered above,\" and its reports contain generic statements that ignore the web search and document analysis results the coordinator received. Which TWO changes fix these problems? (Choose TWO.)",
+  "q_ko": "coordinator 의 `allowedTools` 에는 `\"Task\"` 가 들어 있고, 로그에서도 subagent 를 생성하는 것이 확인된다. 그래도 문제가 두 개 남았다. 첫째, coordinator 가 출처 범주별 웹 검색 Task 호출 4개를 한 턴에 하나씩 내보내서 조사가 예상보다 약 4배 오래 걸린다. 둘째, synthesis subagent 의 프롬프트는 \"위에서 모은 결과를 종합하라\"라고만 하는데, 그 보고서는 coordinator 가 받은 웹 검색·문서 분석 결과를 무시한 일반론으로 채워진다. 두 문제를 고치는 변경 두 가지는? (2개 고르시오.)",
+  "options": [
+   {
+    "en": "Add `\"Task\"` to the synthesis subagent's `allowedTools` so it can retrieve the earlier findings by itself.",
+    "ko": "synthesis subagent 의 `allowedTools` 에 `\"Task\"` 를 넣어 이전 결과를 스스로 가져오게 한다.",
+    "why": "Task 는 새 subagent 를 만드는 도구일 뿐 coordinator 가 받은 결과를 읽어 오지 못하고, coordinator 중심 흐름도 깨진다."
+   },
+   {
+    "en": "Have the coordinator emit all four web search Task calls in a single response so the subagents run in parallel.",
+    "ko": "coordinator 가 웹 검색 Task 호출 4개를 한 응답 안에서 모두 내보내 subagent 들이 병렬로 돌게 한다.",
+    "why": "정답. 한 응답에 여러 Task 호출을 담아야 병렬로 실행되고, 턴마다 하나씩이면 순차 실행이 된다."
+   },
+   {
+    "en": "Include the complete web search and document analysis outputs directly in the synthesis subagent's Task prompt.",
+    "ko": "웹 검색·문서 분석 결과 전체를 synthesis subagent 의 Task 프롬프트에 직접 넣는다.",
+    "why": "정답. subagent 는 coordinator 의 대화 기록을 물려받지 않으므로 필요한 결과를 프롬프트로 명시적으로 넘겨야 한다."
+   },
+   {
+    "en": "Use `fork_session` to create a separate branch for each source category before delegating the searches.",
+    "ko": "검색을 맡기기 전에 `fork_session` 으로 출처 범주마다 별도 분기를 만든다.",
+    "why": "fork 는 같은 분석 기점에서 서로 다른 접근을 탐색할 때 쓰는 것이지 subagent 를 병렬로 돌리는 방법이 아니다."
+   },
+   {
+    "en": "Tell the synthesis subagent in its system prompt that it shares the coordinator's conversation history and should read the earlier turns.",
+    "ko": "synthesis subagent 의 system prompt 에 coordinator 의 대화 기록을 공유하니 앞선 턴을 읽으라고 적는다.",
+    "why": "subagent 의 컨텍스트는 격리되어 있어, 지시를 적어도 없는 대화 기록이 생기지 않는다."
+   }
+  ],
+  "answer": [
+   1,
+   2
+  ],
+  "select": 2,
+  "point_ko": "병렬 = 한 응답에 Task 여러 개, 문맥 = 프롬프트에 직접 넣기",
+  "explain_ko": [
+   "지문 첫 문장이 **allowedTools includes \"Task\"** 와 **spawns subagents** 를 못 박는다. 그러니 Task 권한을 손보는 보기는 이 문제와 상관없다.",
+   "**one per turn** → 턴마다 하나씩 부르면 순차 실행이다. 여러 Task 호출을 **한 응답**에 담아야 병렬로 돈다. 그래서 {B}.",
+   "**\"Synthesize the findings gathered above\"** 는 subagent 가 coordinator 의 대화를 본다고 착각한 프롬프트다. subagent 는 문맥을 물려받지 않으니 **결과 전체를 프롬프트에 넣는** {C} 가 두 번째 정답이다."
+  ],
+  "clues": [
+   {
+    "en": "logs confirm that it spawns subagents",
+    "ko": "Task 권한 문제는 아님"
+   },
+   {
+    "en": "one per turn",
+    "ko": "턴마다 하나 = 순차 실행"
+   },
+   {
+    "en": "Synthesize the findings gathered above",
+    "ko": "문맥을 물려받는다고 착각"
+   },
+   {
+    "en": "ignore the web search and document analysis results the coordinator received",
+    "ko": "결과가 subagent 에게 전달 안 됨"
+   }
+  ],
+  "discuss_ko": "{E} 처럼 '대화 기록을 공유한다'고 system prompt 에 적는 게 왜 아무 효과가 없는지, subagent 가 실제로 받는 입력이 무엇인지로 설명해 볼 수 있을까?",
+  "words": [
+   {
+    "word": "spawn",
+    "pos": "v.",
+    "ko": "(새 인스턴스를) 생성하다, 띄우다",
+    "example": "logs confirm that it spawns subagents"
+   },
+   {
+    "word": "issue",
+    "pos": "v.",
+    "ko": "내보내다, 발행하다",
+    "example": "the coordinator issues its four web search Task calls"
+   },
+   {
+    "word": "generic",
+    "pos": "adj.",
+    "ko": "일반적인, 뻔한",
+    "example": "its reports contain generic statements"
+   },
+   {
+    "word": "gather",
+    "pos": "v.",
+    "ko": "모으다, 수집하다",
+    "example": "Synthesize the findings gathered above"
+   },
+   {
+    "word": "in parallel",
+    "pos": "phr.",
+    "ko": "병렬로, 동시에",
+    "example": "so the subagents run in parallel"
+   },
+   {
+    "word": "retrieve",
+    "pos": "v.",
+    "ko": "가져오다, 불러오다",
+    "example": "so it can retrieve the earlier findings by itself"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C3-02",
+  "domain": 5,
+  "scenario": "Multi-Agent Research System",
+  "source": "claude",
+  "ts": [
+   "5.6",
+   "5.3"
+  ],
+  "guide_en": "Requiring subagents to include publication or data collection dates in structured outputs to enable correct temporal interpretation",
+  "q_en": "Reviewers flag two problems in a report on electric vehicle adoption. The report states that sources \"sharply contradict each other\" because one survey found 18% of households considering an EV and another found 42%, but the first survey was conducted in 2019 and the second in 2024. The report also reads as comprehensive, yet the patent database search timed out, no patent sources were used, and nothing in the report says so. Which TWO changes most effectively address these problems? (Choose TWO.)",
+  "q_ko": "전기차 보급에 관한 보고서에서 검토자들이 두 가지 문제를 지적한다. 보고서는 한 설문에서 EV 를 고려하는 가구가 18%, 다른 설문에서 42%로 나왔다며 출처들이 \"서로 크게 모순된다\"고 적었는데, 사실 첫 설문은 2019년, 두 번째는 2024년에 실시됐다. 또 보고서는 빠짐없이 조사한 것처럼 읽히지만, 특허 데이터베이스 검색은 시간 초과로 실패해 특허 자료가 하나도 쓰이지 않았고 보고서 어디에도 그 사실이 없다. 이 문제들을 가장 효과적으로 해결하는 변경 두 가지는? (2개 고르시오.)",
+  "options": [
+   {
+    "en": "Require subagents to include publication or data collection dates for each finding in their structured outputs.",
+    "ko": "subagent 가 구조화된 출력에 결과마다 발행일이나 데이터 수집일을 넣도록 요구한다.",
+    "why": "정답. 날짜가 함께 전달되면 synthesis 가 5년 사이의 변화를 모순으로 오해하지 않는다."
+   },
+   {
+    "en": "Have the synthesis agent keep only the figure from the most authoritative source whenever two statistics disagree.",
+    "ko": "두 통계가 다르면 synthesis agent 가 가장 권위 있는 출처의 수치만 남기게 한다.",
+    "why": "수치 하나를 임의로 버리는 방식이고, 이 경우는 애초에 모순이 아니라 시점 차이다."
+   },
+   {
+    "en": "Structure the synthesis output with coverage annotations showing which topic areas are well supported and which have gaps due to unavailable sources.",
+    "ko": "synthesis 출력에 coverage annotation(범위 주석)을 달아, 어떤 주제가 근거가 탄탄하고 어떤 주제가 출처를 못 써서 비었는지 보여 준다.",
+    "why": "정답. 특허 자료가 빠졌다는 사실이 보고서에 드러나 독자가 결론의 한계를 알 수 있다."
+   },
+   {
+    "en": "Terminate the research workflow whenever any source category fails, so incomplete reports are never produced.",
+    "ko": "출처 범주 하나라도 실패하면 조사 워크플로 전체를 종료해 불완전한 보고서가 나오지 않게 한다.",
+    "why": "실패 하나로 전체를 멈추는 건 안티패턴이다. 나머지 결과로도 쓸모 있는 보고서를 만들 수 있다."
+   },
+   {
+    "en": "Have the web search subagent return an empty result set marked as successful when a source times out, so synthesis is not interrupted.",
+    "ko": "출처가 시간 초과되면 웹 검색 subagent 가 빈 결과를 성공으로 표시해 돌려주게 해서 synthesis 가 끊기지 않게 한다.",
+    "why": "실패를 성공으로 숨기면 빠진 영역이 더 안 보이게 되어 두 번째 문제를 오히려 악화시킨다."
+   }
+  ],
+  "answer": [
+   0,
+   2
+  ],
+  "select": 2,
+  "point_ko": "시점 차이 ≠ 모순 → 날짜 포함, 빠진 출처 → coverage annotation",
+  "explain_ko": [
+   "**conducted in 2019 and the second in 2024** — 5년 사이에 수치가 오른 것은 모순이 아니라 변화다. synthesis 가 날짜를 몰랐기 때문에 **sharply contradict** 로 오해했다. 그래서 날짜를 구조화 출력에 넣는 {A}.",
+   "**reads as comprehensive, yet ... nothing in the report says so** — 빠진 출처가 숨겨진 것이 문제다. 어느 영역이 탄탄하고 어디가 비었는지 표시하는 **coverage annotations** 인 {C} 가 두 번째 정답이다.",
+   "{B} 는 임의 선택, {D} 는 전체 중단, {E} 는 실패 은폐로 모두 전형적인 함정이다."
+  ],
+  "clues": [
+   {
+    "en": "sharply contradict each other",
+    "ko": "모순이라고 판단함"
+   },
+   {
+    "en": "conducted in 2019 and the second in 2024",
+    "ko": "시점 차이일 뿐 → 날짜 필요"
+   },
+   {
+    "en": "reads as comprehensive",
+    "ko": "빠짐없어 보이게 씀"
+   },
+   {
+    "en": "nothing in the report says so",
+    "ko": "빈 영역이 표시 안 됨 → coverage annotation"
+   }
+  ],
+  "discuss_ko": "{B} 처럼 권위 있는 출처 하나를 고르면 보고서가 깔끔해지는데, 날짜 정보가 있었다면 이 두 수치를 어떻게 함께 쓸 수 있었을까?",
+  "words": [
+   {
+    "word": "adoption",
+    "pos": "n.",
+    "ko": "보급, 채택",
+    "example": "a report on electric vehicle adoption"
+   },
+   {
+    "word": "sharply",
+    "pos": "adv.",
+    "ko": "뚜렷하게, 크게",
+    "example": "sharply contradict each other"
+   },
+   {
+    "word": "contradict",
+    "pos": "v.",
+    "ko": "모순되다, 반박하다",
+    "example": "sharply contradict each other"
+   },
+   {
+    "word": "conduct",
+    "pos": "v.",
+    "ko": "(조사·설문을) 실시하다",
+    "example": "the first survey was conducted in 2019"
+   },
+   {
+    "word": "comprehensive",
+    "pos": "adj.",
+    "ko": "포괄적인, 빠짐없는",
+    "example": "The report also reads as comprehensive"
+   },
+   {
+    "word": "authoritative",
+    "pos": "adj.",
+    "ko": "권위 있는, 신뢰할 만한",
+    "example": "the most authoritative source"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ }
+]

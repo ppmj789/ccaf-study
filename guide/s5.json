@@ -1,0 +1,186 @@
+{
+  "no": 5,
+  "name_en": "Claude Code for Continuous Integration",
+  "name_ko": "CI 파이프라인 속 Claude Code",
+  "domains": [3, 4],
+  "oneline_ko": "PR 이 올라올 때마다 자동으로 코드 리뷰를 해 주는 로봇 선배를 만든다. 옆에 사람이 없으니 멈추면 안 되고, 헛지적(오탐)이 많으면 아무도 안 믿는다.",
+  "description": [
+    {"en": "You are integrating Claude Code into your Continuous Integration/Continuous Deployment (CI/CD) pipeline.", "ko": "여러분은 Claude Code 를 CI/CD(지속적 통합·배포) 파이프라인에 붙이고 있다."},
+    {"en": "The system runs automated code reviews, generates test cases, and provides feedback on pull requests.", "ko": "이 시스템은 자동으로 코드 리뷰를 하고, 테스트 케이스를 만들고, pull request 에 피드백을 남긴다."},
+    {"en": "You need to design prompts that provide actionable feedback and minimize false positives.", "ko": "바로 고칠 수 있는 피드백을 주고 false positive(오탐)는 최소로 줄이는 프롬프트를 설계해야 한다."}
+  ],
+  "primary_en": "Primary domains: Claude Code Configuration & Workflows, Prompt Engineering & Structured Output",
+  "story_ko": [
+    "개발자가 pull request(PR, 코드 변경 요청)를 올리면 CI(코드가 올라올 때마다 자동으로 도는 검사 라인)가 Claude Code 를 불러 리뷰를 맡긴다.",
+    "공장 컨베이어 벨트 옆 검수원을 떠올리면 쉽다. 말을 걸어 줄 사람이 없으니 질문하지 말고 혼자 끝까지 일하고 퇴근해야 한다. 이게 `-p` 플래그다.",
+    "검수 결과는 사람이 아니라 스크립트가 받아서 PR 에 줄 단위 코멘트로 붙인다. 그래서 자유로운 글보다 매번 같은 JSON 모양이 필요하다.",
+    "검수원이 사소한 것까지 전부 불량이라고 외치면 작업자는 곧 경보를 무시한다. 오탐이 많은 카테고리 하나가 정확한 지적까지 못 믿게 만든다.",
+    "파일이 많은 PR 을 한 번에 훑으면 어떤 파일은 꼼꼼히, 어떤 파일은 대충 본다. 또 코드를 쓴 바로 그 세션은 자기 실수를 잘 못 찾는다.",
+    "시험은 이런 증상을 보여 주고 '근본 원인을 고치면서 과하지 않은 해법'을 고르게 한다."
+  ],
+  "flow": [
+    {"en": "Pull request opened / new commit pushed", "ko": "PR 열림 / 새 commit 올라옴", "note_ko": "CI job 이 자동으로 시작된다"},
+    {"en": "CI job runs claude -p", "ko": "CI 가 `claude -p` 실행", "note_ko": "`-p` 가 없으면 입력을 기다리며 멈춘다"},
+    {"en": "CLAUDE.md loads review criteria, testing standards, fixtures", "ko": "CLAUDE.md 로 프로젝트 기준 전달", "note_ko": "무엇을 보고하고 무엇을 건너뛸지, 테스트 기준은 무엇인지"},
+    {"en": "Per-file passes + cross-file integration pass (independent instance)", "ko": "파일별 리뷰 + 파일 사이 통합 리뷰", "note_ko": "코드를 만든 세션이 아닌 독립 인스턴스가 리뷰"},
+    {"en": "--output-format json --json-schema → structured findings", "ko": "정해진 JSON 모양의 지적 사항", "note_ko": "스크립트가 그대로 읽을 수 있다"},
+    {"en": "Compare with prior findings → post only new issues as inline PR comments", "ko": "이전 지적과 비교 후 새 문제만 PR 코멘트로", "note_ko": "중복 코멘트 방지"},
+    {"en": "Blocking pre-merge check (synchronous API) / Overnight report (Message Batches API)", "ko": "merge 전 필수 검사는 실시간 / 밤샘 보고서는 Batch", "note_ko": "기다리는 사람이 있느냐로 가른다"}
+  ],
+  "flow_note_ko": "시험은 2단계(`-p`), 4단계(파일별 패스·독립 인스턴스), 5~6단계(JSON 출력·중복 제거), 마지막 갈림길(실시간 vs Batch)에서 자주 묻는다. 3단계의 리뷰 기준을 어떻게 쓰느냐가 오탐 문제의 핵심이다.",
+  "cast": [
+    {"term": "-p (--print)", "ko": "비대화형 실행 플래그", "what_ko": "프롬프트를 처리해 stdout 에 결과를 내고 바로 끝난다. CI 에서 '입력을 기다리며 멈춤' 문제의 공식 정답이다."},
+    {"term": "--output-format json / --json-schema", "ko": "JSON 출력 / 출력 구조 지정 플래그", "what_ko": "CI 에서 구조화된 출력을 강제한다. 결과를 PR 코멘트로 자동 게시할 때 쓴다."},
+    {"term": "CLAUDE.md", "ko": "프로젝트 설명서 파일", "what_ko": "CI 에서 불린 Claude Code 에게 테스트 기준, fixture 규칙, 리뷰 기준 같은 프로젝트 context 를 주는 수단이다."},
+    {"term": "false positive", "ko": "오탐 (문제가 아닌데 문제라고 지적)", "what_ko": "오탐이 많은 카테고리는 정확한 카테고리의 신뢰까지 무너뜨린다. 이 시나리오의 핵심 고민이다."},
+    {"term": "findings", "ko": "리뷰 지적 사항 목록", "what_ko": "재리뷰 때 이전 findings 를 context 에 넣어야 같은 지적을 또 달지 않는다."},
+    {"term": "few-shot examples", "ko": "모범 답안 예시 몇 개", "what_ko": "자세한 지시로도 형식·판단이 들쭉날쭉할 때 가장 효과적인 방법이다."},
+    {"term": "independent review instance", "ko": "독립 리뷰 인스턴스", "what_ko": "코드를 생성할 때의 추론 context 가 없는 별도 Claude. 같은 세션의 자기 리뷰보다 미묘한 문제를 잘 잡는다."},
+    {"term": "multi-pass review", "ko": "나눠서 여러 번 보는 리뷰", "what_ko": "파일별 로컬 분석 패스 + 파일 사이 데이터 흐름을 보는 통합 패스. 주의가 흩어지는 문제를 막는다."},
+    {"term": "Message Batches API", "ko": "묶음 처리 API", "what_ko": "50% 저렴하지만 최대 24시간 걸리고 지연 보장(SLA)이 없다. 기다려도 되는 작업에만 쓴다."},
+    {"term": "custom_id", "ko": "batch 요청 이름표", "what_ko": "batch 요청과 응답의 짝을 맞춘다. '결과 순서가 섞여서 batch 를 못 쓴다'는 보기는 오답이다."},
+    {"term": "detected_pattern", "ko": "지적을 일으킨 코드 패턴 기록 칸", "what_ko": "개발자가 무시한 지적을 모아 어떤 패턴에서 오탐이 나는지 분석하게 해 준다."}
+  ],
+  "patterns": [
+    {
+      "title_ko": "CI 에서 멈추면 `-p` 플래그",
+      "signal_en": ["job hangs indefinitely", "waiting for interactive input", "automated pipeline"],
+      "signal_ko": "사람이 없는 자동 실행 환경에서 Claude Code 가 대화형 모드로 입력을 기다리고 있다는 뜻.",
+      "answer_ko": "`claude -p \"...\"` 처럼 `-p`(`--print`, 비대화형 모드) 플래그를 붙인다. 프롬프트를 처리하고 결과를 출력한 뒤 바로 끝난다.",
+      "answer_en": "Add the -p flag: claude -p \"Analyze this pull request for security issues\"",
+      "trap_ko": [
+        "`CLAUDE_HEADLESS=true` 환경 변수: 존재하지 않는 기능이다.",
+        "`--batch` 플래그: 존재하지 않는 플래그다. Message Batches API 와 이름만 비슷하다.",
+        "`< /dev/null` 로 입력 막기: 유닉스 우회일 뿐 Claude Code 의 공식 비대화형 방법이 아니다."
+      ],
+      "ts": "3.6",
+      "guide_en": "Running Claude Code in CI with the -p flag to prevent interactive input hangs",
+      "guide_ko": "CI 에서 `-p` 플래그로 Claude Code 를 실행해 대화형 입력 대기로 멈추는 일을 막는다."
+    },
+    {
+      "title_ko": "스크립트가 결과를 읽으면 `--output-format json` + `--json-schema`",
+      "signal_en": ["machine-parseable", "inline PR comments", "automated posting"],
+      "signal_ko": "사람이 아니라 프로그램이 결과를 받아 처리한다는 뜻. 출력 모양이 매번 같아야 한다.",
+      "answer_ko": "CLI 플래그 `--output-format json` 과 `--json-schema` 로 정해진 구조의 findings 를 받아 PR 줄 코멘트로 자동 게시한다.",
+      "answer_en": "--output-format json with --json-schema to produce machine-parseable structured findings",
+      "trap_ko": [
+        "프롬프트에 'JSON 으로만 답해'라고 쓰기: 부탁일 뿐 구조를 강제하지 못한다.",
+        "자유 텍스트를 받아 정규식으로 잘라 내기: 출력 문장이 조금만 달라져도 깨진다.",
+        "사람이 결과를 읽고 코멘트로 옮기기: 자동화라는 목적과 맞지 않는다."
+      ],
+      "ts": "3.6",
+      "guide_en": "Using --output-format json with --json-schema to produce machine-parseable structured findings for automated posting as inline PR comments",
+      "guide_ko": "`--output-format json` 과 `--json-schema` 로 기계가 읽을 수 있는 구조화된 findings 를 만들어 PR 줄 코멘트로 자동 게시한다."
+    },
+    {
+      "title_ko": "중복 코멘트·중복 테스트는 '이미 있는 것'을 context 로 준다",
+      "signal_en": ["after new commits", "duplicate comments", "already covered by the test suite"],
+      "signal_ko": "Claude 가 이전에 무엇을 지적했는지, 어떤 테스트가 이미 있는지 모른 채 처음부터 다시 하고 있다는 뜻.",
+      "answer_ko": "재리뷰 때는 이전 리뷰 findings 를 context 에 넣고 '새 문제나 아직 안 고친 문제만' 보고하라고 지시한다. 테스트를 만들 때는 기존 테스트 파일을 넣어 주고, 테스트 기준과 쓸 수 있는 fixture(테스트용 준비 데이터)를 CLAUDE.md 에 적어 둔다.",
+      "answer_en": "instructing Claude to report only new or still-unaddressed issues",
+      "trap_ko": [
+        "게시 뒤 스크립트로 비슷한 코멘트 지우기: 표현이 조금만 달라도 못 거르고, context 부족이라는 원인을 안 고친다.",
+        "새 commit 마다 이전 코멘트를 모두 지우고 처음부터 리뷰: 고친 문제와 남은 문제를 구분하지 못한다.",
+        "'중복 테스트를 만들지 마'라고만 지시: 무엇이 이미 있는지 보여 주지 않으면 판단할 수 없다."
+      ],
+      "ts": "3.6",
+      "guide_en": "Including prior review findings in context when re-running reviews after new commits, instructing Claude to report only new or still-unaddressed issues to avoid duplicate comments",
+      "guide_ko": "새 commit 뒤 리뷰를 다시 돌릴 때 이전 리뷰 findings 를 context 에 넣고, 새 문제나 아직 해결되지 않은 문제만 보고하게 해서 중복 코멘트를 막는다."
+    },
+    {
+      "title_ko": "오탐 줄이기는 '조심해' 가 아니라 구체적인 보고 기준",
+      "signal_en": ["high false positive rate", "developers dismiss findings", "only report high-confidence findings"],
+      "signal_ko": "지적이 너무 많거나 틀려서 개발자가 리뷰를 믿지 않게 됐다는 뜻. 막연한 지시가 보기로 나오면 함정이다.",
+      "answer_ko": "보고할 것(버그, 보안)과 건너뛸 것(사소한 스타일, 이 코드베이스만의 관례)을 카테고리로 정해 적는다. 오탐이 특히 많은 카테고리는 프롬프트를 고치는 동안 잠시 꺼서 신뢰부터 되찾는다.",
+      "answer_en": "specific review criteria that define which issues to report (bugs, security) versus skip (minor style, local patterns)",
+      "trap_ko": [
+        "\"be conservative\"(보수적으로 해)나 \"only report high-confidence findings\" 추가: 가이드가 콕 집은 효과 없는 막연한 지시다.",
+        "모델이 매긴 confidence 로 거르기: 기준 없이 확신도에 기대는 방식이라 정밀도가 오르지 않는다.",
+        "오탐이 많아도 모든 카테고리를 계속 켜 두기: 오탐 많은 카테고리가 정확한 카테고리의 신뢰까지 깎는다."
+      ],
+      "ts": "4.1",
+      "guide_en": "Writing specific review criteria that define which issues to report (bugs, security) versus skip (minor style, local patterns) rather than relying on confidence-based filtering",
+      "guide_ko": "confidence 기반 필터링에 기대지 말고, 보고할 문제(버그, 보안)와 건너뛸 문제(사소한 스타일, 로컬 패턴)를 정의하는 구체적인 리뷰 기준을 쓴다."
+    },
+    {
+      "title_ko": "자세히 지시해도 형식·판단이 들쭉날쭉하면 few-shot 예시",
+      "signal_en": ["inconsistent format", "detailed instructions alone", "acceptable code patterns"],
+      "signal_ko": "설명은 충분히 했는데도 출력 형식이나 심각도 판단이 매번 달라진다는 뜻.",
+      "answer_ko": "원하는 출력 모양(위치, 문제, 심각도, 수정 제안)을 보여 주는 few-shot 예시를 넣는다. 괜찮은 코드 패턴과 진짜 문제를 구별하는 예시를 주면 오탐이 줄고 처음 보는 코드에도 판단을 일반화한다. 심각도는 등급마다 구체적인 코드 예시로 기준을 잡는다.",
+      "answer_en": "few-shot examples that demonstrate specific desired output format (location, issue, severity, suggested fix)",
+      "trap_ko": [
+        "지시문을 더 길고 자세하게 쓰기: 이미 자세한 지시로 안 되는 상황이다.",
+        "가능한 경우를 규칙 목록으로 전부 나열하기: 적어 둔 경우만 맞추고 새 패턴에는 일반화하지 못한다.",
+        "출력을 받은 뒤 후처리 스크립트로 형식 맞추기: 판단이 들쭉날쭉한 문제는 그대로다."
+      ],
+      "ts": "4.2",
+      "guide_en": "Including few-shot examples that demonstrate specific desired output format (location, issue, severity, suggested fix) to achieve consistency",
+      "guide_ko": "원하는 출력 형식(위치, 문제, 심각도, 수정 제안)을 보여 주는 few-shot 예시를 넣어 일관성을 얻는다."
+    },
+    {
+      "title_ko": "코드를 만든 세션의 자기 리뷰는 약하다: 독립 인스턴스로 리뷰",
+      "signal_en": ["same session that generated the code", "review its own changes", "subtle issues"],
+      "signal_ko": "코드를 쓸 때의 추론이 context 에 남아 있어서 자기 결정을 의심하지 못한다는 뜻.",
+      "answer_ko": "생성할 때의 추론 context 가 없는 두 번째 독립 Claude 인스턴스에게 리뷰를 맡긴다.",
+      "answer_en": "a second independent Claude instance to review generated code without the generator's reasoning context",
+      "trap_ko": [
+        "같은 세션에 '비판적으로 다시 검토해'라고 지시: 자기 추론 context 가 그대로 남아 있다.",
+        "extended thinking(더 오래 생각하기) 켜기: 가이드는 독립 인스턴스가 이보다 효과적이라고 한다.",
+        "같은 세션에서 리뷰를 여러 번 반복: 같은 편향이 되풀이된다."
+      ],
+      "ts": "4.6",
+      "guide_en": "Using a second independent Claude instance to review generated code without the generator's reasoning context",
+      "guide_ko": "생성한 쪽의 추론 context 가 없는 두 번째 독립 Claude 인스턴스로 생성된 코드를 리뷰한다."
+    },
+    {
+      "title_ko": "파일 많은 PR 은 파일별 패스 + 통합 패스로 쪼갠다",
+      "signal_en": ["modifies 14 files", "superficial comments for others", "contradictory feedback"],
+      "signal_ko": "한 번에 너무 많이 봐서 주의가 흩어졌다(attention dilution)는 뜻. 같은 코드를 한 파일에선 지적하고 다른 파일에선 통과시키는 것도 같은 증상이다.",
+      "answer_ko": "파일마다 따로 보는 로컬 분석 패스를 돌리고, 파일 사이의 데이터 흐름만 보는 통합 패스를 따로 한 번 더 돌린다.",
+      "answer_en": "analyze each file individually for local issues, then run a separate integration-focused pass examining cross-file data flow",
+      "trap_ko": [
+        "개발자에게 PR 을 3~4개 파일로 쪼개라고 요구: 시스템은 그대로 두고 부담만 개발자에게 넘긴다.",
+        "context window 가 더 큰 상위 모델로 교체: 창이 커져도 주의 품질 문제는 안 풀린다.",
+        "전체 PR 을 3번 돌려 2번 이상 나온 것만 표시: 가끔만 잡히는 진짜 버그를 오히려 숨긴다."
+      ],
+      "ts": "4.6",
+      "guide_en": "Splitting large multi-file reviews into focused per-file passes for local issues plus separate integration passes for cross-file data flow analysis",
+      "guide_ko": "큰 여러 파일 리뷰를 로컬 문제를 보는 파일별 패스와, 파일 사이 데이터 흐름을 분석하는 별도 통합 패스로 나눈다."
+    },
+    {
+      "title_ko": "기다리는 사람이 있으면 실시간 API, 밤샘 작업만 Batch API",
+      "signal_en": ["blocking pre-merge check", "generated overnight", "50% cost savings"],
+      "signal_ko": "작업마다 결과를 얼마나 빨리 받아야 하는지 따져 보라는 뜻.",
+      "answer_ko": "개발자가 결과를 기다리는 pre-merge 검사(merge 전 필수 검사)는 실시간 호출을 유지하고, 다음 날 아침에 볼 기술 부채 보고서처럼 기다려도 되는 작업만 Message Batches API 로 옮긴다.",
+      "answer_en": "Use batch processing for the technical debt reports only; keep real-time calls for pre-merge checks.",
+      "trap_ko": [
+        "둘 다 batch 로 바꾸고 상태 polling: 최대 24시간 걸리고 지연 보장이 없어 merge 를 막는 검사에 못 쓴다.",
+        "결과 순서 문제 때문에 둘 다 실시간 유지: batch 결과는 `custom_id` 로 짝을 맞출 수 있으니 오해다.",
+        "둘 다 batch 로 하고 늦으면 실시간으로 fallback: 작업마다 맞는 API 를 고르면 되는데 괜히 복잡하다."
+      ],
+      "ts": "4.5",
+      "guide_en": "Matching API approach to workflow latency requirements: synchronous API for blocking pre-merge checks, batch API for overnight/weekly analysis",
+      "guide_ko": "작업의 지연 요구에 맞춰 API 를 고른다. merge 를 막는 사전 검사는 동기 API, 밤샘·주간 분석은 batch API."
+    }
+  ],
+  "compare": {
+    "title_ko": "오탐(false positive)을 줄인다는 방법들: 효과 있는 것과 없는 것",
+    "cols_ko": ["방법", "효과", "이유"],
+    "rows": [
+      ["\"be conservative\" / \"only report high-confidence findings\" 지시", "없음", "막연해서 무엇을 빼야 할지 기준이 생기지 않는다"],
+      ["보고할 것·건너뛸 것을 카테고리로 명시", "있음", "버그·보안은 보고, 사소한 스타일·로컬 관례는 건너뛰는 기준이 생긴다"],
+      ["심각도 등급마다 구체적인 코드 예시", "있음", "같은 종류의 문제를 매번 같은 등급으로 분류한다"],
+      ["괜찮은 패턴 vs 진짜 문제를 보여 주는 few-shot", "있음", "오탐이 줄고 처음 보는 코드에도 판단을 일반화한다"],
+      ["오탐 많은 카테고리를 잠시 끄기", "있음 (임시)", "프롬프트를 고치는 동안 개발자 신뢰를 되찾는다"],
+      ["3번 돌려 2번 이상 나온 것만 표시", "역효과", "가끔만 잡히는 진짜 버그까지 숨긴다"]
+    ]
+  },
+  "checklist_ko": [
+    "CI 에서 멈춘다 → `-p`. `CLAUDE_HEADLESS`, `--batch` 는 없는 기능. 스크립트가 결과를 읽으면 `--output-format json` + `--json-schema`.",
+    "오탐 문제 → '조심해' 같은 막연한 지시 말고 보고할 것/건너뛸 것 카테고리. 신뢰가 무너졌으면 그 카테고리를 잠시 끈다.",
+    "형식·판단이 들쭉날쭉 → few-shot 예시(위치·문제·심각도·수정 제안).",
+    "재리뷰 중복 코멘트 → 이전 findings 를 넣고 새 문제·미해결만. 중복 테스트 → 기존 테스트 파일 + CLAUDE.md 에 테스트 기준.",
+    "파일 많은 PR → 파일별 패스 + 통합 패스. 리뷰는 코드를 쓴 세션이 아닌 독립 인스턴스로.",
+    "기다리는 사람이 있는 작업 → 실시간 API. 밤샘·주간 보고서 → Batch API(50% 저렴, 최대 24시간, 지연 보장 없음)."
+  ]
+}

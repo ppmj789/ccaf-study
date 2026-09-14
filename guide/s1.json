@@ -1,0 +1,186 @@
+{
+  "no": 1,
+  "name_en": "Customer Support Resolution Agent",
+  "name_ko": "고객 지원 해결 에이전트",
+  "domains": [1, 2, 5],
+  "oneline_ko": "온라인 쇼핑몰 상담원을 AI로 만든다. 환불 버튼까지 누를 수 있는 상담원이라, 중요한 규칙은 말로 부탁하지 않고 코드로 막는다.",
+  "description": [
+    {"en": "You are building a customer support resolution agent using the Claude Agent SDK.", "ko": "여러분은 Claude Agent SDK 로 고객 지원 해결 에이전트를 만들고 있다."},
+    {"en": "The agent handles high-ambiguity requests like returns, billing disputes, and account issues.", "ko": "이 에이전트는 반품, 결제 분쟁, 계정 문제처럼 애매한 요청을 처리한다."},
+    {"en": "It has access to your backend systems through custom Model Context Protocol (MCP) tools (get_customer, lookup_order, process_refund, escalate_to_human).", "ko": "에이전트는 직접 만든 MCP(Model Context Protocol) 도구(get_customer, lookup_order, process_refund, escalate_to_human)로 회사 내부 시스템에 접근한다."},
+    {"en": "Your target is 80%+ first-contact resolution while knowing when to escalate.", "ko": "목표는 첫 상담에서 80% 이상 해결하면서도, 사람에게 넘겨야 할 때는 제대로 넘기는 것이다."}
+  ],
+  "primary_en": "Primary domains: Agentic Architecture & Orchestration, Tool Design & MCP Integration, Context Management & Reliability",
+  "story_ko": [
+    "쇼핑몰 고객센터에 AI 상담원을 한 명 앉힌다고 생각하면 된다. 이 상담원은 말만 하는 게 아니라 고객 조회, 주문 조회, 환불, 사람에게 넘기기 버튼을 직접 누를 수 있다.",
+    "버튼마다 도구(tool)가 하나씩 있고, 에이전트는 도구 설명서를 읽고 어떤 버튼을 누를지 스스로 고른다. 설명서가 한 줄짜리면 비슷한 버튼을 헷갈려 잘못 누른다.",
+    "돈이 나가는 일은 순서가 생명이다. 신원 확인 없이 환불하면 엉뚱한 사람에게 돈이 간다. 이런 규칙은 '꼭 지켜 주세요'라는 부탁(prompt)이 아니라 잠금장치(hook, prerequisite)로 막아야 한다.",
+    "목표는 첫 상담 해결률 80% 이상이다. 쉬운 건 직접 끝내고, 고객이 사람을 원하거나 정책에 답이 없는 경우만 사람에게 넘긴다. 너무 자주 넘겨도, 너무 안 넘겨도 틀린다.",
+    "상담이 길어지면 앞에서 들은 금액·날짜·주문번호가 요약 속에서 흐려진다. 그래서 중요한 사실은 따로 메모지(case facts)에 적어 두고 매번 함께 보여 준다."
+  ],
+  "flow": [
+    {"en": "Customer message", "ko": "고객 문의", "note_ko": "반품·결제·계정 문제. 한 메시지에 여러 문제가 섞여 올 수 있다."},
+    {"en": "Agent (Claude Agent SDK loop)", "ko": "에이전트가 읽고 판단", "note_ko": "도구 설명을 보고 다음에 부를 도구를 고른다. stop_reason 이 tool_use 면 계속 돈다."},
+    {"en": "get_customer", "ko": "고객 신원 확인", "note_ko": "검증된 customer ID 를 받아야 다음 단계로 갈 수 있다."},
+    {"en": "lookup_order", "ko": "주문 조회", "note_ko": "결과가 길면 필요한 필드만 남긴다."},
+    {"en": "Hook check (prerequisite / refund threshold)", "ko": "hook 검사 (잠금장치)", "note_ko": "신원 확인 전 환불 차단, 한도 초과 환불 차단. 코드가 확정적으로 막는다."},
+    {"en": "process_refund / escalate_to_human", "ko": "환불 처리 / 사람에게 넘기기", "note_ko": "넘길 때는 대화를 못 본 사람을 위해 구조화된 인계 요약을 붙인다."}
+  ],
+  "flow_note_ko": "시험에 제일 많이 나오는 곳은 5단계 hook 검사와 6단계 갈림길이다. '순서를 반드시 지켜야 한다'면 코드로 막고, '언제 사람에게 넘기나'는 명확한 기준과 few-shot 예시로 정한다.",
+  "cast": [
+    {"term": "Claude Agent SDK", "ko": "에이전트 제작 도구 모음", "what_ko": "Claude 가 도구를 부르며 스스로 일하게 만드는 SDK. hook 도 여기서 건다."},
+    {"term": "MCP tool", "ko": "MCP 도구 (에이전트가 누르는 버튼)", "what_ko": "내부 시스템과 연결된 기능. 에이전트는 도구의 description(설명)을 보고 무엇을 쓸지 고른다."},
+    {"term": "get_customer", "ko": "고객 정보 조회", "what_ko": "신원 확인 단계. 이걸 건너뛰고 이름만으로 주문을 찾는 것이 샘플 문제 1번의 사고다."},
+    {"term": "lookup_order", "ko": "주문 정보 조회", "what_ko": "주문번호로 주문을 찾는 도구. get_customer 와 설명이 비슷하면 잘못 선택된다(샘플 문제 2번)."},
+    {"term": "process_refund", "ko": "환불 실행", "what_ko": "돈이 나가는 도구. 신원 확인 전이나 한도 초과일 때는 코드로 막아야 한다."},
+    {"term": "escalate_to_human", "ko": "사람 상담원에게 넘기기", "what_ko": "넘기는 기준(고객 요청, 정책 공백, 진행 불가)을 아는지가 시험 포인트다."},
+    {"term": "first-contact resolution", "ko": "첫 상담 해결률", "what_ko": "한 번의 상담으로 끝낸 비율. 목표 80%+. 쉬운 건까지 넘기면 이 숫자가 떨어진다."},
+    {"term": "programmatic prerequisite", "ko": "코드로 거는 선행 조건", "what_ko": "앞 단계가 끝나기 전에는 다음 도구 호출을 막는 장치. 확정적(deterministic)이다."},
+    {"term": "hook (PostToolUse / tool call interception)", "ko": "도구 호출 가로채기 장치", "what_ko": "도구 결과를 모델이 보기 전에 다듬거나(PostToolUse), 나가는 호출을 막는다. 규칙을 반드시 지켜야 할 때 쓴다."},
+    {"term": "few-shot examples", "ko": "예시 몇 개 보여 주기", "what_ko": "프롬프트에 '이럴 땐 이렇게'를 2~4개 넣는 방법. 판단 기준을 알려 줄 때 좋지만 강제력은 없다."},
+    {"term": "isError / errorCategory / isRetryable", "ko": "구조화된 에러 정보", "what_ko": "실패했을 때 '왜, 다시 해도 되는지'를 알려 주는 필드. 'Operation failed' 한 줄은 오답이다."},
+    {"term": "case facts block", "ko": "사건 사실 메모 칸", "what_ko": "금액·날짜·주문번호·상태를 요약 밖에 따로 적어 매 프롬프트에 넣는 칸. 긴 대화에서 숫자가 흐려지는 걸 막는다."}
+  ],
+  "patterns": [
+    {
+      "title_ko": "돈이 걸린 순서는 코드로 강제한다",
+      "signal_en": ["in 12% of cases", "skips get_customer", "incorrect refunds"],
+      "signal_ko": "대부분은 지키는데 가끔 순서를 건너뛰고, 그 결과가 돈 사고라는 뜻. 부탁(prompt)으로는 0% 실패를 만들 수 없다.",
+      "answer_ko": "앞 단계(get_customer)가 검증된 customer ID 를 돌려주기 전에는 다음 도구 호출을 코드로 막는 보기가 정답이다.",
+      "answer_en": "programmatic prerequisite that blocks lookup_order and process_refund calls until get_customer has returned a verified customer ID",
+      "trap_ko": [
+        "system prompt 에 '반드시 확인하라'고 적기: 확률적이라 여전히 가끔 건너뛴다.",
+        "few-shot 예시 추가: 이것도 확률적이다. 돈 문제에는 부족하다.",
+        "요청 유형별로 도구를 켜고 끄는 routing classifier: 문제는 어떤 도구가 있느냐가 아니라 순서다."
+      ],
+      "ts": "1.4",
+      "guide_en": "Implementing programmatic prerequisites that block downstream tool calls until prerequisite steps have completed (e.g., blocking process_refund until get_customer has returned a verified customer ID)",
+      "guide_ko": "앞 단계가 끝날 때까지 뒤 도구 호출을 막는 코드 선행 조건을 구현한다(예: get_customer 가 검증된 customer ID 를 돌려줄 때까지 process_refund 차단)."
+    },
+    {
+      "title_ko": "도구를 헷갈리면 먼저 설명(description)을 고친다",
+      "signal_en": ["minimal descriptions", "accept similar identifier formats", "most effective first step"],
+      "signal_ko": "도구 설명이 한 줄뿐이라 모델이 두 도구를 구별할 근거가 없다는 뜻. 'first step' 은 가장 싸고 원인에 직접 닿는 방법을 고르라는 신호다.",
+      "answer_ko": "각 도구 설명에 받는 입력 형식, 예시 질문, 예외 상황, 비슷한 도구와의 경계(언제 이걸 쓰고 언제 저걸 쓰나)를 채우는 보기가 정답이다.",
+      "answer_en": "Expand each tool's description to include input formats it handles, example queries, edge cases, and boundaries",
+      "trap_ko": [
+        "few-shot 예시 5~8개 추가: 토큰만 늘고 설명 부족이라는 원인은 그대로다.",
+        "키워드로 도구를 미리 골라 주는 routing layer: 과한 설계이고 모델의 이해력을 버린다.",
+        "두 도구를 lookup_entity 하나로 합치기: 가능한 설계지만 '첫 단계'로는 너무 크다."
+      ],
+      "ts": "2.1",
+      "guide_en": "Tool descriptions as the primary mechanism LLMs use for tool selection; minimal descriptions lead to unreliable selection among similar tools",
+      "guide_ko": "도구 설명은 LLM 이 도구를 고르는 핵심 수단이다. 설명이 빈약하면 비슷한 도구 사이에서 선택이 불안정해진다."
+    },
+    {
+      "title_ko": "넘기는 기준이 흐리면 명확한 기준 + few-shot 예시",
+      "signal_en": ["55% first-contact resolution", "escalates straightforward cases", "attempting to autonomously handle complex situations"],
+      "signal_ko": "쉬운 건 넘기고 어려운 건 붙잡고 있다. 판단 기준 자체가 없다는 뜻이다.",
+      "answer_ko": "system prompt 에 언제 넘기고 언제 직접 해결할지 명시한 기준을 넣고, 그걸 보여 주는 few-shot 예시를 붙이는 보기가 정답이다. 인프라를 늘리기 전에 해 볼 적절한 첫 대응이다.",
+      "answer_en": "explicit escalation criteria to your system prompt with few-shot examples demonstrating when to escalate versus resolve autonomously",
+      "trap_ko": [
+        "자기 신뢰도 점수(1-10)로 넘기기: 모델의 자기 평가는 부정확하다. 이미 어려운 건에 자신만만한 상태다.",
+        "과거 티켓으로 학습한 별도 classifier: 프롬프트도 안 고쳐 보고 ML 인프라부터 까는 과한 설계다.",
+        "감정 분석(sentiment)으로 넘기기: 화난 정도와 사건 난이도는 관계가 없다."
+      ],
+      "ts": "5.2",
+      "guide_en": "Adding explicit escalation criteria with few-shot examples to the system prompt demonstrating when to escalate versus resolve autonomously",
+      "guide_ko": "언제 넘기고 언제 직접 해결할지 보여 주는 few-shot 예시와 함께 명확한 에스컬레이션 기준을 system prompt 에 넣는다."
+    },
+    {
+      "title_ko": "고객이 사람을 달라고 하면 바로 넘긴다",
+      "signal_en": ["explicitly asks for a human", "I want to speak to a person", "frustrated"],
+      "signal_ko": "'사람과 얘기하고 싶다'는 명시적 요청인지, 그냥 화가 난 것인지 구별하라는 신호다.",
+      "answer_ko": "명시적으로 사람을 요구하면 조사부터 하지 말고 즉시 넘긴다. 단지 화가 났고 문제가 쉬우면 공감한 뒤 해결을 제안하고, 고객이 다시 사람을 원할 때만 넘긴다.",
+      "answer_en": "Honoring explicit customer requests for human agents immediately",
+      "trap_ko": [
+        "먼저 주문을 조회해 보고 해결되면 넘기지 않기: 고객의 명시적 요청을 무시한다.",
+        "화난 기색만 보여도 무조건 넘기기: 쉬운 건까지 넘겨 해결률이 떨어진다.",
+        "신뢰도 점수가 낮을 때만 넘기기: 고객 요청이라는 분명한 기준을 모델의 자기 평가로 바꿔 버린다."
+      ],
+      "ts": "5.2",
+      "guide_en": "Honoring explicit customer requests for human agents immediately without first attempting investigation",
+      "guide_ko": "고객이 사람 상담원을 명시적으로 요청하면 먼저 조사하려 하지 말고 즉시 따른다."
+    },
+    {
+      "title_ko": "정책에 답이 없으면 추측하지 말고 넘긴다",
+      "signal_en": ["policy only addresses", "competitor price matching", "policy is silent"],
+      "signal_ko": "고객 요청이 정책 문서가 다루지 않는 빈틈(policy gap)에 떨어졌다는 뜻이다. 복잡해서가 아니라 규칙이 없어서 넘긴다.",
+      "answer_ko": "정책이 모호하거나 그 요청에 대해 아무 말이 없으면 escalate_to_human 으로 넘기는 보기가 정답이다. 넘길 때는 customer ID, 원인, 금액, 권장 조치를 담은 구조화된 인계 요약을 붙인다.",
+      "answer_en": "escalate when policy is ambiguous or silent on the customer's specific request",
+      "trap_ko": [
+        "비슷한 정책(자사 가격 조정)을 확대 적용해 직접 처리: 에이전트가 정책을 새로 만들어 버린다.",
+        "정책에 없으니 거절: 해결 기회도, 사람 판단 기회도 없앤다.",
+        "대화 기록만 넘기기: 사람 상담원은 대화를 못 보므로 핵심을 정리한 요약이 필요하다."
+      ],
+      "ts": "5.2",
+      "guide_en": "Escalating when policy is ambiguous or silent on the customer's specific request (e.g., competitor price matching when policy only addresses own-site adjustments)",
+      "guide_ko": "정책이 고객의 구체적 요청에 대해 모호하거나 아무 말이 없으면 넘긴다(예: 정책은 자사 사이트 가격 조정만 다루는데 경쟁사 가격 맞춤을 요청할 때)."
+    },
+    {
+      "title_ko": "한도 넘는 환불은 hook 이 가로채서 사람에게 돌린다",
+      "signal_en": ["refunds exceeding $500", "must never", "guaranteed compliance"],
+      "signal_ko": "업무 규칙이 '반드시' 지켜져야 한다는 뜻. 확률적인 부탁이 아니라 확정적인 차단 장치를 고르라는 신호다.",
+      "answer_ko": "나가는 도구 호출을 가로채는 hook 으로 규칙 위반(예: $500 초과 환불)을 막고, 사람 에스컬레이션 같은 다른 흐름으로 돌리는 보기가 정답이다.",
+      "answer_en": "tool call interception hooks that block policy-violating actions and redirect to human escalation",
+      "trap_ko": [
+        "system prompt 에 '$500 넘으면 환불하지 마라' 추가: 확률적이라 가끔 뚫린다.",
+        "환불 후 사후 감사로 잡기: 돈은 이미 나갔다.",
+        "모델에게 금액을 두 번 확인하게 하기: 여전히 모델의 판단에 기대는 방법이다."
+      ],
+      "ts": "1.5",
+      "guide_en": "Implementing tool call interception hooks that block policy-violating actions (e.g., refunds exceeding $500) and redirect to alternative workflows (e.g., human escalation)",
+      "guide_ko": "정책 위반 행동(예: $500 초과 환불)을 막고 다른 흐름(예: 사람에게 넘기기)으로 돌리는 도구 호출 가로채기 hook 을 구현한다."
+    },
+    {
+      "title_ko": "에러는 '왜 실패했고 다시 해도 되는지'를 담아 돌려준다",
+      "signal_en": ["Operation failed", "retries repeatedly", "tells the customer"],
+      "signal_ko": "모든 실패가 같은 모양이라 에이전트가 재시도할지, 고객에게 설명할지 결정하지 못한다는 뜻이다.",
+      "answer_ko": "isError 와 함께 errorCategory(transient·validation·permission 등), isRetryable 값, 사람이 읽을 설명을 돌려주는 보기가 정답이다. 정책 위반 같은 business error 는 retriable: false 와 고객용 설명을 붙인다.",
+      "answer_en": "structured error metadata including errorCategory, isRetryable boolean, and human-readable descriptions",
+      "trap_ko": [
+        "모든 실패에 'Operation failed' 하나로 응답: 복구 판단에 필요한 정보가 없다.",
+        "무조건 자동 재시도: 정책 위반은 몇 번을 다시 해도 실패해 시간만 버린다.",
+        "조회 실패를 빈 결과로 돌려주기: '고객이 없음'과 '시스템 접속 실패'를 구별할 수 없게 된다."
+      ],
+      "ts": "2.2",
+      "guide_en": "Including retriable: false flags and customer-friendly explanations for business rule violations so the agent can communicate appropriately",
+      "guide_ko": "업무 규칙 위반에는 retriable: false 표시와 고객이 이해할 설명을 넣어, 에이전트가 고객에게 알맞게 말할 수 있게 한다."
+    },
+    {
+      "title_ko": "긴 상담에서 숫자는 요약 밖 메모 칸에 따로 둔다",
+      "signal_en": ["long conversation", "loses the refund amount", "40+ fields per order lookup"],
+      "signal_ko": "대화가 길어져 요약하다 보니 금액·날짜 같은 핵심 사실이 흐려졌거나, 쓸데없는 도구 결과가 context 를 채웠다는 뜻이다.",
+      "answer_ko": "금액·날짜·주문번호·상태를 'case facts' 블록으로 뽑아 요약된 대화 밖에 두고 매 프롬프트에 넣는 보기가 정답이다. 주문 조회 결과는 필요한 필드만 남기고 잘라 낸다.",
+      "answer_en": "persistent \"case facts\" block included in each prompt, outside summarized history",
+      "trap_ko": [
+        "대화 전체를 더 짧게 요약: 숫자와 고객이 말한 기대가 더 흐려진다.",
+        "더 큰 context window 모델로 교체: 쌓이는 불필요한 필드와 요약 손실은 그대로다.",
+        "고객에게 다시 물어보기: 이미 받은 정보를 잃어버린 설계 문제를 고객에게 떠넘긴다."
+      ],
+      "ts": "5.1",
+      "guide_en": "Extracting transactional facts (amounts, dates, order numbers, statuses) into a persistent \"case facts\" block included in each prompt, outside summarized history",
+      "guide_ko": "거래 사실(금액, 날짜, 주문번호, 상태)을 뽑아 요약된 대화 기록 밖의 고정 'case facts' 블록에 담고 매 프롬프트에 넣는다."
+    }
+  ],
+  "compare": {
+    "title_ko": "어떤 방법이 확률적이고 어떤 방법이 확정적인가",
+    "cols_ko": ["방법", "성격", "언제 고르나"],
+    "rows": [
+      ["system prompt 지시", "확률적 (대부분 따르지만 실패율이 0이 아님)", "톤, 일반 안내처럼 가끔 틀려도 큰일 없는 것"],
+      ["few-shot examples", "확률적", "애매한 판단 기준 가르치기 (언제 넘길지, 어떤 도구 쓸지)"],
+      ["tool description 보강", "확률적 (선택 근거를 늘림)", "비슷한 도구를 헷갈릴 때의 첫 단계"],
+      ["programmatic prerequisite", "확정적 (코드가 막음)", "신원 확인 후 환불처럼 순서가 반드시 지켜져야 할 때"],
+      ["hook (tool call interception / PostToolUse)", "확정적", "한도 초과 환불 차단, 도구 결과 형식 통일"],
+      ["self-reported confidence / sentiment", "믿을 수 없는 대리 지표", "시험에서는 거의 항상 오답 보기"]
+    ]
+  },
+  "checklist_ko": [
+    "'가끔 건너뛴다' + 돈 사고 = prompt 가 아니라 코드(prerequisite, hook)로 막는다.",
+    "도구를 헷갈린다 + 설명이 짧다 = 먼저 tool description 을 자세히 쓴다.",
+    "넘기는 기준이 엉망이다 = 명확한 기준 + few-shot 예시. 신뢰도 점수·감정 분석은 오답.",
+    "고객이 사람을 명시적으로 원하면 즉시 넘기고, 정책에 답이 없으면 추측하지 말고 넘긴다.",
+    "고객이 여러 명 검색되면 아무나 고르지 말고 추가 식별 정보를 묻는다.",
+    "에러는 종류·재시도 가능 여부·설명을 담아 돌려주고, 긴 대화의 숫자는 case facts 블록에 따로 둔다."
+  ]
+}

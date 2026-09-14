@@ -1,0 +1,181 @@
+{
+  "no": 4,
+  "name_en": "Developer Productivity with Claude",
+  "name_ko": "Claude로 개발자 생산성 높이기",
+  "domains": [1, 2, 3],
+  "oneline_ko": "처음 가 보는 거대한 도서관(낯선 코드베이스)에서 책을 찾아 주는 AI 사서를 만든다. 제목으로 찾을지(Glob) 본문으로 찾을지(Grep) 고르고, 전부 읽으려 들지 않는 것이 요령.",
+  "description": [
+    {"en": "You are building developer productivity tools using the Claude Agent SDK.", "ko": "Claude Agent SDK로 개발자 생산성 도구를 만들고 있다."},
+    {"en": "The agent helps engineers explore unfamiliar codebases, understand legacy systems, generate boilerplate code, and automate repetitive tasks.", "ko": "이 에이전트는 엔지니어가 낯선 코드베이스를 탐색하고, 오래된 레거시 시스템을 이해하고, 반복되는 틀 코드(boilerplate)를 만들고, 반복 작업을 자동화하도록 돕는다."},
+    {"en": "It uses the built-in tools (Read, Write, Bash, Grep, Glob) and integrates with Model Context Protocol (MCP) servers.", "ko": "기본 내장 도구(Read, Write, Bash, Grep, Glob)를 쓰고, Model Context Protocol(MCP, 외부 도구를 연결하는 규격) 서버와 연동한다."}
+  ],
+  "primary_en": "Primary domains: Tool Design & MCP Integration, Claude Code Configuration & Workflows, Agentic Architecture & Orchestration",
+  "story_ko": [
+    "새 회사에 들어간 첫날, 수천 개 파일로 된 코드를 넘겨받았다고 해 보자. 이 에이전트는 그 코드를 대신 뒤져 주는 조수다.",
+    "조수에게는 연장이 있다. 파일 이름으로 찾는 Glob, 파일 내용으로 찾는 Grep, 파일을 읽는 Read, 통째로 쓰는 Write, 일부만 고치는 Edit, 명령을 실행하는 Bash. 거기에 Jira 같은 외부 시스템을 붙이는 MCP 서버가 더해진다.",
+    "잘못되기 쉬운 곳은 연장 고르기다. 이름 패턴으로 찾을 일에 Grep을 쓰거나, 처음부터 모든 파일을 읽어 context(모델이 한 번에 기억하는 작업 공간)를 가득 채운다.",
+    "오래 탐색하다 보면 context가 흐려져서, 앞에서 찾은 구체적인 클래스 대신 '보통은 이렇다'는 일반론으로 답하기 시작한다. 그래서 Explore subagent나 메모 파일(scratchpad)로 기억을 덜어 낸다.",
+    "MCP 설정도 자주 나온다. 팀이 함께 쓸 서버는 저장소의 `.mcp.json`에, 나 혼자 실험하는 서버는 `~/.claude.json`에 둔다. 비밀 토큰은 `${GITHUB_TOKEN}`처럼 환경 변수로 넣는다."
+  ],
+  "flow": [
+    {"en": "Engineer's question", "ko": "엔지니어의 질문", "note_ko": "예: 환불 흐름이 어디서 시작되지?"},
+    {"en": "Glob (find files by name) / Grep (find content)", "ko": "Glob으로 파일 이름 찾기 / Grep으로 내용 찾기", "note_ko": "`**/*.test.tsx`는 Glob, 함수 호출부·에러 메시지는 Grep"},
+    {"en": "Read to follow imports and trace flows", "ko": "Read로 import를 따라가며 흐름 추적", "note_ko": "모든 파일을 먼저 읽지 않고 필요한 곳만 조금씩"},
+    {"en": "Explore subagent / scratchpad for long exploration", "ko": "긴 탐색은 Explore subagent나 scratchpad 파일로", "note_ko": "장황한 탐색 결과를 따로 떼어 요약만 받는다"},
+    {"en": "MCP tools (.mcp.json) for external systems", "ko": "외부 시스템은 MCP 도구로", "note_ko": "MCP 도구 설명이 부실하면 에이전트가 Grep만 쓴다"},
+    {"en": "Edit / Read + Write to change code", "ko": "Edit으로 고치기 / 안 되면 Read 후 Write", "note_ko": "Edit은 고칠 부분의 텍스트가 파일에서 유일해야 한다"}
+  ],
+  "flow_note_ko": "시험에 가장 많이 나오는 지점은 2단계(Grep과 Glob 구분)와 6단계(Edit이 실패했을 때), 그리고 MCP 서버를 어느 파일에 설정하느냐다. 탐색이 길어져 답이 흐려지는 상황도 단골이다.",
+  "cast": [
+    {"term": "Grep", "ko": "파일 내용 검색", "what_ko": "함수 이름, 에러 메시지, import 문처럼 파일 안의 글자를 찾는다. '누가 이 함수를 부르나'는 Grep이다."},
+    {"term": "Glob", "ko": "파일 경로 패턴 검색", "what_ko": "`**/*.test.tsx`처럼 이름이나 확장자 패턴으로 파일을 찾는다. 내용은 보지 않는다."},
+    {"term": "Edit", "ko": "부분 수정", "what_ko": "고칠 곳을 유일한 텍스트로 찾아 바꾼다. 같은 텍스트가 여러 곳에 있으면 실패하고, 그때는 Read 후 Write로 대신한다."},
+    {"term": ".mcp.json", "ko": "프로젝트 MCP 설정 파일", "what_ko": "팀이 함께 쓰는 MCP 서버를 저장소에 두는 곳이다. 토큰은 `${GITHUB_TOKEN}` 같은 환경 변수로 넣어 비밀을 커밋하지 않는다."},
+    {"term": "~/.claude.json", "ko": "사용자 MCP 설정 파일", "what_ko": "나만 쓰는 개인·실험용 MCP 서버를 두는 곳이라 팀원에게 공유되지 않는다."},
+    {"term": "MCP resources", "ko": "MCP 자료 목록", "what_ko": "이슈 요약, 문서 목차, DB 스키마 같은 목록을 미리 보여 줘서 이것저것 뒤져 보는 도구 호출을 줄인다."},
+    {"term": "Explore subagent", "ko": "탐색 전용 하위 에이전트", "what_ko": "장황한 탐색 출력을 따로 떼어 처리하고 요약만 돌려줘서 메인 대화의 context를 아낀다."},
+    {"term": "--resume / fork_session", "ko": "세션 이어 하기 / 갈래 만들기", "what_ko": "`--resume <session-name>`은 이름 붙인 이전 대화를 이어 가고, fork_session은 같은 분석에서 갈라져 두 방법을 따로 시험한다."}
+  ],
+  "patterns": [
+    {
+      "title_ko": "이름으로 찾으면 Glob, 내용으로 찾으면 Grep",
+      "signal_en": ["find all files matching", "all callers of a function", "locate error messages", "**/*.test.tsx"],
+      "signal_ko": "찾는 대상이 파일 이름·확장자 패턴인지, 파일 안에 적힌 글자인지 구분하라는 신호다.",
+      "answer_ko": "파일 이름 패턴(예: 모든 테스트 파일)은 Glob, 함수 호출부나 에러 메시지처럼 코드 내용은 Grep을 고른다.",
+      "answer_en": "Selecting Grep for searching code content across a codebase",
+      "trap_ko": [
+        "`*.test.tsx` 파일 찾기에 Grep을 쓰는 보기: Grep은 내용을 뒤지는 도구라 이름 패턴 찾기에 맞지 않는다.",
+        "함수를 부르는 곳을 찾으려고 Glob을 쓰는 보기: Glob은 경로만 보고 파일 안 글자는 보지 않는다.",
+        "Bash로 파일을 하나씩 열어 보기: 전용 검색 도구가 있는데 느리고 context를 낭비한다."
+      ],
+      "ts": "2.5",
+      "guide_en": "Selecting Glob for finding files matching naming patterns (e.g., **/*.test.tsx)",
+      "guide_ko": "이름 패턴에 맞는 파일을 찾을 때는 Glob을 고른다(예: **/*.test.tsx)"
+    },
+    {
+      "title_ko": "낯선 코드는 전부 읽지 말고 Grep으로 입구를 찾은 뒤 Read로 따라가기",
+      "signal_en": ["unfamiliar codebase", "reading all files upfront", "trace flows", "wrapper modules"],
+      "signal_ko": "처음 보는 큰 코드베이스를 이해해야 하는데, 한꺼번에 다 읽으면 context가 넘친다.",
+      "answer_ko": "Grep으로 시작점(entry point)을 찾고, Read로 import를 따라가며 흐름을 추적한다. wrapper(감싸는) 모듈을 거치는 함수는 먼저 export된 이름을 모두 알아낸 뒤 이름마다 코드베이스를 검색한다.",
+      "answer_en": "starting with Grep to find entry points, then using Read to follow imports and trace flows",
+      "trap_ko": [
+        "모든 파일을 먼저 Read로 읽어 두기: context만 차고 중요한 내용이 묻힌다.",
+        "원래 함수 이름 하나로만 검색하기: wrapper 모듈이 다른 이름으로 내보내면 호출부를 놓친다.",
+        "더 큰 context window가 필요하다는 보기: 문제는 크기가 아니라 탐색 순서다."
+      ],
+      "ts": "2.5",
+      "guide_en": "Building codebase understanding incrementally: starting with Grep to find entry points, then using Read to follow imports and trace flows, rather than reading all files upfront",
+      "guide_ko": "코드베이스를 조금씩 이해해 간다. 처음부터 모든 파일을 읽지 않고, Grep으로 시작점을 찾은 뒤 Read로 import를 따라가며 흐름을 추적한다"
+    },
+    {
+      "title_ko": "Edit이 '유일하지 않다'며 실패하면 Read 후 Write",
+      "signal_en": ["Edit fails", "non-unique text matches", "unique anchor text"],
+      "signal_ko": "고치려는 텍스트가 파일에 여러 번 나와서 Edit이 위치를 정하지 못한다.",
+      "answer_ko": "Read로 파일 전체를 읽은 다음, 고친 전체 내용을 Write로 저장한다. 확실하게 파일을 고치는 대안이다.",
+      "answer_en": "Using Read to load full file contents followed by Write",
+      "trap_ko": [
+        "같은 Edit을 계속 다시 시도하기: 텍스트가 유일하지 않은 한 계속 실패한다.",
+        "Bash로 텍스트 치환 명령을 돌리기: 여러 곳이 한꺼번에 바뀌어 원하지 않는 곳까지 고쳐질 수 있다.",
+        "파일을 지우고 처음부터 새로 만들기: 기존 내용을 읽지 않으면 나머지 코드를 잃는다."
+      ],
+      "ts": "2.5",
+      "guide_en": "Using Read to load full file contents followed by Write when Edit cannot find unique anchor text",
+      "guide_ko": "Edit이 유일한 기준 텍스트를 찾지 못하면, Read로 파일 전체 내용을 읽은 뒤 Write로 저장한다"
+    },
+    {
+      "title_ko": "팀 공유 MCP는 .mcp.json + 환경 변수, 개인 실험용은 ~/.claude.json",
+      "signal_en": ["shared with the team", "without committing secrets", "personal/experimental", "every developer"],
+      "signal_ko": "MCP 서버를 팀 전체가 쓸지 나 혼자 쓸지, 그리고 토큰 같은 비밀을 어떻게 다룰지 묻는다.",
+      "answer_ko": "팀이 함께 쓰는 서버는 프로젝트의 `.mcp.json`에 넣고 인증 토큰은 `${GITHUB_TOKEN}`처럼 환경 변수 확장으로 채운다. 개인·실험용 서버는 `~/.claude.json`에 둔다. 설정된 모든 서버의 도구는 연결될 때 발견되어 동시에 쓸 수 있다.",
+      "answer_en": "project-scoped .mcp.json with environment variable expansion",
+      "trap_ko": [
+        "토큰 값을 `.mcp.json`에 직접 적어 커밋하기: 비밀이 저장소에 올라간다.",
+        "팀 공유 서버를 각자 `~/.claude.json`에 설정하게 하기: 사용자 설정은 버전 관리로 공유되지 않는다.",
+        "Jira 같은 표준 연동을 직접 만든 서버로 구현하기: 가이드는 표준 연동은 기존 커뮤니티 MCP 서버를 쓰고, 직접 만든 서버는 팀 고유 워크플로에 남겨 두라고 한다."
+      ],
+      "ts": "2.4",
+      "guide_en": "Configuring shared MCP servers in project-scoped .mcp.json with environment variable expansion for authentication tokens",
+      "guide_ko": "공유 MCP 서버는 프로젝트 범위의 .mcp.json에 설정하고, 인증 토큰은 환경 변수 확장으로 넣는다"
+    },
+    {
+      "title_ko": "에이전트가 좋은 MCP 도구를 두고 Grep만 쓰면 MCP 도구 설명을 자세히",
+      "signal_en": ["prefers built-in tools", "instead of the MCP tool", "more capable MCP tools"],
+      "signal_ko": "더 좋은 MCP 도구가 연결돼 있는데 에이전트가 Grep 같은 내장 도구만 고른다.",
+      "answer_ko": "MCP 도구의 설명에 무엇을 할 수 있고 무엇을 돌려주는지 자세히 적는다. 도구 설명은 모델이 도구를 고르는 가장 중요한 근거다. 내용 목록을 MCP resources로 보여 주면 이것저것 뒤져 보는 호출도 줄어든다.",
+      "answer_en": "Enhancing MCP tool descriptions to explain capabilities and outputs in detail",
+      "trap_ko": [
+        "내장 Grep 도구를 막아 버리기: 원인(부실한 설명)은 그대로 두고 필요한 도구까지 잃는다.",
+        "system prompt에 'MCP 도구를 써라'는 키워드 지시만 넣기: 키워드에 민감한 지시는 의도하지 않은 도구 연결을 만들 수 있다.",
+        "매 턴 사용자 입력을 분석해 도구를 미리 골라 주는 routing 계층 만들기: 설명만 고치면 되는 문제에 과한 설계다."
+      ],
+      "ts": "2.4",
+      "guide_en": "Enhancing MCP tool descriptions to explain capabilities and outputs in detail, preventing the agent from preferring built-in tools (like Grep) over more capable MCP tools",
+      "guide_ko": "MCP 도구 설명에 기능과 출력을 자세히 적어서, 에이전트가 더 유능한 MCP 도구 대신 내장 도구(Grep 등)를 고르지 않게 한다"
+    },
+    {
+      "title_ko": "탐색이 길어져 답이 흐려지면 Explore subagent로 떼어 내고 요약만 받기",
+      "signal_en": ["typical patterns", "context window exhaustion", "verbose discovery output", "extended sessions"],
+      "signal_ko": "긴 세션에서 앞서 찾은 구체적인 클래스 대신 '보통은 이렇다'는 식으로 답하거나, 탐색 출력이 context를 다 채운다.",
+      "answer_ko": "장황한 탐색 단계는 Explore subagent에 맡겨 요약만 받는다. 핵심 발견은 scratchpad 파일에 적어 두고 다음 질문 때 참고하며, context가 차면 `/compact`로 줄인다.",
+      "answer_en": "Using the Explore subagent for verbose discovery phases",
+      "trap_ko": [
+        "모든 탐색을 메인 대화에서 계속하기: 장황한 출력이 쌓여 context가 흐려진다.",
+        "더 큰 모델이나 더 긴 context window로 바꾸기: 쌓인 잡음을 치우는 방법이 아니다.",
+        "처음부터 모든 파일을 읽어 두고 시작하기: context를 가장 빨리 소모하는 방법이다."
+      ],
+      "ts": "3.4",
+      "guide_en": "Using the Explore subagent for verbose discovery phases to prevent context window exhaustion during multi-phase tasks",
+      "guide_ko": "여러 단계로 이어지는 작업에서 context window가 바닥나지 않도록, 장황한 탐색 단계는 Explore subagent에 맡긴다"
+    },
+    {
+      "title_ko": "'레거시에 테스트 전부 추가' 같은 열린 과제는 구조 파악 → 중요 지점 → 바뀌는 계획",
+      "signal_en": ["legacy codebase", "open-ended", "comprehensive tests", "as dependencies are discovered"],
+      "signal_ko": "끝이 정해져 있지 않은 큰 과제라 미리 정한 순서대로 밀어붙이기 어렵다.",
+      "answer_ko": "먼저 코드 구조를 파악하고, 영향이 큰 부분을 찾은 뒤, 우선순위 계획을 세우고 새 의존성이 드러날 때마다 계획을 고친다. dynamic decomposition(상황에 따라 나누기)이다. 예측 가능한 여러 측면 리뷰에는 고정 순서인 prompt chaining이 맞다.",
+      "answer_en": "first mapping structure, identifying high-impact areas, then creating a prioritized plan that adapts",
+      "trap_ko": [
+        "파일 알파벳 순서대로 하나씩 테스트 쓰기: 영향이 큰 곳을 먼저 챙기지 못한다.",
+        "처음에 정한 고정 단계를 끝까지 따르기: 열린 탐색 과제에서는 중간에 발견한 내용을 반영하지 못한다.",
+        "구조 파악 없이 바로 코드 생성 시작하기: 의존성을 늦게 발견해 다시 해야 하는 일이 생긴다."
+      ],
+      "ts": "1.6",
+      "guide_en": "Decomposing open-ended tasks (e.g., \"add comprehensive tests to a legacy codebase\") by first mapping structure, identifying high-impact areas, then creating a prioritized plan that adapts as dependencies are discovered",
+      "guide_ko": "열린 과제(예: \"레거시 코드베이스에 테스트를 빠짐없이 추가\")는 먼저 구조를 파악하고 영향이 큰 부분을 찾은 뒤, 의존성이 드러날 때마다 바뀌는 우선순위 계획을 세워 나눈다"
+    },
+    {
+      "title_ko": "이전 세션을 이어 갈까 새로 시작할까: 도구 결과가 낡았으면 요약을 넣고 새로",
+      "signal_en": ["resume", "stale tool results", "files have changed since", "fork_session"],
+      "signal_ko": "어제 하던 탐색을 이어 가려는데 그사이 코드가 바뀌었거나, 같은 분석에서 두 방법을 비교하고 싶다.",
+      "answer_ko": "이전 context가 대부분 유효하면 `--resume <session-name>`으로 이어 가고, 바뀐 파일을 구체적으로 알려 그 부분만 다시 분석하게 한다. 도구 결과가 낡았으면 구조화된 요약을 넣어 새 세션을 시작한다. 두 방법 비교는 fork_session으로 갈래를 만든다.",
+      "answer_en": "starting fresh with injected summaries (when prior tool results are stale)",
+      "trap_ko": [
+        "코드가 많이 바뀌었는데 아무 말 없이 resume하기: 낡은 도구 결과를 사실로 믿고 틀린 답을 낸다.",
+        "파일 몇 개만 바뀌었는데 처음부터 전부 다시 탐색하기: 바뀐 파일만 알려 주면 된다.",
+        "두 리팩터링 방법을 한 세션에서 번갈아 시험하기: fork_session으로 같은 출발점에서 독립된 갈래를 만드는 것이 맞다."
+      ],
+      "ts": "1.7",
+      "guide_en": "Choosing between session resumption (when prior context is mostly valid) and starting fresh with injected summaries (when prior tool results are stale)",
+      "guide_ko": "세션 이어 하기(이전 context가 대부분 유효할 때)와 요약을 넣어 새로 시작하기(이전 도구 결과가 낡았을 때) 중에서 고른다"
+    }
+  ],
+  "compare": {
+    "title_ko": "내장 도구: 무엇을 할 때 어떤 도구를 고르나",
+    "cols_ko": ["도구", "하는 일", "시험에 나오는 예"],
+    "rows": [
+      ["Grep", "파일 내용에서 패턴 검색", "함수를 부르는 곳 모두 찾기, 에러 메시지 위치 찾기, 탐색 시작점 찾기"],
+      ["Glob", "파일 경로·이름 패턴 매칭", "`**/*.test.tsx` 같은 테스트 파일 전부 찾기"],
+      ["Read", "파일 전체 읽기", "Grep으로 찾은 시작점에서 import 따라가기, Edit 실패 시 먼저 읽기"],
+      ["Edit", "유일한 텍스트를 찾아 부분 수정", "한 곳만 고칠 때. 같은 텍스트가 여러 곳이면 실패"],
+      ["Write", "파일 전체 쓰기", "Edit이 실패했을 때 Read 다음에 전체 내용 저장"],
+      ["Bash", "셸 명령 실행", "가이드는 내장 도구 목록에 이름만 올린다. 검색은 Grep·Glob이 먼저"]
+    ]
+  },
+  "checklist_ko": [
+    "이름 패턴이면 Glob, 파일 안 글자면 Grep.",
+    "낯선 코드는 전부 읽지 않는다. Grep으로 시작점, Read로 따라가기.",
+    "Edit이 '유일하지 않다'고 실패하면 Read 후 Write.",
+    "팀 공유 MCP는 `.mcp.json`과 `${환경변수}`, 개인 실험용은 `~/.claude.json`.",
+    "좋은 MCP 도구를 안 쓰면 그 도구의 설명을 자세히 고친다.",
+    "탐색이 길어져 답이 흐려지면 Explore subagent, scratchpad, `/compact`."
+  ]
+}

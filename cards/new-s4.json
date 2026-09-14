@@ -1,0 +1,998 @@
+[
+ {
+  "id": "C4-01",
+  "domain": 2,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ts": [
+   "2.5"
+  ],
+  "guide_en": "Selecting Glob for finding files matching naming patterns (e.g., **/*.test.tsx)",
+  "q_en": "Before a release, an engineer asks your productivity agent for two things: list every Storybook file in the monorepo (all named `*.stories.tsx`, scattered across 60+ packages), and find every place the error message `Session token expired` is raised. In the last run, the agent read the full contents of 900 files under `packages/` to answer both, took 11 minutes, and hit the context limit before finishing. Which TWO tool calls should the agent make instead? (Choose TWO.)",
+  "q_ko": "릴리스를 앞두고 엔지니어가 생산성 agent 에게 두 가지를 요청한다. 모노레포의 Storybook 파일(모두 `*.stories.tsx` 이름이고 60개가 넘는 패키지에 흩어져 있음)을 전부 나열하는 것, 그리고 오류 메시지 `Session token expired` 를 발생시키는 곳을 모두 찾는 것이다. 지난번에 agent 는 이 둘에 답하려고 `packages/` 아래 파일 900개의 내용을 통째로 읽었고, 11분이 걸린 데다 끝내기 전에 컨텍스트 한도에 걸렸다. 대신 agent 가 해야 할 도구 호출 두 가지는? (2개 고르시오.)",
+  "select": 2,
+  "options": [
+   {
+    "en": "Glob with the pattern `**/*.stories.tsx` to list the Storybook files.",
+    "ko": "`**/*.stories.tsx` 패턴으로 Glob 을 실행해 Storybook 파일을 나열한다.",
+    "why": "정답. 이름·확장자 패턴으로 파일을 찾는 일은 파일 경로 매칭 도구인 Glob 의 몫이다."
+   },
+   {
+    "en": "Grep for `Session token expired` across the repository to locate where the message is raised.",
+    "ko": "저장소 전체에서 `Session token expired` 를 Grep 해 메시지가 발생하는 위치를 찾는다.",
+    "why": "정답. 파일 안의 오류 메시지 같은 내용 검색은 Grep 이 맡는다."
+   },
+   {
+    "en": "Grep with `**/*.stories.tsx` as the content pattern to locate the Storybook files.",
+    "ko": "`**/*.stories.tsx` 를 내용 검색 패턴으로 넣어 Grep 으로 Storybook 파일을 찾는다.",
+    "why": "Grep 은 파일 내용을 뒤지므로 파일 이름 패턴을 넣으면 엉뚱한 결과가 나온다."
+   },
+   {
+    "en": "Glob with the pattern `**/*Session token expired*` to find where the message is raised.",
+    "ko": "`**/*Session token expired*` 패턴으로 Glob 을 실행해 메시지가 발생하는 곳을 찾는다.",
+    "why": "Glob 은 파일 경로만 맞춰 보므로 파일 안에 적힌 메시지는 찾지 못한다."
+   },
+   {
+    "en": "Bash running `cat` on every file under `packages/` and filtering the output for both targets.",
+    "ko": "Bash 로 `packages/` 아래 모든 파일을 `cat` 한 뒤 두 대상을 출력에서 걸러 낸다.",
+    "why": "도구만 바꿨을 뿐 모든 파일을 통째로 읽는 원래 문제를 그대로 되풀이한다."
+   }
+  ],
+  "answer": [
+   0,
+   1
+  ],
+  "point_ko": "파일 이름 = Glob, 파일 내용 = Grep",
+  "explain_ko": [
+   "**all named `*.stories.tsx`** 는 파일을 이름 패턴으로 찾는 일이다. 경로 패턴 매칭 도구인 **Glob** 이 맞다.",
+   "**the error message ... is raised** 는 파일 속 글자를 찾는 일이다. 내용 검색 도구인 **Grep** 이 맞다.",
+   "**read the full contents of 900 files** 가 문제의 뿌리다. 알맞은 검색 도구를 고르면 파일을 다 읽지 않아도 된다. 두 도구를 서로 바꿔 쓰는 보기는 둘 다 결과가 틀린다."
+  ],
+  "clues": [
+   {
+    "en": "all named `*.stories.tsx`",
+    "ko": "이름 패턴으로 파일 찾기 = Glob"
+   },
+   {
+    "en": "find every place the error message",
+    "ko": "파일 내용 검색 = Grep"
+   },
+   {
+    "en": "read the full contents of 900 files",
+    "ko": "전부 읽기가 병목"
+   }
+  ],
+  "discuss_ko": "Grep 에도 파일 종류를 거르는 옵션이 있는데, 그래도 '이 이름의 파일 목록'을 뽑을 때 Glob 이 더 알맞은 이유는 뭘까?",
+  "words": [
+   {
+    "word": "scattered",
+    "pos": "adj.",
+    "ko": "여기저기 흩어진",
+    "example": "scattered across 60+ packages"
+   },
+   {
+    "word": "raise",
+    "pos": "v.",
+    "ko": "(오류·예외를) 발생시키다",
+    "example": "the error message `Session token expired` is raised"
+   },
+   {
+    "word": "hit the limit",
+    "pos": "idiom",
+    "ko": "한도에 걸리다, 한계에 부딪히다",
+    "example": "hit the context limit before finishing"
+   },
+   {
+    "word": "locate",
+    "pos": "v.",
+    "ko": "위치를 찾아내다",
+    "example": "to locate where the message is raised"
+   },
+   {
+    "word": "filter",
+    "pos": "v.",
+    "ko": "걸러 내다",
+    "example": "filtering the output for both targets"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C4-02",
+  "domain": 2,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ts": [
+   "2.5"
+  ],
+  "guide_en": "Building codebase understanding incrementally: starting with Grep to find entry points, then using Read to follow imports and trace flows, rather than reading all files upfront",
+  "q_en": "A new engineer asks the agent how a webhook from the payment provider ends up updating an invoice in a 1,400-file legacy service. The agent's system prompt tells it to \"Read every file in `src/` first so you have full context.\" After reading 220 files, the context window is exhausted, and the answer describes typical webhook handlers instead of the service's actual code path. What's the most effective change?",
+  "q_ko": "새로 온 엔지니어가 파일 1,400개짜리 레거시 서비스에서 결제사 webhook 이 어떻게 인보이스 갱신으로 이어지는지 agent 에게 묻는다. agent 의 system prompt 에는 \"전체 맥락을 갖도록 `src/` 의 모든 파일을 먼저 Read 하라\"고 적혀 있다. 파일 220개를 읽고 나자 컨텍스트 창이 바닥났고, 답변은 이 서비스의 실제 코드 경로 대신 흔한 webhook handler 이야기를 늘어놓는다. 가장 효과적인 변경은?",
+  "options": [
+   {
+    "en": "Have the agent Grep for the webhook route or handler name to find the entry point, then Read that file and follow its imports to trace the flow to the invoice update.",
+    "ko": "agent 가 webhook 경로나 handler 이름을 Grep 해 진입점을 찾고, 그 파일을 Read 한 뒤 import 를 따라가며 인보이스 갱신까지 흐름을 추적하게 한다.",
+    "why": "정답. 진입점에서 출발해 필요한 파일만 차례로 읽으니 컨텍스트를 아끼면서 실제 경로를 따라간다."
+   },
+   {
+    "en": "Switch to a model with a larger context window so every file in `src/` fits in a single pass.",
+    "ko": "`src/` 파일이 한 번에 다 들어가도록 컨텍스트 창이 더 큰 모델로 바꾼다.",
+    "why": "전부 먼저 읽는 방식은 그대로라 비용만 늘고, 관련 없는 코드에 주의가 흩어지는 문제도 남는다."
+   },
+   {
+    "en": "Use Glob `src/**/*.ts` to list all files, then Read them all upfront in alphabetical batches of 50 and summarize each batch.",
+    "ko": "Glob `src/**/*.ts` 로 모든 파일을 나열한 뒤, 알파벳 순으로 50개씩 미리 전부 Read 하고 묶음마다 요약한다.",
+    "why": "묶어서 요약해도 결국 모든 파일을 먼저 읽는 방식이고, 요약 과정에서 실제 호출 관계가 흐려진다."
+   },
+   {
+    "en": "Add \"Always cite specific classes and never describe typical patterns\" to the system prompt.",
+    "ko": "system prompt 에 \"항상 구체적인 클래스를 인용하고 흔한 패턴을 설명하지 말라\"를 추가한다.",
+    "why": "증상에 대한 지시만 더할 뿐, 컨텍스트가 바닥나는 원인인 전부 읽기 전략은 고치지 못한다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "Grep 으로 진입점 → Read 로 import 따라가기",
+  "explain_ko": [
+   "**Read every file in `src/` first** 가 근본 원인이다. 1,400개를 먼저 다 읽으려다 **context window is exhausted** 가 났다.",
+   "흐름을 묻는 질문은 출발점만 찾으면 된다. **Grep** 으로 webhook handler 같은 진입점을 찾고, **Read** 로 그 파일의 import 를 따라가며 필요한 파일만 읽는다.",
+   "**typical webhook handlers** 라는 뭉뚱그린 답은 컨텍스트가 무너졌다는 신호다. 프롬프트로 막거나 더 큰 창을 쓰는 건 원인을 비켜 간다."
+  ],
+  "clues": [
+   {
+    "en": "Read every file in `src/` first",
+    "ko": "처음부터 전부 읽기 = 잘못된 전략"
+   },
+   {
+    "en": "the context window is exhausted",
+    "ko": "읽은 양이 한도를 넘음"
+   },
+   {
+    "en": "ends up updating an invoice",
+    "ko": "흐름 추적 질문 = 진입점부터"
+   },
+   {
+    "en": "describes typical webhook handlers",
+    "ko": "구체성 상실 = 컨텍스트 저하 신호"
+   }
+  ],
+  "discuss_ko": "컨텍스트 창이 충분히 큰 모델이라면 전부 먼저 읽는 방식도 괜찮지 않을까? 비용 말고 품질 면에서 무엇이 나빠지는지 이야기해 보자.",
+  "words": [
+   {
+    "word": "end up",
+    "pos": "phr. v.",
+    "ko": "결국 ~하게 되다",
+    "example": "ends up updating an invoice"
+   },
+   {
+    "word": "exhaust",
+    "pos": "v.",
+    "ko": "다 써 버리다, 소진하다",
+    "example": "the context window is exhausted"
+   },
+   {
+    "word": "entry point",
+    "pos": "n.",
+    "ko": "진입점, 처리가 시작되는 곳",
+    "example": "to find the entry point"
+   },
+   {
+    "word": "trace",
+    "pos": "v.",
+    "ko": "(흐름을) 추적하다, 따라가다",
+    "example": "to trace the flow to the invoice update"
+   },
+   {
+    "word": "upfront",
+    "pos": "adv.",
+    "ko": "미리, 처음부터 한꺼번에",
+    "example": "Read them all upfront"
+   },
+   {
+    "word": "in a single pass",
+    "pos": "idiom",
+    "ko": "한 번에 훑어서",
+    "example": "fits in a single pass"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C4-03",
+  "domain": 2,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ts": [
+   "2.5"
+  ],
+  "guide_en": "Tracing function usage across wrapper modules by first identifying all exported names, then searching for each name across the codebase",
+  "q_en": "Before deprecating the internal `sendEmail` function, a developer asks the agent to find every caller. The agent Greps for `sendEmail` and reports 4 call sites, but the staging rollout later breaks 23 other files. Investigation shows that `lib/notify/index.ts` wraps `sendEmail` and re-exports it as `notifyUser` and `sendTransactional`, which most services import instead. What's the most effective way for the agent to find all usages?",
+  "q_ko": "사내 함수 `sendEmail` 을 사용 중단하기 전에 개발자가 agent 에게 모든 호출처를 찾아 달라고 한다. agent 는 `sendEmail` 을 Grep 해 호출 지점 4곳을 보고했지만, 이후 staging 배포에서 다른 파일 23개가 깨졌다. 조사해 보니 `lib/notify/index.ts` 가 `sendEmail` 을 감싸 `notifyUser` 와 `sendTransactional` 이라는 이름으로 다시 export 하고 있었고, 대부분의 서비스는 이 이름들을 import 하고 있었다. agent 가 모든 사용처를 찾는 가장 효과적인 방법은?",
+  "options": [
+   {
+    "en": "Read the wrapper module to identify every exported name that wraps `sendEmail`, then Grep for each of those names across the codebase.",
+    "ko": "wrapper 모듈을 Read 해 `sendEmail` 을 감싼 export 이름을 모두 확인한 뒤, 그 이름 하나하나를 코드베이스 전체에서 Grep 한다.",
+    "why": "정답. 서비스들이 실제로 쓰는 이름을 먼저 알아낸 뒤 각각 검색하니 별칭으로 부르는 호출처까지 잡힌다."
+   },
+   {
+    "en": "Glob for `**/*email*` and `**/*notify*` to find every file whose name relates to email.",
+    "ko": "`**/*email*` 과 `**/*notify*` 로 Glob 해 이름이 이메일과 관련된 파일을 모두 찾는다.",
+    "why": "파일 이름만 볼 뿐 그 함수를 호출하는 코드는 찾지 못한다. 호출하는 파일 이름은 대개 이메일과 무관하다."
+   },
+   {
+    "en": "Grep for `sendEmail` again with case-insensitive matching and a wider file-type filter.",
+    "ko": "대소문자 구분 없이, 파일 종류 필터를 넓혀 `sendEmail` 을 다시 Grep 한다.",
+    "why": "검색 범위만 넓혔지 찾는 이름이 같아서 `notifyUser` 같은 별칭 호출은 여전히 빠진다."
+   },
+   {
+    "en": "Build a custom MCP server that parses the TypeScript AST and generates a full call graph before any deprecation work.",
+    "ko": "TypeScript AST 를 파싱해 전체 호출 그래프를 만드는 custom MCP server 를 먼저 구축한다.",
+    "why": "export 이름 몇 개를 검색하면 풀리는 일에 새 인프라를 짓는 과한 해법이다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "wrapper 는 export 이름부터 찾고 이름마다 Grep",
+  "explain_ko": [
+   "**re-exports it as `notifyUser` and `sendTransactional`** 이 핵심 단서다. 서비스들은 원래 이름이 아니라 wrapper 가 붙인 새 이름으로 호출한다.",
+   "그래서 `sendEmail` 만 Grep 하면 **4 call sites** 처럼 일부만 나온다. 먼저 wrapper 모듈의 **export 이름을 모두 확인**하고, 이름마다 코드베이스 전체를 Grep 해야 한다.",
+   "검색 옵션을 넓히거나 파일 이름으로 찾는 건 별칭 문제를 못 풀고, 호출 그래프 서버는 과하다."
+  ],
+  "clues": [
+   {
+    "en": "wraps `sendEmail` and re-exports it as `notifyUser` and `sendTransactional`",
+    "ko": "다른 이름으로 다시 export = 별칭 추적 필요"
+   },
+   {
+    "en": "which most services import instead",
+    "ko": "실제 호출은 wrapper 이름으로"
+   },
+   {
+    "en": "reports 4 call sites",
+    "ko": "원래 이름 검색은 일부만 잡음"
+   }
+  ],
+  "discuss_ko": "wrapper 가 한 겹이 아니라 두세 겹으로 다시 export 한다면, 이 방법을 어떻게 반복해야 빠짐없이 찾을 수 있을까?",
+  "words": [
+   {
+    "word": "deprecate",
+    "pos": "v.",
+    "ko": "사용 중단 예정으로 지정하다",
+    "example": "Before deprecating the internal `sendEmail` function"
+   },
+   {
+    "word": "call site",
+    "pos": "n.",
+    "ko": "(함수) 호출 지점",
+    "example": "reports 4 call sites"
+   },
+   {
+    "word": "rollout",
+    "pos": "n.",
+    "ko": "(단계적) 배포, 출시",
+    "example": "the staging rollout later breaks 23 other files"
+   },
+   {
+    "word": "wrap",
+    "pos": "v.",
+    "ko": "(다른 함수를) 감싸다",
+    "example": "wraps `sendEmail`"
+   },
+   {
+    "word": "case-insensitive",
+    "pos": "adj.",
+    "ko": "대소문자를 구분하지 않는",
+    "example": "with case-insensitive matching"
+   },
+   {
+    "word": "instead",
+    "pos": "adv.",
+    "ko": "(그것) 대신에",
+    "example": "which most services import instead"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C4-04",
+  "domain": 2,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ts": [
+   "2.4",
+   "2.1"
+  ],
+  "guide_en": "Enhancing MCP tool descriptions to explain capabilities and outputs in detail, preventing the agent from preferring built-in tools (like Grep) over more capable MCP tools",
+  "q_en": "Your platform team connected an internal MCP server whose `code_search` tool queries a precomputed index of all 41 company repositories and returns each symbol's definition, every reference, and the owning team. Its description reads only \"Searches code.\" Over two weeks of logs, the agent called `code_search` for 6% of dependency-tracing questions and used Grep on the local checkout for the rest, missing references in the other 40 repositories. What's the most effective fix?",
+  "q_ko": "플랫폼 팀이 사내 MCP server 를 연결했다. 이 서버의 `code_search` 도구는 회사 저장소 41개 전체를 미리 계산해 둔 색인에서 조회해, 심볼마다 정의, 모든 참조, 담당 팀을 돌려준다. 그런데 설명은 \"Searches code.\" 한 줄뿐이다. 2주치 로그를 보니 agent 는 의존성 추적 질문의 6% 에서만 `code_search` 를 불렀고, 나머지는 로컬 체크아웃에 Grep 을 써서 다른 저장소 40개의 참조를 놓쳤다. 가장 효과적인 해결책은?",
+  "options": [
+   {
+    "en": "Expand the `code_search` description to explain that it covers all company repositories, what it returns (definitions, references, owning team), and when to prefer it over Grep.",
+    "ko": "`code_search` 설명을 늘려, 회사 저장소 전체를 다룬다는 점, 무엇을 돌려주는지(정의·참조·담당 팀), 언제 Grep 보다 이 도구를 써야 하는지 적는다.",
+    "why": "정답. agent 는 설명을 보고 도구를 고르므로, 능력과 출력을 자세히 적으면 Grep 보다 이 도구를 택하게 된다."
+   },
+   {
+    "en": "Remove Grep from the agent's allowed tools so that `code_search` is the only search option.",
+    "ko": "agent 의 허용 도구에서 Grep 을 빼서 `code_search` 만 검색 수단으로 남긴다.",
+    "why": "로컬 파일 내용 검색처럼 Grep 이 맞는 일까지 막는 과한 조치이고, 설명이 빈약한 원인은 그대로다."
+   },
+   {
+    "en": "Set `tool_choice` to force `code_search` on every request.",
+    "ko": "모든 요청에서 `tool_choice` 로 `code_search` 를 강제한다.",
+    "why": "검색이 필요 없는 요청에도 억지로 부르게 되고, 어떤 경우에 쓸 도구인지 알려 주지 못한다."
+   },
+   {
+    "en": "Clone all 40 other repositories into the agent's workspace so Grep can see their contents.",
+    "ko": "나머지 저장소 40개를 agent 작업 공간에 모두 clone 해서 Grep 이 내용을 볼 수 있게 한다.",
+    "why": "이미 있는 색인을 두고 무거운 인프라를 새로 얹는 해법이며, 담당 팀 같은 정보도 얻지 못한다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "MCP 도구가 안 불리면 설명을 자세히",
+  "explain_ko": [
+   "**Its description reads only \"Searches code.\"** 가 원인이다. agent 는 도구 설명으로 도구를 고르는데, 이 한 줄로는 Grep 과 다를 게 없어 보인다.",
+   "**queries a precomputed index of all 41 company repositories** 처럼 더 강한 능력이 있으니, 설명에 **다루는 범위·돌려주는 내용·Grep 대신 쓸 때**를 적어 주면 된다.",
+   "Grep 을 빼거나 `tool_choice` 로 강제하는 건 선택 문제를 힘으로 누르는 방식이고, 저장소를 다 clone 하는 건 과한 인프라다."
+  ],
+  "clues": [
+   {
+    "en": "Its description reads only \"Searches code.\"",
+    "ko": "빈약한 설명 = 선택 실패의 원인"
+   },
+   {
+    "en": "used Grep on the local checkout for the rest",
+    "ko": "내장 도구를 더 선호함"
+   },
+   {
+    "en": "returns each symbol's definition, every reference, and the owning team",
+    "ko": "MCP 도구가 더 유능함"
+   }
+  ],
+  "discuss_ko": "Grep 을 허용 도구에서 아예 빼 버리면 확실히 `code_search` 를 쓸 텐데, 그 방법이 잃게 되는 것은 무엇일까?",
+  "words": [
+   {
+    "word": "precomputed",
+    "pos": "adj.",
+    "ko": "미리 계산해 둔",
+    "example": "a precomputed index of all 41 company repositories"
+   },
+   {
+    "word": "owning team",
+    "pos": "n.",
+    "ko": "(코드를) 담당·소유하는 팀",
+    "example": "the owning team"
+   },
+   {
+    "word": "checkout",
+    "pos": "n.",
+    "ko": "(저장소에서) 받아 온 로컬 작업 사본",
+    "example": "used Grep on the local checkout"
+   },
+   {
+    "word": "for the rest",
+    "pos": "idiom",
+    "ko": "나머지 경우에는",
+    "example": "for the rest"
+   },
+   {
+    "word": "prefer A over B",
+    "pos": "idiom",
+    "ko": "B 보다 A 를 택하다",
+    "example": "when to prefer it over Grep"
+   },
+   {
+    "word": "expand",
+    "pos": "v.",
+    "ko": "늘리다, 보강하다",
+    "example": "Expand the `code_search` description"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C4-05",
+  "domain": 2,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ts": [
+   "2.4"
+  ],
+  "guide_en": "Choosing existing community MCP servers over custom implementations for standard integrations (e.g., Jira), reserving custom servers for team-specific workflows",
+  "q_en": "Your team wants the agent to (1) read and update Jira tickets and (2) run the team's in-house release checklist, which calls an internal deploy-approval service with custom sign-off rules. One engineer has already spent a week writing a custom Jira MCP server and has implemented only 3 of the 12 issue operations developers need. You want both capabilities working with the least ongoing maintenance. Which TWO actions should you take? (Choose TWO.)",
+  "q_ko": "팀은 agent 가 (1) Jira 티켓을 읽고 수정하고, (2) 팀 자체 릴리스 체크리스트를 실행하기를 원한다. 체크리스트는 고유한 승인 규칙이 있는 사내 배포 승인 서비스를 호출한다. 한 엔지니어가 이미 일주일 동안 custom Jira MCP server 를 만들었지만, 개발자에게 필요한 이슈 작업 12개 중 3개만 구현했다. 두 기능을 모두 돌리면서 이후 유지 보수는 가장 적게 하고 싶다. 해야 할 조치 두 가지는? (2개 고르시오.)",
+  "select": 2,
+  "options": [
+   {
+    "en": "Adopt an existing community MCP server for Jira instead of continuing the custom implementation.",
+    "ko": "custom 구현을 이어 가지 말고, 이미 있는 Jira 용 커뮤니티 MCP server 를 채택한다.",
+    "why": "정답. Jira 는 표준 연동이라 이미 만들어진 서버를 쓰는 편이 빠르고 유지 보수도 적다."
+   },
+   {
+    "en": "Build a custom MCP server for the release checklist, since its deploy-approval rules are specific to your team.",
+    "ko": "배포 승인 규칙이 팀 고유의 것이므로 릴리스 체크리스트용 custom MCP server 를 만든다.",
+    "why": "정답. 팀만의 워크플로는 기성 서버가 없으니 custom 서버를 만들 자리가 바로 여기다."
+   },
+   {
+    "en": "Finish the custom Jira MCP server so that every integration is maintained in-house in the same way.",
+    "ko": "모든 연동을 같은 방식으로 사내에서 관리하도록 custom Jira MCP server 를 끝까지 완성한다.",
+    "why": "남은 9개 작업을 새로 구현하고 계속 관리해야 해서 유지 보수를 최소화하려는 목표와 어긋난다."
+   },
+   {
+    "en": "Find a community MCP server for release checklists and adapt the team's sign-off rules to whatever it supports.",
+    "ko": "릴리스 체크리스트용 커뮤니티 MCP server 를 찾아, 팀 승인 규칙을 그 서버가 지원하는 방식에 맞춘다.",
+    "why": "도구에 맞추려고 팀 고유의 승인 규칙을 바꾸는 건 거꾸로다. 팀 전용 흐름은 custom 서버 몫이다."
+   },
+   {
+    "en": "Skip MCP and have the agent call the Jira REST API through Bash with `curl`, documenting the endpoints in CLAUDE.md.",
+    "ko": "MCP 없이 agent 가 Bash 에서 `curl` 로 Jira REST API 를 부르게 하고, endpoint 는 CLAUDE.md 에 적어 둔다.",
+    "why": "인증·오류 처리·요청 형식을 매번 agent 가 떠맡아 불안정하고, 표준 연동을 굳이 손으로 다시 짜는 셈이다."
+   }
+  ],
+  "answer": [
+   0,
+   1
+  ],
+  "point_ko": "표준 연동 = 커뮤니티 서버, 팀 전용 = custom",
+  "explain_ko": [
+   "**Jira tickets** 는 누구나 쓰는 표준 연동이다. 이미 있는 **커뮤니티 MCP server** 를 쓰는 게 custom 구현(**only 3 of the 12**)을 이어 가는 것보다 빠르고 관리할 것도 적다.",
+   "**in-house release checklist ... with custom sign-off rules** 는 팀에만 있는 흐름이다. 이런 곳에만 **custom MCP server** 를 만든다.",
+   "**least ongoing maintenance** 라는 조건이 판단 기준이다. 모두 직접 짜거나, 팀 규칙을 기성 도구에 맞추거나, `curl` 로 우회하는 보기는 이 기준을 어긴다."
+  ],
+  "clues": [
+   {
+    "en": "read and update Jira tickets",
+    "ko": "표준 연동 = 기성 서버"
+   },
+   {
+    "en": "in-house release checklist",
+    "ko": "팀 전용 흐름 = custom 서버"
+   },
+   {
+    "en": "implemented only 3 of the 12 issue operations",
+    "ko": "직접 구현은 느리고 비쌈"
+   },
+   {
+    "en": "the least ongoing maintenance",
+    "ko": "유지 보수 최소가 기준"
+   }
+  ],
+  "discuss_ko": "이미 일주일을 들인 custom Jira 서버를 버리는 게 아깝게 느껴지는데, 매몰 비용 말고 앞으로의 비용으로 따지면 어떻게 보일까?",
+  "words": [
+   {
+    "word": "in-house",
+    "pos": "adj.",
+    "ko": "사내의, 자체 제작한",
+    "example": "the team's in-house release checklist"
+   },
+   {
+    "word": "sign-off",
+    "pos": "n.",
+    "ko": "(최종) 승인, 결재",
+    "example": "custom sign-off rules"
+   },
+   {
+    "word": "ongoing",
+    "pos": "adj.",
+    "ko": "계속되는, 지속적인",
+    "example": "the least ongoing maintenance"
+   },
+   {
+    "word": "adopt",
+    "pos": "v.",
+    "ko": "채택하다, 도입하다",
+    "example": "Adopt an existing community MCP server for Jira"
+   },
+   {
+    "word": "adapt",
+    "pos": "v.",
+    "ko": "(~에) 맞추다, 조정하다",
+    "example": "adapt the team's sign-off rules to whatever it supports"
+   },
+   {
+    "word": "specific to",
+    "pos": "idiom",
+    "ko": "~에만 해당하는, ~ 고유의",
+    "example": "specific to your team"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C4-06",
+  "domain": 2,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ts": [
+   "2.4"
+  ],
+  "guide_en": "Exposing content catalogs as MCP resources to give agents visibility into available data without requiring exploratory tool calls",
+  "q_en": "Your agent helps engineers write SQL against an analytics warehouse through an MCP server that offers `list_tables`, `describe_table`, and `run_query` tools. Traces show that for a typical question the agent makes 14 exploratory `list_tables` and `describe_table` calls before its first `run_query`, adding about 40 seconds of latency. The warehouse schema changes only about once a month. What's the most effective improvement?",
+  "q_ko": "agent 는 `list_tables`, `describe_table`, `run_query` 도구를 제공하는 MCP server 를 통해 엔지니어가 분석용 웨어하우스에 SQL 을 쓰도록 돕는다. 실행 기록을 보면 보통의 질문 하나에 agent 가 첫 `run_query` 전에 탐색용 `list_tables`·`describe_table` 호출을 14번 해서 지연이 40초쯤 늘어난다. 웨어하우스 schema 는 한 달에 한 번 정도만 바뀐다. 가장 효과적인 개선은?",
+  "options": [
+   {
+    "en": "Expose the warehouse's schema catalog (tables, columns, and their descriptions) as an MCP resource so the agent can see what data is available without exploratory calls.",
+    "ko": "웨어하우스 schema 카탈로그(테이블·컬럼·설명)를 MCP resource 로 노출해, agent 가 탐색 호출 없이 어떤 데이터가 있는지 보게 한다.",
+    "why": "정답. 잘 안 바뀌는 카탈로그를 resource 로 보여 주면 매번 도구로 더듬어 찾을 필요가 사라진다."
+   },
+   {
+    "en": "Add \"Minimize exploratory tool calls\" to the agent's system prompt.",
+    "ko": "agent 의 system prompt 에 \"탐색용 도구 호출을 최소화하라\"를 넣는다.",
+    "why": "데이터 구조를 알 방법은 주지 않고 호출만 줄이라 해서, 테이블을 추측하는 오류로 이어진다."
+   },
+   {
+    "en": "Remove `list_tables` and `describe_table` so the agent goes straight to `run_query`.",
+    "ko": "`list_tables` 와 `describe_table` 을 없애 agent 가 곧장 `run_query` 로 가게 한다.",
+    "why": "구조를 확인할 수단 자체가 없어져 틀린 테이블·컬럼 이름으로 쿼리하게 된다."
+   },
+   {
+    "en": "Put a caching proxy in front of the MCP server that stores `describe_table` responses for 30 days.",
+    "ko": "MCP server 앞에 `describe_table` 응답을 30일간 저장하는 캐싱 프록시를 둔다.",
+    "why": "호출 한 번의 속도는 빨라져도 탐색 호출 14번이라는 횟수 문제는 그대로다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "데이터 목록 보여 주기 = MCP resources",
+  "explain_ko": [
+   "**14 exploratory `list_tables` and `describe_table` calls** 는 agent 가 어떤 데이터가 있는지 몰라 도구로 더듬고 있다는 뜻이다.",
+   "**schema changes only about once a month** 이니 schema 는 거의 고정된 카탈로그다. 이런 내용은 **MCP resource** 로 노출하면 agent 가 탐색 호출 없이 바로 본다.",
+   "캐시는 호출 속도만, 프롬프트는 의지만 건드린다. 도구를 없애면 agent 가 구조를 알 길이 아예 막힌다."
+  ],
+  "clues": [
+   {
+    "en": "14 exploratory `list_tables` and `describe_table` calls",
+    "ko": "탐색 호출 과다 = 카탈로그가 안 보임"
+   },
+   {
+    "en": "The warehouse schema changes only about once a month",
+    "ko": "잘 안 바뀌는 목록 = resource 감"
+   },
+   {
+    "en": "adding about 40 seconds of latency",
+    "ko": "탐색 비용이 실제로 큼"
+   }
+  ],
+  "discuss_ko": "캐싱 프록시로 `describe_table` 응답을 빠르게 만들면 지연은 꽤 줄 텐데, 그래도 resource 가 더 근본적인 해법인 이유는 뭘까?",
+  "words": [
+   {
+    "word": "exploratory",
+    "pos": "adj.",
+    "ko": "탐색을 위한, 더듬어 찾는",
+    "example": "14 exploratory `list_tables` and `describe_table` calls"
+   },
+   {
+    "word": "latency",
+    "pos": "n.",
+    "ko": "지연 시간",
+    "example": "adding about 40 seconds of latency"
+   },
+   {
+    "word": "trace",
+    "pos": "n.",
+    "ko": "실행 기록, 추적 로그",
+    "example": "Traces show that for a typical question"
+   },
+   {
+    "word": "warehouse",
+    "pos": "n.",
+    "ko": "(데이터) 웨어하우스, 분석용 대형 저장소",
+    "example": "an analytics warehouse"
+   },
+   {
+    "word": "expose",
+    "pos": "v.",
+    "ko": "(외부에서 볼 수 있게) 노출하다",
+    "example": "Expose the warehouse's schema catalog"
+   },
+   {
+    "word": "go straight to",
+    "pos": "idiom",
+    "ko": "곧장 ~로 가다",
+    "example": "the agent goes straight to `run_query`"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C4-07",
+  "domain": 1,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ts": [
+   "1.6"
+  ],
+  "guide_en": "Decomposing open-ended tasks (e.g., \"add comprehensive tests to a legacy codebase\") by first mapping structure, identifying high-impact areas, then creating a prioritized plan that adapts as dependencies are discovered",
+  "q_en": "An engineering manager asks the agent to add comprehensive tests to a 9-year-old billing service with 5% test coverage. Your current workflow is a fixed chain: list all 310 modules alphabetically, then generate a test file for each module in order. After two days, 80 test files exist for rarely used helper modules, the payment-calculation core is still untested, and 30 generated tests fail because they don't account for a shared database fixture the agent discovered on the first day. What's the most effective change to the task decomposition?",
+  "q_ko": "엔지니어링 매니저가 테스트 커버리지 5% 인 9년 된 결제 서비스에 포괄적인 테스트를 추가해 달라고 agent 에게 맡겼다. 지금 워크플로는 고정된 체인이다. 모듈 310개를 알파벳 순으로 나열한 뒤, 순서대로 모듈마다 테스트 파일을 만든다. 이틀이 지나자 거의 안 쓰는 helper 모듈용 테스트 파일 80개가 생겼지만 결제 계산 핵심부는 여전히 테스트가 없고, 생성된 테스트 30개는 agent 가 첫날 발견한 공용 데이터베이스 fixture 를 반영하지 않아 실패한다. 작업 분해 방식을 어떻게 바꾸는 게 가장 효과적인가?",
+  "options": [
+   {
+    "en": "First map the codebase structure and identify high-impact areas such as payment calculation, then create a prioritized test plan that the agent updates as it discovers dependencies like the shared fixture.",
+    "ko": "먼저 코드베이스 구조를 파악해 결제 계산 같은 영향이 큰 영역을 찾고, 우선순위를 매긴 테스트 계획을 세운 뒤 공용 fixture 같은 의존성을 발견할 때마다 계획을 고친다.",
+    "why": "정답. 열린 과제는 발견한 내용에 따라 하위 작업을 새로 짜는 동적 분해가 맞다."
+   },
+   {
+    "en": "Keep the fixed chain but add a final cross-module integration pass that repairs failing tests.",
+    "ko": "고정 체인은 그대로 두고, 마지막에 실패한 테스트를 고치는 모듈 간 통합 단계를 덧붙인다.",
+    "why": "순서가 뻔한 리뷰에 맞는 prompt chaining 을 덧댈 뿐, 핵심부가 뒤로 밀리는 우선순위 문제는 못 고친다."
+   },
+   {
+    "en": "Spawn 310 parallel subagents, one per module, so that every test file is generated in a single run.",
+    "ko": "모듈마다 하나씩 subagent 310개를 병렬로 띄워 모든 테스트 파일을 한 번에 만든다.",
+    "why": "속도만 올릴 뿐 무엇이 중요한지 가리지 않고, 발견한 의존성도 서로 공유되지 않는다."
+   },
+   {
+    "en": "Add \"Prioritize important modules and handle shared fixtures\" to the prompt at each step of the chain.",
+    "ko": "체인의 단계마다 프롬프트에 \"중요한 모듈을 우선하고 공용 fixture 를 처리하라\"를 넣는다.",
+    "why": "알파벳 순 고정 구조는 그대로라, 지시를 넣어도 순서와 계획이 발견에 맞춰 바뀌지 않는다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "열린 과제 = 구조 파악 → 우선순위 → 적응형 계획",
+  "explain_ko": [
+   "**add comprehensive tests** 는 끝이 정해지지 않은 열린 과제다. 이런 일에 **fixed chain** 을 쓰니 알파벳 순서대로 덜 중요한 모듈부터 채워졌다.",
+   "**the payment-calculation core is still untested** 는 우선순위가 없다는 증거고, **discovered on the first day** 인데도 테스트가 실패한다는 건 발견이 계획에 반영되지 않았다는 뜻이다.",
+   "그래서 **구조 파악 → 영향 큰 영역 식별 → 우선순위 계획 → 발견에 따라 계획 수정**이라는 동적 분해로 바꿔야 한다."
+  ],
+  "clues": [
+   {
+    "en": "add comprehensive tests",
+    "ko": "열린 과제 = 동적 분해"
+   },
+   {
+    "en": "a fixed chain",
+    "ko": "고정 순서가 문제의 뿌리"
+   },
+   {
+    "en": "the payment-calculation core is still untested",
+    "ko": "영향 큰 곳 우선순위 없음"
+   },
+   {
+    "en": "a shared database fixture the agent discovered on the first day",
+    "ko": "발견이 계획에 반영 안 됨"
+   }
+  ],
+  "discuss_ko": "파일별 분석 후 통합 점검을 하는 코드 리뷰에서는 고정 체인이 맞는데, 테스트 추가에서는 왜 안 맞을까? 두 과제의 차이를 짚어 보자.",
+  "words": [
+   {
+    "word": "comprehensive",
+    "pos": "adj.",
+    "ko": "포괄적인, 빠짐없는",
+    "example": "add comprehensive tests"
+   },
+   {
+    "word": "coverage",
+    "pos": "n.",
+    "ko": "(테스트) 커버리지, 적용 범위",
+    "example": "5% test coverage"
+   },
+   {
+    "word": "account for",
+    "pos": "phr. v.",
+    "ko": "~을 고려하다, 반영하다",
+    "example": "they don't account for a shared database fixture"
+   },
+   {
+    "word": "fixture",
+    "pos": "n.",
+    "ko": "(테스트용) 고정 데이터·환경",
+    "example": "a shared database fixture"
+   },
+   {
+    "word": "decomposition",
+    "pos": "n.",
+    "ko": "분해, 쪼개기",
+    "example": "the task decomposition"
+   },
+   {
+    "word": "prioritized",
+    "pos": "adj.",
+    "ko": "우선순위를 매긴",
+    "example": "a prioritized test plan"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C4-08",
+  "domain": 1,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ts": [
+   "1.7"
+  ],
+  "guide_en": "Informing a resumed session about specific file changes for targeted re-analysis rather than requiring full re-exploration",
+  "q_en": "Yesterday you spent 3 hours in a Claude Code session named `order-flow-map`, tracing how orders move through 40 modules of a legacy system. Overnight, a teammate merged a small PR that changed only `pricing/discounts.py` and `pricing/tax.py`; everything else you analyzed is untouched. You want to continue the investigation this morning. What's the most effective approach?",
+  "q_ko": "어제 `order-flow-map` 이라는 이름의 Claude Code 세션에서 3시간 동안 레거시 시스템의 모듈 40개를 따라 주문 흐름을 추적했다. 밤사이 팀원이 `pricing/discounts.py` 와 `pricing/tax.py` 만 바꾼 작은 PR 을 병합했고, 분석했던 나머지는 그대로다. 오늘 아침 조사를 이어 가고 싶다. 가장 효과적인 방법은?",
+  "options": [
+   {
+    "en": "Run `claude --resume order-flow-map` and tell the agent that `pricing/discounts.py` and `pricing/tax.py` changed, so it re-analyzes only those files.",
+    "ko": "`claude --resume order-flow-map` 으로 이어 가고, `pricing/discounts.py` 와 `pricing/tax.py` 가 바뀌었다고 알려 그 파일만 다시 분석하게 한다.",
+    "why": "정답. 이전 맥락이 대부분 유효하니 세션을 이어 가고, 바뀐 파일만 콕 집어 다시 보게 하면 된다."
+   },
+   {
+    "en": "Start a new session and have the agent re-explore all 40 modules from scratch so that no finding is stale.",
+    "ko": "새 세션을 열고 오래된 발견이 없도록 모듈 40개를 처음부터 다시 탐색하게 한다.",
+    "why": "두 파일만 바뀌었는데 3시간짜리 분석을 통째로 버리는 낭비다."
+   },
+   {
+    "en": "Run `claude --resume order-flow-map` and continue without mentioning the PR, since the agent will notice the file changes on its own.",
+    "ko": "`claude --resume order-flow-map` 으로 이어 가되 PR 얘기는 하지 않는다. agent 가 파일 변경을 스스로 알아챌 것이기 때문이다.",
+    "why": "재개한 세션에는 어제 읽은 옛 tool 결과가 남아 있어, 말해 주지 않으면 바뀌기 전 코드를 기준으로 추론한다."
+   },
+   {
+    "en": "Use `fork_session` to branch from yesterday's session and have the new branch compare the merged PR against the old analysis.",
+    "ko": "`fork_session` 으로 어제 세션에서 갈라져 나온 뒤, 새 갈래에서 병합된 PR 과 예전 분석을 비교하게 한다.",
+    "why": "fork 는 같은 기반에서 서로 다른 접근을 시험할 때 쓴다. 코드 변경을 반영하는 해법이 아니다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "대부분 유효 = resume + 바뀐 파일만 알려 주기",
+  "explain_ko": [
+   "**changed only `pricing/discounts.py` and `pricing/tax.py`** 와 **everything else you analyzed is untouched** 는 어제 맥락이 거의 다 유효하다는 뜻이다. 그러니 이름으로 **`--resume`** 해서 이어 간다.",
+   "다만 재개한 세션은 어제의 tool 결과를 그대로 믿는다. 그래서 **바뀐 파일을 구체적으로 알려** 그 부분만 다시 분석하게 해야 한다.",
+   "대규모 리팩터처럼 옛 결과가 대부분 낡았다면 새 세션에 요약을 넣는 게 낫지만, 이번처럼 작은 변경이면 전부 다시 탐색할 필요가 없다."
+  ],
+  "clues": [
+   {
+    "en": "a Claude Code session named `order-flow-map`",
+    "ko": "이름 붙은 세션 = --resume 가능"
+   },
+   {
+    "en": "changed only `pricing/discounts.py` and `pricing/tax.py`",
+    "ko": "바뀐 파일이 소수로 특정됨"
+   },
+   {
+    "en": "everything else you analyzed is untouched",
+    "ko": "이전 맥락 대부분 유효"
+   }
+  ],
+  "discuss_ko": "만약 팀원이 모듈 40개 중 25개를 건드린 대규모 리팩터를 병합했다면, 같은 상황에서 답이 어떻게 달라질까?",
+  "words": [
+   {
+    "word": "overnight",
+    "pos": "adv.",
+    "ko": "밤사이에",
+    "example": "Overnight, a teammate merged a small PR"
+   },
+   {
+    "word": "merge",
+    "pos": "v.",
+    "ko": "(브랜치·PR 을) 병합하다",
+    "example": "a teammate merged a small PR"
+   },
+   {
+    "word": "untouched",
+    "pos": "adj.",
+    "ko": "손대지 않은, 그대로인",
+    "example": "everything else you analyzed is untouched"
+   },
+   {
+    "word": "from scratch",
+    "pos": "idiom",
+    "ko": "처음부터, 백지 상태에서",
+    "example": "re-explore all 40 modules from scratch"
+   },
+   {
+    "word": "stale",
+    "pos": "adj.",
+    "ko": "낡은, 최신이 아닌",
+    "example": "so that no finding is stale"
+   },
+   {
+    "word": "on its own",
+    "pos": "idiom",
+    "ko": "스스로, 알아서",
+    "example": "the agent will notice the file changes on its own"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C4-09",
+  "domain": 3,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ts": [
+   "3.4",
+   "5.4"
+  ],
+  "guide_en": "Using the Explore subagent for verbose discovery phases to prevent context window exhaustion during multi-phase tasks",
+  "q_en": "A developer uses Claude Code to migrate a service from a deprecated HTTP client library to a new one across roughly 60 files. During the discovery phase, Claude runs dozens of searches and dumps every matching file excerpt, error-handling variant, and retry configuration into the main conversation. By the time the migration plan is agreed, the context is 85% full, and the session has to be compacted twice during implementation, losing details of the agreed plan. What's the most effective way to structure this multi-phase task next time?",
+  "q_ko": "개발자가 Claude Code 로 서비스의 HTTP client 라이브러리를 사용 중단 예정인 것에서 새것으로 옮긴다. 대상은 파일 60개 정도다. 탐색 단계에서 Claude 는 검색을 수십 번 돌리며 일치하는 파일 발췌, 오류 처리 변형, 재시도 설정을 전부 메인 대화에 쏟아 낸다. 마이그레이션 계획에 합의할 무렵 컨텍스트는 85% 가 찼고, 구현 중에 세션을 두 번 compact 해야 해서 합의한 계획의 세부 내용이 사라졌다. 다음번에 이 여러 단계짜리 작업을 어떻게 구성하는 게 가장 효과적인가?",
+  "options": [
+   {
+    "en": "Run the discovery phase in the Explore subagent so the verbose search output stays in its own context and only a summary of usages and patterns returns to the main conversation.",
+    "ko": "탐색 단계를 Explore subagent 에서 돌려, 장황한 검색 결과는 그쪽 컨텍스트에 두고 사용처와 패턴 요약만 메인 대화로 돌아오게 한다.",
+    "why": "정답. 장황한 탐색 출력을 격리하고 요약만 받으니 계획과 구현에 쓸 메인 컨텍스트가 보존된다."
+   },
+   {
+    "en": "Skip the discovery phase and use direct execution, letting Claude find each usage as it edits files one by one.",
+    "ko": "탐색 단계를 건너뛰고 direct execution 으로, Claude 가 파일을 하나씩 고치면서 사용처를 찾게 한다.",
+    "why": "60개 파일에 걸친 라이브러리 교체는 먼저 조사하고 계획해야 하는 일이라, 탐색을 빼면 되돌리는 작업이 커진다."
+   },
+   {
+    "en": "Run `/compact` after every few discovery searches so the main conversation never fills up.",
+    "ko": "탐색 검색을 몇 번 할 때마다 `/compact` 를 실행해 메인 대화가 차지 않게 한다.",
+    "why": "출력이 메인 대화에 계속 쌓이는 구조는 그대로이고, 압축을 거듭할수록 세부 내용이 더 빠져나간다."
+   },
+   {
+    "en": "Save the full discovery output into the project's CLAUDE.md so that it is loaded at the start of every session.",
+    "ko": "탐색 결과 전체를 프로젝트 CLAUDE.md 에 저장해 세션마다 처음부터 불러오게 한다.",
+    "why": "CLAUDE.md 는 늘 불러오는 공통 규칙용이다. 장황한 결과를 넣으면 모든 세션의 컨텍스트가 처음부터 무거워진다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "장황한 탐색 단계 = Explore subagent 로 격리",
+  "explain_ko": [
+   "**dumps every matching file excerpt ... into the main conversation** 이 원인이다. 탐색 단계의 장황한 출력이 메인 컨텍스트를 채워 버렸다.",
+   "**Explore subagent** 는 이런 탐색을 자기 컨텍스트에서 처리하고 **요약만** 돌려준다. 그러면 계획·구현 단계에 쓸 메인 대화가 넉넉하게 남는다.",
+   "`/compact` 는 이미 찬 뒤에 줄이는 사후 조치라 **losing details** 가 되풀이된다. 격리가 먼저다."
+  ],
+  "clues": [
+   {
+    "en": "dumps every matching file excerpt",
+    "ko": "장황한 탐색 출력"
+   },
+   {
+    "en": "into the main conversation",
+    "ko": "메인 컨텍스트가 오염됨"
+   },
+   {
+    "en": "this multi-phase task",
+    "ko": "탐색 → 계획 → 구현 여러 단계"
+   },
+   {
+    "en": "losing details of the agreed plan",
+    "ko": "압축으로는 세부가 사라짐"
+   }
+  ],
+  "discuss_ko": "탐색 결과를 scratchpad 파일에 적어 두는 방법도 있는데, Explore subagent 와 어떻게 다르고 둘을 함께 쓸 수도 있을까?",
+  "words": [
+   {
+    "word": "deprecated",
+    "pos": "adj.",
+    "ko": "사용 중단 예정인, 더는 권장되지 않는",
+    "example": "a deprecated HTTP client library"
+   },
+   {
+    "word": "dump",
+    "pos": "v.",
+    "ko": "(마구) 쏟아 넣다",
+    "example": "dumps every matching file excerpt"
+   },
+   {
+    "word": "excerpt",
+    "pos": "n.",
+    "ko": "발췌, 일부 인용",
+    "example": "every matching file excerpt"
+   },
+   {
+    "word": "variant",
+    "pos": "n.",
+    "ko": "변형, 다른 형태",
+    "example": "error-handling variant"
+   },
+   {
+    "word": "by the time",
+    "pos": "conj.",
+    "ko": "~할 무렵이면, ~할 때쯤에는",
+    "example": "By the time the migration plan is agreed"
+   },
+   {
+    "word": "verbose",
+    "pos": "adj.",
+    "ko": "장황한, 말이 많은",
+    "example": "the verbose search output"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "C4-10",
+  "domain": 5,
+  "scenario": "Developer Productivity with Claude",
+  "source": "claude",
+  "ts": [
+   "5.4"
+  ],
+  "guide_en": "Designing crash recovery using structured agent state exports (manifests) that the coordinator loads on resume and injects into agent prompts",
+  "q_en": "Your Agent SDK tool runs an overnight legacy-system audit: a coordinator spawns 8 subagents, each analyzing one subsystem for about 40 minutes. Last night the coordinator process crashed after 6 subagents had finished, and the restart reran all 8 from scratch, costing another 5 hours. The completed subagents' findings existed only in the crashed coordinator's conversation. What's the most effective design to make the audit recoverable?",
+  "q_ko": "Agent SDK 로 만든 도구가 밤새 레거시 시스템 감사를 돌린다. coordinator 가 subagent 8개를 띄우고, 각자 하위 시스템 하나를 40분 정도 분석한다. 어젯밤 subagent 6개가 끝난 뒤 coordinator 프로세스가 죽었고, 재시작하자 8개를 처음부터 다시 돌려 5시간이 더 들었다. 끝난 subagent 들의 결과는 죽은 coordinator 의 대화 안에만 있었다. 감사를 복구 가능하게 만드는 가장 효과적인 설계는?",
+  "options": [
+   {
+    "en": "Have each subagent export its state and findings to a known location, and have the coordinator load a manifest of completed work on resume and inject those results into the prompts for the remaining work.",
+    "ko": "subagent 마다 상태와 결과를 정해진 위치에 내보내고, coordinator 는 재개할 때 완료 작업 manifest 를 불러와 그 결과를 남은 작업의 프롬프트에 넣는다.",
+    "why": "정답. 결과가 프로세스 밖 파일에 남으니, 재개하면 끝난 일은 건너뛰고 남은 일만 이어 간다."
+   },
+   {
+    "en": "Add a supervisor that automatically restarts the coordinator process whenever it crashes.",
+    "ko": "coordinator 프로세스가 죽을 때마다 자동으로 다시 띄우는 감시 프로세스를 둔다.",
+    "why": "다시 빨리 뜨긴 해도 끝난 결과가 남아 있지 않아 여전히 8개를 처음부터 돌린다."
+   },
+   {
+    "en": "Run all 8 subsystem analyses sequentially inside the coordinator's own session so there is only one process to keep alive.",
+    "ko": "subsystem 분석 8개를 모두 coordinator 자기 세션 안에서 차례로 돌려, 살려 둘 프로세스를 하나로 줄인다.",
+    "why": "결과가 여전히 한 대화 안에만 있어 죽으면 다 잃고, 컨텍스트도 훨씬 빨리 찬다."
+   },
+   {
+    "en": "Instruct the coordinator in its system prompt to remember which subagents completed before any crash.",
+    "ko": "coordinator 의 system prompt 에 비정상 종료 전에 어떤 subagent 가 끝났는지 기억하라고 지시한다.",
+    "why": "프로세스가 죽으면 대화 기억도 함께 사라지므로, 지시로는 상태를 보존할 수 없다."
+   }
+  ],
+  "answer": 0,
+  "point_ko": "crash 복구 = 상태 내보내기 + 재개 시 manifest 로드",
+  "explain_ko": [
+   "**findings existed only in the crashed coordinator's conversation** 이 근본 원인이다. 결과가 프로세스 메모리에만 있으니 죽으면 다 사라진다.",
+   "그래서 각 agent 가 **정해진 위치에 상태를 내보내고**, coordinator 가 재개할 때 **manifest 를 읽어** 끝난 작업은 건너뛰고 그 결과를 남은 작업 프롬프트에 넣는다.",
+   "자동 재시작은 빨리 다시 뜨게만 할 뿐 **reran all 8 from scratch** 를 막지 못하고, 프롬프트 지시는 프로세스와 함께 사라진다."
+  ],
+  "clues": [
+   {
+    "en": "crashed after 6 subagents had finished",
+    "ko": "끝난 작업이 있었음"
+   },
+   {
+    "en": "reran all 8 from scratch",
+    "ko": "완료 상태가 보존 안 됨"
+   },
+   {
+    "en": "existed only in the crashed coordinator's conversation",
+    "ko": "상태가 프로세스 밖에 없음 = 내보내기 필요"
+   }
+  ],
+  "discuss_ko": "manifest 에 결과 전문을 다 넣을지, 파일 위치와 요약만 넣을지에 따라 재개 후 coordinator 의 컨텍스트가 어떻게 달라질까?",
+  "words": [
+   {
+    "word": "audit",
+    "pos": "n.",
+    "ko": "감사, 점검",
+    "example": "an overnight legacy-system audit"
+   },
+   {
+    "word": "crash",
+    "pos": "v.",
+    "ko": "(프로그램이) 비정상 종료되다",
+    "example": "the coordinator process crashed"
+   },
+   {
+    "word": "rerun",
+    "pos": "v.",
+    "ko": "다시 실행하다 (과거형 reran)",
+    "example": "the restart reran all 8 from scratch"
+   },
+   {
+    "word": "recoverable",
+    "pos": "adj.",
+    "ko": "복구할 수 있는",
+    "example": "to make the audit recoverable"
+   },
+   {
+    "word": "manifest",
+    "pos": "n.",
+    "ko": "(작업·파일) 목록 명세",
+    "example": "load a manifest of completed work"
+   },
+   {
+    "word": "inject",
+    "pos": "v.",
+    "ko": "주입하다, 넣어 주다",
+    "example": "inject those results into the prompts"
+   },
+   {
+    "word": "on resume",
+    "pos": "idiom",
+    "ko": "재개할 때",
+    "example": "on resume"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ }
+]

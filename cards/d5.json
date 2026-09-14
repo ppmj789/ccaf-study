@@ -1,593 +1,1077 @@
 [
-  {
-    "id": "D5-01",
-    "domain": 5,
-    "scenario": "Multi-Agent Research System",
-    "q_en": "Production monitoring reveals inconsistent synthesis quality. When aggregated results total ~75K tokens, the synthesis agent reliably cites information from the first 15K tokens (web search headlines and snippets) and the final 10K tokens (document analysis conclusions), but frequently omits critical findings that appear in the middle 50K tokens — even when those findings directly address the research question. How should you restructure the aggregated input?",
-    "q_ko": "운영 모니터링에서 종합(synthesis) 품질이 들쑥날쑥하다는 게 드러났다. 취합된 결과가 약 75K 토큰일 때, synthesis agent 는 앞쪽 15K 토큰(웹 검색 헤드라인과 스니펫)과 마지막 10K 토큰(문서 분석 결론)은 꾸준히 인용하지만, 가운데 50K 토큰에 있는 핵심 발견은 자주 빠뜨린다. 그 발견이 연구 질문에 직접 답하는 내용이어도 그렇다. 취합된 입력을 어떻게 재구성해야 하는가?",
-    "options": [
-      {
-        "en": "Implement rotation that alternates which subagent's results appear first across different research tasks, ensuring both sources receive primacy positioning equally over time.",
-        "ko": "연구 작업마다 어느 subagent 의 결과를 앞에 둘지 번갈아 바꿔, 시간이 지나면 두 출처가 맨 앞자리를 공평하게 차지하게 한다.",
-        "why": "문제는 어느 출처가 앞에 오느냐가 아니라 가운데가 묻힌다는 것이라, 순서를 돌려도 가운데는 여전히 빠진다."
-      },
-      {
-        "en": "Place a key findings summary at the beginning of the aggregated input and organise detailed results with explicit section headers for easier navigation.",
-        "ko": "취합된 입력 맨 앞에 핵심 발견 요약을 두고, 세부 결과는 찾기 쉽도록 명시적인 섹션 헤더로 정리한다.",
-        "why": "모델이 잘 보는 맨 앞에 핵심을 올리고 헤더로 구조를 잡아 lost-in-the-middle 을 직접 완화하므로 정답이다."
-      },
-      {
-        "en": "Summarise all subagent outputs to under 20K tokens total before aggregation, ensuring content stays within the model's reliable processing range.",
-        "ko": "취합 전에 모든 subagent 출력을 합계 20K 토큰 미만으로 요약해, 모델이 안정적으로 처리하는 범위 안에 두게 한다.",
-        "why": "크게 줄이는 요약은 손실이 커서 가운데 있던 중요한 근거까지 날려 버린다."
-      },
-      {
-        "en": "Stream subagent results to the synthesis agent incrementally, processing web search results first to completion before introducing document analysis findings.",
-        "ko": "subagent 결과를 synthesis agent 에 조금씩 스트리밍해, 웹 검색 결과를 끝까지 처리한 뒤에 문서 분석 결과를 넣는다.",
-        "why": "전달 순서가 아니라 입력 구조의 문제라서 스트리밍은 원인을 비껴간다."
-      }
-    ],
-    "answer": 1,
-    "point_ko": "가운데가 묻히면 = 맨 앞 핵심 요약 + 섹션 헤더",
-    "explain_ko": [
-      "앞 15K 와 끝 10K 는 인용하는데 **가운데 50K 만 빠뜨린다**는 단서는 전형적인 lost-in-the-middle 현상이다.",
-      "모델은 입력의 처음과 끝을 잘 보므로, **핵심 발견 요약을 맨 앞**에 두면 중요한 내용이 확실히 눈에 들어간다.",
-      "세부 결과는 **명시적인 섹션 헤더**로 나눠, 긴 가운데 구간에서도 길을 잃지 않게 한다.",
-      "순서 돌리기, 크기 줄이기, 스트리밍은 가운데가 묻힌다는 구조 문제를 풀지 못한다."
-    ],
-    "clues": [
-      {"en": "reliably cites information from the first 15K tokens", "ko": "앞부분은 잘 인용함"},
-      {"en": "the final 10K tokens", "ko": "끝부분도 잘 인용함"},
-      {"en": "frequently omits critical findings that appear in the middle 50K tokens", "ko": "가운데만 묻힘 = lost-in-the-middle"},
-      {"en": "restructure the aggregated input", "ko": "입력의 배치와 구조를 바꾸라는 질문"}
-    ],
-    "discuss_ko": "C 처럼 전체를 20K 아래로 줄이면 가운데 자체가 없어지니 해결될 것 같은데, 요약 과정에서 무엇을 잃게 되는지 따져 보면 왜 안 되는 걸까?",
-    "words": [
-      {"word": "aggregate", "pos": "v.", "ko": "모으다, 취합하다", "example": "When aggregated results total ~75K tokens"},
-      {"word": "omit", "pos": "v.", "ko": "빠뜨리다, 누락하다", "example": "frequently omits critical findings"},
-      {"word": "synthesis", "pos": "n.", "ko": "종합, 통합", "example": "inconsistent synthesis quality"},
-      {"word": "rotation", "pos": "n.", "ko": "순환, 돌아가며 바꾸기", "example": "Implement rotation that alternates which subagent's results appear first"},
-      {"word": "primacy", "pos": "n.", "ko": "맨 앞자리, 우선순위(첫머리 효과)", "example": "ensuring both sources receive primacy positioning equally over time"},
-      {"word": "incrementally", "pos": "adv.", "ko": "조금씩, 점진적으로", "example": "Stream subagent results to the synthesis agent incrementally"}
-    ],
-    "check": "ok",
-    "checkNote": ""
-  },
-  {
-    "id": "D5-02",
-    "domain": 5,
-    "scenario": "Customer Support Agent",
-    "q_en": "After a 15-turn support session about a billing dispute, the agent's response refers to \"a recent refund\" and \"prompt processing\" — but the customer's original claim specified a $247.83 refund promised by Friday. What context management failure caused this?",
-    "q_ko": "청구 분쟁에 관한 15턴짜리 상담이 이어진 뒤, 에이전트의 응답은 “최근 환불”, “신속한 처리”라고만 말한다. 그런데 고객의 원래 주장은 금요일까지 해 주기로 약속된 $247.83 환불이었다. 어떤 컨텍스트 관리 실패가 이런 결과를 낳았는가?",
-    "options": [
-      {
-        "en": "The agent exceeded its token budget and silently dropped the tool result containing the refund amount.",
-        "ko": "에이전트가 토큰 예산을 넘겨 환불 금액이 담긴 tool result 를 조용히 버렸다.",
-        "why": "금액이 통째로 사라진 게 아니라 '최근 환불'처럼 흐릿하게 바뀌었으니, 버려진 것이 아니라 요약 손실이다."
-      },
-      {
-        "en": "Progressive summarisation compressed specific transactional facts ($247.83, by Friday) into vague prose during conversation history compression.",
-        "ko": "대화 기록을 압축하는 과정에서 점진적 요약(progressive summarization)이 구체적인 거래 사실($247.83, 금요일까지)을 흐릿한 문장으로 뭉개 버렸다.",
-        "why": "숫자와 기한이 모호한 표현으로 바뀐 것은 요약 압축의 전형적 흔적이므로 정답이다."
-      },
-      {
-        "en": "The model's attention degraded due to the lost-in-the-middle effect applied to the conversation history.",
-        "ko": "대화 기록에 lost-in-the-middle 효과가 작용해 모델의 주의력이 떨어졌다.",
-        "why": "주의력 저하라면 사실을 놓칠 뿐, 구체적 값을 '최근 환불' 같은 뭉뚱그린 말로 바꿔 쓰지는 않는다."
-      },
-      {
-        "en": "The tool result for the order lookup was too long and was truncated before reaching the model.",
-        "ko": "주문 조회 tool result 가 너무 길어 모델에 닿기 전에 잘렸다.",
-        "why": "금액과 기한은 고객이 대화에서 직접 말한 내용이라 tool result 잘림과는 관계가 없다."
-      }
-    ],
-    "answer": 1,
-    "point_ko": "숫자·기한이 흐려짐 = 요약 압축 손실 → case facts 블록",
-    "explain_ko": [
-      "핵심은 **$247.83, 금요일까지** 같은 구체적 사실이 **\"a recent refund\", \"prompt processing\"** 같은 흐릿한 말로 바뀌었다는 점이다.",
-      "15턴이 쌓이면 대화 기록을 요약해 줄이는데, 이때 금액·날짜·주문번호 같은 값이 가장 먼저 뭉개진다.",
-      "해결책은 금액·기한·고객이 말한 기대를 **case facts 블록**으로 따로 뽑아, 요약하지 않고 매 프롬프트에 그대로 넣는 것이다."
-    ],
-    "clues": [
-      {"en": "15-turn support session", "ko": "긴 대화, 기록 압축이 일어날 길이"},
-      {"en": "\"a recent refund\" and \"prompt processing\"", "ko": "구체적 값이 흐릿한 말로 바뀜"},
-      {"en": "specified a $247.83 refund promised by Friday", "ko": "원래는 정확한 금액과 기한"},
-      {"en": "context management failure", "ko": "컨텍스트를 관리하는 방식의 문제"}
-    ],
-    "discuss_ko": "C 의 lost-in-the-middle 도 긴 대화에서 생기는 문제인데, 사실이 '빠진' 경우와 '흐려진' 경우를 어떻게 구분해서 원인을 가를 수 있을까?",
-    "words": [
-      {"word": "dispute", "pos": "n.", "ko": "분쟁, 이의 제기", "example": "a billing dispute"},
-      {"word": "progressive", "pos": "adj.", "ko": "점진적인, 단계적으로 누적되는", "example": "Progressive summarisation compressed specific transactional facts"},
-      {"word": "compress", "pos": "v.", "ko": "압축하다", "example": "during conversation history compression"},
-      {"word": "transactional", "pos": "adj.", "ko": "거래와 관련된", "example": "specific transactional facts"},
-      {"word": "vague", "pos": "adj.", "ko": "모호한, 흐릿한", "example": "into vague prose"},
-      {"word": "truncate", "pos": "v.", "ko": "(일부를) 잘라내다", "example": "was truncated before reaching the model"},
-      {"word": "silently", "pos": "adv.", "ko": "알리지 않고, 조용히", "example": "silently dropped the tool result"}
-    ],
-    "check": "ok",
-    "checkNote": ""
-  },
-  {
-    "id": "D5-03",
-    "domain": 5,
-    "scenario": "Customer Support Agent",
-    "q_en": "A customer says: \"I've been dealing with this for three weeks. Just connect me with a human — I'm done with bots.\" The agent responds: \"I understand your frustration. Let me quickly check your account and see if I can resolve this directly.\" Is this correct behaviour?",
-    "q_ko": "고객이 말한다. “이 문제로 3주째 씨름하고 있어요. 그냥 사람 상담원 연결해 주세요. 봇은 이제 됐어요.” 에이전트는 이렇게 답한다. “답답하신 마음 이해합니다. 제가 빠르게 계정을 확인해서 직접 해결할 수 있는지 볼게요.” 올바른 행동인가?",
-    "options": [
-      {
-        "en": "Yes — acknowledging frustration and attempting resolution maximises first-contact resolution rate.",
-        "ko": "그렇다. 불만에 공감하고 해결을 시도하면 첫 상담 해결률이 가장 높아진다.",
-        "why": "해결률 지표보다 고객이 분명히 밝힌 요청이 먼저다."
-      },
-      {
-        "en": "Yes — the issue may be straightforward; the agent should try before escalating.",
-        "ko": "그렇다. 간단한 문제일 수 있으니 에스컬레이션 전에 먼저 시도해야 한다.",
-        "why": "문제가 쉬운지와 상관없이, 사람을 명시적으로 요청하면 바로 넘겨야 한다."
-      },
-      {
-        "en": "No — explicit customer requests for a human agent must be honoured immediately without first attempting investigation.",
-        "ko": "아니다. 고객이 사람 상담원을 명시적으로 요청하면 조사를 먼저 시도하지 말고 즉시 들어줘야 한다.",
-        "why": "명시적 요청은 무조건 에스컬레이션하는 조건이므로 정답이다."
-      },
-      {
-        "en": "No — the agent should only escalate after a tool call confirms the issue exceeds its resolution capability.",
-        "ko": "아니다. tool call 로 에이전트가 해결할 수 없는 문제임을 확인한 뒤에만 에스컬레이션해야 한다.",
-        "why": "'아니다'는 맞지만, 확인부터 하라는 조건 때문에 결국 고객 요청을 미루게 된다."
-      }
-    ],
-    "answer": 2,
-    "point_ko": "사람 연결 명시 요청 = 조사 없이 즉시 에스컬레이션",
-    "explain_ko": [
-      "**Just connect me with a human** 은 불평이 아니라 명시적인 요청이다.",
-      "명시적 요청은 문제가 쉬워 보여도 조사보다 먼저 들어줘야 한다. **Let me quickly check your account** 는 그 요청을 뒤로 미룬 것이다.",
-      "에스컬레이션 조건은 (1) 고객의 명시적 요청 (2) 정책에 없는 상황 (3) 더 진전이 없음이다. 화난 감정만으로는 조건이 아니지만, 명시 요청은 언제나 조건이다."
-    ],
-    "clues": [
-      {"en": "Just connect me with a human", "ko": "사람 상담원 명시 요청"},
-      {"en": "I'm done with bots", "ko": "봇 거부 의사가 분명함"},
-      {"en": "Let me quickly check your account", "ko": "요청을 미루고 조사부터 함"},
-      {"en": "Is this correct behaviour?", "ko": "요청을 따랐는지 평가하라는 질문"}
-    ],
-    "discuss_ko": "D 처럼 툴로 한 번 확인하고 넘기면 상담원에게 더 많은 정보를 줄 수 있어 보이는데, 고객이 사람을 명시적으로 요청한 상황에서는 왜 그게 안 될까?",
-    "words": [
-      {"word": "frustration", "pos": "n.", "ko": "답답함, 불만", "example": "I understand your frustration."},
-      {"word": "be done with", "pos": "idiom", "ko": "~은 이제 질렸다, 끝내다", "example": "I'm done with bots."},
-      {"word": "honour", "pos": "v.", "ko": "(요청·약속을) 지키다, 들어주다", "example": "must be honoured immediately"},
-      {"word": "explicit", "pos": "adj.", "ko": "명시적인, 분명히 밝힌", "example": "explicit customer requests for a human agent"},
-      {"word": "straightforward", "pos": "adj.", "ko": "간단한, 복잡하지 않은", "example": "the issue may be straightforward"},
-      {"word": "escalate", "pos": "v.", "ko": "상급자·사람에게 넘기다", "example": "the agent should try before escalating"},
-      {"word": "exceed", "pos": "v.", "ko": "넘어서다, 초과하다", "example": "the issue exceeds its resolution capability"}
-    ],
-    "check": "ok",
-    "checkNote": ""
-  },
-  {
-    "id": "D5-04",
-    "domain": 5,
-    "scenario": "Multi-Agent Research System",
-    "q_en": "The document analysis agent discovers that two credible sources contain directly conflicting statistics on a key metric: one government report states 40% growth while an industry analysis states 12% growth. Both sources appear legitimate and the discrepancy could significantly affect the research conclusions. What's the most effective way for the document analysis agent to handle this?",
-    "q_ko": "문서 분석 에이전트가 신뢰할 만한 두 출처에서 핵심 지표에 대한 통계가 정면으로 충돌한다는 것을 발견했다. 한 정부 보고서는 40% 성장, 한 업계 분석은 12% 성장이라고 한다. 두 출처 모두 믿을 만해 보이고, 이 차이는 연구 결론에 크게 영향을 줄 수 있다. 문서 분석 에이전트가 이를 처리하는 가장 효과적인 방법은?",
-    "options": [
-      {
-        "en": "Select the government report figure as the more authoritative source and note the discrepancy briefly.",
-        "ko": "정부 보고서를 더 권위 있는 출처로 보고 그 수치를 택한 뒤, 차이는 짧게 언급한다.",
-        "why": "둘 다 믿을 만한데 한쪽을 골라 버리면 판단을 너무 일찍 내리고 다른 근거를 묻어 버린다."
-      },
-      {
-        "en": "Average the two values (26%) and include a note that sources vary on this metric.",
-        "ko": "두 값을 평균(26%)해 넣고, 출처마다 이 지표 값이 다르다고 메모한다.",
-        "why": "평균은 어느 출처도 보고하지 않은 숫자를 지어내는 것이다."
-      },
-      {
-        "en": "Flag the conflict to the coordinator and pause document analysis pending coordinator resolution.",
-        "ko": "충돌을 coordinator 에게 알리고, coordinator 가 결론을 낼 때까지 문서 분석을 멈춘다.",
-        "why": "충돌 하나 때문에 작업을 멈출 필요는 없고, 정보를 넘기면 종합 단계에서 다룰 수 있다."
-      },
-      {
-        "en": "Include both statistics with full source attribution and explicitly annotate the conflict, letting the synthesis agent and downstream consumers decide how to interpret the discrepancy.",
-        "ko": "두 통계를 출처와 함께 모두 넣고 충돌을 명시적으로 표시해, synthesis agent 와 뒤 단계 사용자가 그 차이를 어떻게 해석할지 정하게 한다.",
-        "why": "두 값을 출처와 함께 보존하고 충돌을 드러내므로 정답이다."
-      }
-    ],
-    "answer": 3,
-    "point_ko": "출처 충돌 = 둘 다 출처 달아 보존 + 충돌 표시",
-    "explain_ko": [
-      "**two credible sources**, **Both sources appear legitimate** 는 어느 한쪽을 틀렸다고 볼 근거가 없다는 뜻이다.",
-      "문서 분석 에이전트는 판정하는 자리가 아니다. 두 값을 **출처와 함께 그대로 남기고 충돌을 표시**해 다음 단계로 넘긴다.",
-      "평균 내기는 없던 숫자를 만들고, 한쪽 고르기는 정보를 숨기고, 멈추기는 작업만 막는다."
-    ],
-    "clues": [
-      {"en": "two credible sources", "ko": "둘 다 믿을 만함"},
-      {"en": "directly conflicting statistics", "ko": "값이 정면으로 충돌"},
-      {"en": "Both sources appear legitimate", "ko": "한쪽을 버릴 근거 없음"},
-      {"en": "could significantly affect the research conclusions", "ko": "숨기면 안 되는 중요한 차이"}
-    ],
-    "discuss_ko": "A 처럼 정부 보고서가 더 권위 있다고 보는 게 상식적으로 보이는데, 문서 분석 단계에서 그런 판단을 내려 버리면 왜 문제가 될까?",
-    "words": [
-      {"word": "credible", "pos": "adj.", "ko": "믿을 만한, 신뢰할 수 있는", "example": "two credible sources"},
-      {"word": "discrepancy", "pos": "n.", "ko": "불일치, 차이", "example": "the discrepancy could significantly affect the research conclusions"},
-      {"word": "legitimate", "pos": "adj.", "ko": "정당한, 믿을 만한", "example": "Both sources appear legitimate"},
-      {"word": "authoritative", "pos": "adj.", "ko": "권위 있는", "example": "the more authoritative source"},
-      {"word": "attribution", "pos": "n.", "ko": "출처 표시", "example": "with full source attribution"},
-      {"word": "annotate", "pos": "v.", "ko": "주석을 달다, 표시하다", "example": "explicitly annotate the conflict"},
-      {"word": "pending", "pos": "prep.", "ko": "~할 때까지, ~을 기다리며", "example": "pending coordinator resolution"}
-    ],
-    "check": "ok",
-    "checkNote": ""
-  },
-  {
-    "id": "D5-05",
-    "domain": 5,
-    "scenario": "Multi-Agent Research System",
-    "q_en": "The web search subagent returns results for only 3 of 5 requested source categories (competitor websites and industry reports succeeded, but news archives and social media feeds timed out). The document analysis subagent successfully processed all provided documents. The synthesis subagent must now produce a findings summary from this mixed-quality input. What's the most effective error propagation strategy?",
-    "q_ko": "웹 검색 subagent 가 요청받은 출처 범주 5개 중 3개에 대해서만 결과를 돌려주었다(경쟁사 웹사이트와 업계 보고서는 성공, 뉴스 아카이브와 소셜 미디어 피드는 타임아웃). 문서 분석 subagent 는 받은 문서를 모두 처리했다. 이제 synthesis subagent 가 품질이 고르지 않은 이 입력으로 발견 요약을 만들어야 한다. 가장 효과적인 오류 전파 전략은?",
-    "options": [
-      {
-        "en": "Halt synthesis and retry all failed searches with extended timeouts before proceeding.",
-        "ko": "종합을 멈추고, 실패한 검색을 모두 타임아웃을 늘려 다시 시도한 뒤 진행한다.",
-        "why": "성공한 결과까지 붙잡아 두고 전체 흐름을 멈추게 해 부분 결과의 가치를 버린다."
-      },
-      {
-        "en": "Proceed with available results and exclude any sections in the synthesis where data is missing.",
-        "ko": "있는 결과로 진행하되, 데이터가 빠진 부분은 종합 결과에서 아예 뺀다.",
-        "why": "진행은 맞지만 빈 곳을 조용히 지우면 읽는 사람이 공백이 있다는 걸 모르게 된다."
-      },
-      {
-        "en": "Structure the synthesis output with coverage annotations indicating which areas are well-supported versus which have gaps due to the unavailable source categories.",
-        "ko": "종합 결과에 커버리지 표시를 달아, 어느 영역은 근거가 충분하고 어느 영역은 받지 못한 출처 범주 때문에 공백이 있는지 밝힌다.",
-        "why": "성공한 결과는 살리고 한계는 투명하게 드러내므로 정답이다."
-      },
-      {
-        "en": "Have the coordinator re-invoke the web search agent for only the failed categories before proceeding to synthesis.",
-        "ko": "종합으로 넘어가기 전에 coordinator 가 실패한 범주만 웹 검색 agent 에 다시 요청하게 한다.",
-        "why": "지문은 이미 종합 단계에서 불완전한 입력을 어떻게 다룰지 묻고 있고, 이 방식은 공백을 드러내는 전략이 아니라 종합을 또 미루는 것이다."
-      }
-    ],
-    "answer": 2,
-    "point_ko": "일부 실패 = 멈추지 말고 커버리지 공백 표시",
-    "explain_ko": [
-      "**must now produce a findings summary from this mixed-quality input** 은 이미 종합 단계이고 있는 입력으로 결과를 내야 한다는 뜻이다.",
-      "성공한 결과를 버리거나 전체를 멈추지 않고 진행하는 것이 graceful degradation(부분 실패에도 계속 동작)이다.",
-      "대신 **어느 영역이 근거가 탄탄하고 어느 영역이 비었는지** 표시해야 읽는 사람이 결과의 한계를 안다.",
-      "공백을 조용히 빼는 B 는 투명하지 않아서 오답이다."
-    ],
-    "clues": [
-      {"en": "only 3 of 5 requested source categories", "ko": "일부 범주만 성공"},
-      {"en": "timed out", "ko": "접근 실패로 데이터 없음"},
-      {"en": "successfully processed all provided documents", "ko": "쓸 수 있는 결과는 있음"},
-      {"en": "mixed-quality input", "ko": "고르지 않은 입력을 그대로 다뤄야 함"}
-    ],
-    "discuss_ko": "D 처럼 실패한 범주만 다시 불러오면 공백 자체가 사라질 텐데, 이 지문에서는 왜 커버리지 표시가 더 나은 답으로 꼽힐까?",
-    "words": [
-      {"word": "propagation", "pos": "n.", "ko": "전파, 위로 전달하기", "example": "error propagation strategy"},
-      {"word": "halt", "pos": "v.", "ko": "멈추다, 중단하다", "example": "Halt synthesis and retry all failed searches"},
-      {"word": "extended", "pos": "adj.", "ko": "늘린, 연장된", "example": "with extended timeouts"},
-      {"word": "exclude", "pos": "v.", "ko": "제외하다, 빼다", "example": "exclude any sections in the synthesis where data is missing"},
-      {"word": "annotation", "pos": "n.", "ko": "주석, 표시", "example": "coverage annotations"},
-      {"word": "well-supported", "pos": "adj.", "ko": "근거가 충분한", "example": "which areas are well-supported"},
-      {"word": "re-invoke", "pos": "v.", "ko": "다시 호출하다", "example": "re-invoke the web search agent"}
-    ],
-    "check": "ok",
-    "checkNote": "지문의 '5개 중 3개 성공'과 괄호 안에 나열된 범주(성공 2, 실패 2)의 수가 맞지 않지만, 정답 판단에는 영향이 없다."
-  },
-  {
-    "id": "D5-06",
-    "domain": 5,
-    "scenario": "Developer Productivity Tools",
-    "q_en": "During extended codebase exploration (context is 82% full), the model starts referencing 'typical Spring MVC patterns' instead of the specific class hierarchy it identified 20 turns ago. Recommended immediate action:",
-    "q_ko": "긴 코드베이스 탐색 도중(컨텍스트 82% 사용), 모델이 20턴 전에 찾아낸 구체적인 클래스 계층 대신 '전형적인 Spring MVC 패턴'을 이야기하기 시작한다. 권장되는 즉시 조치는?",
-    "options": [
-      {
-        "en": "Start a new session with an injected structured summary of key findings discovered so far.",
-        "ko": "지금까지 찾은 핵심 발견을 구조화된 요약으로 넣고 새 세션을 시작한다.",
-        "why": "출제자 기준으로는 아직 유효한 컨텍스트를 버리는 선택이라 오답이지만, 이미 저하 증상이 나타났다는 점에서 충분히 방어할 수 있는 보기다."
-      },
-      {
-        "en": "Switch to a model with a larger context window to accommodate the full session.",
-        "ko": "세션 전체를 담을 수 있게 더 큰 컨텍스트 창을 가진 모델로 바꾼다.",
-        "why": "긴 컨텍스트에서의 성능 저하는 창만 키운다고 사라지지 않는다."
-      },
-      {
-        "en": "Use `/compact` to reduce context usage while preserving key findings, then continue the session.",
-        "ko": "`/compact` 로 핵심 발견은 살리면서 컨텍스트 사용량을 줄이고, 세션을 이어 간다.",
-        "why": "장황한 탐색 출력을 압축해 공간을 되찾고 같은 세션을 이어 가므로 출제자 기준 정답이다."
-      },
-      {
-        "en": "Ask the model to re-read the specific files it analysed earlier to refresh its memory.",
-        "ko": "모델에게 예전에 분석한 파일을 다시 읽어 기억을 새로 고치라고 요청한다.",
-        "why": "남은 18% 공간을 파일 재독에 써 버려 문제를 더 키운다."
-      }
-    ],
-    "answer": 2,
-    "point_ko": "꽉 찼지만 유효한 컨텍스트 = /compact 로 압축 후 계속",
-    "explain_ko": [
-      "**'typical Spring MVC patterns' instead of the specific class hierarchy** 는 긴 세션에서 생기는 컨텍스트 저하의 대표 증상이다.",
-      "**82% full** 은 공간이 모자라다는 신호이고, 20턴 전에 찾은 내용 자체는 아직 유효하다.",
-      "`/compact` 는 장황한 중간 탐색 기록을 요약해 공간을 되찾고 세션을 이어 가게 해 준다. 뒤에 무엇을 남길지 지시를 붙일 수도 있다.",
-      "파일 다시 읽기는 남은 공간을 더 쓰고, 모델 교체는 근본 해결이 아니다."
-    ],
-    "clues": [
-      {"en": "context is 82% full", "ko": "공간이 거의 참"},
-      {"en": "typical Spring MVC patterns", "ko": "구체 정보 대신 일반론 = 컨텍스트 저하"},
-      {"en": "the specific class hierarchy it identified 20 turns ago", "ko": "이미 찾아 둔 유효한 발견"},
-      {"en": "Recommended immediate action", "ko": "지금 당장 할 조치"}
-    ],
-    "discuss_ko": "A 처럼 핵심 발견을 요약해 새 세션을 여는 것과 `/compact` 는 둘 다 '요약하고 계속하기'인데, 모델이 이미 일반론을 말하기 시작한 상태라면 어느 쪽이 더 믿을 만할까?",
-    "words": [
-      {"word": "extended", "pos": "adj.", "ko": "오래 이어진, 장시간의", "example": "During extended codebase exploration"},
-      {"word": "hierarchy", "pos": "n.", "ko": "계층 구조", "example": "the specific class hierarchy"},
-      {"word": "inject", "pos": "v.", "ko": "(내용을) 넣다, 주입하다", "example": "an injected structured summary of key findings"},
-      {"word": "accommodate", "pos": "v.", "ko": "수용하다, 담다", "example": "to accommodate the full session"},
-      {"word": "immediate", "pos": "adj.", "ko": "즉각적인", "example": "Recommended immediate action"},
-      {"word": "refresh", "pos": "v.", "ko": "새로 고치다, 되살리다", "example": "to refresh its memory"}
-    ],
-    "check": "doubt",
-    "checkNote": "CCAF 시험 범위에는 긴 탐색 세션에서 `/compact` 로 컨텍스트를 줄이는 방법과, 핵심 발견을 구조화 요약으로 넣고 새로 시작하는 방법이 둘 다 나온다. 이 지문은 이미 구체 정보 대신 일반 패턴을 말하는 저하 증상이 나타난 상태라, 자동 요약인 `/compact` 가 그 클래스 계층을 제대로 남긴다는 보장이 약하고 A 도 정답으로 볼 여지가 크다. 출제자 해설은 '유효한 컨텍스트면 /compact, stale 하면 새로 시작'이라는 구분으로 C 를 고른다."
-  },
-  {
-    "id": "D5-07",
-    "domain": 5,
-    "scenario": "Multi-Agent Research System",
-    "q_en": "Research subagents return verbose reasoning chains and full source text to the coordinator. The coordinator is hitting context limits and synthesis quality is degrading. Most effective fix:",
-    "q_ko": "리서치 subagent 들이 장황한 추론 과정과 출처 원문 전체를 coordinator 에게 돌려준다. coordinator 는 컨텍스트 한도에 걸리고 종합 품질이 떨어지고 있다. 가장 효과적인 해결책은?",
-    "options": [
-      {
-        "en": "Increase the coordinator's `max_tokens` parameter to accommodate larger inputs.",
-        "ko": "더 큰 입력을 받도록 coordinator 의 `max_tokens` 파라미터를 늘린다.",
-        "why": "`max_tokens` 는 출력 길이 상한이라 입력이 컨텍스트 한도에 걸리는 문제와는 상관없다."
-      },
-      {
-        "en": "Instruct the coordinator to summarise incoming subagent results before processing them.",
-        "ko": "coordinator 가 들어오는 subagent 결과를 처리하기 전에 요약하도록 지시한다.",
-        "why": "부푼 결과가 이미 coordinator 컨텍스트에 들어온 뒤라 원인은 그대로 두고 처리만 늘린다."
-      },
-      {
-        "en": "Modify subagents to return structured data (key facts, citations, relevance scores) instead of verbose prose and reasoning chains.",
-        "ko": "subagent 가 장황한 글과 추론 과정 대신 구조화된 데이터(핵심 사실, 인용, 관련도 점수)를 돌려주도록 바꾼다.",
-        "why": "부풀림의 원천인 subagent 출력을 줄이므로 정답이다."
-      },
-      {
-        "en": "Reduce the number of subagents to lower total output volume.",
-        "ko": "전체 출력량을 줄이려고 subagent 수를 줄인다.",
-        "why": "양은 줄지만 조사 범위도 함께 줄어 결과 품질을 해친다."
-      }
-    ],
-    "answer": 2,
-    "point_ko": "coordinator 과부하 = subagent 출력을 구조화해 상류에서 줄이기",
-    "explain_ko": [
-      "**verbose reasoning chains and full source text** 가 원인이다. 넘어오는 내용 자체가 너무 크다.",
-      "추론은 각 subagent 안에서 끝내고, 에이전트 경계를 넘을 때는 **핵심 사실·인용·관련도 점수**만 넘기는 게 원칙이다.",
-      "받은 뒤에 요약하기(B)나 한도 늘리기(A)는 하류에서 막는 임시방편이다. 문제는 **상류(subagent 출력)**에서 고친다."
-    ],
-    "clues": [
-      {"en": "return verbose reasoning chains and full source text", "ko": "넘기는 양이 과함, 원천은 subagent"},
-      {"en": "hitting context limits", "ko": "coordinator 컨텍스트 부족"},
-      {"en": "synthesis quality is degrading", "ko": "잡음이 많아 품질 저하"},
-      {"en": "Most effective fix", "ko": "근본 해결책을 고르라는 뜻"}
-    ],
-    "discuss_ko": "B 처럼 coordinator 가 받자마자 요약해도 결국 컨텍스트는 줄어들 것 같은데, 왜 subagent 출력을 바꾸는 것보다 못한 답일까?",
-    "words": [
-      {"word": "verbose", "pos": "adj.", "ko": "장황한, 말이 많은", "example": "verbose reasoning chains"},
-      {"word": "degrade", "pos": "v.", "ko": "(품질이) 떨어지다, 저하되다", "example": "synthesis quality is degrading"},
-      {"word": "hit a limit", "pos": "idiom", "ko": "한도에 걸리다", "example": "The coordinator is hitting context limits"},
-      {"word": "accommodate", "pos": "v.", "ko": "수용하다, 받아들이다", "example": "to accommodate larger inputs"},
-      {"word": "relevance", "pos": "n.", "ko": "관련성", "example": "relevance scores"},
-      {"word": "volume", "pos": "n.", "ko": "양, 분량", "example": "to lower total output volume"}
-    ],
-    "check": "ok",
-    "checkNote": ""
-  },
-  {
-    "id": "D5-08",
-    "domain": 5,
-    "scenario": "Multi-Agent Research System",
-    "q_en": "During a materials research task, the web search subagent queries three source categories with different outcomes: academic databases returned 15 relevant papers, industry reports returned '0 results found,' and patent databases returned 'Connection timeout.' When designing error propagation to the coordinator, what approach enables the best recovery decisions?",
-    "q_ko": "소재 연구 작업 중 웹 검색 subagent 가 세 가지 출처 범주를 조회했더니 결과가 제각각이었다. 학술 데이터베이스는 관련 논문 15편, 업계 보고서는 '0 results found', 특허 데이터베이스는 'Connection timeout' 이었다. coordinator 로 오류를 전달하는 방식을 설계할 때, 가장 좋은 복구 결정을 가능하게 하는 방법은?",
-    "options": [
-      {
-        "en": "Return a single combined error status for all three categories, since one of them failed.",
-        "ko": "하나가 실패했으니 세 범주 모두에 대해 하나로 합친 오류 상태를 돌려준다.",
-        "why": "성공과 빈 결과까지 오류로 뭉개 coordinator 가 무엇을 다시 해야 할지 알 수 없다."
-      },
-      {
-        "en": "Return only the successful academic database results and silently discard the other outcomes.",
-        "ko": "성공한 학술 데이터베이스 결과만 돌려주고 나머지 결과는 조용히 버린다.",
-        "why": "실패와 빈 결과를 숨겨 coordinator 가 공백이 있다는 사실조차 모르게 된다."
-      },
-      {
-        "en": "Return all three outcomes separately: academic results as success, industry as `isError:false` with empty results (valid query, no data), and patent as `isError:true` with structured error context including failure type, query attempted, and retry guidance.",
-        "ko": "세 결과를 따로 돌려준다. 학술은 성공, 업계는 `isError:false` 와 빈 결과(정상 조회, 데이터 없음), 특허는 `isError:true` 와 함께 실패 유형·시도한 쿼리·재시도 안내를 담은 구조화된 오류 정보로 보낸다.",
-        "why": "성공, 빈 결과, 접근 실패를 구분해 각각 다른 대응을 할 수 있게 하므로 정답이다."
-      },
-      {
-        "en": "Automatically retry the patent database timeout within the subagent, returning a unified result once all categories are complete or exhausted.",
-        "ko": "특허 데이터베이스 타임아웃은 subagent 안에서 자동으로 재시도하고, 모든 범주가 끝나거나 시도가 소진되면 하나로 합친 결과를 돌려준다.",
-        "why": "재시도 자체는 괜찮지만 결과를 하나로 합쳐 실패 맥락을 감춘다."
-      }
-    ],
-    "answer": 2,
-    "point_ko": "성공 / 빈 결과 / 접근 실패는 따로 구분해 전달",
-    "explain_ko": [
-      "세 결과 **15 relevant papers**, **'0 results found'**, **'Connection timeout'** 은 성격이 모두 다르다.",
-      "'0 results found' 는 제대로 찾았는데 없는 것이라 오류가 아니다. `isError:false` 로 두고 재시도할 필요가 없다.",
-      "'Connection timeout' 은 접근 실패라 `isError:true` 에 실패 유형·쿼리·재시도 안내를 붙여야 coordinator 가 다시 시도할지 판단할 수 있다.",
-      "합치거나(A, D) 버리면(B) 이 구분이 사라져 **best recovery decisions** 를 내릴 수 없다."
-    ],
-    "clues": [
-      {"en": "academic databases returned 15 relevant papers", "ko": "성공"},
-      {"en": "industry reports returned '0 results found,'", "ko": "정상 조회지만 결과 없음"},
-      {"en": "patent databases returned 'Connection timeout.'", "ko": "접근 실패, 재시도 후보"},
-      {"en": "enables the best recovery decisions", "ko": "coordinator 가 판단할 정보가 필요"}
-    ],
-    "discuss_ko": "D 처럼 subagent 가 타임아웃을 스스로 재시도하는 건 합리적으로 보이는데, 결과를 하나로 합쳐 돌려주면 coordinator 는 무엇을 모르게 될까?",
-    "words": [
-      {"word": "outcome", "pos": "n.", "ko": "결과", "example": "three source categories with different outcomes"},
-      {"word": "propagation", "pos": "n.", "ko": "전파, 전달", "example": "designing error propagation to the coordinator"},
-      {"word": "recovery", "pos": "n.", "ko": "복구", "example": "the best recovery decisions"},
-      {"word": "discard", "pos": "v.", "ko": "버리다, 폐기하다", "example": "silently discard the other outcomes"},
-      {"word": "guidance", "pos": "n.", "ko": "안내, 지침", "example": "retry guidance"},
-      {"word": "exhausted", "pos": "adj.", "ko": "(시도·자원이) 다 소진된", "example": "once all categories are complete or exhausted"}
-    ],
-    "check": "ok",
-    "checkNote": ""
-  },
-  {
-    "id": "D5-09",
-    "domain": 5,
-    "scenario": "Developer Productivity Tools",
-    "q_en": "You're running an extended codebase exploration session to map a legacy system's data flow. After 30+ turns, the context is 78% full and Claude has identified key service boundaries and data transformations. You need to continue across multiple future sessions without losing these findings. What's the most reliable approach?",
-    "q_ko": "레거시 시스템의 데이터 흐름을 파악하려고 긴 코드베이스 탐색 세션을 진행하고 있다. 30턴이 넘자 컨텍스트가 78% 찼고, Claude 는 주요 서비스 경계와 데이터 변환 지점을 찾아냈다. 이 발견을 잃지 않고 앞으로 여러 세션에 걸쳐 작업을 이어 가야 한다. 가장 믿을 만한 방법은?",
-    "options": [
-      {
-        "en": "Use `/compact` to compress the current session and continue from where you left off.",
-        "ko": "`/compact` 로 현재 세션을 압축하고 멈춘 곳부터 이어 간다.",
-        "why": "지금 세션은 늘릴 수 있지만, 다음 세션으로 발견을 넘겨주지는 못한다."
-      },
-      {
-        "en": "Ask Claude to summarize its findings in a response, then manually copy them into a document.",
-        "ko": "Claude 에게 발견을 응답으로 요약하게 한 뒤, 사람이 직접 문서에 복사해 넣는다.",
-        "why": "사람 손을 거쳐야 하고, 빠뜨리거나 구조가 흐트러지기 쉽다."
-      },
-      {
-        "en": "Have Claude write the key findings — service boundaries, data flow maps, identified dependencies — to a scratchpad file in the repo that future sessions can read.",
-        "ko": "Claude 가 핵심 발견(서비스 경계, 데이터 흐름도, 파악한 의존성)을 저장소 안 scratchpad 파일에 적어, 이후 세션이 읽을 수 있게 한다.",
-        "why": "파일은 세션이 끝나도 남아 다음 세션이 그대로 불러올 수 있으므로 정답이다."
-      },
-      {
-        "en": "Start a new session with a detailed prompt describing the codebase from memory.",
-        "ko": "기억나는 대로 코드베이스를 자세히 설명하는 프롬프트로 새 세션을 시작한다.",
-        "why": "사람 기억에 기대서 손실이 크고, Claude 가 찾은 구체적 발견을 보존하지 못한다."
-      }
-    ],
-    "answer": 2,
-    "point_ko": "여러 세션에 걸쳐 유지 = 발견을 scratchpad 파일에 기록",
-    "explain_ko": [
-      "**continue across multiple future sessions** 가 결정적 단서다. 지금 세션을 늘리는 게 아니라 다음 세션으로 넘겨야 한다.",
-      "`/compact` 는 현재 세션 안에서만 효과가 있어서, 세션이 끝나거나 중단되면 발견이 남지 않는다.",
-      "Claude 가 직접 **scratchpad 파일**에 구조화해 적어 두면, 다음 세션이 그 파일을 읽고 바로 이어 간다."
-    ],
-    "clues": [
-      {"en": "continue across multiple future sessions", "ko": "세션을 넘어 보존해야 함"},
-      {"en": "without losing these findings", "ko": "발견 유지가 목표"},
-      {"en": "the context is 78% full", "ko": "지금 세션은 곧 한계"},
-      {"en": "most reliable approach", "ko": "기억·수작업보다 확실한 방식"}
-    ],
-    "discuss_ko": "A 의 `/compact` 도 핵심 발견을 남긴다고 하는데, 다음 날 새 세션을 열었을 때 그걸로는 왜 부족한지 이야기해 보자.",
-    "words": [
-      {"word": "legacy", "pos": "adj.", "ko": "오래된(기존에 물려받은) 시스템의", "example": "a legacy system's data flow"},
-      {"word": "boundary", "pos": "n.", "ko": "경계", "example": "key service boundaries"},
-      {"word": "transformation", "pos": "n.", "ko": "변환", "example": "data transformations"},
-      {"word": "dependency", "pos": "n.", "ko": "의존성", "example": "identified dependencies"},
-      {"word": "reliable", "pos": "adj.", "ko": "믿을 만한, 확실한", "example": "the most reliable approach"},
-      {"word": "leave off", "pos": "phr. v.", "ko": "(하던 것을) 멈추다", "example": "continue from where you left off"}
-    ],
-    "check": "ok",
-    "checkNote": ""
-  },
-  {
-    "id": "D5-10",
-    "domain": 5,
-    "scenario": "Structured Data Extraction",
-    "q_en": "Your extraction pipeline reports 96% accuracy across 10,000 invoices processed last month. Your team proposes removing human review entirely based on this metric. What validation step is most critical before automating the full pipeline?",
-    "q_ko": "추출 파이프라인이 지난달 처리한 인보이스 10,000건에서 정확도 96% 를 기록했다. 팀은 이 지표를 근거로 사람 검토를 완전히 없애자고 제안한다. 파이프라인 전체를 자동화하기 전에 가장 중요한 검증 단계는?",
-    "options": [
-      {
-        "en": "Run the pipeline on 1,000 additional invoices to confirm the 96% figure is stable at scale.",
-        "ko": "인보이스 1,000건을 더 돌려, 규모가 커져도 96% 가 유지되는지 확인한다.",
-        "why": "전체 수치가 안정적인지만 볼 뿐, 특정 유형에서 무너지는지는 드러나지 않는다."
-      },
-      {
-        "en": "Analyze accuracy by document type and field segment to verify consistent performance before removing human review.",
-        "ko": "사람 검토를 없애기 전에 문서 유형과 필드 구간별로 정확도를 나눠 분석해, 성능이 고르게 나오는지 확인한다.",
-        "why": "평균 96% 뒤에 숨은 약한 구간을 찾아내므로 정답이다."
-      },
-      {
-        "en": "Lower the confidence threshold from 0.9 to 0.85 to approve more extractions automatically and increase throughput.",
-        "ko": "confidence threshold 를 0.9 에서 0.85 로 낮춰 자동 승인을 늘리고 처리량을 높인다.",
-        "why": "검증이 아니라 처리량 최적화이고, 오류를 오히려 늘릴 수 있다."
-      },
-      {
-        "en": "Add a second extraction pass to catch the 4% of errors the first pass misses.",
-        "ko": "두 번째 추출 단계를 추가해 첫 단계가 놓치는 4% 오류를 잡는다.",
-        "why": "오류가 어디에 몰려 있는지 확인하지 않고 덧붙이는 최적화일 뿐이다."
-      }
-    ],
-    "answer": 1,
-    "point_ko": "전체 정확도는 가림막 = 유형·필드별로 쪼개 확인",
-    "explain_ko": [
-      "**96% accuracy across 10,000 invoices** 는 전체 평균이라, 특정 유형에서 크게 틀리는 것을 가릴 수 있다.",
-      "예를 들어 일반 디지털 인보이스는 거의 완벽하고 손글씨·스캔본은 40% 여도 전체로는 96% 가까이 나온다.",
-      "**removing human review entirely** 는 되돌리기 어려운 결정이니, 먼저 문서 유형·필드별 정확도를 나눠 봐야 어디가 위험한지 안다."
-    ],
-    "clues": [
-      {"en": "reports 96% accuracy across 10,000 invoices", "ko": "전체 평균 수치 하나"},
-      {"en": "removing human review entirely", "ko": "안전장치를 통째로 없애는 결정"},
-      {"en": "based on this metric", "ko": "집계 지표 하나에만 기댐"},
-      {"en": "most critical before automating the full pipeline", "ko": "자동화 전 꼭 필요한 검증"}
-    ],
-    "discuss_ko": "A 처럼 표본을 늘려 96% 가 안정적인지 보는 것도 검증인데, '규모에서 안정적'인 것과 '구간별로 고른' 것은 무엇이 다를까?",
-    "words": [
-      {"word": "validation", "pos": "n.", "ko": "검증", "example": "What validation step is most critical"},
-      {"word": "entirely", "pos": "adv.", "ko": "완전히, 전부", "example": "removing human review entirely"},
-      {"word": "at scale", "pos": "idiom", "ko": "대규모로, 규모가 커져도", "example": "the 96% figure is stable at scale"},
-      {"word": "segment", "pos": "n.", "ko": "구간, 부분 집단", "example": "by document type and field segment"},
-      {"word": "consistent", "pos": "adj.", "ko": "고른, 일관된", "example": "to verify consistent performance"},
-      {"word": "threshold", "pos": "n.", "ko": "기준값, 문턱값", "example": "Lower the confidence threshold from 0.9 to 0.85"},
-      {"word": "throughput", "pos": "n.", "ko": "처리량", "example": "increase throughput"}
-    ],
-    "check": "ok",
-    "checkNote": ""
-  },
-  {
-    "id": "D5-11",
-    "domain": 5,
-    "scenario": "Customer Support Resolution Agent",
-    "q_en": "A customer contacts support saying 'I need help with my account.' Your agent calls `get_customer` and the tool returns three different customer records matching that name. What should the agent do?",
-    "q_ko": "고객이 '계정 문제로 도움이 필요해요'라며 상담을 요청한다. 에이전트가 `get_customer` 를 호출하자, 그 이름과 일치하는 서로 다른 고객 레코드 3개가 돌아왔다. 에이전트는 어떻게 해야 하는가?",
-    "options": [
-      {
-        "en": "Select the most recently active account — it is most likely the customer contacting support.",
-        "ko": "가장 최근에 활동한 계정을 고른다. 지금 연락한 고객일 가능성이 가장 높다.",
-        "why": "추측으로 고르면 엉뚱한 고객의 계정을 건드리거나 남의 정보를 보여 줄 위험이 있다."
-      },
-      {
-        "en": "Select the account with the highest lifetime value to prioritize high-value customers.",
-        "ko": "고가치 고객을 우선하려고 누적 고객 가치(lifetime value)가 가장 높은 계정을 고른다.",
-        "why": "고객 가치는 누가 연락했는지와 무관한 기준이라 잘못된 계정을 고를 수 있다."
-      },
-      {
-        "en": "Ask the customer for an additional identifier (email address, account number, or order number) to resolve the ambiguity before proceeding.",
-        "ko": "진행하기 전에 고객에게 추가 식별 정보(이메일 주소, 계정 번호, 주문 번호)를 물어 누구인지 확실히 한다.",
-        "why": "질문 하나로 정확한 계정을 가릴 수 있으므로 정답이다."
-      },
-      {
-        "en": "Escalate immediately to a human agent since the agent cannot determine the correct account without additional information.",
-        "ko": "추가 정보 없이는 맞는 계정을 알 수 없으니 즉시 사람 상담원에게 넘긴다.",
-        "why": "에이전트가 되물어서 스스로 풀 수 있는데 넘기는 건 불필요한 에스컬레이션이다."
-      }
-    ],
-    "answer": 2,
-    "point_ko": "일치 레코드 여러 개 = 추측 금지, 식별 정보 되묻기",
-    "explain_ko": [
-      "**three different customer records matching that name** 은 이름만으로는 누구인지 알 수 없다는 뜻이다.",
-      "최근 활동이나 고객 가치 같은 기준으로 고르면 다른 고객의 정보를 보여 주거나 잘못 변경할 위험이 있다.",
-      "이메일·계정 번호·주문 번호를 한 번 더 물으면 에이전트가 직접 해결할 수 있으니 에스컬레이션도 필요 없다."
-    ],
-    "clues": [
-      {"en": "I need help with my account.", "ko": "식별 정보가 없는 요청"},
-      {"en": "returns three different customer records", "ko": "후보가 여럿 = 모호함"},
-      {"en": "matching that name", "ko": "이름만으로는 특정 불가"}
-    ],
-    "discuss_ko": "D 처럼 사람에게 넘기면 잘못된 계정을 건드릴 위험은 없어지는데, 그래도 되묻기가 더 나은 답인 이유는 무엇일까?",
-    "words": [
-      {"word": "ambiguity", "pos": "n.", "ko": "모호함, 애매함", "example": "to resolve the ambiguity before proceeding"},
-      {"word": "identifier", "pos": "n.", "ko": "식별 정보, 식별자", "example": "an additional identifier"},
-      {"word": "proceed", "pos": "v.", "ko": "진행하다, 계속하다", "example": "before proceeding"},
-      {"word": "lifetime value", "pos": "n.", "ko": "고객 생애 가치(누적 가치)", "example": "the highest lifetime value"},
-      {"word": "prioritize", "pos": "v.", "ko": "우선시하다", "example": "to prioritize high-value customers"},
-      {"word": "determine", "pos": "v.", "ko": "알아내다, 판별하다", "example": "cannot determine the correct account"}
-    ],
-    "check": "ok",
-    "checkNote": ""
-  }
+ {
+  "id": "D5-01",
+  "domain": 5,
+  "scenario": "Multi-Agent Research System",
+  "q_en": "Production monitoring reveals inconsistent synthesis quality. When aggregated results total ~75K tokens, the synthesis agent reliably cites information from the first 15K tokens (web search headlines and snippets) and the final 10K tokens (document analysis conclusions), but frequently omits critical findings that appear in the middle 50K tokens — even when those findings directly address the research question. How should you restructure the aggregated input?",
+  "q_ko": "운영 모니터링에서 종합(synthesis) 품질이 들쑥날쑥하다는 게 드러났다. 취합된 결과가 약 75K 토큰일 때, synthesis agent 는 앞쪽 15K 토큰(웹 검색 헤드라인과 스니펫)과 마지막 10K 토큰(문서 분석 결론)은 꾸준히 인용하지만, 가운데 50K 토큰에 있는 핵심 발견은 자주 빠뜨린다. 그 발견이 연구 질문에 직접 답하는 내용이어도 그렇다. 취합된 입력을 어떻게 재구성해야 하는가?",
+  "options": [
+   {
+    "en": "Implement rotation that alternates which subagent's results appear first across different research tasks, ensuring both sources receive primacy positioning equally over time.",
+    "ko": "연구 작업마다 어느 subagent 의 결과를 앞에 둘지 번갈아 바꿔, 시간이 지나면 두 출처가 맨 앞자리를 공평하게 차지하게 한다.",
+    "why": "문제는 어느 출처가 앞에 오느냐가 아니라 가운데가 묻힌다는 것이라, 순서를 돌려도 가운데는 여전히 빠진다."
+   },
+   {
+    "en": "Place a key findings summary at the beginning of the aggregated input and organise detailed results with explicit section headers for easier navigation.",
+    "ko": "취합된 입력 맨 앞에 핵심 발견 요약을 두고, 세부 결과는 찾기 쉽도록 명시적인 섹션 헤더로 정리한다.",
+    "why": "모델이 잘 보는 맨 앞에 핵심을 올리고 헤더로 구조를 잡아 lost-in-the-middle 을 직접 완화하므로 정답이다."
+   },
+   {
+    "en": "Summarise all subagent outputs to under 20K tokens total before aggregation, ensuring content stays within the model's reliable processing range.",
+    "ko": "취합 전에 모든 subagent 출력을 합계 20K 토큰 미만으로 요약해, 모델이 안정적으로 처리하는 범위 안에 두게 한다.",
+    "why": "크게 줄이는 요약은 손실이 커서 가운데 있던 중요한 근거까지 날려 버린다."
+   },
+   {
+    "en": "Stream subagent results to the synthesis agent incrementally, processing web search results first to completion before introducing document analysis findings.",
+    "ko": "subagent 결과를 synthesis agent 에 조금씩 스트리밍해, 웹 검색 결과를 끝까지 처리한 뒤에 문서 분석 결과를 넣는다.",
+    "why": "전달 순서가 아니라 입력 구조의 문제라서 스트리밍은 원인을 비껴간다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "가운데가 묻히면 = 맨 앞 핵심 요약 + 섹션 헤더",
+  "explain_ko": [
+   "앞 15K 와 끝 10K 는 인용하는데 **가운데 50K 만 빠뜨린다**는 단서는 전형적인 lost-in-the-middle 현상이다.",
+   "모델은 입력의 처음과 끝을 잘 보므로, **핵심 발견 요약을 맨 앞**에 두면 중요한 내용이 확실히 눈에 들어간다.",
+   "세부 결과는 **명시적인 섹션 헤더**로 나눠, 긴 가운데 구간에서도 길을 잃지 않게 한다.",
+   "순서 돌리기, 크기 줄이기, 스트리밍은 가운데가 묻힌다는 구조 문제를 풀지 못한다."
+  ],
+  "clues": [
+   {
+    "en": "reliably cites information from the first 15K tokens",
+    "ko": "앞부분은 잘 인용함"
+   },
+   {
+    "en": "the final 10K tokens",
+    "ko": "끝부분도 잘 인용함"
+   },
+   {
+    "en": "frequently omits critical findings that appear in the middle 50K tokens",
+    "ko": "가운데만 묻힘 = lost-in-the-middle"
+   },
+   {
+    "en": "restructure the aggregated input",
+    "ko": "입력의 배치와 구조를 바꾸라는 질문"
+   }
+  ],
+  "discuss_ko": "{C} 처럼 전체를 20K 아래로 줄이면 가운데 자체가 없어지니 해결될 것 같은데, 요약 과정에서 무엇을 잃게 되는지 따져 보면 왜 안 되는 걸까?",
+  "words": [
+   {
+    "word": "aggregate",
+    "pos": "v.",
+    "ko": "모으다, 취합하다",
+    "example": "When aggregated results total ~75K tokens"
+   },
+   {
+    "word": "omit",
+    "pos": "v.",
+    "ko": "빠뜨리다, 누락하다",
+    "example": "frequently omits critical findings"
+   },
+   {
+    "word": "synthesis",
+    "pos": "n.",
+    "ko": "종합, 통합",
+    "example": "inconsistent synthesis quality"
+   },
+   {
+    "word": "rotation",
+    "pos": "n.",
+    "ko": "순환, 돌아가며 바꾸기",
+    "example": "Implement rotation that alternates which subagent's results appear first"
+   },
+   {
+    "word": "primacy",
+    "pos": "n.",
+    "ko": "맨 앞자리, 우선순위(첫머리 효과)",
+    "example": "ensuring both sources receive primacy positioning equally over time"
+   },
+   {
+    "word": "incrementally",
+    "pos": "adv.",
+    "ko": "조금씩, 점진적으로",
+    "example": "Stream subagent results to the synthesis agent incrementally"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "D5-02",
+  "domain": 5,
+  "scenario": "Customer Support Agent",
+  "q_en": "After a 15-turn support session about a billing dispute, the agent's response refers to \"a recent refund\" and \"prompt processing\" — but the customer's original claim specified a $247.83 refund promised by Friday. What context management failure caused this?",
+  "q_ko": "청구 분쟁에 관한 15턴짜리 상담이 이어진 뒤, 에이전트의 응답은 “최근 환불”, “신속한 처리”라고만 말한다. 그런데 고객의 원래 주장은 금요일까지 해 주기로 약속된 $247.83 환불이었다. 어떤 컨텍스트 관리 실패가 이런 결과를 낳았는가?",
+  "options": [
+   {
+    "en": "The agent exceeded its token budget and silently dropped the tool result containing the refund amount.",
+    "ko": "에이전트가 토큰 예산을 넘겨 환불 금액이 담긴 tool result 를 조용히 버렸다.",
+    "why": "금액이 통째로 사라진 게 아니라 '최근 환불'처럼 흐릿하게 바뀌었으니, 버려진 것이 아니라 요약 손실이다."
+   },
+   {
+    "en": "Progressive summarisation compressed specific transactional facts ($247.83, by Friday) into vague prose during conversation history compression.",
+    "ko": "대화 기록을 압축하는 과정에서 점진적 요약(progressive summarization)이 구체적인 거래 사실($247.83, 금요일까지)을 흐릿한 문장으로 뭉개 버렸다.",
+    "why": "숫자와 기한이 모호한 표현으로 바뀐 것은 요약 압축의 전형적 흔적이므로 정답이다."
+   },
+   {
+    "en": "The model's attention degraded due to the lost-in-the-middle effect applied to the conversation history.",
+    "ko": "대화 기록에 lost-in-the-middle 효과가 작용해 모델의 주의력이 떨어졌다.",
+    "why": "주의력 저하라면 사실을 놓칠 뿐, 구체적 값을 '최근 환불' 같은 뭉뚱그린 말로 바꿔 쓰지는 않는다."
+   },
+   {
+    "en": "The tool result for the order lookup was too long and was truncated before reaching the model.",
+    "ko": "주문 조회 tool result 가 너무 길어 모델에 닿기 전에 잘렸다.",
+    "why": "금액과 기한은 고객이 대화에서 직접 말한 내용이라 tool result 잘림과는 관계가 없다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "숫자·기한이 흐려짐 = 요약 압축 손실 → case facts 블록",
+  "explain_ko": [
+   "핵심은 **$247.83, 금요일까지** 같은 구체적 사실이 **\"a recent refund\", \"prompt processing\"** 같은 흐릿한 말로 바뀌었다는 점이다.",
+   "15턴이 쌓이면 대화 기록을 요약해 줄이는데, 이때 금액·날짜·주문번호 같은 값이 가장 먼저 뭉개진다.",
+   "해결책은 금액·기한·고객이 말한 기대를 **case facts 블록**으로 따로 뽑아, 요약하지 않고 매 프롬프트에 그대로 넣는 것이다."
+  ],
+  "clues": [
+   {
+    "en": "15-turn support session",
+    "ko": "긴 대화, 기록 압축이 일어날 길이"
+   },
+   {
+    "en": "\"a recent refund\" and \"prompt processing\"",
+    "ko": "구체적 값이 흐릿한 말로 바뀜"
+   },
+   {
+    "en": "specified a $247.83 refund promised by Friday",
+    "ko": "원래는 정확한 금액과 기한"
+   },
+   {
+    "en": "context management failure",
+    "ko": "컨텍스트를 관리하는 방식의 문제"
+   }
+  ],
+  "discuss_ko": "{C} 의 lost-in-the-middle 도 긴 대화에서 생기는 문제인데, 사실이 '빠진' 경우와 '흐려진' 경우를 어떻게 구분해서 원인을 가를 수 있을까?",
+  "words": [
+   {
+    "word": "dispute",
+    "pos": "n.",
+    "ko": "분쟁, 이의 제기",
+    "example": "a billing dispute"
+   },
+   {
+    "word": "progressive",
+    "pos": "adj.",
+    "ko": "점진적인, 단계적으로 누적되는",
+    "example": "Progressive summarisation compressed specific transactional facts"
+   },
+   {
+    "word": "compress",
+    "pos": "v.",
+    "ko": "압축하다",
+    "example": "during conversation history compression"
+   },
+   {
+    "word": "transactional",
+    "pos": "adj.",
+    "ko": "거래와 관련된",
+    "example": "specific transactional facts"
+   },
+   {
+    "word": "vague",
+    "pos": "adj.",
+    "ko": "모호한, 흐릿한",
+    "example": "into vague prose"
+   },
+   {
+    "word": "truncate",
+    "pos": "v.",
+    "ko": "(일부를) 잘라내다",
+    "example": "was truncated before reaching the model"
+   },
+   {
+    "word": "silently",
+    "pos": "adv.",
+    "ko": "알리지 않고, 조용히",
+    "example": "silently dropped the tool result"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "D5-03",
+  "domain": 5,
+  "scenario": "Customer Support Agent",
+  "q_en": "A customer says: \"I've been dealing with this for three weeks. Just connect me with a human — I'm done with bots.\" The agent responds: \"I understand your frustration. Let me quickly check your account and see if I can resolve this directly.\" Is this correct behaviour?",
+  "q_ko": "고객이 말한다. “이 문제로 3주째 씨름하고 있어요. 그냥 사람 상담원 연결해 주세요. 봇은 이제 됐어요.” 에이전트는 이렇게 답한다. “답답하신 마음 이해합니다. 제가 빠르게 계정을 확인해서 직접 해결할 수 있는지 볼게요.” 올바른 행동인가?",
+  "options": [
+   {
+    "en": "Yes — acknowledging frustration and attempting resolution maximises first-contact resolution rate.",
+    "ko": "그렇다. 불만에 공감하고 해결을 시도하면 첫 상담 해결률이 가장 높아진다.",
+    "why": "해결률 지표보다 고객이 분명히 밝힌 요청이 먼저다."
+   },
+   {
+    "en": "Yes — the issue may be straightforward; the agent should try before escalating.",
+    "ko": "그렇다. 간단한 문제일 수 있으니 에스컬레이션 전에 먼저 시도해야 한다.",
+    "why": "문제가 쉬운지와 상관없이, 사람을 명시적으로 요청하면 바로 넘겨야 한다."
+   },
+   {
+    "en": "No — explicit customer requests for a human agent must be honoured immediately without first attempting investigation.",
+    "ko": "아니다. 고객이 사람 상담원을 명시적으로 요청하면 조사를 먼저 시도하지 말고 즉시 들어줘야 한다.",
+    "why": "명시적 요청은 무조건 에스컬레이션하는 조건이므로 정답이다."
+   },
+   {
+    "en": "No — the agent should only escalate after a tool call confirms the issue exceeds its resolution capability.",
+    "ko": "아니다. tool call 로 에이전트가 해결할 수 없는 문제임을 확인한 뒤에만 에스컬레이션해야 한다.",
+    "why": "'아니다'는 맞지만, 확인부터 하라는 조건 때문에 결국 고객 요청을 미루게 된다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "사람 연결 명시 요청 = 조사 없이 즉시 에스컬레이션",
+  "explain_ko": [
+   "**Just connect me with a human** 은 불평이 아니라 명시적인 요청이다.",
+   "명시적 요청은 문제가 쉬워 보여도 조사보다 먼저 들어줘야 한다. **Let me quickly check your account** 는 그 요청을 뒤로 미룬 것이다.",
+   "에스컬레이션 조건은 (1) 고객의 명시적 요청 (2) 정책에 없는 상황 (3) 더 진전이 없음이다. 화난 감정만으로는 조건이 아니지만, 명시 요청은 언제나 조건이다."
+  ],
+  "clues": [
+   {
+    "en": "Just connect me with a human",
+    "ko": "사람 상담원 명시 요청"
+   },
+   {
+    "en": "I'm done with bots",
+    "ko": "봇 거부 의사가 분명함"
+   },
+   {
+    "en": "Let me quickly check your account",
+    "ko": "요청을 미루고 조사부터 함"
+   },
+   {
+    "en": "Is this correct behaviour?",
+    "ko": "요청을 따랐는지 평가하라는 질문"
+   }
+  ],
+  "discuss_ko": "{D} 처럼 툴로 한 번 확인하고 넘기면 상담원에게 더 많은 정보를 줄 수 있어 보이는데, 고객이 사람을 명시적으로 요청한 상황에서는 왜 그게 안 될까?",
+  "words": [
+   {
+    "word": "frustration",
+    "pos": "n.",
+    "ko": "답답함, 불만",
+    "example": "I understand your frustration."
+   },
+   {
+    "word": "be done with",
+    "pos": "idiom",
+    "ko": "~은 이제 질렸다, 끝내다",
+    "example": "I'm done with bots."
+   },
+   {
+    "word": "honour",
+    "pos": "v.",
+    "ko": "(요청·약속을) 지키다, 들어주다",
+    "example": "must be honoured immediately"
+   },
+   {
+    "word": "explicit",
+    "pos": "adj.",
+    "ko": "명시적인, 분명히 밝힌",
+    "example": "explicit customer requests for a human agent"
+   },
+   {
+    "word": "straightforward",
+    "pos": "adj.",
+    "ko": "간단한, 복잡하지 않은",
+    "example": "the issue may be straightforward"
+   },
+   {
+    "word": "escalate",
+    "pos": "v.",
+    "ko": "상급자·사람에게 넘기다",
+    "example": "the agent should try before escalating"
+   },
+   {
+    "word": "exceed",
+    "pos": "v.",
+    "ko": "넘어서다, 초과하다",
+    "example": "the issue exceeds its resolution capability"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "D5-04",
+  "domain": 5,
+  "scenario": "Multi-Agent Research System",
+  "q_en": "The document analysis agent discovers that two credible sources contain directly conflicting statistics on a key metric: one government report states 40% growth while an industry analysis states 12% growth. Both sources appear legitimate and the discrepancy could significantly affect the research conclusions. What's the most effective way for the document analysis agent to handle this?",
+  "q_ko": "문서 분석 에이전트가 신뢰할 만한 두 출처에서 핵심 지표에 대한 통계가 정면으로 충돌한다는 것을 발견했다. 한 정부 보고서는 40% 성장, 한 업계 분석은 12% 성장이라고 한다. 두 출처 모두 믿을 만해 보이고, 이 차이는 연구 결론에 크게 영향을 줄 수 있다. 문서 분석 에이전트가 이를 처리하는 가장 효과적인 방법은?",
+  "options": [
+   {
+    "en": "Select the government report figure as the more authoritative source and note the discrepancy briefly.",
+    "ko": "정부 보고서를 더 권위 있는 출처로 보고 그 수치를 택한 뒤, 차이는 짧게 언급한다.",
+    "why": "둘 다 믿을 만한데 한쪽을 골라 버리면 판단을 너무 일찍 내리고 다른 근거를 묻어 버린다."
+   },
+   {
+    "en": "Average the two values (26%) and include a note that sources vary on this metric.",
+    "ko": "두 값을 평균(26%)해 넣고, 출처마다 이 지표 값이 다르다고 메모한다.",
+    "why": "평균은 어느 출처도 보고하지 않은 숫자를 지어내는 것이다."
+   },
+   {
+    "en": "Flag the conflict to the coordinator and pause document analysis pending coordinator resolution.",
+    "ko": "충돌을 coordinator 에게 알리고, coordinator 가 결론을 낼 때까지 문서 분석을 멈춘다.",
+    "why": "충돌 하나 때문에 작업을 멈출 필요는 없고, 정보를 넘기면 종합 단계에서 다룰 수 있다."
+   },
+   {
+    "en": "Include both statistics with full source attribution and explicitly annotate the conflict, letting the synthesis agent and downstream consumers decide how to interpret the discrepancy.",
+    "ko": "두 통계를 출처와 함께 모두 넣고 충돌을 명시적으로 표시해, synthesis agent 와 뒤 단계 사용자가 그 차이를 어떻게 해석할지 정하게 한다.",
+    "why": "두 값을 출처와 함께 보존하고 충돌을 드러내므로 정답이다."
+   }
+  ],
+  "answer": 3,
+  "point_ko": "출처 충돌 = 둘 다 출처 달아 보존 + 충돌 표시",
+  "explain_ko": [
+   "**two credible sources**, **Both sources appear legitimate** 는 어느 한쪽을 틀렸다고 볼 근거가 없다는 뜻이다.",
+   "문서 분석 에이전트는 판정하는 자리가 아니다. 두 값을 **출처와 함께 그대로 남기고 충돌을 표시**해 다음 단계로 넘긴다.",
+   "평균 내기는 없던 숫자를 만들고, 한쪽 고르기는 정보를 숨기고, 멈추기는 작업만 막는다."
+  ],
+  "clues": [
+   {
+    "en": "two credible sources",
+    "ko": "둘 다 믿을 만함"
+   },
+   {
+    "en": "directly conflicting statistics",
+    "ko": "값이 정면으로 충돌"
+   },
+   {
+    "en": "Both sources appear legitimate",
+    "ko": "한쪽을 버릴 근거 없음"
+   },
+   {
+    "en": "could significantly affect the research conclusions",
+    "ko": "숨기면 안 되는 중요한 차이"
+   }
+  ],
+  "discuss_ko": "{A} 처럼 정부 보고서가 더 권위 있다고 보는 게 상식적으로 보이는데, 문서 분석 단계에서 그런 판단을 내려 버리면 왜 문제가 될까?",
+  "words": [
+   {
+    "word": "credible",
+    "pos": "adj.",
+    "ko": "믿을 만한, 신뢰할 수 있는",
+    "example": "two credible sources"
+   },
+   {
+    "word": "discrepancy",
+    "pos": "n.",
+    "ko": "불일치, 차이",
+    "example": "the discrepancy could significantly affect the research conclusions"
+   },
+   {
+    "word": "legitimate",
+    "pos": "adj.",
+    "ko": "정당한, 믿을 만한",
+    "example": "Both sources appear legitimate"
+   },
+   {
+    "word": "authoritative",
+    "pos": "adj.",
+    "ko": "권위 있는",
+    "example": "the more authoritative source"
+   },
+   {
+    "word": "attribution",
+    "pos": "n.",
+    "ko": "출처 표시",
+    "example": "with full source attribution"
+   },
+   {
+    "word": "annotate",
+    "pos": "v.",
+    "ko": "주석을 달다, 표시하다",
+    "example": "explicitly annotate the conflict"
+   },
+   {
+    "word": "pending",
+    "pos": "prep.",
+    "ko": "~할 때까지, ~을 기다리며",
+    "example": "pending coordinator resolution"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "D5-05",
+  "domain": 5,
+  "scenario": "Multi-Agent Research System",
+  "q_en": "The web search subagent returns results for only 3 of 5 requested source categories (competitor websites and industry reports succeeded, but news archives and social media feeds timed out). The document analysis subagent successfully processed all provided documents. The synthesis subagent must now produce a findings summary from this mixed-quality input. What's the most effective error propagation strategy?",
+  "q_ko": "웹 검색 subagent 가 요청받은 출처 범주 5개 중 3개에 대해서만 결과를 돌려주었다(경쟁사 웹사이트와 업계 보고서는 성공, 뉴스 아카이브와 소셜 미디어 피드는 타임아웃). 문서 분석 subagent 는 받은 문서를 모두 처리했다. 이제 synthesis subagent 가 품질이 고르지 않은 이 입력으로 발견 요약을 만들어야 한다. 가장 효과적인 오류 전파 전략은?",
+  "options": [
+   {
+    "en": "Halt synthesis and retry all failed searches with extended timeouts before proceeding.",
+    "ko": "종합을 멈추고, 실패한 검색을 모두 타임아웃을 늘려 다시 시도한 뒤 진행한다.",
+    "why": "성공한 결과까지 붙잡아 두고 전체 흐름을 멈추게 해 부분 결과의 가치를 버린다."
+   },
+   {
+    "en": "Proceed with available results and exclude any sections in the synthesis where data is missing.",
+    "ko": "있는 결과로 진행하되, 데이터가 빠진 부분은 종합 결과에서 아예 뺀다.",
+    "why": "진행은 맞지만 빈 곳을 조용히 지우면 읽는 사람이 공백이 있다는 걸 모르게 된다."
+   },
+   {
+    "en": "Structure the synthesis output with coverage annotations indicating which areas are well-supported versus which have gaps due to the unavailable source categories.",
+    "ko": "종합 결과에 커버리지 표시를 달아, 어느 영역은 근거가 충분하고 어느 영역은 받지 못한 출처 범주 때문에 공백이 있는지 밝힌다.",
+    "why": "성공한 결과는 살리고 한계는 투명하게 드러내므로 정답이다."
+   },
+   {
+    "en": "Have the coordinator re-invoke the web search agent for only the failed categories before proceeding to synthesis.",
+    "ko": "종합으로 넘어가기 전에 coordinator 가 실패한 범주만 웹 검색 agent 에 다시 요청하게 한다.",
+    "why": "지문은 이미 종합 단계에서 불완전한 입력을 어떻게 다룰지 묻고 있고, 이 방식은 공백을 드러내는 전략이 아니라 종합을 또 미루는 것이다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "일부 실패 = 멈추지 말고 커버리지 공백 표시",
+  "explain_ko": [
+   "**must now produce a findings summary from this mixed-quality input** 은 이미 종합 단계이고 있는 입력으로 결과를 내야 한다는 뜻이다.",
+   "성공한 결과를 버리거나 전체를 멈추지 않고 진행하는 것이 graceful degradation(부분 실패에도 계속 동작)이다.",
+   "대신 **어느 영역이 근거가 탄탄하고 어느 영역이 비었는지** 표시해야 읽는 사람이 결과의 한계를 안다.",
+   "공백을 조용히 빼는 {B} 는 투명하지 않아서 오답이다."
+  ],
+  "clues": [
+   {
+    "en": "only 3 of 5 requested source categories",
+    "ko": "일부 범주만 성공"
+   },
+   {
+    "en": "timed out",
+    "ko": "접근 실패로 데이터 없음"
+   },
+   {
+    "en": "successfully processed all provided documents",
+    "ko": "쓸 수 있는 결과는 있음"
+   },
+   {
+    "en": "mixed-quality input",
+    "ko": "고르지 않은 입력을 그대로 다뤄야 함"
+   }
+  ],
+  "discuss_ko": "{D} 처럼 실패한 범주만 다시 불러오면 공백 자체가 사라질 텐데, 이 지문에서는 왜 커버리지 표시가 더 나은 답으로 꼽힐까?",
+  "words": [
+   {
+    "word": "propagation",
+    "pos": "n.",
+    "ko": "전파, 위로 전달하기",
+    "example": "error propagation strategy"
+   },
+   {
+    "word": "halt",
+    "pos": "v.",
+    "ko": "멈추다, 중단하다",
+    "example": "Halt synthesis and retry all failed searches"
+   },
+   {
+    "word": "extended",
+    "pos": "adj.",
+    "ko": "늘린, 연장된",
+    "example": "with extended timeouts"
+   },
+   {
+    "word": "exclude",
+    "pos": "v.",
+    "ko": "제외하다, 빼다",
+    "example": "exclude any sections in the synthesis where data is missing"
+   },
+   {
+    "word": "annotation",
+    "pos": "n.",
+    "ko": "주석, 표시",
+    "example": "coverage annotations"
+   },
+   {
+    "word": "well-supported",
+    "pos": "adj.",
+    "ko": "근거가 충분한",
+    "example": "which areas are well-supported"
+   },
+   {
+    "word": "re-invoke",
+    "pos": "v.",
+    "ko": "다시 호출하다",
+    "example": "re-invoke the web search agent"
+   }
+  ],
+  "check": "ok",
+  "checkNote": "지문의 '5개 중 3개 성공'과 괄호 안에 나열된 범주(성공 2, 실패 2)의 수가 맞지 않지만, 정답 판단에는 영향이 없다."
+ },
+ {
+  "id": "D5-06",
+  "domain": 5,
+  "scenario": "Developer Productivity Tools",
+  "q_en": "During extended codebase exploration (context is 82% full), the model starts referencing 'typical Spring MVC patterns' instead of the specific class hierarchy it identified 20 turns ago. Recommended immediate action:",
+  "q_ko": "긴 코드베이스 탐색 도중(컨텍스트 82% 사용), 모델이 20턴 전에 찾아낸 구체적인 클래스 계층 대신 '전형적인 Spring MVC 패턴'을 이야기하기 시작한다. 권장되는 즉시 조치는?",
+  "options": [
+   {
+    "en": "Start a new session with an injected structured summary of key findings discovered so far.",
+    "ko": "지금까지 찾은 핵심 발견을 구조화된 요약으로 넣고 새 세션을 시작한다.",
+    "why": "출제자 기준으로는 아직 유효한 컨텍스트를 버리는 선택이라 오답이지만, 이미 저하 증상이 나타났다는 점에서 충분히 방어할 수 있는 보기다."
+   },
+   {
+    "en": "Switch to a model with a larger context window to accommodate the full session.",
+    "ko": "세션 전체를 담을 수 있게 더 큰 컨텍스트 창을 가진 모델로 바꾼다.",
+    "why": "긴 컨텍스트에서의 성능 저하는 창만 키운다고 사라지지 않는다."
+   },
+   {
+    "en": "Use `/compact` to reduce context usage while preserving key findings, then continue the session.",
+    "ko": "`/compact` 로 핵심 발견은 살리면서 컨텍스트 사용량을 줄이고, 세션을 이어 간다.",
+    "why": "장황한 탐색 출력을 압축해 공간을 되찾고 같은 세션을 이어 가므로 출제자 기준 정답이다."
+   },
+   {
+    "en": "Ask the model to re-read the specific files it analysed earlier to refresh its memory.",
+    "ko": "모델에게 예전에 분석한 파일을 다시 읽어 기억을 새로 고치라고 요청한다.",
+    "why": "남은 18% 공간을 파일 재독에 써 버려 문제를 더 키운다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "꽉 찼지만 유효한 컨텍스트 = /compact 로 압축 후 계속",
+  "explain_ko": [
+   "**'typical Spring MVC patterns' instead of the specific class hierarchy** 는 긴 세션에서 생기는 컨텍스트 저하의 대표 증상이다.",
+   "**82% full** 은 공간이 모자라다는 신호이고, 20턴 전에 찾은 내용 자체는 아직 유효하다.",
+   "`/compact` 는 장황한 중간 탐색 기록을 요약해 공간을 되찾고 세션을 이어 가게 해 준다. 뒤에 무엇을 남길지 지시를 붙일 수도 있다.",
+   "파일 다시 읽기는 남은 공간을 더 쓰고, 모델 교체는 근본 해결이 아니다."
+  ],
+  "clues": [
+   {
+    "en": "context is 82% full",
+    "ko": "공간이 거의 참"
+   },
+   {
+    "en": "typical Spring MVC patterns",
+    "ko": "구체 정보 대신 일반론 = 컨텍스트 저하"
+   },
+   {
+    "en": "the specific class hierarchy it identified 20 turns ago",
+    "ko": "이미 찾아 둔 유효한 발견"
+   },
+   {
+    "en": "Recommended immediate action",
+    "ko": "지금 당장 할 조치"
+   }
+  ],
+  "discuss_ko": "{A} 처럼 핵심 발견을 요약해 새 세션을 여는 것과 `/compact` 는 둘 다 '요약하고 계속하기'인데, 모델이 이미 일반론을 말하기 시작한 상태라면 어느 쪽이 더 믿을 만할까?",
+  "words": [
+   {
+    "word": "extended",
+    "pos": "adj.",
+    "ko": "오래 이어진, 장시간의",
+    "example": "During extended codebase exploration"
+   },
+   {
+    "word": "hierarchy",
+    "pos": "n.",
+    "ko": "계층 구조",
+    "example": "the specific class hierarchy"
+   },
+   {
+    "word": "inject",
+    "pos": "v.",
+    "ko": "(내용을) 넣다, 주입하다",
+    "example": "an injected structured summary of key findings"
+   },
+   {
+    "word": "accommodate",
+    "pos": "v.",
+    "ko": "수용하다, 담다",
+    "example": "to accommodate the full session"
+   },
+   {
+    "word": "immediate",
+    "pos": "adj.",
+    "ko": "즉각적인",
+    "example": "Recommended immediate action"
+   },
+   {
+    "word": "refresh",
+    "pos": "v.",
+    "ko": "새로 고치다, 되살리다",
+    "example": "to refresh its memory"
+   }
+  ],
+  "check": "doubt",
+  "checkNote": "CCAF 시험 범위에는 긴 탐색 세션에서 `/compact` 로 컨텍스트를 줄이는 방법과, 핵심 발견을 구조화 요약으로 넣고 새로 시작하는 방법이 둘 다 나온다. 이 지문은 이미 구체 정보 대신 일반 패턴을 말하는 저하 증상이 나타난 상태라, 자동 요약인 `/compact` 가 그 클래스 계층을 제대로 남긴다는 보장이 약하고 {A} 도 정답으로 볼 여지가 크다. 출제자 해설은 '유효한 컨텍스트면 /compact, stale 하면 새로 시작'이라는 구분으로 {C} 를 고른다."
+ },
+ {
+  "id": "D5-07",
+  "domain": 5,
+  "scenario": "Multi-Agent Research System",
+  "q_en": "Research subagents return verbose reasoning chains and full source text to the coordinator. The coordinator is hitting context limits and synthesis quality is degrading. Most effective fix:",
+  "q_ko": "리서치 subagent 들이 장황한 추론 과정과 출처 원문 전체를 coordinator 에게 돌려준다. coordinator 는 컨텍스트 한도에 걸리고 종합 품질이 떨어지고 있다. 가장 효과적인 해결책은?",
+  "options": [
+   {
+    "en": "Increase the coordinator's `max_tokens` parameter to accommodate larger inputs.",
+    "ko": "더 큰 입력을 받도록 coordinator 의 `max_tokens` 파라미터를 늘린다.",
+    "why": "`max_tokens` 는 출력 길이 상한이라 입력이 컨텍스트 한도에 걸리는 문제와는 상관없다."
+   },
+   {
+    "en": "Instruct the coordinator to summarise incoming subagent results before processing them.",
+    "ko": "coordinator 가 들어오는 subagent 결과를 처리하기 전에 요약하도록 지시한다.",
+    "why": "부푼 결과가 이미 coordinator 컨텍스트에 들어온 뒤라 원인은 그대로 두고 처리만 늘린다."
+   },
+   {
+    "en": "Modify subagents to return structured data (key facts, citations, relevance scores) instead of verbose prose and reasoning chains.",
+    "ko": "subagent 가 장황한 글과 추론 과정 대신 구조화된 데이터(핵심 사실, 인용, 관련도 점수)를 돌려주도록 바꾼다.",
+    "why": "부풀림의 원천인 subagent 출력을 줄이므로 정답이다."
+   },
+   {
+    "en": "Reduce the number of subagents to lower total output volume.",
+    "ko": "전체 출력량을 줄이려고 subagent 수를 줄인다.",
+    "why": "양은 줄지만 조사 범위도 함께 줄어 결과 품질을 해친다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "coordinator 과부하 = subagent 출력을 구조화해 상류에서 줄이기",
+  "explain_ko": [
+   "**verbose reasoning chains and full source text** 가 원인이다. 넘어오는 내용 자체가 너무 크다.",
+   "추론은 각 subagent 안에서 끝내고, 에이전트 경계를 넘을 때는 **핵심 사실·인용·관련도 점수**만 넘기는 게 원칙이다.",
+   "받은 뒤에 요약하기({B})나 한도 늘리기({A})는 하류에서 막는 임시방편이다. 문제는 **상류(subagent 출력)**에서 고친다."
+  ],
+  "clues": [
+   {
+    "en": "return verbose reasoning chains and full source text",
+    "ko": "넘기는 양이 과함, 원천은 subagent"
+   },
+   {
+    "en": "hitting context limits",
+    "ko": "coordinator 컨텍스트 부족"
+   },
+   {
+    "en": "synthesis quality is degrading",
+    "ko": "잡음이 많아 품질 저하"
+   },
+   {
+    "en": "Most effective fix",
+    "ko": "근본 해결책을 고르라는 뜻"
+   }
+  ],
+  "discuss_ko": "{B} 처럼 coordinator 가 받자마자 요약해도 결국 컨텍스트는 줄어들 것 같은데, 왜 subagent 출력을 바꾸는 것보다 못한 답일까?",
+  "words": [
+   {
+    "word": "verbose",
+    "pos": "adj.",
+    "ko": "장황한, 말이 많은",
+    "example": "verbose reasoning chains"
+   },
+   {
+    "word": "degrade",
+    "pos": "v.",
+    "ko": "(품질이) 떨어지다, 저하되다",
+    "example": "synthesis quality is degrading"
+   },
+   {
+    "word": "hit a limit",
+    "pos": "idiom",
+    "ko": "한도에 걸리다",
+    "example": "The coordinator is hitting context limits"
+   },
+   {
+    "word": "accommodate",
+    "pos": "v.",
+    "ko": "수용하다, 받아들이다",
+    "example": "to accommodate larger inputs"
+   },
+   {
+    "word": "relevance",
+    "pos": "n.",
+    "ko": "관련성",
+    "example": "relevance scores"
+   },
+   {
+    "word": "volume",
+    "pos": "n.",
+    "ko": "양, 분량",
+    "example": "to lower total output volume"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "D5-08",
+  "domain": 5,
+  "scenario": "Multi-Agent Research System",
+  "q_en": "During a materials research task, the web search subagent queries three source categories with different outcomes: academic databases returned 15 relevant papers, industry reports returned '0 results found,' and patent databases returned 'Connection timeout.' When designing error propagation to the coordinator, what approach enables the best recovery decisions?",
+  "q_ko": "소재 연구 작업 중 웹 검색 subagent 가 세 가지 출처 범주를 조회했더니 결과가 제각각이었다. 학술 데이터베이스는 관련 논문 15편, 업계 보고서는 '0 results found', 특허 데이터베이스는 'Connection timeout' 이었다. coordinator 로 오류를 전달하는 방식을 설계할 때, 가장 좋은 복구 결정을 가능하게 하는 방법은?",
+  "options": [
+   {
+    "en": "Return a single combined error status for all three categories, since one of them failed.",
+    "ko": "하나가 실패했으니 세 범주 모두에 대해 하나로 합친 오류 상태를 돌려준다.",
+    "why": "성공과 빈 결과까지 오류로 뭉개 coordinator 가 무엇을 다시 해야 할지 알 수 없다."
+   },
+   {
+    "en": "Return only the successful academic database results and silently discard the other outcomes.",
+    "ko": "성공한 학술 데이터베이스 결과만 돌려주고 나머지 결과는 조용히 버린다.",
+    "why": "실패와 빈 결과를 숨겨 coordinator 가 공백이 있다는 사실조차 모르게 된다."
+   },
+   {
+    "en": "Return all three outcomes separately: academic results as success, industry as `isError:false` with empty results (valid query, no data), and patent as `isError:true` with structured error context including failure type, query attempted, and retry guidance.",
+    "ko": "세 결과를 따로 돌려준다. 학술은 성공, 업계는 `isError:false` 와 빈 결과(정상 조회, 데이터 없음), 특허는 `isError:true` 와 함께 실패 유형·시도한 쿼리·재시도 안내를 담은 구조화된 오류 정보로 보낸다.",
+    "why": "성공, 빈 결과, 접근 실패를 구분해 각각 다른 대응을 할 수 있게 하므로 정답이다."
+   },
+   {
+    "en": "Automatically retry the patent database timeout within the subagent, returning a unified result once all categories are complete or exhausted.",
+    "ko": "특허 데이터베이스 타임아웃은 subagent 안에서 자동으로 재시도하고, 모든 범주가 끝나거나 시도가 소진되면 하나로 합친 결과를 돌려준다.",
+    "why": "재시도 자체는 괜찮지만 결과를 하나로 합쳐 실패 맥락을 감춘다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "성공 / 빈 결과 / 접근 실패는 따로 구분해 전달",
+  "explain_ko": [
+   "세 결과 **15 relevant papers**, **'0 results found'**, **'Connection timeout'** 은 성격이 모두 다르다.",
+   "'0 results found' 는 제대로 찾았는데 없는 것이라 오류가 아니다. `isError:false` 로 두고 재시도할 필요가 없다.",
+   "'Connection timeout' 은 접근 실패라 `isError:true` 에 실패 유형·쿼리·재시도 안내를 붙여야 coordinator 가 다시 시도할지 판단할 수 있다.",
+   "합치거나({A}, {D}) 버리면({B}) 이 구분이 사라져 **best recovery decisions** 를 내릴 수 없다."
+  ],
+  "clues": [
+   {
+    "en": "academic databases returned 15 relevant papers",
+    "ko": "성공"
+   },
+   {
+    "en": "industry reports returned '0 results found,'",
+    "ko": "정상 조회지만 결과 없음"
+   },
+   {
+    "en": "patent databases returned 'Connection timeout.'",
+    "ko": "접근 실패, 재시도 후보"
+   },
+   {
+    "en": "enables the best recovery decisions",
+    "ko": "coordinator 가 판단할 정보가 필요"
+   }
+  ],
+  "discuss_ko": "{D} 처럼 subagent 가 타임아웃을 스스로 재시도하는 건 합리적으로 보이는데, 결과를 하나로 합쳐 돌려주면 coordinator 는 무엇을 모르게 될까?",
+  "words": [
+   {
+    "word": "outcome",
+    "pos": "n.",
+    "ko": "결과",
+    "example": "three source categories with different outcomes"
+   },
+   {
+    "word": "propagation",
+    "pos": "n.",
+    "ko": "전파, 전달",
+    "example": "designing error propagation to the coordinator"
+   },
+   {
+    "word": "recovery",
+    "pos": "n.",
+    "ko": "복구",
+    "example": "the best recovery decisions"
+   },
+   {
+    "word": "discard",
+    "pos": "v.",
+    "ko": "버리다, 폐기하다",
+    "example": "silently discard the other outcomes"
+   },
+   {
+    "word": "guidance",
+    "pos": "n.",
+    "ko": "안내, 지침",
+    "example": "retry guidance"
+   },
+   {
+    "word": "exhausted",
+    "pos": "adj.",
+    "ko": "(시도·자원이) 다 소진된",
+    "example": "once all categories are complete or exhausted"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "D5-09",
+  "domain": 5,
+  "scenario": "Developer Productivity Tools",
+  "q_en": "You're running an extended codebase exploration session to map a legacy system's data flow. After 30+ turns, the context is 78% full and Claude has identified key service boundaries and data transformations. You need to continue across multiple future sessions without losing these findings. What's the most reliable approach?",
+  "q_ko": "레거시 시스템의 데이터 흐름을 파악하려고 긴 코드베이스 탐색 세션을 진행하고 있다. 30턴이 넘자 컨텍스트가 78% 찼고, Claude 는 주요 서비스 경계와 데이터 변환 지점을 찾아냈다. 이 발견을 잃지 않고 앞으로 여러 세션에 걸쳐 작업을 이어 가야 한다. 가장 믿을 만한 방법은?",
+  "options": [
+   {
+    "en": "Use `/compact` to compress the current session and continue from where you left off.",
+    "ko": "`/compact` 로 현재 세션을 압축하고 멈춘 곳부터 이어 간다.",
+    "why": "지금 세션은 늘릴 수 있지만, 다음 세션으로 발견을 넘겨주지는 못한다."
+   },
+   {
+    "en": "Ask Claude to summarize its findings in a response, then manually copy them into a document.",
+    "ko": "Claude 에게 발견을 응답으로 요약하게 한 뒤, 사람이 직접 문서에 복사해 넣는다.",
+    "why": "사람 손을 거쳐야 하고, 빠뜨리거나 구조가 흐트러지기 쉽다."
+   },
+   {
+    "en": "Have Claude write the key findings — service boundaries, data flow maps, identified dependencies — to a scratchpad file in the repo that future sessions can read.",
+    "ko": "Claude 가 핵심 발견(서비스 경계, 데이터 흐름도, 파악한 의존성)을 저장소 안 scratchpad 파일에 적어, 이후 세션이 읽을 수 있게 한다.",
+    "why": "파일은 세션이 끝나도 남아 다음 세션이 그대로 불러올 수 있으므로 정답이다."
+   },
+   {
+    "en": "Start a new session with a detailed prompt describing the codebase from memory.",
+    "ko": "기억나는 대로 코드베이스를 자세히 설명하는 프롬프트로 새 세션을 시작한다.",
+    "why": "사람 기억에 기대서 손실이 크고, Claude 가 찾은 구체적 발견을 보존하지 못한다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "여러 세션에 걸쳐 유지 = 발견을 scratchpad 파일에 기록",
+  "explain_ko": [
+   "**continue across multiple future sessions** 가 결정적 단서다. 지금 세션을 늘리는 게 아니라 다음 세션으로 넘겨야 한다.",
+   "`/compact` 는 현재 세션 안에서만 효과가 있어서, 세션이 끝나거나 중단되면 발견이 남지 않는다.",
+   "Claude 가 직접 **scratchpad 파일**에 구조화해 적어 두면, 다음 세션이 그 파일을 읽고 바로 이어 간다."
+  ],
+  "clues": [
+   {
+    "en": "continue across multiple future sessions",
+    "ko": "세션을 넘어 보존해야 함"
+   },
+   {
+    "en": "without losing these findings",
+    "ko": "발견 유지가 목표"
+   },
+   {
+    "en": "the context is 78% full",
+    "ko": "지금 세션은 곧 한계"
+   },
+   {
+    "en": "most reliable approach",
+    "ko": "기억·수작업보다 확실한 방식"
+   }
+  ],
+  "discuss_ko": "{A} 의 `/compact` 도 핵심 발견을 남긴다고 하는데, 다음 날 새 세션을 열었을 때 그걸로는 왜 부족한지 이야기해 보자.",
+  "words": [
+   {
+    "word": "legacy",
+    "pos": "adj.",
+    "ko": "오래된(기존에 물려받은) 시스템의",
+    "example": "a legacy system's data flow"
+   },
+   {
+    "word": "boundary",
+    "pos": "n.",
+    "ko": "경계",
+    "example": "key service boundaries"
+   },
+   {
+    "word": "transformation",
+    "pos": "n.",
+    "ko": "변환",
+    "example": "data transformations"
+   },
+   {
+    "word": "dependency",
+    "pos": "n.",
+    "ko": "의존성",
+    "example": "identified dependencies"
+   },
+   {
+    "word": "reliable",
+    "pos": "adj.",
+    "ko": "믿을 만한, 확실한",
+    "example": "the most reliable approach"
+   },
+   {
+    "word": "leave off",
+    "pos": "phr. v.",
+    "ko": "(하던 것을) 멈추다",
+    "example": "continue from where you left off"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "D5-10",
+  "domain": 5,
+  "scenario": "Structured Data Extraction",
+  "q_en": "Your extraction pipeline reports 96% accuracy across 10,000 invoices processed last month. Your team proposes removing human review entirely based on this metric. What validation step is most critical before automating the full pipeline?",
+  "q_ko": "추출 파이프라인이 지난달 처리한 인보이스 10,000건에서 정확도 96% 를 기록했다. 팀은 이 지표를 근거로 사람 검토를 완전히 없애자고 제안한다. 파이프라인 전체를 자동화하기 전에 가장 중요한 검증 단계는?",
+  "options": [
+   {
+    "en": "Run the pipeline on 1,000 additional invoices to confirm the 96% figure is stable at scale.",
+    "ko": "인보이스 1,000건을 더 돌려, 규모가 커져도 96% 가 유지되는지 확인한다.",
+    "why": "전체 수치가 안정적인지만 볼 뿐, 특정 유형에서 무너지는지는 드러나지 않는다."
+   },
+   {
+    "en": "Analyze accuracy by document type and field segment to verify consistent performance before removing human review.",
+    "ko": "사람 검토를 없애기 전에 문서 유형과 필드 구간별로 정확도를 나눠 분석해, 성능이 고르게 나오는지 확인한다.",
+    "why": "평균 96% 뒤에 숨은 약한 구간을 찾아내므로 정답이다."
+   },
+   {
+    "en": "Lower the confidence threshold from 0.9 to 0.85 to approve more extractions automatically and increase throughput.",
+    "ko": "confidence threshold 를 0.9 에서 0.85 로 낮춰 자동 승인을 늘리고 처리량을 높인다.",
+    "why": "검증이 아니라 처리량 최적화이고, 오류를 오히려 늘릴 수 있다."
+   },
+   {
+    "en": "Add a second extraction pass to catch the 4% of errors the first pass misses.",
+    "ko": "두 번째 추출 단계를 추가해 첫 단계가 놓치는 4% 오류를 잡는다.",
+    "why": "오류가 어디에 몰려 있는지 확인하지 않고 덧붙이는 최적화일 뿐이다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "전체 정확도는 가림막 = 유형·필드별로 쪼개 확인",
+  "explain_ko": [
+   "**96% accuracy across 10,000 invoices** 는 전체 평균이라, 특정 유형에서 크게 틀리는 것을 가릴 수 있다.",
+   "예를 들어 일반 디지털 인보이스는 거의 완벽하고 손글씨·스캔본은 40% 여도 전체로는 96% 가까이 나온다.",
+   "**removing human review entirely** 는 되돌리기 어려운 결정이니, 먼저 문서 유형·필드별 정확도를 나눠 봐야 어디가 위험한지 안다."
+  ],
+  "clues": [
+   {
+    "en": "reports 96% accuracy across 10,000 invoices",
+    "ko": "전체 평균 수치 하나"
+   },
+   {
+    "en": "removing human review entirely",
+    "ko": "안전장치를 통째로 없애는 결정"
+   },
+   {
+    "en": "based on this metric",
+    "ko": "집계 지표 하나에만 기댐"
+   },
+   {
+    "en": "most critical before automating the full pipeline",
+    "ko": "자동화 전 꼭 필요한 검증"
+   }
+  ],
+  "discuss_ko": "{A} 처럼 표본을 늘려 96% 가 안정적인지 보는 것도 검증인데, '규모에서 안정적'인 것과 '구간별로 고른' 것은 무엇이 다를까?",
+  "words": [
+   {
+    "word": "validation",
+    "pos": "n.",
+    "ko": "검증",
+    "example": "What validation step is most critical"
+   },
+   {
+    "word": "entirely",
+    "pos": "adv.",
+    "ko": "완전히, 전부",
+    "example": "removing human review entirely"
+   },
+   {
+    "word": "at scale",
+    "pos": "idiom",
+    "ko": "대규모로, 규모가 커져도",
+    "example": "the 96% figure is stable at scale"
+   },
+   {
+    "word": "segment",
+    "pos": "n.",
+    "ko": "구간, 부분 집단",
+    "example": "by document type and field segment"
+   },
+   {
+    "word": "consistent",
+    "pos": "adj.",
+    "ko": "고른, 일관된",
+    "example": "to verify consistent performance"
+   },
+   {
+    "word": "threshold",
+    "pos": "n.",
+    "ko": "기준값, 문턱값",
+    "example": "Lower the confidence threshold from 0.9 to 0.85"
+   },
+   {
+    "word": "throughput",
+    "pos": "n.",
+    "ko": "처리량",
+    "example": "increase throughput"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "D5-11",
+  "domain": 5,
+  "scenario": "Customer Support Resolution Agent",
+  "q_en": "A customer contacts support saying 'I need help with my account.' Your agent calls `get_customer` and the tool returns three different customer records matching that name. What should the agent do?",
+  "q_ko": "고객이 '계정 문제로 도움이 필요해요'라며 상담을 요청한다. 에이전트가 `get_customer` 를 호출하자, 그 이름과 일치하는 서로 다른 고객 레코드 3개가 돌아왔다. 에이전트는 어떻게 해야 하는가?",
+  "options": [
+   {
+    "en": "Select the most recently active account — it is most likely the customer contacting support.",
+    "ko": "가장 최근에 활동한 계정을 고른다. 지금 연락한 고객일 가능성이 가장 높다.",
+    "why": "추측으로 고르면 엉뚱한 고객의 계정을 건드리거나 남의 정보를 보여 줄 위험이 있다."
+   },
+   {
+    "en": "Select the account with the highest lifetime value to prioritize high-value customers.",
+    "ko": "고가치 고객을 우선하려고 누적 고객 가치(lifetime value)가 가장 높은 계정을 고른다.",
+    "why": "고객 가치는 누가 연락했는지와 무관한 기준이라 잘못된 계정을 고를 수 있다."
+   },
+   {
+    "en": "Ask the customer for an additional identifier (email address, account number, or order number) to resolve the ambiguity before proceeding.",
+    "ko": "진행하기 전에 고객에게 추가 식별 정보(이메일 주소, 계정 번호, 주문 번호)를 물어 누구인지 확실히 한다.",
+    "why": "질문 하나로 정확한 계정을 가릴 수 있으므로 정답이다."
+   },
+   {
+    "en": "Escalate immediately to a human agent since the agent cannot determine the correct account without additional information.",
+    "ko": "추가 정보 없이는 맞는 계정을 알 수 없으니 즉시 사람 상담원에게 넘긴다.",
+    "why": "에이전트가 되물어서 스스로 풀 수 있는데 넘기는 건 불필요한 에스컬레이션이다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "일치 레코드 여러 개 = 추측 금지, 식별 정보 되묻기",
+  "explain_ko": [
+   "**three different customer records matching that name** 은 이름만으로는 누구인지 알 수 없다는 뜻이다.",
+   "최근 활동이나 고객 가치 같은 기준으로 고르면 다른 고객의 정보를 보여 주거나 잘못 변경할 위험이 있다.",
+   "이메일·계정 번호·주문 번호를 한 번 더 물으면 에이전트가 직접 해결할 수 있으니 에스컬레이션도 필요 없다."
+  ],
+  "clues": [
+   {
+    "en": "I need help with my account.",
+    "ko": "식별 정보가 없는 요청"
+   },
+   {
+    "en": "returns three different customer records",
+    "ko": "후보가 여럿 = 모호함"
+   },
+   {
+    "en": "matching that name",
+    "ko": "이름만으로는 특정 불가"
+   }
+  ],
+  "discuss_ko": "{D} 처럼 사람에게 넘기면 잘못된 계정을 건드릴 위험은 없어지는데, 그래도 되묻기가 더 나은 답인 이유는 무엇일까?",
+  "words": [
+   {
+    "word": "ambiguity",
+    "pos": "n.",
+    "ko": "모호함, 애매함",
+    "example": "to resolve the ambiguity before proceeding"
+   },
+   {
+    "word": "identifier",
+    "pos": "n.",
+    "ko": "식별 정보, 식별자",
+    "example": "an additional identifier"
+   },
+   {
+    "word": "proceed",
+    "pos": "v.",
+    "ko": "진행하다, 계속하다",
+    "example": "before proceeding"
+   },
+   {
+    "word": "lifetime value",
+    "pos": "n.",
+    "ko": "고객 생애 가치(누적 가치)",
+    "example": "the highest lifetime value"
+   },
+   {
+    "word": "prioritize",
+    "pos": "v.",
+    "ko": "우선시하다",
+    "example": "to prioritize high-value customers"
+   },
+   {
+    "word": "determine",
+    "pos": "v.",
+    "ko": "알아내다, 판별하다",
+    "example": "cannot determine the correct account"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ }
 ]

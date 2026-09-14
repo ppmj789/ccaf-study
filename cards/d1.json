@@ -1,406 +1,1029 @@
 [
-  {
-    "id": "D1-01",
-    "domain": 1,
-    "scenario": "Customer Support Agent",
-    "q_en": "Production data shows that in 12% of cases, the support agent skips `get_customer` and calls `process_refund` directly using only the customer's stated name, occasionally leading to misidentified accounts and incorrect refunds. What change most reliably fixes this?",
-    "q_ko": "운영 데이터를 보니 12%의 경우 지원 에이전트가 `get_customer`를 건너뛰고, 고객이 말한 이름만으로 바로 `process_refund`를 호출한다. 그 결과 가끔 계정을 잘못 식별해 엉뚱한 환불이 나간다. 이를 가장 확실하게 고치는 변경은?",
-    "options": [
-      {"en": "Strengthen the system prompt: \"Customer verification via `get_customer` is mandatory before any order operation.\"", "ko": "시스템 프롬프트를 강화한다: \"모든 주문 작업 전에 `get_customer`로 고객 확인을 반드시 해야 한다.\"", "why": "프롬프트 지시는 확률적이라 여전히 일정 비율로 무시될 수 있다."},
-      {"en": "Add few-shot examples always showing `get_customer` called first, even when the customer volunteers an order ID.", "ko": "고객이 주문 ID를 먼저 알려 줘도 항상 `get_customer`를 먼저 호출하는 few-shot 예시를 추가한다.", "why": "few-shot 예시도 모델의 경향을 바꿀 뿐 순서를 100% 보장하지 못한다."},
-      {"en": "Add a programmatic prerequisite that blocks `lookup_order` and `process_refund` until `get_customer` has returned a verified customer ID.", "ko": "`get_customer`가 확인된 고객 ID를 반환하기 전까지 `lookup_order`와 `process_refund`를 막는 코드상의 선행 조건을 추가한다.", "why": "코드로 순서를 강제하므로 금전 피해로 이어지는 잘못된 순서를 매번 차단한다."},
-      {"en": "Deploy a routing classifier that analyses each request and enables only the appropriate tool subset.", "ko": "요청마다 분석해 알맞은 도구 묶음만 켜 주는 라우팅 분류기를 배치한다.", "why": "어떤 도구를 쓸 수 있느냐를 정할 뿐, 호출 순서는 강제하지 못한다."}
-    ],
-    "answer": 2,
-    "point_ko": "돈이 걸린 순서는 프롬프트 말고 코드로 강제",
-    "explain_ko": [
-      "**in 12% of cases**, **incorrect refunds** 는 '가끔 틀리는데, 틀리면 돈이 나간다'는 뜻이다.",
-      "프롬프트와 few-shot 은 확률적이라 실패율이 0이 되지 않는다.",
-      "**programmatic prerequisite**(코드로 만든 선행 조건)만 `get_customer` 다음에 `process_refund` 가 오는 순서를 매번 보장한다."
-    ],
-    "clues": [
-      {"en": "in 12% of cases", "ko": "가끔 순서를 어김 = 확률적 실패"},
-      {"en": "skips `get_customer`", "ko": "문제는 호출 순서"},
-      {"en": "incorrect refunds", "ko": "금전 피해, 확실한 보장 필요"},
-      {"en": "most reliably", "ko": "결정적인(코드) 해법을 고르라"}
-    ],
-    "discuss_ko": "few-shot 예시를 충분히 넣으면 12%를 거의 0으로 줄일 수 있을 텐데, 그래도 코드로 강제해야 하는 이유는 뭘까?",
-    "words": [
-      {"word": "prerequisite", "pos": "n.", "ko": "전제 조건, 선행 조건", "example": "Add a programmatic prerequisite"},
-      {"word": "programmatic", "pos": "adj.", "ko": "프로그램(코드)으로 처리하는", "example": "a programmatic prerequisite that blocks `lookup_order`"},
-      {"word": "misidentify", "pos": "v.", "ko": "잘못 식별하다", "example": "occasionally leading to misidentified accounts"},
-      {"word": "mandatory", "pos": "adj.", "ko": "필수의, 의무적인", "example": "is mandatory before any order operation"},
-      {"word": "volunteer", "pos": "v.", "ko": "(묻기 전에) 자진해서 말하다", "example": "even when the customer volunteers an order ID"},
-      {"word": "stated", "pos": "adj.", "ko": "(본인이) 말한, 진술된", "example": "using only the customer's stated name"}
-    ],
-    "check": "ok",
-    "checkNote": ""
-  },
-  {
-    "id": "D1-02",
-    "domain": 1,
-    "scenario": "Multi-Agent Research System",
-    "q_en": "After running the system on the topic \"impact of AI on creative industries,\" you observe that each subagent completes successfully: the web search agent finds relevant articles, the document analysis agent summarises papers correctly, and the synthesis agent produces coherent output. However, the final reports cover only visual arts, completely missing music, writing, and film production. When you examine the coordinator's logs, you see it decomposed the topic into three subtasks: \"AI in digital art creation,\" \"AI in graphic design,\" and \"AI in photography.\" What is the most likely root cause?",
-    "q_ko": "\"AI가 창작 산업에 미치는 영향\"이라는 주제로 시스템을 돌렸더니 subagent 는 모두 제대로 끝났다. 웹 검색 에이전트는 관련 기사를 찾았고, 문서 분석 에이전트는 논문을 정확히 요약했으며, synthesis(종합) 에이전트는 일관된 결과물을 냈다. 그런데 최종 보고서는 시각 예술만 다루고 음악·글쓰기·영화 제작은 완전히 빠져 있다. 코디네이터 로그를 보니 주제를 \"디지털 아트 창작의 AI\", \"그래픽 디자인의 AI\", \"사진의 AI\" 세 하위 작업으로 쪼갰다. 가장 유력한 근본 원인은?",
-    "options": [
-      {"en": "The synthesis agent lacks instructions for identifying coverage gaps in the findings it receives from other agents.", "ko": "synthesis 에이전트에 다른 에이전트가 넘긴 결과에서 빠진 범위를 찾아내라는 지시가 없다.", "why": "synthesis 에이전트는 받은 결과를 잘 합쳤을 뿐, 애초에 음악·영화 자료가 들어오지 않았다."},
-      {"en": "The coordinator agent's task decomposition is too narrow, resulting in subagent assignments that don't cover all relevant domains of the topic.", "ko": "코디네이터의 작업 분해가 너무 좁아서, subagent 배정이 주제의 관련 분야를 다 덮지 못했다.", "why": "로그에 세 하위 작업이 모두 시각 예술뿐이라는 증거가 그대로 나온다."},
-      {"en": "The web search agent's queries are not comprehensive enough and need to be expanded to cover more creative industry sectors.", "ko": "웹 검색 에이전트의 검색어가 충분히 포괄적이지 않아 더 많은 창작 산업 분야로 넓혀야 한다.", "why": "웹 검색 에이전트는 배정받은 시각 예술 주제 안에서 제대로 일했다."},
-      {"en": "The document analysis agent is filtering out sources related to non-visual creative industries due to overly restrictive relevance criteria.", "ko": "문서 분석 에이전트가 관련성 기준이 지나치게 엄격해서 시각 예술 외 분야의 자료를 걸러내고 있다.", "why": "필터링 흔적은 없고, 누락은 배정 단계에서 이미 생겼다."}
-    ],
-    "answer": 1,
-    "point_ko": "주제 누락은 코디네이터의 작업 분해 문제",
-    "explain_ko": [
-      "**each subagent completes successfully** — 하위 에이전트는 모두 맡은 일을 잘했다.",
-      "**coordinator's logs** 를 보면 세 하위 작업이 전부 시각 예술(digital art, graphic design, photography)이다.",
-      "그러니 음악·글·영화가 빠진 원인은 배정 자체, 즉 코디네이터가 주제를 너무 좁게 쪼갠 데 있다.",
-      "나머지 보기는 모두 정상적으로 일한 하류(downstream) 에이전트를 탓한다."
-    ],
-    "clues": [
-      {"en": "each subagent completes successfully", "ko": "하위 에이전트 잘못 아님"},
-      {"en": "completely missing music, writing, and film production", "ko": "범위가 통째로 빠짐"},
-      {"en": "decomposed the topic into three subtasks", "ko": "분해 단계가 원인"},
-      {"en": "AI in graphic design", "ko": "전부 시각 예술로만 쪼갬"}
-    ],
-    "discuss_ko": "synthesis 에이전트에 '빠진 분야를 찾아라'는 지시를 넣으면 누락을 알아챌 수도 있는데, 왜 그건 근본 해결이 아닐까?",
-    "words": [
-      {"word": "root cause", "pos": "n.", "ko": "근본 원인", "example": "What is the most likely root cause?"},
-      {"word": "decompose", "pos": "v.", "ko": "분해하다, 쪼개다", "example": "it decomposed the topic into three subtasks"},
-      {"word": "coherent", "pos": "adj.", "ko": "일관성 있는, 논리가 맞는", "example": "the synthesis agent produces coherent output"},
-      {"word": "coverage gap", "pos": "n.", "ko": "다루지 못한 빈틈", "example": "identifying coverage gaps in the findings"},
-      {"word": "comprehensive", "pos": "adj.", "ko": "포괄적인, 빠짐없는", "example": "not comprehensive enough"},
-      {"word": "overly restrictive", "pos": "phr.", "ko": "지나치게 제한적인", "example": "due to overly restrictive relevance criteria"}
-    ],
-    "check": "ok",
-    "checkNote": ""
-  },
-  {
-    "id": "D1-03",
-    "domain": 1,
-    "scenario": "Multi-Agent Research System",
-    "q_en": "When researching a broad topic, you observe that the web search agent and document analysis agent are both investigating the same subtopics, resulting in significant overlap in their findings. Token usage has nearly doubled without proportionally increasing the breadth or depth of research coverage. What is the most effective way to address this?",
-    "q_ko": "넓은 주제를 조사할 때 웹 검색 에이전트와 문서 분석 에이전트가 같은 하위 주제를 함께 파고들어 결과가 크게 겹친다. 토큰 사용량은 거의 두 배가 됐는데 조사의 폭이나 깊이는 그만큼 늘지 않았다. 가장 효과적인 해결책은?",
-    "options": [
-      {"en": "Give both agents identical tool sets and let the model naturally differentiate their outputs based on tool capabilities.", "ko": "두 에이전트에 똑같은 도구 세트를 주고, 모델이 도구 기능에 따라 알아서 결과를 나누게 둔다.", "why": "도구가 같으면 오히려 더 겹치고, 알아서 나눈다는 보장도 없다."},
-      {"en": "Merge the web search and document analysis agents into a single research agent to eliminate the coordination overhead.", "ko": "웹 검색 에이전트와 문서 분석 에이전트를 하나의 조사 에이전트로 합쳐 조율 부담을 없앤다.", "why": "겹침은 사라지지만 각 에이전트의 전문화 이점까지 잃는다."},
-      {"en": "Partition research scope in the coordinator's decomposition — assign distinct subtopics or source types to each agent to minimise duplication.", "ko": "코디네이터의 작업 분해 단계에서 조사 범위를 나눈다. 에이전트마다 서로 다른 하위 주제나 자료 유형을 맡겨 중복을 최소화한다.", "why": "중복이 생기는 배정 단계를 상류에서 바로 고친다."},
-      {"en": "Add a deduplication pass where the synthesis agent filters out redundant findings after both agents complete.", "ko": "두 에이전트가 끝난 뒤 synthesis 에이전트가 중복된 결과를 걸러내는 중복 제거 단계를 추가한다.", "why": "이미 겹친 작업에 토큰을 다 쓴 뒤 거르는 것이라 낭비는 그대로다."}
-    ],
-    "answer": 2,
-    "point_ko": "작업 중복은 코디네이터가 범위를 나눠 배정",
-    "explain_ko": [
-      "**investigating the same subtopics** — 두 에이전트가 같은 일을 받았다는 뜻이다.",
-      "**Token usage has nearly doubled** — 문제는 결과 품질이 아니라 낭비된 작업이다.",
-      "그래서 일을 시키기 전에, 코디네이터가 분해할 때 하위 주제나 자료 유형을 나눠 주는 게 맞다.",
-      "사후 중복 제거(D)는 이미 쓴 토큰을 되돌리지 못한다."
-    ],
-    "clues": [
-      {"en": "investigating the same subtopics", "ko": "배정이 겹침"},
-      {"en": "significant overlap in their findings", "ko": "중복 작업"},
-      {"en": "Token usage has nearly doubled", "ko": "사후 정리로는 비용이 안 줄어듦"},
-      {"en": "without proportionally increasing the breadth or depth", "ko": "늘어난 작업이 쓸모없음"}
-    ],
-    "discuss_ko": "나중에 중복 제거(D)를 하면 보고서 품질은 똑같을 텐데, 왜 상류에서 범위를 나누는 쪽이 더 낫다고 할까?",
-    "words": [
-      {"word": "overlap", "pos": "n.", "ko": "겹침, 중복", "example": "significant overlap in their findings"},
-      {"word": "proportionally", "pos": "adv.", "ko": "비례하여, 그에 맞게", "example": "without proportionally increasing the breadth or depth"},
-      {"word": "breadth", "pos": "n.", "ko": "폭, 범위", "example": "the breadth or depth of research coverage"},
-      {"word": "partition", "pos": "v.", "ko": "나누다, 분할하다", "example": "Partition research scope"},
-      {"word": "duplication", "pos": "n.", "ko": "중복", "example": "to minimise duplication"},
-      {"word": "redundant", "pos": "adj.", "ko": "불필요하게 중복된", "example": "filters out redundant findings"},
-      {"word": "overhead", "pos": "n.", "ko": "부가 비용, 추가 부담", "example": "eliminate the coordination overhead"}
-    ],
-    "check": "ok",
-    "checkNote": ""
-  },
-  {
-    "id": "D1-04",
-    "domain": 1,
-    "scenario": "Multi-Agent Research System",
-    "q_en": "A colleague suggests having the document analysis agent send its output directly to the synthesis agent instead of routing through the coordinator. What is the main advantage of keeping the coordinator as the central hub for all subagent communication?",
-    "q_ko": "동료가 문서 분석 에이전트의 결과를 코디네이터를 거치지 말고 synthesis 에이전트로 바로 보내자고 제안한다. 모든 subagent 통신을 코디네이터 중심 허브로 유지할 때의 주된 장점은?",
-    "options": [
-      {"en": "It reduces coordinator involvement in routine data passing, decreasing overall latency.", "ko": "일상적인 데이터 전달에 코디네이터 개입이 줄어 전체 지연 시간이 짧아진다.", "why": "이건 허브를 우회할 때의 장점이라 질문과 방향이 반대다."},
-      {"en": "The coordinator provides centralised observability, consistent error handling, and controlled information flow across the entire pipeline.", "ko": "코디네이터가 파이프라인 전체에 걸쳐 중앙 관찰 가능성, 일관된 오류 처리, 통제된 정보 흐름을 제공한다.", "why": "모든 메시지가 코디네이터를 거쳐야 기록·오류 대응·컨텍스트 배분을 한곳에서 관리할 수 있다."},
-      {"en": "Direct communication allows subagents to share intermediate context the coordinator wouldn't otherwise see.", "ko": "직접 통신하면 코디네이터가 보지 못했을 중간 컨텍스트를 subagent 끼리 공유할 수 있다.", "why": "직접 통신의 장점을 말한 것이고, 코디네이터가 못 보는 정보가 생기는 건 오히려 단점이다."},
-      {"en": "It prevents the synthesis agent from having to wait for the coordinator to reformat results before processing them.", "ko": "synthesis 에이전트가 처리 전에 코디네이터의 결과 재정리를 기다리지 않아도 된다.", "why": "이것도 허브를 우회할 때의 장점이다."}
-    ],
-    "answer": 1,
-    "point_ko": "허브 앤 스포크 = 관찰·오류 처리·정보 흐름 통제",
-    "explain_ko": [
-      "질문은 **advantage of keeping the coordinator**, 즉 허브를 '유지'하는 쪽의 장점을 묻는다.",
-      "A·C·D는 모두 직접 통신(허브 우회)의 장점이라 방향이 반대다.",
-      "코디네이터를 거치면 모든 메시지 추적, 오류 복구 결정, subagent 별로 줄 컨텍스트 통제가 한곳에서 가능하다."
-    ],
-    "clues": [
-      {"en": "instead of routing through the coordinator", "ko": "우회안이 제안됨"},
-      {"en": "main advantage of keeping the coordinator", "ko": "허브 유지 쪽 장점을 고르라"},
-      {"en": "central hub for all subagent communication", "ko": "hub-and-spoke 구조"}
-    ],
-    "discuss_ko": "직접 통신(C)으로 중간 컨텍스트를 공유하면 품질이 좋아질 수도 있는데, 그걸 포기하면서까지 허브를 유지할 가치가 있을까?",
-    "words": [
-      {"word": "route through", "pos": "phr.", "ko": "~를 거쳐 보내다", "example": "instead of routing through the coordinator"},
-      {"word": "observability", "pos": "n.", "ko": "관찰 가능성(내부 동작을 추적·기록할 수 있는 정도)", "example": "centralised observability"},
-      {"word": "latency", "pos": "n.", "ko": "지연 시간", "example": "decreasing overall latency"},
-      {"word": "involvement", "pos": "n.", "ko": "개입, 관여", "example": "It reduces coordinator involvement in routine data passing"},
-      {"word": "routine", "pos": "adj.", "ko": "일상적인, 반복적인", "example": "routine data passing"},
-      {"word": "intermediate", "pos": "adj.", "ko": "중간의", "example": "share intermediate context"}
-    ],
-    "check": "ok",
-    "checkNote": ""
-  },
-  {
-    "id": "D1-05",
-    "domain": 1,
-    "scenario": "Multi-Agent Research System",
-    "q_en": "Your agent runs retries on transient API failures, but customers occasionally report being charged twice after a network timeout. Investigation shows the server processed the first request before the timeout. The retry then issued a second charge. Which fix addresses this completely?",
-    "q_ko": "에이전트는 일시적인 API 실패에 재시도를 하는데, 네트워크 타임아웃 뒤에 두 번 결제됐다는 고객 신고가 가끔 들어온다. 조사해 보니 서버는 타임아웃 전에 첫 요청을 이미 처리했고, 재시도가 두 번째 결제를 만들었다. 이 문제를 완전히 해결하는 방법은?",
-    "options": [
-      {"en": "Fix the backoff policy — longer delays between retries reduce duplicate processing on the server.", "ko": "backoff 정책을 고친다. 재시도 간격을 늘리면 서버의 중복 처리가 줄어든다.", "why": "간격이 길어도 이미 처리된 요청을 다시 보내면 똑같이 두 번 결제된다."},
-      {"en": "Add idempotency keys only — a unique key per operation prevents the server from processing the same request twice.", "ko": "idempotency key 만 추가한다. 작업마다 고유한 키를 두면 서버가 같은 요청을 두 번 처리하지 않는다.", "why": "중복 결제 자체는 막지만, 출제자는 재시도 여부를 가리는 오류 분류가 빠져 불완전하다고 본다."},
-      {"en": "Fix the retry policy to classify errors before retrying — transient failures retry, permanent failures don't.", "ko": "재시도 전에 오류를 분류하도록 재시도 정책을 고친다. 일시적 실패는 재시도하고 영구적 실패는 하지 않는다.", "why": "타임아웃은 일시적 실패라 어차피 재시도되므로 중복 결제를 막지 못한다."},
-      {"en": "Both error classification AND idempotency keys are required — either alone is insufficient.", "ko": "오류 분류와 idempotency key 가 둘 다 필요하다. 하나만으로는 부족하다.", "why": "안전한 재시도만 하게(분류) 하고, 재시도해도 두 번 처리되지 않게(키) 하는 짝 해법이다."}
-    ],
-    "answer": 3,
-    "point_ko": "안전한 재시도 = 오류 분류 + idempotency key",
-    "explain_ko": [
-      "**the server processed the first request before the timeout** — 클라이언트는 실패로 봤지만 서버에서는 이미 성공했다.",
-      "그래서 재시도를 막는 게 아니라, 같은 요청이 두 번 처리되지 않게 하는 **idempotency key** 가 필요하다.",
-      "출제자는 여기에 어떤 오류를 재시도할지 가려내는 **오류 분류**까지 더해야 **completely** 해결된다고 본다."
-    ],
-    "clues": [
-      {"en": "charged twice after a network timeout", "ko": "중복 처리 증상"},
-      {"en": "the server processed the first request before the timeout", "ko": "재시도가 중복을 만듦 → idempotency"},
-      {"en": "runs retries on transient API failures", "ko": "재시도 정책도 얽혀 있음"},
-      {"en": "addresses this completely", "ko": "짝을 이룬 해법을 고르라"}
-    ],
-    "discuss_ko": "idempotency key 만 있어도 두 번 결제는 막히는데(B), 오류 분류까지 있어야 '완전한' 해결이라는 출제 논리는 타당할까?",
-    "words": [
-      {"word": "transient", "pos": "adj.", "ko": "일시적인", "example": "runs retries on transient API failures"},
-      {"word": "idempotency", "pos": "n.", "ko": "멱등성(같은 요청을 여러 번 보내도 한 번 보낸 것과 결과가 같음)", "example": "Add idempotency keys only"},
-      {"word": "backoff", "pos": "n.", "ko": "(재시도 전) 대기 시간을 점점 늘리는 방식", "example": "Fix the backoff policy"},
-      {"word": "issue", "pos": "v.", "ko": "발행하다, (청구를) 내다", "example": "The retry then issued a second charge."},
-      {"word": "permanent", "pos": "adj.", "ko": "영구적인", "example": "permanent failures don't"},
-      {"word": "insufficient", "pos": "adj.", "ko": "불충분한", "example": "either alone is insufficient"}
-    ],
-    "check": "doubt",
-    "checkNote": "Anthropic 공식 문서가 다루는 기능이 아니라 일반 분산 시스템 원칙 문제다. 지문의 증상(서버가 처리를 끝낸 뒤 타임아웃, 재시도로 이중 결제)은 idempotency key 만으로 완전히 막히고, 타임아웃은 어떤 분류 기준에서도 재시도 대상이라 오류 분류는 이 증상과 무관하다. 해설의 'key 만으로는 서버에 닿지 않은 요청이 재시도되지 않으면 소용없다'는 논리도 지문 상황과 맞지 않아 B 를 정답으로 볼 여지가 있다. 출제 의도(짝 해법 D)는 알아 두되 애매한 문항으로 표시."
-  },
-  {
-    "id": "D1-06",
-    "domain": 1,
-    "scenario": "Multi-Agent Research System",
-    "q_en": "To execute the web search subagent and document analysis subagent in parallel rather than sequentially, the coordinator must:",
-    "q_ko": "웹 검색 subagent 와 문서 분석 subagent 를 차례대로가 아니라 병렬로 실행하려면 코디네이터는 무엇을 해야 하나?",
-    "options": [
-      {"en": "Use `fork_session` for each parallel branch before delegating.", "ko": "위임하기 전에 병렬 갈래마다 `fork_session` 을 쓴다.", "why": "`fork_session` 은 같은 기준점에서 독립 탐색 갈래를 만드는 기능이지 서로 다른 subagent 병렬 실행용이 아니다."},
-      {"en": "Emit multiple Task tool calls across separate coordinator turns, one per subagent.", "ko": "subagent 마다 하나씩, 코디네이터의 서로 다른 턴에 걸쳐 Task 도구 호출을 여러 번 낸다.", "why": "턴을 나누면 앞 턴 결과를 기다리므로 순차 실행이 된다."},
-      {"en": "Emit multiple Task tool calls within a single coordinator response.", "ko": "코디네이터의 한 응답 안에서 Task 도구 호출을 여러 개 낸다.", "why": "한 응답 안에 Task 호출이 여러 개 있어야 동시에 실행된다."},
-      {"en": "Set `allowedTools` to list all subagent type names simultaneously.", "ko": "`allowedTools` 에 모든 subagent 유형 이름을 한꺼번에 나열한다.", "why": "`allowedTools` 는 쓸 수 있는 도구 권한 설정일 뿐 실행 방식과 무관하다."}
-    ],
-    "answer": 2,
-    "point_ko": "병렬 실행 = 한 응답에 Task 호출 여러 개",
-    "explain_ko": [
-      "**in parallel rather than sequentially** — 실행 방식(동시냐 차례냐)을 묻는다.",
-      "턴을 나눠 호출하면 각 턴이 앞 결과를 기다리니 순차 실행이다.",
-      "**한 번의 응답 안에** Task 호출을 여러 개 내보내야 subagent 들이 동시에 돈다."
-    ],
-    "clues": [
-      {"en": "in parallel rather than sequentially", "ko": "실행 방식 문제"},
-      {"en": "web search subagent and document analysis subagent", "ko": "서로 다른 종류의 subagent 두 개"},
-      {"en": "the coordinator must", "ko": "코디네이터의 호출 방식을 고르라"}
-    ],
-    "discuss_ko": "`fork_session` 도 갈래를 두 개 만드는데, 왜 서로 다른 subagent 를 병렬로 돌리는 용도로는 맞지 않을까?",
-    "words": [
-      {"word": "in parallel", "pos": "phr.", "ko": "병렬로, 동시에", "example": "in parallel rather than sequentially"},
-      {"word": "sequentially", "pos": "adv.", "ko": "순차적으로, 차례대로", "example": "in parallel rather than sequentially"},
-      {"word": "emit", "pos": "v.", "ko": "내보내다, 출력하다", "example": "Emit multiple Task tool calls within a single coordinator response."},
-      {"word": "delegate", "pos": "v.", "ko": "위임하다, 맡기다", "example": "for each parallel branch before delegating"},
-      {"word": "simultaneously", "pos": "adv.", "ko": "동시에, 한꺼번에", "example": "list all subagent type names simultaneously"}
-    ],
-    "check": "ok",
-    "checkNote": ""
-  },
-  {
-    "id": "D1-07",
-    "domain": 1,
-    "scenario": "Multi-Agent Research System",
-    "q_en": "The document analysis subagent frequently encounters failures when processing PDF files — some have corrupted sections causing parsing exceptions, others are password-protected, and occasionally the parsing library times out on large files. Currently, any exception immediately terminates the subagent and returns an error to the coordinator, which must decide whether to retry, skip, or fail the entire task. This is causing excessive coordinator involvement in routine error handling. What's the most effective architectural improvement?",
-    "q_ko": "문서 분석 subagent 가 PDF 를 처리하다 자주 실패한다. 일부는 손상된 구간 때문에 파싱 예외가 나고, 일부는 비밀번호로 보호돼 있으며, 가끔 큰 파일에서 파싱 라이브러리가 타임아웃된다. 지금은 예외가 하나라도 나면 subagent 가 즉시 종료되고 코디네이터에 오류를 돌려주며, 코디네이터가 재시도할지·건너뛸지·작업 전체를 실패 처리할지 정해야 한다. 이 때문에 일상적인 오류 처리에 코디네이터가 지나치게 개입하고 있다. 가장 효과적인 구조 개선은?",
-    "options": [
-      {"en": "Add a coordinator-level retry policy that re-invokes the subagent up to 3 times for any document that fails.", "ko": "실패한 문서마다 subagent 를 최대 3번 다시 호출하는 코디네이터 수준 재시도 정책을 추가한다.", "why": "여전히 코디네이터가 개입하고, 실패마다 subagent 전체를 다시 돌려 비용만 커진다."},
-      {"en": "Add detailed error-handling instructions to the subagent's system prompt so it classifies and responds to each failure type.", "ko": "subagent 시스템 프롬프트에 자세한 오류 처리 지시를 넣어 실패 유형별로 분류하고 대응하게 한다.", "why": "대체 파서나 부분 결과 같은 복구 수단이 구조에 없으면 지시만으로는 실제로 복구할 방법이 없다."},
-      {"en": "Pre-validate all PDF files before sending them to the subagent, rejecting password-protected or oversized files upfront.", "ko": "subagent 에 보내기 전에 모든 PDF 를 미리 검사해 비밀번호가 걸리거나 너무 큰 파일을 걸러낸다.", "why": "손상 구간은 미리 잡지 못하고, 걸러낸 파일에서는 부분 결과조차 얻지 못한다."},
-      {"en": "Implement local error recovery within the subagent: try fallback parsers for corrupt sections, skip unrecoverable sections with a partial-result flag, and return structured error context only for truly unresolvable failures.", "ko": "subagent 안에 로컬 오류 복구를 구현한다. 손상 구간은 대체 파서로 다시 시도하고, 복구할 수 없는 구간은 부분 결과 플래그를 달아 건너뛰며, 정말 해결할 수 없는 실패만 구조화된 오류 컨텍스트로 돌려준다.", "why": "흔한 실패는 subagent 안에서 끝내고 꼭 필요한 것만 올리니 코디네이터 개입이 줄어든다."}
-    ],
-    "answer": 3,
-    "point_ko": "풀 수 있는 오류는 subagent 안에서, 못 푸는 것만 위로",
-    "explain_ko": [
-      "**excessive coordinator involvement in routine error handling** — 흔한 오류까지 모두 코디네이터로 올라가는 구조가 문제다.",
-      "그러니 오류를 처리하는 위치를 subagent 안으로 옮기는 게 핵심이다.",
-      "대체 파서와 부분 결과 플래그로 로컬 복구하고, **truly unresolvable** 한 것만 구조화된 오류로 올리면 코디네이터는 판단이 필요한 경우만 보게 된다."
-    ],
-    "clues": [
-      {"en": "any exception immediately terminates the subagent", "ko": "로컬 복구가 전혀 없음"},
-      {"en": "excessive coordinator involvement in routine error handling", "ko": "오류 처리 위치를 옮겨라"},
-      {"en": "corrupted sections causing parsing exceptions", "ko": "부분 복구가 가능한 실패"},
-      {"en": "architectural improvement", "ko": "프롬프트 말고 구조를 바꿔라"}
-    ],
-    "discuss_ko": "코디네이터 수준 재시도(A)도 자동으로 처리되긴 마찬가지인데, subagent 안의 로컬 복구가 더 나은 이유는 뭘까?",
-    "words": [
-      {"word": "corrupted", "pos": "adj.", "ko": "손상된, 깨진", "example": "some have corrupted sections"},
-      {"word": "terminate", "pos": "v.", "ko": "종료시키다", "example": "any exception immediately terminates the subagent"},
-      {"word": "excessive", "pos": "adj.", "ko": "지나친, 과도한", "example": "excessive coordinator involvement"},
-      {"word": "fallback", "pos": "adj.", "ko": "대체의, 예비의", "example": "try fallback parsers for corrupt sections"},
-      {"word": "unrecoverable", "pos": "adj.", "ko": "복구할 수 없는", "example": "skip unrecoverable sections"},
-      {"word": "unresolvable", "pos": "adj.", "ko": "해결할 수 없는", "example": "only for truly unresolvable failures"},
-      {"word": "upfront", "pos": "adv.", "ko": "사전에, 미리", "example": "rejecting password-protected or oversized files upfront"}
-    ],
-    "check": "ok",
-    "checkNote": ""
-  },
-  {
-    "id": "D1-08",
-    "domain": 1,
-    "scenario": "Multi-Agent Research System",
-    "q_en": "You've defined a coordinator agent with a system prompt instructing it to delegate research subtasks to specialized subagents. During testing, the coordinator produces detailed analysis but never delegates to any subagent — it handles everything itself. The most likely cause is:",
-    "q_ko": "특화된 subagent 에게 조사 하위 작업을 위임하라는 시스템 프롬프트로 코디네이터 에이전트를 정의했다. 테스트해 보니 코디네이터가 자세한 분석은 내놓지만 어떤 subagent 에게도 위임하지 않고 모든 걸 혼자 처리한다. 가장 유력한 원인은?",
-    "options": [
-      {"en": "The coordinator's system prompt doesn't explicitly name which subagents to invoke.", "ko": "코디네이터 시스템 프롬프트가 어떤 subagent 를 호출할지 이름을 명시하지 않았다.", "why": "프롬프트 문제라면 가끔은 위임할 텐데, 한 번도 안 한다는 건 호출 수단 자체가 없다는 신호다."},
-      {"en": "The subagent definitions don't have system prompts configured.", "ko": "subagent 정의에 시스템 프롬프트가 설정돼 있지 않다.", "why": "subagent 의 프롬프트는 코디네이터가 그들을 호출할 수 있느냐와 무관하다."},
-      {"en": "`\"Task\"` is not included in the coordinator's `allowedTools` configuration.", "ko": "코디네이터의 `allowedTools` 설정에 `\"Task\"` 가 들어 있지 않다.", "why": "Task 도구가 subagent 를 부르는 수단이라, 없으면 프롬프트와 상관없이 위임할 수 없다."},
-      {"en": "The coordinator needs more context about the research topic before it will decide to delegate.", "ko": "코디네이터가 위임을 결정하려면 조사 주제에 대한 컨텍스트가 더 필요하다.", "why": "이미 자세한 분석까지 해냈으니 컨텍스트 부족이 원인이 아니다."}
-    ],
-    "answer": 2,
-    "point_ko": "subagent 호출하려면 allowedTools 에 Task 필수",
-    "explain_ko": [
-      "**never delegates to any subagent** — 가끔이 아니라 한 번도 안 한다는 건 능력(권한) 자체가 없다는 신호다.",
-      "subagent 는 Task 도구로 호출되므로 `allowedTools` 에 `\"Task\"` 가 없으면 프롬프트가 뭐라 하든 위임할 수 없다.",
-      "즉 프롬프트 문제가 아니라 **설정 문제**다."
-    ],
-    "clues": [
-      {"en": "never delegates to any subagent", "ko": "한 번도 안 함 = 권한 없음"},
-      {"en": "a system prompt instructing it to delegate", "ko": "지시는 이미 있음, 프롬프트 탓 아님"},
-      {"en": "it handles everything itself", "ko": "호출 수단이 없어 혼자 처리"}
-    ],
-    "discuss_ko": "프롬프트에 subagent 이름을 적지 않은 것(A)도 위임을 줄일 수 있는데, 왜 '한 번도 안 한다'면 설정부터 의심해야 할까?",
-    "words": [
-      {"word": "delegate", "pos": "v.", "ko": "위임하다, 맡기다", "example": "never delegates to any subagent"},
-      {"word": "instruct", "pos": "v.", "ko": "지시하다", "example": "a system prompt instructing it to delegate"},
-      {"word": "specialized", "pos": "adj.", "ko": "특화된, 전문화된", "example": "specialized subagents"},
-      {"word": "explicitly", "pos": "adv.", "ko": "명시적으로, 분명히", "example": "doesn't explicitly name which subagents to invoke"},
-      {"word": "invoke", "pos": "v.", "ko": "호출하다, 불러내다", "example": "which subagents to invoke"},
-      {"word": "configuration", "pos": "n.", "ko": "설정, 구성", "example": "the coordinator's `allowedTools` configuration"}
-    ],
-    "check": "ok",
-    "checkNote": ""
-  },
-  {
-    "id": "D1-09",
-    "domain": 1,
-    "scenario": "Claude Code for CI/CD",
-    "q_en": "Your automated code review runs three steps on every PR: (1) analyze each file individually for local issues, (2) run a cross-file integration pass for data flow and contract issues, (3) generate a severity-ranked summary. The structure never varies. Which decomposition pattern is this, and is it the right choice?",
-    "q_ko": "자동 코드 리뷰가 모든 PR 에 세 단계를 실행한다. (1) 파일마다 따로 로컬 이슈를 분석하고, (2) 데이터 흐름과 계약(contract) 이슈를 보는 파일 간 통합 점검을 돌리고, (3) 심각도순 요약을 만든다. 구조는 절대 바뀌지 않는다. 이건 어떤 분해 패턴이며, 올바른 선택인가?",
-    "options": [
-      {"en": "Dynamic decomposition — appropriate because findings from step 1 could change what step 2 needs to examine.", "ko": "동적 분해. 1단계 결과에 따라 2단계가 볼 대상이 달라질 수 있으니 적절하다.", "why": "구조가 절대 바뀌지 않는다고 했으니 흐름을 동적으로 바꿀 이유가 없다."},
-      {"en": "Fixed sequential pipeline (prompt chaining) — appropriate because the structure is stable and each step consumes the prior step's output.", "ko": "고정 순차 파이프라인(prompt chaining). 구조가 안정적이고 각 단계가 앞 단계 결과를 받아 쓰므로 적절하다.", "why": "정해진 순서로 앞 결과를 이어받는 안정적인 작업에 딱 맞는 패턴이다."},
-      {"en": "Evaluator-optimiser — appropriate because step 3 evaluates the quality of the prior steps.", "ko": "evaluator-optimiser. 3단계가 앞 단계의 품질을 평가하므로 적절하다.", "why": "3단계는 요약일 뿐, 평가 결과를 보고 반복 개선하는 루프가 없다."},
-      {"en": "Fixed sequential pipeline — but wrong; dynamic decomposition would skip unnecessary passes on simple PRs.", "ko": "고정 순차 파이프라인이지만 잘못된 선택이다. 동적 분해라면 단순한 PR 에서 불필요한 단계를 건너뛸 것이다.", "why": "세 단계는 PR 내용과 관계없이 늘 가치가 있어서, 동적 분해는 부담만 늘린다."}
-    ],
-    "answer": 1,
-    "point_ko": "구조 고정 + 앞 결과 이어받기 = prompt chaining",
-    "explain_ko": [
-      "**The structure never varies** — 중간 결과에 따라 흐름을 바꿀 필요가 없다는 뜻이다.",
-      "1단계 결과를 2단계가, 2단계 결과를 3단계가 받아 쓰는 **정해진 순서**다.",
-      "이런 안정적인 작업에는 고정 순차 파이프라인(prompt chaining)이 맞고, 동적 분해는 부담만 더한다."
-    ],
-    "clues": [
-      {"en": "The structure never varies", "ko": "동적 조정 불필요"},
-      {"en": "runs three steps on every PR", "ko": "매번 같은 단계"},
-      {"en": "generate a severity-ranked summary", "ko": "평가 루프가 아니라 요약 단계"}
-    ],
-    "discuss_ko": "아주 작은 PR 에도 파일 간 통합 점검을 매번 돌리는 건 낭비 같은데, 동적 분해를 택하자는 D 는 왜 틀렸다고 볼까?",
-    "words": [
-      {"word": "decomposition", "pos": "n.", "ko": "분해, 쪼개기", "example": "Which decomposition pattern is this"},
-      {"word": "vary", "pos": "v.", "ko": "달라지다, 바뀌다", "example": "The structure never varies."},
-      {"word": "severity-ranked", "pos": "adj.", "ko": "심각도 순으로 정렬된", "example": "generate a severity-ranked summary"},
-      {"word": "integration", "pos": "n.", "ko": "통합", "example": "run a cross-file integration pass"},
-      {"word": "consume", "pos": "v.", "ko": "(입력으로) 받아 쓰다", "example": "each step consumes the prior step's output"},
-      {"word": "prior", "pos": "adj.", "ko": "이전의, 앞선", "example": "the prior step's output"}
-    ],
-    "check": "ok",
-    "checkNote": ""
-  },
-  {
-    "id": "D1-10",
-    "domain": 1,
-    "scenario": "Multi-Agent Research System",
-    "q_en": "You want to explore two competing architectural approaches for the research pipeline — a sequential pipeline vs a parallel fan-out design — starting from the same codebase analysis you completed this morning. You need both explorations to stay independent so findings don't cross-contaminate. Which mechanism is designed for this?",
-    "q_ko": "연구 파이프라인을 두고 서로 경쟁하는 두 아키텍처, 즉 순차 파이프라인과 병렬 fan-out 설계를 탐색하려 한다. 출발점은 오늘 아침 끝낸 코드베이스 분석으로 같다. 두 탐색은 결과가 섞이지 않도록 서로 독립적이어야 한다. 이 용도로 설계된 메커니즘은?",
-    "options": [
-      {"en": "Open two separate Claude Code terminal sessions and manually synchronize findings at the end.", "ko": "Claude Code 터미널 세션을 두 개 따로 열고 끝에 결과를 수동으로 맞춘다.", "why": "새로 연 세션 두 개는 오늘 아침의 분석을 물려받지 못한다."},
-      {"en": "Use `--resume` with two different session names, one per approach.", "ko": "방식마다 하나씩, 서로 다른 세션 이름으로 `--resume` 을 쓴다.", "why": "`--resume` 은 세션을 이어가는 기능이지 공통 기준점에서 갈래를 나누는 기능이 아니다."},
-      {"en": "Use `fork_session` to create two independent branches from the shared analysis baseline.", "ko": "`fork_session` 으로 공유된 분석 기준점에서 독립적인 갈래 두 개를 만든다.", "why": "같은 분석에서 출발하되 이후 기록은 서로 분리되는 갈래를 만드는 기능이다."},
-      {"en": "Run two Task tool calls in a single coordinator response, one per approach.", "ko": "방식마다 하나씩, 코디네이터의 한 응답에서 Task 도구 호출 두 개를 실행한다.", "why": "Task 는 멀티 에이전트 시스템에서 subagent 를 띄우는 용도지, 내 탐색 세션을 분기하는 용도가 아니다."}
-    ],
-    "answer": 2,
-    "point_ko": "같은 출발점 + 독립 갈래 = fork_session",
-    "explain_ko": [
-      "**starting from the same codebase analysis** — 오늘 아침 분석을 둘 다 이어받아야 한다.",
-      "**stay independent** — 두 탐색의 결과가 서로 섞이면 안 된다.",
-      "두 조건을 함께 만족하는 게 `fork_session` 이다. 새 세션(A)은 분석을 못 물려받고, `--resume`(B)은 갈래 없이 이어가기만 한다."
-    ],
-    "clues": [
-      {"en": "starting from the same codebase analysis", "ko": "공유 기준점 필요"},
-      {"en": "stay independent", "ko": "갈래를 분리"},
-      {"en": "findings don't cross-contaminate", "ko": "서로 섞이면 안 됨"},
-      {"en": "two competing architectural approaches", "ko": "두 방향으로 탐색"}
-    ],
-    "discuss_ko": "두 터미널 세션(A)에 오늘 아침 분석 요약을 붙여 넣으면 비슷한 효과가 날 텐데, 그래도 `fork_session` 이 더 나은 이유는?",
-    "words": [
-      {"word": "competing", "pos": "adj.", "ko": "경쟁하는, 서로 대립하는", "example": "two competing architectural approaches"},
-      {"word": "fan-out", "pos": "n.", "ko": "하나에서 여러 갈래로 퍼뜨리는 구조", "example": "a parallel fan-out design"},
-      {"word": "cross-contaminate", "pos": "v.", "ko": "서로 오염시키다, 뒤섞이다", "example": "findings don't cross-contaminate"},
-      {"word": "synchronize", "pos": "v.", "ko": "동기화하다, 맞추다", "example": "manually synchronize findings at the end"},
-      {"word": "baseline", "pos": "n.", "ko": "기준점, 출발선", "example": "from the shared analysis baseline"}
-    ],
-    "check": "ok",
-    "checkNote": ""
-  },
-  {
-    "id": "D1-11",
-    "domain": 1,
-    "scenario": "Code Generation with Claude Code",
-    "q_en": "Last week you ran a deep codebase exploration session, mapping authentication flows and service boundaries. Since then, the team merged a major refactor of the auth module. You want to continue analysis using the prior findings. What's the most reliable approach?",
-    "q_ko": "지난주에 인증 흐름과 서비스 경계를 파악하는 깊은 코드베이스 탐색 세션을 돌렸다. 그 뒤 팀이 auth 모듈의 대규모 리팩터를 머지했다. 이전에 알아낸 내용을 활용해 분석을 이어가고 싶다. 가장 믿을 만한 방법은?",
-    "options": [
-      {"en": "Resume the prior session using `--resume` — it already has the full codebase map and tool results.", "ko": "`--resume` 으로 이전 세션을 재개한다. 이미 전체 코드베이스 지도와 도구 결과가 들어 있다.", "why": "리팩터 전의 낡은 도구 결과를 지금도 맞는 것처럼 그대로 가져온다."},
-      {"en": "Start a new session and re-explore the entire codebase from scratch to avoid any stale assumptions.", "ko": "새 세션을 열고, 낡은 가정을 피하려고 코드베이스 전체를 처음부터 다시 탐색한다.", "why": "여전히 유효한 이전 발견까지 버려 시간과 토큰을 낭비한다."},
-      {"en": "Start a new session, inject a structured summary of the valid prior findings, and explicitly note that the auth module has changed.", "ko": "새 세션을 열고, 유효한 이전 발견을 구조화된 요약으로 넣은 뒤, auth 모듈이 바뀌었다고 분명히 적어 준다.", "why": "유효한 지식은 살리고 바뀐 부분은 새로 조사하게 만든다."},
-      {"en": "Resume the prior session and instruct Claude to ignore its previous observations about the auth module.", "ko": "이전 세션을 재개하고 auth 모듈에 대한 이전 관찰은 무시하라고 Claude 에게 지시한다.", "why": "낡은 도구 결과가 컨텍스트에 그대로 남아 있어 '무시하라'는 지시만으로는 영향이 사라진다는 보장이 없다."}
-    ],
-    "answer": 2,
-    "point_ko": "도구 결과가 낡았으면 새 세션 + 구조화 요약",
-    "explain_ko": [
-      "**merged a major refactor of the auth module** — 지난주 도구 결과 중 auth 부분은 이제 낡았다.",
-      "resume 하면 그 낡은 결과를 현재 사실처럼 끌고 온다.",
-      "**continue analysis using the prior findings** — 그렇다고 전부 버릴 필요는 없으니, 유효한 것만 요약해 새 세션에 넣고 바뀐 곳을 짚어 주는 게 가장 믿을 만하다."
-    ],
-    "clues": [
-      {"en": "merged a major refactor of the auth module", "ko": "이전 도구 결과가 stale"},
-      {"en": "continue analysis using the prior findings", "ko": "처음부터 다시 할 필요는 없음"},
-      {"en": "most reliable approach", "ko": "낡은 컨텍스트를 끌고 오지 않는 방법"}
-    ],
-    "discuss_ko": "D 처럼 재개한 뒤 'auth 관련 관찰은 무시해'라고 하면 토큰도 아낄 텐데, 왜 새 세션보다 믿기 어렵다고 할까?",
-    "words": [
-      {"word": "boundary", "pos": "n.", "ko": "경계", "example": "mapping authentication flows and service boundaries"},
-      {"word": "refactor", "pos": "n.", "ko": "리팩터링, 코드 구조 개선", "example": "a major refactor of the auth module"},
-      {"word": "from scratch", "pos": "phr.", "ko": "처음부터, 맨바닥부터", "example": "re-explore the entire codebase from scratch"},
-      {"word": "stale", "pos": "adj.", "ko": "낡은, 최신이 아닌", "example": "to avoid any stale assumptions"},
-      {"word": "assumption", "pos": "n.", "ko": "가정, 전제", "example": "to avoid any stale assumptions"},
-      {"word": "inject", "pos": "v.", "ko": "주입하다, 넣어 주다", "example": "inject a structured summary of the valid prior findings"}
-    ],
-    "check": "ok",
-    "checkNote": ""
-  }
+ {
+  "id": "D1-01",
+  "domain": 1,
+  "scenario": "Customer Support Agent",
+  "q_en": "Production data shows that in 12% of cases, the support agent skips `get_customer` and calls `process_refund` directly using only the customer's stated name, occasionally leading to misidentified accounts and incorrect refunds. What change most reliably fixes this?",
+  "q_ko": "운영 데이터를 보니 12%의 경우 지원 에이전트가 `get_customer`를 건너뛰고, 고객이 말한 이름만으로 바로 `process_refund`를 호출한다. 그 결과 가끔 계정을 잘못 식별해 엉뚱한 환불이 나간다. 이를 가장 확실하게 고치는 변경은?",
+  "options": [
+   {
+    "en": "Strengthen the system prompt: \"Customer verification via `get_customer` is mandatory before any order operation.\"",
+    "ko": "시스템 프롬프트를 강화한다: \"모든 주문 작업 전에 `get_customer`로 고객 확인을 반드시 해야 한다.\"",
+    "why": "프롬프트 지시는 확률적이라 여전히 일정 비율로 무시될 수 있다."
+   },
+   {
+    "en": "Add few-shot examples always showing `get_customer` called first, even when the customer volunteers an order ID.",
+    "ko": "고객이 주문 ID를 먼저 알려 줘도 항상 `get_customer`를 먼저 호출하는 few-shot 예시를 추가한다.",
+    "why": "few-shot 예시도 모델의 경향을 바꿀 뿐 순서를 100% 보장하지 못한다."
+   },
+   {
+    "en": "Add a programmatic prerequisite that blocks `lookup_order` and `process_refund` until `get_customer` has returned a verified customer ID.",
+    "ko": "`get_customer`가 확인된 고객 ID를 반환하기 전까지 `lookup_order`와 `process_refund`를 막는 코드상의 선행 조건을 추가한다.",
+    "why": "코드로 순서를 강제하므로 금전 피해로 이어지는 잘못된 순서를 매번 차단한다."
+   },
+   {
+    "en": "Deploy a routing classifier that analyses each request and enables only the appropriate tool subset.",
+    "ko": "요청마다 분석해 알맞은 도구 묶음만 켜 주는 라우팅 분류기를 배치한다.",
+    "why": "어떤 도구를 쓸 수 있느냐를 정할 뿐, 호출 순서는 강제하지 못한다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "돈이 걸린 순서는 프롬프트 말고 코드로 강제",
+  "explain_ko": [
+   "**in 12% of cases**, **incorrect refunds** 는 '가끔 틀리는데, 틀리면 돈이 나간다'는 뜻이다.",
+   "프롬프트와 few-shot 은 확률적이라 실패율이 0이 되지 않는다.",
+   "**programmatic prerequisite**(코드로 만든 선행 조건)만 `get_customer` 다음에 `process_refund` 가 오는 순서를 매번 보장한다."
+  ],
+  "clues": [
+   {
+    "en": "in 12% of cases",
+    "ko": "가끔 순서를 어김 = 확률적 실패"
+   },
+   {
+    "en": "skips `get_customer`",
+    "ko": "문제는 호출 순서"
+   },
+   {
+    "en": "incorrect refunds",
+    "ko": "금전 피해, 확실한 보장 필요"
+   },
+   {
+    "en": "most reliably",
+    "ko": "결정적인(코드) 해법을 고르라"
+   }
+  ],
+  "discuss_ko": "few-shot 예시를 충분히 넣으면 12%를 거의 0으로 줄일 수 있을 텐데, 그래도 코드로 강제해야 하는 이유는 뭘까?",
+  "words": [
+   {
+    "word": "prerequisite",
+    "pos": "n.",
+    "ko": "전제 조건, 선행 조건",
+    "example": "Add a programmatic prerequisite"
+   },
+   {
+    "word": "programmatic",
+    "pos": "adj.",
+    "ko": "프로그램(코드)으로 처리하는",
+    "example": "a programmatic prerequisite that blocks `lookup_order`"
+   },
+   {
+    "word": "misidentify",
+    "pos": "v.",
+    "ko": "잘못 식별하다",
+    "example": "occasionally leading to misidentified accounts"
+   },
+   {
+    "word": "mandatory",
+    "pos": "adj.",
+    "ko": "필수의, 의무적인",
+    "example": "is mandatory before any order operation"
+   },
+   {
+    "word": "volunteer",
+    "pos": "v.",
+    "ko": "(묻기 전에) 자진해서 말하다",
+    "example": "even when the customer volunteers an order ID"
+   },
+   {
+    "word": "stated",
+    "pos": "adj.",
+    "ko": "(본인이) 말한, 진술된",
+    "example": "using only the customer's stated name"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "D1-02",
+  "domain": 1,
+  "scenario": "Multi-Agent Research System",
+  "q_en": "After running the system on the topic \"impact of AI on creative industries,\" you observe that each subagent completes successfully: the web search agent finds relevant articles, the document analysis agent summarises papers correctly, and the synthesis agent produces coherent output. However, the final reports cover only visual arts, completely missing music, writing, and film production. When you examine the coordinator's logs, you see it decomposed the topic into three subtasks: \"AI in digital art creation,\" \"AI in graphic design,\" and \"AI in photography.\" What is the most likely root cause?",
+  "q_ko": "\"AI가 창작 산업에 미치는 영향\"이라는 주제로 시스템을 돌렸더니 subagent 는 모두 제대로 끝났다. 웹 검색 에이전트는 관련 기사를 찾았고, 문서 분석 에이전트는 논문을 정확히 요약했으며, synthesis(종합) 에이전트는 일관된 결과물을 냈다. 그런데 최종 보고서는 시각 예술만 다루고 음악·글쓰기·영화 제작은 완전히 빠져 있다. 코디네이터 로그를 보니 주제를 \"디지털 아트 창작의 AI\", \"그래픽 디자인의 AI\", \"사진의 AI\" 세 하위 작업으로 쪼갰다. 가장 유력한 근본 원인은?",
+  "options": [
+   {
+    "en": "The synthesis agent lacks instructions for identifying coverage gaps in the findings it receives from other agents.",
+    "ko": "synthesis 에이전트에 다른 에이전트가 넘긴 결과에서 빠진 범위를 찾아내라는 지시가 없다.",
+    "why": "synthesis 에이전트는 받은 결과를 잘 합쳤을 뿐, 애초에 음악·영화 자료가 들어오지 않았다."
+   },
+   {
+    "en": "The coordinator agent's task decomposition is too narrow, resulting in subagent assignments that don't cover all relevant domains of the topic.",
+    "ko": "코디네이터의 작업 분해가 너무 좁아서, subagent 배정이 주제의 관련 분야를 다 덮지 못했다.",
+    "why": "로그에 세 하위 작업이 모두 시각 예술뿐이라는 증거가 그대로 나온다."
+   },
+   {
+    "en": "The web search agent's queries are not comprehensive enough and need to be expanded to cover more creative industry sectors.",
+    "ko": "웹 검색 에이전트의 검색어가 충분히 포괄적이지 않아 더 많은 창작 산업 분야로 넓혀야 한다.",
+    "why": "웹 검색 에이전트는 배정받은 시각 예술 주제 안에서 제대로 일했다."
+   },
+   {
+    "en": "The document analysis agent is filtering out sources related to non-visual creative industries due to overly restrictive relevance criteria.",
+    "ko": "문서 분석 에이전트가 관련성 기준이 지나치게 엄격해서 시각 예술 외 분야의 자료를 걸러내고 있다.",
+    "why": "필터링 흔적은 없고, 누락은 배정 단계에서 이미 생겼다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "주제 누락은 코디네이터의 작업 분해 문제",
+  "explain_ko": [
+   "**each subagent completes successfully** — 하위 에이전트는 모두 맡은 일을 잘했다.",
+   "**coordinator's logs** 를 보면 세 하위 작업이 전부 시각 예술(digital art, graphic design, photography)이다.",
+   "그러니 음악·글·영화가 빠진 원인은 배정 자체, 즉 코디네이터가 주제를 너무 좁게 쪼갠 데 있다.",
+   "나머지 보기는 모두 정상적으로 일한 하류(downstream) 에이전트를 탓한다."
+  ],
+  "clues": [
+   {
+    "en": "each subagent completes successfully",
+    "ko": "하위 에이전트 잘못 아님"
+   },
+   {
+    "en": "completely missing music, writing, and film production",
+    "ko": "범위가 통째로 빠짐"
+   },
+   {
+    "en": "decomposed the topic into three subtasks",
+    "ko": "분해 단계가 원인"
+   },
+   {
+    "en": "AI in graphic design",
+    "ko": "전부 시각 예술로만 쪼갬"
+   }
+  ],
+  "discuss_ko": "synthesis 에이전트에 '빠진 분야를 찾아라'는 지시를 넣으면 누락을 알아챌 수도 있는데, 왜 그건 근본 해결이 아닐까?",
+  "words": [
+   {
+    "word": "root cause",
+    "pos": "n.",
+    "ko": "근본 원인",
+    "example": "What is the most likely root cause?"
+   },
+   {
+    "word": "decompose",
+    "pos": "v.",
+    "ko": "분해하다, 쪼개다",
+    "example": "it decomposed the topic into three subtasks"
+   },
+   {
+    "word": "coherent",
+    "pos": "adj.",
+    "ko": "일관성 있는, 논리가 맞는",
+    "example": "the synthesis agent produces coherent output"
+   },
+   {
+    "word": "coverage gap",
+    "pos": "n.",
+    "ko": "다루지 못한 빈틈",
+    "example": "identifying coverage gaps in the findings"
+   },
+   {
+    "word": "comprehensive",
+    "pos": "adj.",
+    "ko": "포괄적인, 빠짐없는",
+    "example": "not comprehensive enough"
+   },
+   {
+    "word": "overly restrictive",
+    "pos": "phr.",
+    "ko": "지나치게 제한적인",
+    "example": "due to overly restrictive relevance criteria"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "D1-03",
+  "domain": 1,
+  "scenario": "Multi-Agent Research System",
+  "q_en": "When researching a broad topic, you observe that the web search agent and document analysis agent are both investigating the same subtopics, resulting in significant overlap in their findings. Token usage has nearly doubled without proportionally increasing the breadth or depth of research coverage. What is the most effective way to address this?",
+  "q_ko": "넓은 주제를 조사할 때 웹 검색 에이전트와 문서 분석 에이전트가 같은 하위 주제를 함께 파고들어 결과가 크게 겹친다. 토큰 사용량은 거의 두 배가 됐는데 조사의 폭이나 깊이는 그만큼 늘지 않았다. 가장 효과적인 해결책은?",
+  "options": [
+   {
+    "en": "Give both agents identical tool sets and let the model naturally differentiate their outputs based on tool capabilities.",
+    "ko": "두 에이전트에 똑같은 도구 세트를 주고, 모델이 도구 기능에 따라 알아서 결과를 나누게 둔다.",
+    "why": "도구가 같으면 오히려 더 겹치고, 알아서 나눈다는 보장도 없다."
+   },
+   {
+    "en": "Merge the web search and document analysis agents into a single research agent to eliminate the coordination overhead.",
+    "ko": "웹 검색 에이전트와 문서 분석 에이전트를 하나의 조사 에이전트로 합쳐 조율 부담을 없앤다.",
+    "why": "겹침은 사라지지만 각 에이전트의 전문화 이점까지 잃는다."
+   },
+   {
+    "en": "Partition research scope in the coordinator's decomposition — assign distinct subtopics or source types to each agent to minimise duplication.",
+    "ko": "코디네이터의 작업 분해 단계에서 조사 범위를 나눈다. 에이전트마다 서로 다른 하위 주제나 자료 유형을 맡겨 중복을 최소화한다.",
+    "why": "중복이 생기는 배정 단계를 상류에서 바로 고친다."
+   },
+   {
+    "en": "Add a deduplication pass where the synthesis agent filters out redundant findings after both agents complete.",
+    "ko": "두 에이전트가 끝난 뒤 synthesis 에이전트가 중복된 결과를 걸러내는 중복 제거 단계를 추가한다.",
+    "why": "이미 겹친 작업에 토큰을 다 쓴 뒤 거르는 것이라 낭비는 그대로다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "작업 중복은 코디네이터가 범위를 나눠 배정",
+  "explain_ko": [
+   "**investigating the same subtopics** — 두 에이전트가 같은 일을 받았다는 뜻이다.",
+   "**Token usage has nearly doubled** — 문제는 결과 품질이 아니라 낭비된 작업이다.",
+   "그래서 일을 시키기 전에, 코디네이터가 분해할 때 하위 주제나 자료 유형을 나눠 주는 게 맞다.",
+   "사후 중복 제거({D})는 이미 쓴 토큰을 되돌리지 못한다."
+  ],
+  "clues": [
+   {
+    "en": "investigating the same subtopics",
+    "ko": "배정이 겹침"
+   },
+   {
+    "en": "significant overlap in their findings",
+    "ko": "중복 작업"
+   },
+   {
+    "en": "Token usage has nearly doubled",
+    "ko": "사후 정리로는 비용이 안 줄어듦"
+   },
+   {
+    "en": "without proportionally increasing the breadth or depth",
+    "ko": "늘어난 작업이 쓸모없음"
+   }
+  ],
+  "discuss_ko": "나중에 중복 제거({D})를 하면 보고서 품질은 똑같을 텐데, 왜 상류에서 범위를 나누는 쪽이 더 낫다고 할까?",
+  "words": [
+   {
+    "word": "overlap",
+    "pos": "n.",
+    "ko": "겹침, 중복",
+    "example": "significant overlap in their findings"
+   },
+   {
+    "word": "proportionally",
+    "pos": "adv.",
+    "ko": "비례하여, 그에 맞게",
+    "example": "without proportionally increasing the breadth or depth"
+   },
+   {
+    "word": "breadth",
+    "pos": "n.",
+    "ko": "폭, 범위",
+    "example": "the breadth or depth of research coverage"
+   },
+   {
+    "word": "partition",
+    "pos": "v.",
+    "ko": "나누다, 분할하다",
+    "example": "Partition research scope"
+   },
+   {
+    "word": "duplication",
+    "pos": "n.",
+    "ko": "중복",
+    "example": "to minimise duplication"
+   },
+   {
+    "word": "redundant",
+    "pos": "adj.",
+    "ko": "불필요하게 중복된",
+    "example": "filters out redundant findings"
+   },
+   {
+    "word": "overhead",
+    "pos": "n.",
+    "ko": "부가 비용, 추가 부담",
+    "example": "eliminate the coordination overhead"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "D1-04",
+  "domain": 1,
+  "scenario": "Multi-Agent Research System",
+  "q_en": "A colleague suggests having the document analysis agent send its output directly to the synthesis agent instead of routing through the coordinator. What is the main advantage of keeping the coordinator as the central hub for all subagent communication?",
+  "q_ko": "동료가 문서 분석 에이전트의 결과를 코디네이터를 거치지 말고 synthesis 에이전트로 바로 보내자고 제안한다. 모든 subagent 통신을 코디네이터 중심 허브로 유지할 때의 주된 장점은?",
+  "options": [
+   {
+    "en": "It reduces coordinator involvement in routine data passing, decreasing overall latency.",
+    "ko": "일상적인 데이터 전달에 코디네이터 개입이 줄어 전체 지연 시간이 짧아진다.",
+    "why": "이건 허브를 우회할 때의 장점이라 질문과 방향이 반대다."
+   },
+   {
+    "en": "The coordinator provides centralised observability, consistent error handling, and controlled information flow across the entire pipeline.",
+    "ko": "코디네이터가 파이프라인 전체에 걸쳐 중앙 관찰 가능성, 일관된 오류 처리, 통제된 정보 흐름을 제공한다.",
+    "why": "모든 메시지가 코디네이터를 거쳐야 기록·오류 대응·컨텍스트 배분을 한곳에서 관리할 수 있다."
+   },
+   {
+    "en": "Direct communication allows subagents to share intermediate context the coordinator wouldn't otherwise see.",
+    "ko": "직접 통신하면 코디네이터가 보지 못했을 중간 컨텍스트를 subagent 끼리 공유할 수 있다.",
+    "why": "직접 통신의 장점을 말한 것이고, 코디네이터가 못 보는 정보가 생기는 건 오히려 단점이다."
+   },
+   {
+    "en": "It prevents the synthesis agent from having to wait for the coordinator to reformat results before processing them.",
+    "ko": "synthesis 에이전트가 처리 전에 코디네이터의 결과 재정리를 기다리지 않아도 된다.",
+    "why": "이것도 허브를 우회할 때의 장점이다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "허브 앤 스포크 = 관찰·오류 처리·정보 흐름 통제",
+  "explain_ko": [
+   "질문은 **advantage of keeping the coordinator**, 즉 허브를 '유지'하는 쪽의 장점을 묻는다.",
+   "{A}·{C}·{D}는 모두 직접 통신(허브 우회)의 장점이라 방향이 반대다.",
+   "코디네이터를 거치면 모든 메시지 추적, 오류 복구 결정, subagent 별로 줄 컨텍스트 통제가 한곳에서 가능하다."
+  ],
+  "clues": [
+   {
+    "en": "instead of routing through the coordinator",
+    "ko": "우회안이 제안됨"
+   },
+   {
+    "en": "main advantage of keeping the coordinator",
+    "ko": "허브 유지 쪽 장점을 고르라"
+   },
+   {
+    "en": "central hub for all subagent communication",
+    "ko": "hub-and-spoke 구조"
+   }
+  ],
+  "discuss_ko": "직접 통신({C})으로 중간 컨텍스트를 공유하면 품질이 좋아질 수도 있는데, 그걸 포기하면서까지 허브를 유지할 가치가 있을까?",
+  "words": [
+   {
+    "word": "route through",
+    "pos": "phr.",
+    "ko": "~를 거쳐 보내다",
+    "example": "instead of routing through the coordinator"
+   },
+   {
+    "word": "observability",
+    "pos": "n.",
+    "ko": "관찰 가능성(내부 동작을 추적·기록할 수 있는 정도)",
+    "example": "centralised observability"
+   },
+   {
+    "word": "latency",
+    "pos": "n.",
+    "ko": "지연 시간",
+    "example": "decreasing overall latency"
+   },
+   {
+    "word": "involvement",
+    "pos": "n.",
+    "ko": "개입, 관여",
+    "example": "It reduces coordinator involvement in routine data passing"
+   },
+   {
+    "word": "routine",
+    "pos": "adj.",
+    "ko": "일상적인, 반복적인",
+    "example": "routine data passing"
+   },
+   {
+    "word": "intermediate",
+    "pos": "adj.",
+    "ko": "중간의",
+    "example": "share intermediate context"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "D1-05",
+  "domain": 1,
+  "scenario": "Multi-Agent Research System",
+  "q_en": "Your agent runs retries on transient API failures, but customers occasionally report being charged twice after a network timeout. Investigation shows the server processed the first request before the timeout. The retry then issued a second charge. Which fix addresses this completely?",
+  "q_ko": "에이전트는 일시적인 API 실패에 재시도를 하는데, 네트워크 타임아웃 뒤에 두 번 결제됐다는 고객 신고가 가끔 들어온다. 조사해 보니 서버는 타임아웃 전에 첫 요청을 이미 처리했고, 재시도가 두 번째 결제를 만들었다. 이 문제를 완전히 해결하는 방법은?",
+  "options": [
+   {
+    "en": "Fix the backoff policy — longer delays between retries reduce duplicate processing on the server.",
+    "ko": "backoff 정책을 고친다. 재시도 간격을 늘리면 서버의 중복 처리가 줄어든다.",
+    "why": "간격이 길어도 이미 처리된 요청을 다시 보내면 똑같이 두 번 결제된다."
+   },
+   {
+    "en": "Add idempotency keys only — a unique key per operation prevents the server from processing the same request twice.",
+    "ko": "idempotency key 만 추가한다. 작업마다 고유한 키를 두면 서버가 같은 요청을 두 번 처리하지 않는다.",
+    "why": "중복 결제 자체는 막지만, 출제자는 재시도 여부를 가리는 오류 분류가 빠져 불완전하다고 본다."
+   },
+   {
+    "en": "Fix the retry policy to classify errors before retrying — transient failures retry, permanent failures don't.",
+    "ko": "재시도 전에 오류를 분류하도록 재시도 정책을 고친다. 일시적 실패는 재시도하고 영구적 실패는 하지 않는다.",
+    "why": "타임아웃은 일시적 실패라 어차피 재시도되므로 중복 결제를 막지 못한다."
+   },
+   {
+    "en": "Both error classification AND idempotency keys are required — either alone is insufficient.",
+    "ko": "오류 분류와 idempotency key 가 둘 다 필요하다. 하나만으로는 부족하다.",
+    "why": "안전한 재시도만 하게(분류) 하고, 재시도해도 두 번 처리되지 않게(키) 하는 짝 해법이다."
+   }
+  ],
+  "answer": 3,
+  "point_ko": "안전한 재시도 = 오류 분류 + idempotency key",
+  "explain_ko": [
+   "**the server processed the first request before the timeout** — 클라이언트는 실패로 봤지만 서버에서는 이미 성공했다.",
+   "그래서 재시도를 막는 게 아니라, 같은 요청이 두 번 처리되지 않게 하는 **idempotency key** 가 필요하다.",
+   "출제자는 여기에 어떤 오류를 재시도할지 가려내는 **오류 분류**까지 더해야 **completely** 해결된다고 본다."
+  ],
+  "clues": [
+   {
+    "en": "charged twice after a network timeout",
+    "ko": "중복 처리 증상"
+   },
+   {
+    "en": "the server processed the first request before the timeout",
+    "ko": "재시도가 중복을 만듦 → idempotency"
+   },
+   {
+    "en": "runs retries on transient API failures",
+    "ko": "재시도 정책도 얽혀 있음"
+   },
+   {
+    "en": "addresses this completely",
+    "ko": "짝을 이룬 해법을 고르라"
+   }
+  ],
+  "discuss_ko": "idempotency key 만 있어도 두 번 결제는 막히는데({B}), 오류 분류까지 있어야 '완전한' 해결이라는 출제 논리는 타당할까?",
+  "words": [
+   {
+    "word": "transient",
+    "pos": "adj.",
+    "ko": "일시적인",
+    "example": "runs retries on transient API failures"
+   },
+   {
+    "word": "idempotency",
+    "pos": "n.",
+    "ko": "멱등성(같은 요청을 여러 번 보내도 한 번 보낸 것과 결과가 같음)",
+    "example": "Add idempotency keys only"
+   },
+   {
+    "word": "backoff",
+    "pos": "n.",
+    "ko": "(재시도 전) 대기 시간을 점점 늘리는 방식",
+    "example": "Fix the backoff policy"
+   },
+   {
+    "word": "issue",
+    "pos": "v.",
+    "ko": "발행하다, (청구를) 내다",
+    "example": "The retry then issued a second charge."
+   },
+   {
+    "word": "permanent",
+    "pos": "adj.",
+    "ko": "영구적인",
+    "example": "permanent failures don't"
+   },
+   {
+    "word": "insufficient",
+    "pos": "adj.",
+    "ko": "불충분한",
+    "example": "either alone is insufficient"
+   }
+  ],
+  "check": "doubt",
+  "checkNote": "Anthropic 공식 문서가 다루는 기능이 아니라 일반 분산 시스템 원칙 문제다. 지문의 증상(서버가 처리를 끝낸 뒤 타임아웃, 재시도로 이중 결제)은 idempotency key 만으로 완전히 막히고, 타임아웃은 어떤 분류 기준에서도 재시도 대상이라 오류 분류는 이 증상과 무관하다. 해설의 'key 만으로는 서버에 닿지 않은 요청이 재시도되지 않으면 소용없다'는 논리도 지문 상황과 맞지 않아 {B} 를 정답으로 볼 여지가 있다. 출제 의도(짝 해법 {D})는 알아 두되 애매한 문항으로 표시."
+ },
+ {
+  "id": "D1-06",
+  "domain": 1,
+  "scenario": "Multi-Agent Research System",
+  "q_en": "To execute the web search subagent and document analysis subagent in parallel rather than sequentially, the coordinator must:",
+  "q_ko": "웹 검색 subagent 와 문서 분석 subagent 를 차례대로가 아니라 병렬로 실행하려면 코디네이터는 무엇을 해야 하나?",
+  "options": [
+   {
+    "en": "Use `fork_session` for each parallel branch before delegating.",
+    "ko": "위임하기 전에 병렬 갈래마다 `fork_session` 을 쓴다.",
+    "why": "`fork_session` 은 같은 기준점에서 독립 탐색 갈래를 만드는 기능이지 서로 다른 subagent 병렬 실행용이 아니다."
+   },
+   {
+    "en": "Emit multiple Task tool calls across separate coordinator turns, one per subagent.",
+    "ko": "subagent 마다 하나씩, 코디네이터의 서로 다른 턴에 걸쳐 Task 도구 호출을 여러 번 낸다.",
+    "why": "턴을 나누면 앞 턴 결과를 기다리므로 순차 실행이 된다."
+   },
+   {
+    "en": "Emit multiple Task tool calls within a single coordinator response.",
+    "ko": "코디네이터의 한 응답 안에서 Task 도구 호출을 여러 개 낸다.",
+    "why": "한 응답 안에 Task 호출이 여러 개 있어야 동시에 실행된다."
+   },
+   {
+    "en": "Set `allowedTools` to list all subagent type names simultaneously.",
+    "ko": "`allowedTools` 에 모든 subagent 유형 이름을 한꺼번에 나열한다.",
+    "why": "`allowedTools` 는 쓸 수 있는 도구 권한 설정일 뿐 실행 방식과 무관하다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "병렬 실행 = 한 응답에 Task 호출 여러 개",
+  "explain_ko": [
+   "**in parallel rather than sequentially** — 실행 방식(동시냐 차례냐)을 묻는다.",
+   "턴을 나눠 호출하면 각 턴이 앞 결과를 기다리니 순차 실행이다.",
+   "**한 번의 응답 안에** Task 호출을 여러 개 내보내야 subagent 들이 동시에 돈다."
+  ],
+  "clues": [
+   {
+    "en": "in parallel rather than sequentially",
+    "ko": "실행 방식 문제"
+   },
+   {
+    "en": "web search subagent and document analysis subagent",
+    "ko": "서로 다른 종류의 subagent 두 개"
+   },
+   {
+    "en": "the coordinator must",
+    "ko": "코디네이터의 호출 방식을 고르라"
+   }
+  ],
+  "discuss_ko": "`fork_session` 도 갈래를 두 개 만드는데, 왜 서로 다른 subagent 를 병렬로 돌리는 용도로는 맞지 않을까?",
+  "words": [
+   {
+    "word": "in parallel",
+    "pos": "phr.",
+    "ko": "병렬로, 동시에",
+    "example": "in parallel rather than sequentially"
+   },
+   {
+    "word": "sequentially",
+    "pos": "adv.",
+    "ko": "순차적으로, 차례대로",
+    "example": "in parallel rather than sequentially"
+   },
+   {
+    "word": "emit",
+    "pos": "v.",
+    "ko": "내보내다, 출력하다",
+    "example": "Emit multiple Task tool calls within a single coordinator response."
+   },
+   {
+    "word": "delegate",
+    "pos": "v.",
+    "ko": "위임하다, 맡기다",
+    "example": "for each parallel branch before delegating"
+   },
+   {
+    "word": "simultaneously",
+    "pos": "adv.",
+    "ko": "동시에, 한꺼번에",
+    "example": "list all subagent type names simultaneously"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "D1-07",
+  "domain": 1,
+  "scenario": "Multi-Agent Research System",
+  "q_en": "The document analysis subagent frequently encounters failures when processing PDF files — some have corrupted sections causing parsing exceptions, others are password-protected, and occasionally the parsing library times out on large files. Currently, any exception immediately terminates the subagent and returns an error to the coordinator, which must decide whether to retry, skip, or fail the entire task. This is causing excessive coordinator involvement in routine error handling. What's the most effective architectural improvement?",
+  "q_ko": "문서 분석 subagent 가 PDF 를 처리하다 자주 실패한다. 일부는 손상된 구간 때문에 파싱 예외가 나고, 일부는 비밀번호로 보호돼 있으며, 가끔 큰 파일에서 파싱 라이브러리가 타임아웃된다. 지금은 예외가 하나라도 나면 subagent 가 즉시 종료되고 코디네이터에 오류를 돌려주며, 코디네이터가 재시도할지·건너뛸지·작업 전체를 실패 처리할지 정해야 한다. 이 때문에 일상적인 오류 처리에 코디네이터가 지나치게 개입하고 있다. 가장 효과적인 구조 개선은?",
+  "options": [
+   {
+    "en": "Add a coordinator-level retry policy that re-invokes the subagent up to 3 times for any document that fails.",
+    "ko": "실패한 문서마다 subagent 를 최대 3번 다시 호출하는 코디네이터 수준 재시도 정책을 추가한다.",
+    "why": "여전히 코디네이터가 개입하고, 실패마다 subagent 전체를 다시 돌려 비용만 커진다."
+   },
+   {
+    "en": "Add detailed error-handling instructions to the subagent's system prompt so it classifies and responds to each failure type.",
+    "ko": "subagent 시스템 프롬프트에 자세한 오류 처리 지시를 넣어 실패 유형별로 분류하고 대응하게 한다.",
+    "why": "대체 파서나 부분 결과 같은 복구 수단이 구조에 없으면 지시만으로는 실제로 복구할 방법이 없다."
+   },
+   {
+    "en": "Pre-validate all PDF files before sending them to the subagent, rejecting password-protected or oversized files upfront.",
+    "ko": "subagent 에 보내기 전에 모든 PDF 를 미리 검사해 비밀번호가 걸리거나 너무 큰 파일을 걸러낸다.",
+    "why": "손상 구간은 미리 잡지 못하고, 걸러낸 파일에서는 부분 결과조차 얻지 못한다."
+   },
+   {
+    "en": "Implement local error recovery within the subagent: try fallback parsers for corrupt sections, skip unrecoverable sections with a partial-result flag, and return structured error context only for truly unresolvable failures.",
+    "ko": "subagent 안에 로컬 오류 복구를 구현한다. 손상 구간은 대체 파서로 다시 시도하고, 복구할 수 없는 구간은 부분 결과 플래그를 달아 건너뛰며, 정말 해결할 수 없는 실패만 구조화된 오류 컨텍스트로 돌려준다.",
+    "why": "흔한 실패는 subagent 안에서 끝내고 꼭 필요한 것만 올리니 코디네이터 개입이 줄어든다."
+   }
+  ],
+  "answer": 3,
+  "point_ko": "풀 수 있는 오류는 subagent 안에서, 못 푸는 것만 위로",
+  "explain_ko": [
+   "**excessive coordinator involvement in routine error handling** — 흔한 오류까지 모두 코디네이터로 올라가는 구조가 문제다.",
+   "그러니 오류를 처리하는 위치를 subagent 안으로 옮기는 게 핵심이다.",
+   "대체 파서와 부분 결과 플래그로 로컬 복구하고, **truly unresolvable** 한 것만 구조화된 오류로 올리면 코디네이터는 판단이 필요한 경우만 보게 된다."
+  ],
+  "clues": [
+   {
+    "en": "any exception immediately terminates the subagent",
+    "ko": "로컬 복구가 전혀 없음"
+   },
+   {
+    "en": "excessive coordinator involvement in routine error handling",
+    "ko": "오류 처리 위치를 옮겨라"
+   },
+   {
+    "en": "corrupted sections causing parsing exceptions",
+    "ko": "부분 복구가 가능한 실패"
+   },
+   {
+    "en": "architectural improvement",
+    "ko": "프롬프트 말고 구조를 바꿔라"
+   }
+  ],
+  "discuss_ko": "코디네이터 수준 재시도({A})도 자동으로 처리되긴 마찬가지인데, subagent 안의 로컬 복구가 더 나은 이유는 뭘까?",
+  "words": [
+   {
+    "word": "corrupted",
+    "pos": "adj.",
+    "ko": "손상된, 깨진",
+    "example": "some have corrupted sections"
+   },
+   {
+    "word": "terminate",
+    "pos": "v.",
+    "ko": "종료시키다",
+    "example": "any exception immediately terminates the subagent"
+   },
+   {
+    "word": "excessive",
+    "pos": "adj.",
+    "ko": "지나친, 과도한",
+    "example": "excessive coordinator involvement"
+   },
+   {
+    "word": "fallback",
+    "pos": "adj.",
+    "ko": "대체의, 예비의",
+    "example": "try fallback parsers for corrupt sections"
+   },
+   {
+    "word": "unrecoverable",
+    "pos": "adj.",
+    "ko": "복구할 수 없는",
+    "example": "skip unrecoverable sections"
+   },
+   {
+    "word": "unresolvable",
+    "pos": "adj.",
+    "ko": "해결할 수 없는",
+    "example": "only for truly unresolvable failures"
+   },
+   {
+    "word": "upfront",
+    "pos": "adv.",
+    "ko": "사전에, 미리",
+    "example": "rejecting password-protected or oversized files upfront"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "D1-08",
+  "domain": 1,
+  "scenario": "Multi-Agent Research System",
+  "q_en": "You've defined a coordinator agent with a system prompt instructing it to delegate research subtasks to specialized subagents. During testing, the coordinator produces detailed analysis but never delegates to any subagent — it handles everything itself. The most likely cause is:",
+  "q_ko": "특화된 subagent 에게 조사 하위 작업을 위임하라는 시스템 프롬프트로 코디네이터 에이전트를 정의했다. 테스트해 보니 코디네이터가 자세한 분석은 내놓지만 어떤 subagent 에게도 위임하지 않고 모든 걸 혼자 처리한다. 가장 유력한 원인은?",
+  "options": [
+   {
+    "en": "The coordinator's system prompt doesn't explicitly name which subagents to invoke.",
+    "ko": "코디네이터 시스템 프롬프트가 어떤 subagent 를 호출할지 이름을 명시하지 않았다.",
+    "why": "프롬프트 문제라면 가끔은 위임할 텐데, 한 번도 안 한다는 건 호출 수단 자체가 없다는 신호다."
+   },
+   {
+    "en": "The subagent definitions don't have system prompts configured.",
+    "ko": "subagent 정의에 시스템 프롬프트가 설정돼 있지 않다.",
+    "why": "subagent 의 프롬프트는 코디네이터가 그들을 호출할 수 있느냐와 무관하다."
+   },
+   {
+    "en": "`\"Task\"` is not included in the coordinator's `allowedTools` configuration.",
+    "ko": "코디네이터의 `allowedTools` 설정에 `\"Task\"` 가 들어 있지 않다.",
+    "why": "Task 도구가 subagent 를 부르는 수단이라, 없으면 프롬프트와 상관없이 위임할 수 없다."
+   },
+   {
+    "en": "The coordinator needs more context about the research topic before it will decide to delegate.",
+    "ko": "코디네이터가 위임을 결정하려면 조사 주제에 대한 컨텍스트가 더 필요하다.",
+    "why": "이미 자세한 분석까지 해냈으니 컨텍스트 부족이 원인이 아니다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "subagent 호출하려면 allowedTools 에 Task 필수",
+  "explain_ko": [
+   "**never delegates to any subagent** — 가끔이 아니라 한 번도 안 한다는 건 능력(권한) 자체가 없다는 신호다.",
+   "subagent 는 Task 도구로 호출되므로 `allowedTools` 에 `\"Task\"` 가 없으면 프롬프트가 뭐라 하든 위임할 수 없다.",
+   "즉 프롬프트 문제가 아니라 **설정 문제**다."
+  ],
+  "clues": [
+   {
+    "en": "never delegates to any subagent",
+    "ko": "한 번도 안 함 = 권한 없음"
+   },
+   {
+    "en": "a system prompt instructing it to delegate",
+    "ko": "지시는 이미 있음, 프롬프트 탓 아님"
+   },
+   {
+    "en": "it handles everything itself",
+    "ko": "호출 수단이 없어 혼자 처리"
+   }
+  ],
+  "discuss_ko": "프롬프트에 subagent 이름을 적지 않은 것({A})도 위임을 줄일 수 있는데, 왜 '한 번도 안 한다'면 설정부터 의심해야 할까?",
+  "words": [
+   {
+    "word": "delegate",
+    "pos": "v.",
+    "ko": "위임하다, 맡기다",
+    "example": "never delegates to any subagent"
+   },
+   {
+    "word": "instruct",
+    "pos": "v.",
+    "ko": "지시하다",
+    "example": "a system prompt instructing it to delegate"
+   },
+   {
+    "word": "specialized",
+    "pos": "adj.",
+    "ko": "특화된, 전문화된",
+    "example": "specialized subagents"
+   },
+   {
+    "word": "explicitly",
+    "pos": "adv.",
+    "ko": "명시적으로, 분명히",
+    "example": "doesn't explicitly name which subagents to invoke"
+   },
+   {
+    "word": "invoke",
+    "pos": "v.",
+    "ko": "호출하다, 불러내다",
+    "example": "which subagents to invoke"
+   },
+   {
+    "word": "configuration",
+    "pos": "n.",
+    "ko": "설정, 구성",
+    "example": "the coordinator's `allowedTools` configuration"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "D1-09",
+  "domain": 1,
+  "scenario": "Claude Code for CI/CD",
+  "q_en": "Your automated code review runs three steps on every PR: (1) analyze each file individually for local issues, (2) run a cross-file integration pass for data flow and contract issues, (3) generate a severity-ranked summary. The structure never varies. Which decomposition pattern is this, and is it the right choice?",
+  "q_ko": "자동 코드 리뷰가 모든 PR 에 세 단계를 실행한다. (1) 파일마다 따로 로컬 이슈를 분석하고, (2) 데이터 흐름과 계약(contract) 이슈를 보는 파일 간 통합 점검을 돌리고, (3) 심각도순 요약을 만든다. 구조는 절대 바뀌지 않는다. 이건 어떤 분해 패턴이며, 올바른 선택인가?",
+  "options": [
+   {
+    "en": "Dynamic decomposition — appropriate because findings from step 1 could change what step 2 needs to examine.",
+    "ko": "동적 분해. 1단계 결과에 따라 2단계가 볼 대상이 달라질 수 있으니 적절하다.",
+    "why": "구조가 절대 바뀌지 않는다고 했으니 흐름을 동적으로 바꿀 이유가 없다."
+   },
+   {
+    "en": "Fixed sequential pipeline (prompt chaining) — appropriate because the structure is stable and each step consumes the prior step's output.",
+    "ko": "고정 순차 파이프라인(prompt chaining). 구조가 안정적이고 각 단계가 앞 단계 결과를 받아 쓰므로 적절하다.",
+    "why": "정해진 순서로 앞 결과를 이어받는 안정적인 작업에 딱 맞는 패턴이다."
+   },
+   {
+    "en": "Evaluator-optimiser — appropriate because step 3 evaluates the quality of the prior steps.",
+    "ko": "evaluator-optimiser. 3단계가 앞 단계의 품질을 평가하므로 적절하다.",
+    "why": "3단계는 요약일 뿐, 평가 결과를 보고 반복 개선하는 루프가 없다."
+   },
+   {
+    "en": "Fixed sequential pipeline — but wrong; dynamic decomposition would skip unnecessary passes on simple PRs.",
+    "ko": "고정 순차 파이프라인이지만 잘못된 선택이다. 동적 분해라면 단순한 PR 에서 불필요한 단계를 건너뛸 것이다.",
+    "why": "세 단계는 PR 내용과 관계없이 늘 가치가 있어서, 동적 분해는 부담만 늘린다."
+   }
+  ],
+  "answer": 1,
+  "point_ko": "구조 고정 + 앞 결과 이어받기 = prompt chaining",
+  "explain_ko": [
+   "**The structure never varies** — 중간 결과에 따라 흐름을 바꿀 필요가 없다는 뜻이다.",
+   "1단계 결과를 2단계가, 2단계 결과를 3단계가 받아 쓰는 **정해진 순서**다.",
+   "이런 안정적인 작업에는 고정 순차 파이프라인(prompt chaining)이 맞고, 동적 분해는 부담만 더한다."
+  ],
+  "clues": [
+   {
+    "en": "The structure never varies",
+    "ko": "동적 조정 불필요"
+   },
+   {
+    "en": "runs three steps on every PR",
+    "ko": "매번 같은 단계"
+   },
+   {
+    "en": "generate a severity-ranked summary",
+    "ko": "평가 루프가 아니라 요약 단계"
+   }
+  ],
+  "discuss_ko": "아주 작은 PR 에도 파일 간 통합 점검을 매번 돌리는 건 낭비 같은데, 동적 분해를 택하자는 {D} 는 왜 틀렸다고 볼까?",
+  "words": [
+   {
+    "word": "decomposition",
+    "pos": "n.",
+    "ko": "분해, 쪼개기",
+    "example": "Which decomposition pattern is this"
+   },
+   {
+    "word": "vary",
+    "pos": "v.",
+    "ko": "달라지다, 바뀌다",
+    "example": "The structure never varies."
+   },
+   {
+    "word": "severity-ranked",
+    "pos": "adj.",
+    "ko": "심각도 순으로 정렬된",
+    "example": "generate a severity-ranked summary"
+   },
+   {
+    "word": "integration",
+    "pos": "n.",
+    "ko": "통합",
+    "example": "run a cross-file integration pass"
+   },
+   {
+    "word": "consume",
+    "pos": "v.",
+    "ko": "(입력으로) 받아 쓰다",
+    "example": "each step consumes the prior step's output"
+   },
+   {
+    "word": "prior",
+    "pos": "adj.",
+    "ko": "이전의, 앞선",
+    "example": "the prior step's output"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "D1-10",
+  "domain": 1,
+  "scenario": "Multi-Agent Research System",
+  "q_en": "You want to explore two competing architectural approaches for the research pipeline — a sequential pipeline vs a parallel fan-out design — starting from the same codebase analysis you completed this morning. You need both explorations to stay independent so findings don't cross-contaminate. Which mechanism is designed for this?",
+  "q_ko": "연구 파이프라인을 두고 서로 경쟁하는 두 아키텍처, 즉 순차 파이프라인과 병렬 fan-out 설계를 탐색하려 한다. 출발점은 오늘 아침 끝낸 코드베이스 분석으로 같다. 두 탐색은 결과가 섞이지 않도록 서로 독립적이어야 한다. 이 용도로 설계된 메커니즘은?",
+  "options": [
+   {
+    "en": "Open two separate Claude Code terminal sessions and manually synchronize findings at the end.",
+    "ko": "Claude Code 터미널 세션을 두 개 따로 열고 끝에 결과를 수동으로 맞춘다.",
+    "why": "새로 연 세션 두 개는 오늘 아침의 분석을 물려받지 못한다."
+   },
+   {
+    "en": "Use `--resume` with two different session names, one per approach.",
+    "ko": "방식마다 하나씩, 서로 다른 세션 이름으로 `--resume` 을 쓴다.",
+    "why": "`--resume` 은 세션을 이어가는 기능이지 공통 기준점에서 갈래를 나누는 기능이 아니다."
+   },
+   {
+    "en": "Use `fork_session` to create two independent branches from the shared analysis baseline.",
+    "ko": "`fork_session` 으로 공유된 분석 기준점에서 독립적인 갈래 두 개를 만든다.",
+    "why": "같은 분석에서 출발하되 이후 기록은 서로 분리되는 갈래를 만드는 기능이다."
+   },
+   {
+    "en": "Run two Task tool calls in a single coordinator response, one per approach.",
+    "ko": "방식마다 하나씩, 코디네이터의 한 응답에서 Task 도구 호출 두 개를 실행한다.",
+    "why": "Task 는 멀티 에이전트 시스템에서 subagent 를 띄우는 용도지, 내 탐색 세션을 분기하는 용도가 아니다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "같은 출발점 + 독립 갈래 = fork_session",
+  "explain_ko": [
+   "**starting from the same codebase analysis** — 오늘 아침 분석을 둘 다 이어받아야 한다.",
+   "**stay independent** — 두 탐색의 결과가 서로 섞이면 안 된다.",
+   "두 조건을 함께 만족하는 게 `fork_session` 이다. 새 세션({A})은 분석을 못 물려받고, `--resume`({B})은 갈래 없이 이어가기만 한다."
+  ],
+  "clues": [
+   {
+    "en": "starting from the same codebase analysis",
+    "ko": "공유 기준점 필요"
+   },
+   {
+    "en": "stay independent",
+    "ko": "갈래를 분리"
+   },
+   {
+    "en": "findings don't cross-contaminate",
+    "ko": "서로 섞이면 안 됨"
+   },
+   {
+    "en": "two competing architectural approaches",
+    "ko": "두 방향으로 탐색"
+   }
+  ],
+  "discuss_ko": "두 터미널 세션({A})에 오늘 아침 분석 요약을 붙여 넣으면 비슷한 효과가 날 텐데, 그래도 `fork_session` 이 더 나은 이유는?",
+  "words": [
+   {
+    "word": "competing",
+    "pos": "adj.",
+    "ko": "경쟁하는, 서로 대립하는",
+    "example": "two competing architectural approaches"
+   },
+   {
+    "word": "fan-out",
+    "pos": "n.",
+    "ko": "하나에서 여러 갈래로 퍼뜨리는 구조",
+    "example": "a parallel fan-out design"
+   },
+   {
+    "word": "cross-contaminate",
+    "pos": "v.",
+    "ko": "서로 오염시키다, 뒤섞이다",
+    "example": "findings don't cross-contaminate"
+   },
+   {
+    "word": "synchronize",
+    "pos": "v.",
+    "ko": "동기화하다, 맞추다",
+    "example": "manually synchronize findings at the end"
+   },
+   {
+    "word": "baseline",
+    "pos": "n.",
+    "ko": "기준점, 출발선",
+    "example": "from the shared analysis baseline"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ },
+ {
+  "id": "D1-11",
+  "domain": 1,
+  "scenario": "Code Generation with Claude Code",
+  "q_en": "Last week you ran a deep codebase exploration session, mapping authentication flows and service boundaries. Since then, the team merged a major refactor of the auth module. You want to continue analysis using the prior findings. What's the most reliable approach?",
+  "q_ko": "지난주에 인증 흐름과 서비스 경계를 파악하는 깊은 코드베이스 탐색 세션을 돌렸다. 그 뒤 팀이 auth 모듈의 대규모 리팩터를 머지했다. 이전에 알아낸 내용을 활용해 분석을 이어가고 싶다. 가장 믿을 만한 방법은?",
+  "options": [
+   {
+    "en": "Resume the prior session using `--resume` — it already has the full codebase map and tool results.",
+    "ko": "`--resume` 으로 이전 세션을 재개한다. 이미 전체 코드베이스 지도와 도구 결과가 들어 있다.",
+    "why": "리팩터 전의 낡은 도구 결과를 지금도 맞는 것처럼 그대로 가져온다."
+   },
+   {
+    "en": "Start a new session and re-explore the entire codebase from scratch to avoid any stale assumptions.",
+    "ko": "새 세션을 열고, 낡은 가정을 피하려고 코드베이스 전체를 처음부터 다시 탐색한다.",
+    "why": "여전히 유효한 이전 발견까지 버려 시간과 토큰을 낭비한다."
+   },
+   {
+    "en": "Start a new session, inject a structured summary of the valid prior findings, and explicitly note that the auth module has changed.",
+    "ko": "새 세션을 열고, 유효한 이전 발견을 구조화된 요약으로 넣은 뒤, auth 모듈이 바뀌었다고 분명히 적어 준다.",
+    "why": "유효한 지식은 살리고 바뀐 부분은 새로 조사하게 만든다."
+   },
+   {
+    "en": "Resume the prior session and instruct Claude to ignore its previous observations about the auth module.",
+    "ko": "이전 세션을 재개하고 auth 모듈에 대한 이전 관찰은 무시하라고 Claude 에게 지시한다.",
+    "why": "낡은 도구 결과가 컨텍스트에 그대로 남아 있어 '무시하라'는 지시만으로는 영향이 사라진다는 보장이 없다."
+   }
+  ],
+  "answer": 2,
+  "point_ko": "도구 결과가 낡았으면 새 세션 + 구조화 요약",
+  "explain_ko": [
+   "**merged a major refactor of the auth module** — 지난주 도구 결과 중 auth 부분은 이제 낡았다.",
+   "resume 하면 그 낡은 결과를 현재 사실처럼 끌고 온다.",
+   "**continue analysis using the prior findings** — 그렇다고 전부 버릴 필요는 없으니, 유효한 것만 요약해 새 세션에 넣고 바뀐 곳을 짚어 주는 게 가장 믿을 만하다."
+  ],
+  "clues": [
+   {
+    "en": "merged a major refactor of the auth module",
+    "ko": "이전 도구 결과가 stale"
+   },
+   {
+    "en": "continue analysis using the prior findings",
+    "ko": "처음부터 다시 할 필요는 없음"
+   },
+   {
+    "en": "most reliable approach",
+    "ko": "낡은 컨텍스트를 끌고 오지 않는 방법"
+   }
+  ],
+  "discuss_ko": "{D} 처럼 재개한 뒤 'auth 관련 관찰은 무시해'라고 하면 토큰도 아낄 텐데, 왜 새 세션보다 믿기 어렵다고 할까?",
+  "words": [
+   {
+    "word": "boundary",
+    "pos": "n.",
+    "ko": "경계",
+    "example": "mapping authentication flows and service boundaries"
+   },
+   {
+    "word": "refactor",
+    "pos": "n.",
+    "ko": "리팩터링, 코드 구조 개선",
+    "example": "a major refactor of the auth module"
+   },
+   {
+    "word": "from scratch",
+    "pos": "phr.",
+    "ko": "처음부터, 맨바닥부터",
+    "example": "re-explore the entire codebase from scratch"
+   },
+   {
+    "word": "stale",
+    "pos": "adj.",
+    "ko": "낡은, 최신이 아닌",
+    "example": "to avoid any stale assumptions"
+   },
+   {
+    "word": "assumption",
+    "pos": "n.",
+    "ko": "가정, 전제",
+    "example": "to avoid any stale assumptions"
+   },
+   {
+    "word": "inject",
+    "pos": "v.",
+    "ko": "주입하다, 넣어 주다",
+    "example": "inject a structured summary of the valid prior findings"
+   }
+  ],
+  "check": "ok",
+  "checkNote": ""
+ }
 ]
