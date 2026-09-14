@@ -11,6 +11,7 @@
 - `template.html` — 앱 화면. **실제 컴퓨터 시험(CBT) 화면처럼**: 지문과 보기를 한 화면에, 상단 바(문항 번호·남은 시간), 하단 바(이전·검토 표시·검토 화면·다음). 처음 화면에서 연습 모드(바로 채점, 풀이·보기별 해설·토론 거리가 아래에) / 모의고사(문항당 2분, 끝나고 성적표·환산 점수) / 단어장(표·암기 카드). 사용자가 카드뉴스·OMR 같은 꾸밈 디자인은 불편하다고 해서 뺐으니 다시 넣지 않는다. 디자인은 여기서만 고친다.
 - `build.py` — 카드를 모아 검증(빠진 필드, 단서가 지문에 있는지), 보기 순서를 id 기준으로 섞고(원본 정답이 B·C 에 몰려 있음), 단어 빈도(전체 지문·보기에서 몇 번 나오는지)를 세어 `dist/index.html` 을 만든다.
 - 아티팩트: https://claude.ai/code/artifact/543b273b-06c4-4823-88f0-0fee3b3fb520 — `dist/index.html` 을 이 `url` 로 재발행, capabilities `{"db": {}}`. 진도는 db 문서 `progress/miji` (`answers{id:{pick, ok, at, n}}`, `words{word:"known"|"learn"}`, `tries`), 없으면 localStorage.
+- **공개 주소(로그인 불필요, 휴대폰용)**: https://ppmj789.github.io/ccaf-study/ — GitHub 저장소 https://github.com/ppmj789/ccaf-study (공개, 브랜치 `main`). push 하면 `.github/workflows/pages.yml` 이 build 해서 배포한다. 이 주소는 로그인이 없어 기록이 브라우저마다 저장되고, 처음 화면 `기록 옮기기`(CCAF1: 진도 코드 복사·합치기)로 기기 간에 옮긴다.
 
 ## 문제 출처 원칙
 
@@ -34,4 +35,4 @@
 ```bash
 cd ~/ccaf-notes && python3 build.py   # 경고가 있으면 exit 1, 고친다
 ```
-아티팩트는 같은 파일 경로로 재발행(주소 유지). 커밋은 `git add -A && git commit -m "<한국어 한 줄>"`. 원격 저장소는 없다.
+아티팩트는 같은 파일 경로(또는 위 url)로 재발행하고, 커밋 뒤 `git push` 로 공개 주소도 갱신한다(둘 다 매번). 커밋은 `git add -A && git commit -m "<한국어 한 줄>"`. `gh` 는 `~/bin/gh`.
