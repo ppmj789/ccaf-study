@@ -2225,5 +2225,47 @@
   "example": "retry against the read replica",
   "example_ko": "읽기 전용 복제본으로 다시 시도한다",
   "tip": "원본 DB 의 사본. 읽기만 가능해 부하를 나누거나 원본이 막혔을 때 우회로가 된다"
+ },
+ {
+  "word": "clause",
+  "pos": "n.",
+  "ko": "(계약서의) 조항",
+  "group": "guide",
+  "example": "the summary clause on page 1",
+  "example_ko": "1페이지의 요약 조항"
+ },
+ {
+  "word": "lease",
+  "pos": "n./v.",
+  "ko": "임대차 계약(서), 임대하다",
+  "group": "guide",
+  "example": "a residential lease states a monthly rent of $1,800",
+  "example_ko": "주거용 임대차 계약서에 월세 $1,800 이라고 적혀 있다"
+ },
+ {
+  "word": "individually",
+  "pos": "adv.",
+  "ko": "하나하나 따로 보면",
+  "group": "guide",
+  "example": "both are individually valid numbers",
+  "example_ko": "둘 다 따로 보면 문제없는 숫자다",
+  "tip": "'각각 보면 정상인데 합쳐 보면 모순'이라는 뜻. 충돌 문제의 전형적 신호"
+ },
+ {
+  "word": "cleanly",
+  "pos": "adv.",
+  "ko": "문제없이, 걸림 없이",
+  "group": "guide",
+  "example": "Both values extract cleanly.",
+  "example_ko": "두 값 모두 문제없이 추출된다.",
+  "tip": "추출 자체는 성공했다는 뜻. 그러니 원인을 OCR·파싱에서 찾으면 안 된다"
+ },
+ {
+  "word": "conflict",
+  "pos": "n./v.",
+  "ko": "충돌, 서로 어긋남",
+  "group": "guide",
+  "example": "set a conflict_detected boolean to true",
+  "example_ko": "conflict_detected 값을 true 로 둔다"
  }
 ]
