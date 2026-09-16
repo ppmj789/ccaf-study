@@ -2083,5 +2083,40 @@
   "group": "guide",
   "example": "To pick up its changes sooner, reconnect the server.",
   "example_ko": "변경을 더 빨리 반영하려면 server 를 다시 연결한다."
+ },
+ {
+  "word": "overcharge",
+  "pos": "n./v.",
+  "ko": "초과 청구(하다), 바가지",
+  "group": "guide",
+  "example": "a billing dispute (invoice #4821, $89.00 overcharge)",
+  "example_ko": "청구 분쟁(invoice #4821, $89.00 초과 청구)"
+ },
+ {
+  "word": "unresolved",
+  "pos": "adj.",
+  "ko": "아직 해결되지 않은",
+  "group": "guide",
+  "example": "incident started 2:15 PM, status: unresolved",
+  "example_ko": "장애는 2시 15분에 시작, 상태: 미해결",
+  "tip": "resolve(해결하다) + un-. resolution(해결)과 같은 뿌리"
+ },
+ {
+  "word": "thread",
+  "pos": "n.",
+  "ko": "(대화의) 줄기, 갈래",
+  "group": "guide",
+  "example": "The summary blends both threads.",
+  "example_ko": "그 요약은 두 갈래를 섞어 버린다.",
+  "tip": "한 대화 안에 서로 다른 안건이 여러 개일 때 각각을 thread 라고 부른다"
+ },
+ {
+  "word": "running",
+  "pos": "adj.",
+  "ko": "계속 이어지며 갱신되는",
+  "group": "guide",
+  "example": "a single running narrative summary",
+  "example_ko": "계속 갱신되는 줄글 요약 하나",
+  "tip": "'달리는'이 아니라 '계속 돌아가며 업데이트되는'. running total(누계), running log(계속 쌓는 기록)"
  }
 ]
