@@ -2023,5 +2023,65 @@
   "example": "Option C misunderstands that larger context windows don't solve attention quality issues.",
   "example_ko": "C 는 context window 를 키워도 주의 품질 문제는 해결되지 않는다는 점을 잘못 이해했다.",
   "freq": 1
+ },
+ {
+  "word": "partway through",
+  "pos": "phr.",
+  "ko": "도중에, 중간쯤에",
+  "group": "phrase",
+  "example": "The server adds a new tool partway through a long-running session.",
+  "example_ko": "server 가 오래 이어지는 session 도중에 새 tool 을 추가한다.",
+  "tip": "'시작 전'이 아니라 '이미 진행 중'이라는 뜻. 세션·작업 중간에 상황이 바뀌는 문제의 신호"
+ },
+ {
+  "word": "long-running",
+  "pos": "adj.",
+  "ko": "오래 이어지는, 장시간 도는",
+  "group": "guide",
+  "example": "a long-running session that must survive tool changes",
+  "example_ko": "tool 이 바뀌어도 살아 있어야 하는, 오래 이어지는 session"
+ },
+ {
+  "word": "appropriate",
+  "pos": "adj.",
+  "ko": "알맞은, 해당하는",
+  "group": "guide",
+  "example": "The server sends the appropriate MCP notification.",
+  "example_ko": "server 는 이 경우에 해당하는 MCP 알림을 보낸다.",
+  "tip": "'적절한'보다 '그 상황에 정해진 바로 그것'으로 읽으면 정확하다"
+ },
+ {
+  "word": "manually",
+  "pos": "adv.",
+  "ko": "손으로, 수동으로",
+  "group": "guide",
+  "example": "without manually reconnecting the server",
+  "example_ko": "server 를 손으로 다시 연결하지 않고도",
+  "tip": "문제에 without manually 가 붙으면 '사람 손 없이 자동으로 되는가'를 묻는 것"
+ },
+ {
+  "word": "refresh",
+  "pos": "v./n.",
+  "ko": "다시 불러오다, 갱신",
+  "group": "guide",
+  "example": "Claude Code refreshes the tool list after the notification.",
+  "example_ko": "알림을 받은 뒤 Claude Code 가 tool 목록을 다시 불러온다.",
+  "tip": "알림이 목록을 '가져다주는' 게 아니라, 알림을 받고 '다시 가지러 간다'는 순서가 핵심"
+ },
+ {
+  "word": "disconnect",
+  "pos": "n./v.",
+  "ko": "연결 끊김, 연결을 끊다",
+  "group": "guide",
+  "example": "making the new tool usable without a disconnect",
+  "example_ko": "연결을 끊지 않고도 새 tool 을 쓸 수 있게 한다."
+ },
+ {
+  "word": "reconnect",
+  "pos": "v.",
+  "ko": "다시 연결하다",
+  "group": "guide",
+  "example": "To pick up its changes sooner, reconnect the server.",
+  "example_ko": "변경을 더 빨리 반영하려면 server 를 다시 연결한다."
  }
 ]
