@@ -2182,5 +2182,48 @@
   "example": "Each invocation starts a fresh context.",
   "example_ko": "호출할 때마다 빈 문맥에서 새로 시작한다.",
   "tip": "'신선한'이 아니라 '앞의 것을 물려받지 않은'. fresh context, fresh instance"
+ },
+ {
+  "word": "dispatch",
+  "pos": "v./n.",
+  "ko": "(일·사람을) 보내다, 파견",
+  "group": "guide",
+  "example": "The coordinator dispatches subagents to pull logs.",
+  "example_ko": "coordinator 가 로그를 가져오도록 subagent 들을 내보낸다."
+ },
+ {
+  "word": "abandon",
+  "pos": "v.",
+  "ko": "그만두다, 내버리다",
+  "group": "guide",
+  "example": "abandon the payments-service investigation entirely",
+  "example_ko": "payments service 조사를 통째로 그만둔다",
+  "tip": "보기에 abandon, discard, give up 이 나오면 대개 과잉 반응 오답이다"
+ },
+ {
+  "word": "equivalent",
+  "pos": "adj./n.",
+  "ko": "~과 같은 것으로 취급되는",
+  "group": "guide",
+  "example": "Treat the structured message as equivalent to a plain 'error'.",
+  "example_ko": "그 구조화된 메시지를 단순 'error' 와 같은 것으로 취급한다.",
+  "tip": "treat A as equivalent to B = A 를 B 와 똑같이 본다. 정보를 버리는 보기의 신호"
+ },
+ {
+  "word": "alternative",
+  "pos": "n./adj.",
+  "ko": "대안, 다른 방법",
+  "group": "guide",
+  "example": "alternative: retry against read replica",
+  "example_ko": "대안: read replica 로 다시 시도"
+ },
+ {
+  "word": "read replica",
+  "pos": "n.",
+  "ko": "읽기 전용 복제본 (DB)",
+  "group": "guide",
+  "example": "retry against the read replica",
+  "example_ko": "읽기 전용 복제본으로 다시 시도한다",
+  "tip": "원본 DB 의 사본. 읽기만 가능해 부하를 나누거나 원본이 막혔을 때 우회로가 된다"
  }
 ]
