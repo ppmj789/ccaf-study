@@ -16,7 +16,8 @@
   "group": "phrase",
   "example": "Select the most recently active account — it is most likely the customer contacting support.",
   "example_ko": "가장 최근에 활동한 계정을 고른다. 지금 문의하는 고객일 가능성이 가장 높다.",
-  "freq": 5
+  "freq": 5,
+  "tip": "the most likely reason 로 물으면 '가장 그럴듯한 원인'을 고르는 추론 문제다. 실제로 존재하지 않는 기능을 지어낸 보기부터 지운다"
  },
  {
   "word": "first step",
@@ -2118,5 +2119,23 @@
   "example": "a single running narrative summary",
   "example_ko": "계속 갱신되는 줄글 요약 하나",
   "tip": "'달리는'이 아니라 '계속 돌아가며 업데이트되는'. running total(누계), running log(계속 쌓는 기록)"
+ },
+ {
+  "word": "substitute",
+  "pos": "v./n.",
+  "ko": "대신 넣다, 대체(물)",
+  "group": "guide",
+  "example": "the system ignores the body and substitutes a placeholder prompt",
+  "example_ko": "시스템이 본문을 무시하고 자리표시용 prompt 를 대신 넣는다",
+  "tip": "substitute A for B = B 대신 A 를 쓰다. 순서가 헷갈리기 쉽다"
+ },
+ {
+  "word": "body",
+  "pos": "n.",
+  "ko": "본문 (frontmatter 아래 내용)",
+  "group": "guide",
+  "example": "a skill with the body: 'Follow the approach we discussed.'",
+  "example_ko": "본문이 '우리가 논의한 방식대로 하라'인 skill",
+  "tip": "SKILL.md 는 frontmatter(머리말)와 body(본문)로 나뉜다"
  }
 ]
