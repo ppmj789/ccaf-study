@@ -2858,5 +2858,59 @@
   "example": "the higher one as a distinct, dated data point",
   "example_ko": "더 높은 값은 날짜가 붙은 별개의 데이터로",
   "tip": "'구식의(outdated)'라는 뜻도 있어 헷갈린다. 여기서는 시점을 표시했다는 뜻이다"
+ },
+ {
+  "word": "exception handler",
+  "pos": "n.",
+  "ko": "예외 처리 코드 (에러가 나면 잡아서 처리하는 부분)",
+  "group": "phrase",
+  "example": "A build-automation loop's exception handler catches a tool execution failure",
+  "example_ko": "빌드 자동화 loop 의 예외 처리 코드가 도구 실행 실패를 잡는다",
+  "tip": "catch = (에러를) 잡다. 잡은 에러를 버리지 않고 tool_result 로 Claude 에게 돌려주는 흐름이 정답 패턴이다"
+ },
+ {
+  "word": "model-driven",
+  "pos": "adj.",
+  "ko": "모델이 판단을 이끄는, 모델이 스스로 정하는",
+  "group": "phrase",
+  "example": "consistent with model-driven reasoning",
+  "example_ko": "모델이 스스로 판단하는 방식과 맞게",
+  "tip": "코드에 규칙을 미리 박아 두는 방식(hard-coded)의 반대. 다음 행동을 Claude 가 정한다"
+ },
+ {
+  "word": "sole",
+  "pos": "adj.",
+  "ko": "유일한, 단 하나의",
+  "group": "phrase",
+  "example": "is_error becomes the sole termination signal",
+  "example_ko": "is_error 가 유일한 종료 신호가 된다",
+  "tip": "only 와 같은 뜻. sole, only, never, always 가 붙은 보기는 틀린 단정일 때가 많다"
+ },
+ {
+  "word": "termination signal",
+  "pos": "n.",
+  "ko": "종료 신호 (loop 를 멈추라는 표시)",
+  "group": "phrase",
+  "example": "is_error becomes the sole termination signal for the rest of the loop",
+  "example_ko": "is_error 가 loop 의 남은 동안 유일한 종료 신호가 된다",
+  "tip": "Claude API 에서 loop 를 멈출지 정하는 신호는 stop_reason 이다. is_error 는 종료 신호가 아니다"
+ },
+ {
+  "word": "consistent with",
+  "pos": "phr.",
+  "ko": "~와 맞는, ~에 어긋나지 않는",
+  "group": "phrase",
+  "example": "consistent with model-driven reasoning",
+  "example_ko": "모델이 스스로 판단하는 방식과 맞게",
+  "tip": "정답 보기 끝에 '어떤 원칙과 맞는다'고 근거를 붙일 때 자주 나온다"
+ },
+ {
+  "word": "in context",
+  "pos": "phr.",
+  "ko": "맥락 안에서, 대화 흐름 속에서",
+  "group": "phrase",
+  "example": "It lets Claude see the failure in context",
+  "example_ko": "Claude 가 대화 흐름 속에서 실패를 보게 해 준다",
+  "tip": "결과를 대화 기록(context)에 붙여야 Claude 가 본다는 뜻과 이어진다"
  }
 ]
