@@ -2507,5 +2507,59 @@
   "example": "directory files always take precedence over rules",
   "example_ko": "폴더 파일이 rule 보다 항상 우선한다",
   "tip": "보기에 always 와 함께 나오면 대개 없는 규칙을 지어낸 오답이다"
+ },
+ {
+  "word": "nitpick",
+  "pos": "n.",
+  "ko": "사소한 트집, 괜한 지적",
+  "group": "phrase",
+  "example": "a high volume of false positives on trivial phrasing nitpicks",
+  "example_ko": "사소한 표현 트집에 오탐이 잔뜩 나온다",
+  "tip": "보고하면 안 되는 쪽(skip)을 가리킬 때 나온다. 버그·보안과 반대편"
+ },
+ {
+  "word": "trivial",
+  "pos": "adj.",
+  "ko": "사소한, 별것 아닌",
+  "group": "phrase",
+  "example": "trivial phrasing nitpicks",
+  "example_ko": "사소한 표현 트집",
+  "tip": "minor 와 같은 편. 이런 걸 잡는 리뷰는 오탐으로 취급된다"
+ },
+ {
+  "word": "docstring",
+  "pos": "n.",
+  "ko": "함수 설명 주석 (함수 바로 아래 적는 설명문)",
+  "group": "phrase",
+  "example": "a docstring stating a function returns None",
+  "example_ko": "함수가 None 을 돌려준다고 적힌 설명 주석",
+  "tip": "코드가 실제로 하는 일과 다르면 '진짜 문제'가 된다"
+ },
+ {
+  "word": "high volume of",
+  "pos": "phr.",
+  "ko": "아주 많은 양의",
+  "group": "phrase",
+  "example": "produces a high volume of false positives",
+  "example_ko": "오탐을 아주 많이 만든다",
+  "tip": "'오탐이 많다'는 신호. 다음 문장에 사람들이 결과를 무시한다는 말이 자주 따라온다"
+ },
+ {
+  "word": "regain",
+  "pos": "v.",
+  "ko": "되찾다",
+  "group": "phrase",
+  "example": "so the accurate findings regain developer attention",
+  "example_ko": "정확한 지적이 개발자의 관심을 되찾도록",
+  "tip": "신뢰가 무너진 뒤의 조치를 묻는 보기에 나온다"
+ },
+ {
+  "word": "temporarily",
+  "pos": "adv.",
+  "ko": "잠시, 임시로",
+  "group": "phrase",
+  "example": "Temporarily disable the category while its new criteria are validated",
+  "example_ko": "새 기준을 검증하는 동안 그 카테고리를 잠시 끈다",
+  "tip": "'영구히 끄기'와 다르다. 고치는 동안만 멈춘다는 뜻이라 정답 보기에 자주 붙는다"
  }
 ]
