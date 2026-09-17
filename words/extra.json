@@ -2337,5 +2337,40 @@
   "example": "`**` gives recursive directory matching.",
   "example_ko": "`**` 는 하위 폴더까지 훑어 준다.",
   "tip": "recursively(부사)도 자주 나온다. 폴더 안의 폴더까지 전부"
+ },
+ {
+  "word": "retry",
+  "pos": "v./n.",
+  "ko": "다시 시도(하다)",
+  "group": "guide",
+  "example": "The pipeline retries an extraction ten times.",
+  "example_ko": "파이프라인이 추출을 열 번 다시 시도한다.",
+  "tip": "재시도는 '다시 하면 달라질 때'만 뜻이 있다. 원인이 그대로면 결과도 그대로다"
+ },
+ {
+  "word": "correctable",
+  "pos": "adj.",
+  "ko": "고칠 수 있는",
+  "group": "guide",
+  "example": "rather than a correctable extraction mistake",
+  "example_ko": "고칠 수 있는 추출 실수가 아니라",
+  "tip": "-able 이 붙으면 '~될 수 있는'. recoverable(복구 가능한)과 짝으로 외우면 좋다"
+ },
+ {
+  "word": "idempotent",
+  "pos": "adj.",
+  "ko": "몇 번 해도 결과가 같은",
+  "group": "guide",
+  "example": "Make the refund call idempotent so a retry cannot double-charge.",
+  "example_ko": "환불 호출을 몇 번 해도 결과가 같게 만들어 재시도가 이중 결제를 못 내게 한다.",
+  "tip": "재시도가 안전하려면 이 성질이 필요하다. 시험 단골 어휘"
+ },
+ {
+  "word": "issuing",
+  "pos": "adj.",
+  "ko": "발행하는, 발급하는",
+  "group": "guide",
+  "example": "an arithmetic error introduced by the issuing bank",
+  "example_ko": "명세서를 발행한 은행이 낸 계산 오류"
  }
 ]
