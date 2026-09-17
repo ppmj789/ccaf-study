@@ -2372,5 +2372,50 @@
   "group": "guide",
   "example": "an arithmetic error introduced by the issuing bank",
   "example_ko": "명세서를 발행한 은행이 낸 계산 오류"
+ },
+ {
+  "word": "throttle",
+  "pos": "v.",
+  "ko": "(요청량을) 조이다, 제한하다",
+  "group": "guide",
+  "example": "a warehouse that occasionally throttles requests with a 429",
+  "example_ko": "가끔 429 로 요청을 조이는 데이터 웨어하우스",
+  "tip": "rate limit 과 같은 뜻으로 쓰인다. throttling = 일시적 제한이라 재시도 대상"
+ },
+ {
+  "word": "back off",
+  "pos": "v. phr.",
+  "ko": "(간격을 두고) 물러섰다 다시 시도하다",
+  "group": "phrase",
+  "example": "The agent should back off and retry automatically.",
+  "example_ko": "agent 가 간격을 두었다가 자동으로 다시 시도해야 한다.",
+  "tip": "exponential backoff = 재시도 간격을 2배씩 늘리는 방식"
+ },
+ {
+  "word": "bounded",
+  "pos": "adj.",
+  "ko": "상한이 정해진",
+  "group": "guide",
+  "example": "letting the agent apply its own bounded backoff strategy",
+  "example_ko": "agent 가 스스로 상한을 둔 backoff 전략을 쓰게 한다",
+  "tip": "unbounded(상한 없는)의 반대. '무한 재시도'를 막는다는 뜻"
+ },
+ {
+  "word": "sensible",
+  "pos": "adj.",
+  "ko": "합리적인, 적당한",
+  "group": "guide",
+  "example": "only up to a sensible limit",
+  "example_ko": "적당한 한도까지만",
+  "tip": "'예민한(sensitive)'과 다르다. '분별 있는, 무리 없는'"
+ },
+ {
+  "word": "give up",
+  "pos": "v. phr.",
+  "ko": "포기하다",
+  "group": "phrase",
+  "example": "rather than retrying forever or giving up immediately",
+  "example_ko": "영원히 재시도하거나 곧바로 포기하는 대신",
+  "tip": "문제에 'A 도 B 도 아닌' 구조가 나오면 그 사이가 정답이다"
  }
 ]
