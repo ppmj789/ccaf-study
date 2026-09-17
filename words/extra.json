@@ -2302,5 +2302,40 @@
   "example": "each paired with the exact output the architect expects",
   "example_ko": "각각을 architect 가 기대하는 정확한 출력과 짝지어서",
   "tip": "few-shot 예시는 입력과 출력을 '짝'으로 주는 것이 핵심이다"
+ },
+ {
+  "word": "inspection",
+  "pos": "n.",
+  "ko": "들여다보기, 내용 확인",
+  "group": "guide",
+  "example": "Only a list of file paths is needed, with no content inspection.",
+  "example_ko": "파일 경로 목록만 필요하고, 내용을 들여다볼 필요는 없다.",
+  "tip": "no content inspection 이 보이면 '내용은 안 봐도 된다' = Glob 쪽 신호"
+ },
+ {
+  "word": "naming convention",
+  "pos": "n. phr.",
+  "ko": "이름 짓는 규칙",
+  "group": "guide",
+  "example": "patterns that match the naming conventions directly",
+  "example_ko": "이름 규칙에 바로 들어맞는 패턴"
+ },
+ {
+  "word": "direct fit",
+  "pos": "n. phr.",
+  "ko": "가장 딱 맞는 것",
+  "group": "phrase",
+  "example": "Which tool is the most direct fit?",
+  "example_ko": "어떤 도구가 가장 딱 맞는가?",
+  "tip": "'가능한 것'이 아니라 '가장 알맞은 것'을 고르라는 뜻. 되긴 되는 우회 수단은 오답"
+ },
+ {
+  "word": "recursive",
+  "pos": "adj.",
+  "ko": "하위 폴더까지 훑는",
+  "group": "guide",
+  "example": "`**` gives recursive directory matching.",
+  "example_ko": "`**` 는 하위 폴더까지 훑어 준다.",
+  "tip": "recursively(부사)도 자주 나온다. 폴더 안의 폴더까지 전부"
  }
 ]
