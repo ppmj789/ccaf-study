@@ -2777,5 +2777,32 @@
   "example": "What does this situation illustrate?",
   "example_ko": "이 상황은 무엇을 보여 주는가?",
   "tip": "'그림 그리다'가 아니다. 상황이 어떤 원칙의 예인지 고르라는 질문이다"
+ },
+ {
+  "word": "adherence",
+  "pos": "n.",
+  "ko": "(지시·규칙을) 잘 따르는 정도",
+  "group": "phrase",
+  "example": "Session-start context usage is climbing and adherence is dropping.",
+  "example_ko": "세션 시작 때 쓰는 context 양은 늘고, 지시를 따르는 정도는 떨어지고 있다.",
+  "tip": "adhere to = 따르다. 공식 문서에서 'Longer files consume more context and reduce adherence' 처럼 CLAUDE.md 가 길 때 나온다"
+ },
+ {
+  "word": "climb",
+  "pos": "v.",
+  "ko": "(숫자가) 계속 올라가다",
+  "group": "phrase",
+  "example": "Session-start context usage is climbing",
+  "example_ko": "세션 시작 때 쓰는 context 양이 계속 늘고 있다",
+  "tip": "'오르다'. rising, increasing 과 같은 뜻. dropping(떨어지다)과 짝으로 나온다"
+ },
+ {
+  "word": "session-start",
+  "pos": "adj.",
+  "ko": "세션을 시작할 때의",
+  "group": "phrase",
+  "example": "Session-start context usage is climbing",
+  "example_ko": "세션 시작 때 쓰는 context 양이 늘고 있다",
+  "tip": "at launch 와 같은 때. 이때 불려 오는 것은 CLAUDE.md, paths 없는 rules, @import 파일이다"
  }
 ]
