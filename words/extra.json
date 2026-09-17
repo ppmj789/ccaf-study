@@ -2804,5 +2804,59 @@
   "example": "Session-start context usage is climbing",
   "example_ko": "세션 시작 때 쓰는 context 양이 늘고 있다",
   "tip": "at launch 와 같은 때. 이때 불려 오는 것은 CLAUDE.md, paths 없는 rules, @import 파일이다"
+ },
+ {
+  "word": "due diligence",
+  "pos": "n.",
+  "ko": "(투자·인수 전) 실사, 꼼꼼한 사전 조사",
+  "group": "phrase",
+  "example": "A due-diligence pipeline dispatches five subagents",
+  "example_ko": "실사 파이프라인이 subagent 다섯 개를 보낸다",
+  "tip": "회사를 사거나 투자하기 전에 서류를 샅샅이 확인하는 일. 정확성과 출처가 중요한 상황이라는 신호다"
+ },
+ {
+  "word": "fiscal quarter",
+  "pos": "n.",
+  "ko": "회계 분기 (회사 회계 기준 3개월)",
+  "group": "phrase",
+  "example": "using a filing from a different fiscal quarter",
+  "example_ko": "다른 회계 분기의 공시 자료를 써서",
+  "tip": "시기가 다르다는 단서. 값이 달라도 모순이 아니라 시간 차이일 수 있다"
+ },
+ {
+  "word": "characterize",
+  "pos": "v.",
+  "ko": "(어떤 성격으로) 규정하다, 표현하다",
+  "group": "phrase",
+  "example": "decide how to characterize this in the final report",
+  "example_ko": "최종 보고서에서 이것을 어떻게 표현할지 정한다",
+  "tip": "describe 보다 강하다. '확실한 사실로 볼지, 이상값으로 볼지' 같은 판단을 담는다"
+ },
+ {
+  "word": "outlier",
+  "pos": "n.",
+  "ko": "이상값 (다른 값들과 동떨어진 값)",
+  "group": "phrase",
+  "example": "not an outlier to discard",
+  "example_ko": "버려도 되는 이상값이 아니라",
+  "tip": "다수와 다르다고 바로 outlier 로 버리는 보기는 대개 오답이다. 왜 다른지(시기, 출처)부터 본다"
+ },
+ {
+  "word": "well established",
+  "pos": "adj. phr.",
+  "ko": "충분히 확인된, 확실히 자리 잡은",
+  "group": "phrase",
+  "example": "Present the stable ratio as well established",
+  "example_ko": "안정적인 비율은 충분히 확인된 결과로 제시한다",
+  "tip": "contested(논란 있는)와 짝. 보고서를 두 구역으로 나눠 적으라는 가이드 표현이다"
+ },
+ {
+  "word": "dated",
+  "pos": "adj.",
+  "ko": "날짜가 붙은, 특정 시점의",
+  "group": "phrase",
+  "example": "the higher one as a distinct, dated data point",
+  "example_ko": "더 높은 값은 날짜가 붙은 별개의 데이터로",
+  "tip": "'구식의(outdated)'라는 뜻도 있어 헷갈린다. 여기서는 시점을 표시했다는 뜻이다"
  }
 ]
