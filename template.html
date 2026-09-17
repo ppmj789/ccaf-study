@@ -163,7 +163,10 @@ td .ex button { border: 0; background: none; padding: 0; color: var(--sel-line);
 .tip { margin-top: 4px; font-size: 13px; color: var(--sel-line); }
 .wgroup { display: block; font-size: 11.5px; font-weight: 400; color: var(--muted); }
 .btn.big { padding: 10px 26px; font-size: 16px; }
-@media (max-width: 640px) { .flash { padding: 22px 12px; min-height: 58vh; align-content: center; } .bottombar .btn { padding: 9px 14px; font-size: 15px; } }
+.flash .frow { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 8px; }
+.flash .frow .btn { padding: 10px 20px; font-size: 15px; }
+.flash .fhint { font-size: 12.5px; color: var(--muted); }
+@media (max-width: 640px) { .flash { padding: 22px 12px; min-height: 58vh; align-content: center; } .bottombar .btn { padding: 9px 14px; font-size: 15px; } .flash .frow { width: 100%; } .flash .frow .btn { flex: 1 1 0; padding: 12px 10px; font-size: 15.5px; } }
 
 .pop { position: fixed; left: 50%; bottom: 70px; transform: translateX(-50%); width: min(420px, calc(100% - 32px)); background: #FFFFFF; border: 1px solid var(--ink); box-shadow: 0 6px 20px rgba(0,0,0,.18); padding: 12px 14px; display: grid; gap: 6px; z-index: 20; font-size: 14.5px; }
 .pop .pw { font-size: 18px; font-weight: 700; }
@@ -878,12 +881,17 @@ function renderWords() {
     body = `<div class="flash">
       <div class="fp">${ui.fi + 1} / ${ws.length} · ${WGROUP[w.group || "card"]}${w.freq ? ` · 빈출 ${w.freq}회` : ""}</div>
       <div class="fw">${esc(w.word)}</div><div class="fp">${esc(w.pos)}</div>
-      ${ui.flip ? `<div class="fk">${esc(w.ko)}</div>${exHtml(w, false)}${w.tip ? `<div class="tip">${esc(w.tip)}</div>` : ""}` : `<button class="btn primary big" data-flip>뜻 보기</button>`}
+      ${ui.flip
+        ? `<div class="fk">${esc(w.ko)}</div>${exHtml(w, false)}${w.tip ? `<div class="tip">${esc(w.tip)}</div>` : ""}
+           <div class="frow"><button class="btn" data-fnext="learn">아직 헷갈려요</button><button class="btn primary" data-fnext="known">외웠어요 ▶</button></div>`
+        : `<button class="btn primary big" data-flip>뜻 보기</button>
+           <div class="frow"><button class="btn" data-fnext="learn">아직 헷갈려요</button><button class="btn primary" data-fnext="known">외웠어요 ▶</button></div>
+           <p class="fhint">뜻을 안 보고 바로 표시해도 돼요.</p>`}
     </div>`;
   }
   $("#app").innerHTML = tools + body;
   $("#bottombar").innerHTML = ui.vmode === "flash" && ws.length
-    ? `<button class="btn" data-fprev>◀ 이전</button><span class="mid"><button class="btn" data-fnext="learn">아직 헷갈려요</button></span><button class="btn primary" data-fnext="known">외웠어요 ▶</button>`
+    ? `<button class="btn" data-fprev>◀ 이전</button><span class="mid"></span><button class="btn" data-fskip>다음 ▶</button>`
     : `<span></span><span class="mid"></span><button class="btn primary" data-home>처음 화면</button>`;
 }
 
@@ -1170,6 +1178,7 @@ document.addEventListener("click", e => {
   if (d.card) return openSingle(d.card);
   if ("flip" in d) { ui.flip = true; return render(); }
   if ("fprev" in d) { ui.fi = Math.max(0, ui.fi - 1); ui.flip = false; return render(); }
+  if ("fskip" in d) { const n = wordList().length; ui.fi = n ? (ui.fi + 1) % n : 0; ui.flip = false; return render(); }
   if (d.fnext) {
     const ws = wordList(), w = ws[ui.fi];
     if (w) setKnown(w.word, d.fnext === "known");
