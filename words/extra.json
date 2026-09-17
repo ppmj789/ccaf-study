@@ -2732,5 +2732,50 @@
   "example": "joint filings with differing last names",
   "example_ko": "성이 서로 다른 공동 신고",
   "tip": "different 와 같은 뜻. 문서 추출 문제에서 값이 서로 안 맞는 상황을 가리킨다"
+ },
+ {
+  "word": "dependent",
+  "pos": "n.",
+  "ko": "부양가족 (세금 신고에 함께 올리는 자녀 등)",
+  "group": "phrase",
+  "example": "needs a dependent's Social Security number",
+  "example_ko": "부양가족의 사회보장번호가 필요하다",
+  "tip": "형용사 '의존하는'으로 읽으면 문장이 안 풀린다. 세금 문서에서는 명사 '부양가족'이다"
+ },
+ {
+  "word": "redact",
+  "pos": "v.",
+  "ko": "(민감한 내용을) 가리다, 지우다",
+  "group": "phrase",
+  "example": "the field has been physically redacted with a black marker",
+  "example_ko": "그 칸이 검은 마커로 실제로 가려져 있다",
+  "tip": "가려진 정보는 문서 안에 없는 것과 같다. 재시도로는 찾을 수 없다는 신호다"
+ },
+ {
+  "word": "physically",
+  "pos": "adv.",
+  "ko": "물리적으로, 실제 종이 위에서",
+  "group": "phrase",
+  "example": "physically redacted with a black marker",
+  "example_ko": "검은 마커로 실제로 가려진",
+  "tip": "프롬프트나 코드 문제가 아니라 원본 자체가 그렇다는 강조다"
+ },
+ {
+  "word": "supplied",
+  "pos": "adj.",
+  "ko": "제공된, 넘겨받은",
+  "group": "phrase",
+  "example": "the scanned form supplied to the pipeline",
+  "example_ko": "파이프라인에 넘겨진 스캔 서류",
+  "tip": "provided 와 같은 뜻. 모델이 볼 수 있는 것은 제공된 자료뿐이다"
+ },
+ {
+  "word": "illustrate",
+  "pos": "v.",
+  "ko": "(예로) 보여 주다, 설명해 주다",
+  "group": "phrase",
+  "example": "What does this situation illustrate?",
+  "example_ko": "이 상황은 무엇을 보여 주는가?",
+  "tip": "'그림 그리다'가 아니다. 상황이 어떤 원칙의 예인지 고르라는 질문이다"
  }
 ]
