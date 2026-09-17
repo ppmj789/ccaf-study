@@ -2678,5 +2678,59 @@
   "example": "to reason before acting",
   "example_ko": "행동하기 전에 먼저 생각하려고",
   "tip": "명사 '이유'와 헷갈리지 말 것. 동사면 thinking 기능을 가리키는 경우가 많다"
+ },
+ {
+  "word": "break down",
+  "pos": "phr. v.",
+  "ko": "(숫자를) 항목별로 나눠 보다",
+  "group": "phrase",
+  "example": "Break down the filing-status field's accuracy further by document type",
+  "example_ko": "filing status 칸의 정확도를 문서 종류별로 더 나눠 본다",
+  "tip": "'고장 나다'가 아니다. 평균 하나를 쪼개서 숨은 약점을 찾으라는 뜻이라 정답 보기에 자주 나온다"
+ },
+ {
+  "word": "sub-segment",
+  "pos": "n.",
+  "ko": "더 잘게 나눈 구간(하위 그룹)",
+  "group": "phrase",
+  "example": "to confirm no sub-segment falls well below the aggregate",
+  "example_ko": "평균보다 훨씬 낮은 하위 구간이 없는지 확인하려고",
+  "tip": "aggregate(전체 평균)와 짝. 평균이 높아도 작은 구간 하나가 낮을 수 있다"
+ },
+ {
+  "word": "filing status",
+  "pos": "n.",
+  "ko": "(세금 신고) 신고 유형 (미혼, 부부 공동 신고 등)",
+  "group": "phrase",
+  "example": "reduce human review specifically for the 'filing status' field",
+  "example_ko": "'filing status' 칸만 따로 사람 검토를 줄인다",
+  "tip": "미국 세금 신고서의 칸 이름. 뜻보다 '특정 칸 하나'를 가리킨다는 점이 중요하다"
+ },
+ {
+  "word": "amended return",
+  "pos": "n.",
+  "ko": "수정 신고서 (이미 낸 신고를 고쳐 다시 낸 것)",
+  "group": "phrase",
+  "example": "such as amended returns or joint filings with differing last names",
+  "example_ko": "수정 신고서나 성이 서로 다른 부부 공동 신고 같은",
+  "tip": "amend = 고치다. 흔하지 않은 edge case 의 예로 나온다"
+ },
+ {
+  "word": "joint filing",
+  "pos": "n.",
+  "ko": "(부부) 공동 신고",
+  "group": "phrase",
+  "example": "joint filings with differing last names",
+  "example_ko": "성이 서로 다른 부부의 공동 신고",
+  "tip": "joint = 함께. 두 사람 정보가 섞여 추출이 헷갈리기 쉬운 경우다"
+ },
+ {
+  "word": "differing",
+  "pos": "adj.",
+  "ko": "서로 다른",
+  "group": "phrase",
+  "example": "joint filings with differing last names",
+  "example_ko": "성이 서로 다른 공동 신고",
+  "tip": "different 와 같은 뜻. 문서 추출 문제에서 값이 서로 안 맞는 상황을 가리킨다"
  }
 ]
