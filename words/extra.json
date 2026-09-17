@@ -2453,5 +2453,59 @@
   "example": "Rules without `paths` frontmatter are loaded at launch.",
   "example_ko": "`paths` 머리말이 없는 rule 은 세션 시작 때 모두 불러온다.",
   "tip": "on demand(필요할 때)와 짝으로 외운다"
+ },
+ {
+  "word": "exercise",
+  "pos": "v.",
+  "ko": "(테스트가 코드를) 실제로 실행해 지나가다",
+  "group": "phrase",
+  "example": "branches that are already exercised indirectly by an existing integration test",
+  "example_ko": "기존 통합 테스트가 이미 간접적으로 지나가는 분기",
+  "tip": "'운동하다'가 아니다. 테스트 문맥에서는 그 코드가 실행된다는 뜻, 즉 커버된다는 말이다"
+ },
+ {
+  "word": "indirectly",
+  "pos": "adv.",
+  "ko": "간접적으로",
+  "group": "phrase",
+  "example": "one covered indirectly",
+  "example_ko": "간접적으로 커버된 경우 하나",
+  "tip": "directly(직접)의 반대. 전용 테스트는 없지만 다른 테스트가 그 코드를 지나간다는 뜻"
+ },
+ {
+  "word": "branch",
+  "pos": "n.",
+  "ko": "분기 (if 같은 갈림길 코드)",
+  "group": "phrase",
+  "example": "flag branches (conditional paths) that lack test coverage",
+  "example_ko": "테스트 커버리지가 없는 분기(조건 경로)를 지적한다",
+  "tip": "git branch(브랜치)와 헷갈리지 말 것. 괄호 안 conditional paths 가 힌트다"
+ },
+ {
+  "word": "erode",
+  "pos": "v.",
+  "ko": "(신뢰를) 조금씩 무너뜨리다",
+  "group": "phrase",
+  "example": "noisy false positives that erode reviewer trust",
+  "example_ko": "리뷰어의 신뢰를 갉아먹는 잦은 오탐",
+  "tip": "'erode trust'가 보이면 오탐 때문에 사람들이 결과를 무시하기 시작했다는 신호다"
+ },
+ {
+  "word": "genuinely",
+  "pos": "adv.",
+  "ko": "진짜로, 실제로",
+  "group": "phrase",
+  "example": "the agent starts missing genuinely untested branches",
+  "example_ko": "에이전트가 진짜로 테스트가 없는 분기를 놓치기 시작한다",
+  "tip": "false positive(가짜 문제)와 대비해 '진짜 문제'를 말할 때 쓴다"
+ },
+ {
+  "word": "take precedence over",
+  "pos": "phr.",
+  "ko": "~보다 우선하다",
+  "group": "phrase",
+  "example": "directory files always take precedence over rules",
+  "example_ko": "폴더 파일이 rule 보다 항상 우선한다",
+  "tip": "보기에 always 와 함께 나오면 대개 없는 규칙을 지어낸 오답이다"
  }
 ]
