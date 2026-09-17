@@ -2267,5 +2267,40 @@
   "group": "guide",
   "example": "set a conflict_detected boolean to true",
   "example_ko": "conflict_detected 값을 true 로 둔다"
+ },
+ {
+  "word": "free-form",
+  "pos": "adj.",
+  "ko": "형식이 정해지지 않은",
+  "group": "guide",
+  "example": "convert free-form date strings into ISO 8601 dates",
+  "example_ko": "형식이 제각각인 날짜 문자열을 ISO 8601 날짜로 바꾼다"
+ },
+ {
+  "word": "inconsistently",
+  "pos": "adv.",
+  "ko": "들쭉날쭉하게, 매번 다르게",
+  "group": "guide",
+  "example": "Early attempts still inconsistently interpret ambiguous formats.",
+  "example_ko": "초기 시도는 여전히 모호한 형식을 매번 다르게 해석한다.",
+  "tip": "'가끔 맞고 가끔 틀린다'는 신호. 규칙이 모델에게 확정되지 않았다는 뜻"
+ },
+ {
+  "word": "resolve",
+  "pos": "v.",
+  "ko": "(모호함을) 하나로 확정하다",
+  "group": "guide",
+  "example": "so the ambiguous format resolves to a concrete rule",
+  "example_ko": "모호한 형식이 구체적인 규칙 하나로 확정되도록",
+  "tip": "'해결하다'뿐 아니라 '여러 갈래를 하나로 정한다'는 뜻으로 자주 쓰인다"
+ },
+ {
+  "word": "paired with",
+  "pos": "phr.",
+  "ko": "~과 짝지어진",
+  "group": "phrase",
+  "example": "each paired with the exact output the architect expects",
+  "example_ko": "각각을 architect 가 기대하는 정확한 출력과 짝지어서",
+  "tip": "few-shot 예시는 입력과 출력을 '짝'으로 주는 것이 핵심이다"
  }
 ]
