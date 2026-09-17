@@ -2561,5 +2561,41 @@
   "example": "Temporarily disable the category while its new criteria are validated",
   "example_ko": "새 기준을 검증하는 동안 그 카테고리를 잠시 끈다",
   "tip": "'영구히 끄기'와 다르다. 고치는 동안만 멈춘다는 뜻이라 정답 보기에 자주 붙는다"
+ },
+ {
+  "word": "rely on",
+  "pos": "phr.",
+  "ko": "~에 기대다, ~만 믿다",
+  "group": "phrase",
+  "example": "can rely on prompt instructions alone",
+  "example_ko": "프롬프트 지시만 믿어도 되는지",
+  "tip": "'alone'과 같이 나오면 '그것만으로 충분한가'를 묻는 문제다. 돈·보안이 걸리면 대개 부족하다"
+ },
+ {
+  "word": "hard to reverse",
+  "pos": "phr.",
+  "ko": "되돌리기 어려운",
+  "group": "phrase",
+  "example": "Refunds are financial and hard to reverse",
+  "example_ko": "환불은 돈이 걸려 있고 되돌리기 어렵다",
+  "tip": "irreversible 과 같은 뜻. 보이면 코드로 막는(hook, gate) 쪽이 정답이라는 신호다"
+ },
+ {
+  "word": "argue",
+  "pos": "v.",
+  "ko": "(~라고) 주장하다",
+  "group": "phrase",
+  "example": "A colleague argues the system prompt already tells Claude to verify first",
+  "example_ko": "동료는 system prompt 가 이미 먼저 확인하라고 말한다고 주장한다",
+  "tip": "'싸우다'가 아니다. 뒤에 나오는 주장이 맞는지 틀린지 판단하라는 문제에 자주 나온다"
+ },
+ {
+  "word": "compliance gap",
+  "pos": "n.",
+  "ko": "규정 준수의 빈틈 (규칙이 지켜지지 않은 구멍)",
+  "group": "phrase",
+  "example": "a single skipped verification becomes an unrecoverable compliance gap",
+  "example_ko": "확인을 한 번만 건너뛰어도 되돌릴 수 없는 규정 위반이 된다",
+  "tip": "gap = 빈틈. 한 번의 실수도 허용되지 않는 상황이라는 뜻이다"
  }
 ]
