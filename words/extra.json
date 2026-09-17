@@ -2417,5 +2417,41 @@
   "example": "rather than retrying forever or giving up immediately",
   "example_ko": "영원히 재시도하거나 곧바로 포기하는 대신",
   "tip": "문제에 'A 도 B 도 아닌' 구조가 나오면 그 사이가 정답이다"
+ },
+ {
+  "word": "symlink",
+  "pos": "n./v.",
+  "ko": "바로가기 링크(심볼릭 링크)",
+  "group": "guide",
+  "example": "the repository is symlinked to /workspace/service",
+  "example_ko": "저장소가 /workspace/service 로 링크돼 있다",
+  "tip": "실제 파일은 한 곳에 있고, 다른 경로에서 가리키기만 하는 것. 바로가기와 같다"
+ },
+ {
+  "word": "frontmatter",
+  "pos": "n.",
+  "ko": "머리말 (파일 맨 위 YAML 설정)",
+  "group": "guide",
+  "example": "Rules can be scoped using YAML frontmatter with the `paths` field.",
+  "example_ko": "`paths` 필드를 쓴 YAML 머리말로 rule 의 적용 범위를 정할 수 있다.",
+  "tip": "body(본문)와 짝. `---` 로 감싼 맨 위 부분"
+ },
+ {
+  "word": "in addition to",
+  "pos": "prep. phr.",
+  "ko": "~에 더해서, ~뿐 아니라",
+  "group": "phrase",
+  "example": "in addition to matching direct paths",
+  "example_ko": "직접 경로를 매칭하는 것에 더해서",
+  "tip": "'대신에(instead of)'가 아니다. 둘 다 된다는 뜻이라 정답 보기에 자주 쓰인다"
+ },
+ {
+  "word": "at launch",
+  "pos": "phr.",
+  "ko": "세션을 시작할 때",
+  "group": "phrase",
+  "example": "Rules without `paths` frontmatter are loaded at launch.",
+  "example_ko": "`paths` 머리말이 없는 rule 은 세션 시작 때 모두 불러온다.",
+  "tip": "on demand(필요할 때)와 짝으로 외운다"
  }
 ]
