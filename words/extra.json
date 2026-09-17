@@ -2642,5 +2642,41 @@
   "example": "Not executed: the preceding call failed.",
   "example_ko": "실행 안 함: 앞선 호출이 실패했다.",
   "tip": "previous 와 비슷하다. 순서 문제에서 '바로 앞'을 뜻한다"
+ },
+ {
+  "word": "remedy",
+  "pos": "n.",
+  "ko": "해결책, 고치는 방법",
+  "group": "phrase",
+  "example": "What is the correct explanation and recommended remedy?",
+  "example_ko": "올바른 설명과 권장 해결책은 무엇인가?",
+  "tip": "'원인(explanation) + 해결책(remedy)'을 함께 묻는 문제는 둘 다 맞는 보기를 골라야 한다"
+ },
+ {
+  "word": "manual",
+  "pos": "adj.",
+  "ko": "수동의 (사람이 직접 값을 정하는)",
+  "group": "phrase",
+  "example": "uses manual extended thinking (`thinking: {type: \"enabled\"}`)",
+  "example_ko": "수동 extended thinking(`thinking: {type: \"enabled\"}`)을 쓴다",
+  "tip": "adaptive(모델이 알아서 정함)의 반대. thinking 에서는 budget_tokens 를 직접 정하는 방식"
+ },
+ {
+  "word": "answer directly",
+  "pos": "phr.",
+  "ko": "(도구 없이) 바로 답하다",
+  "group": "phrase",
+  "example": "force it to always call a tool rather than answer directly",
+  "example_ko": "바로 답하지 말고 항상 도구를 부르게 강제한다",
+  "tip": "tool_choice 문제의 신호. auto 는 바로 답할 수도 있고, any/tool 은 도구 호출을 강제한다"
+ },
+ {
+  "word": "reason",
+  "pos": "v.",
+  "ko": "추론하다, 따져 생각하다",
+  "group": "phrase",
+  "example": "to reason before acting",
+  "example_ko": "행동하기 전에 먼저 생각하려고",
+  "tip": "명사 '이유'와 헷갈리지 말 것. 동사면 thinking 기능을 가리키는 경우가 많다"
  }
 ]
