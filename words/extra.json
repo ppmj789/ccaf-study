@@ -2912,5 +2912,68 @@
   "example": "It lets Claude see the failure in context",
   "example_ko": "Claude 가 대화 흐름 속에서 실패를 보게 해 준다",
   "tip": "결과를 대화 기록(context)에 붙여야 Claude 가 본다는 뜻과 이어진다"
+ },
+ {
+  "word": "touch",
+  "pos": "v.",
+  "ko": "(코드·파일을) 건드리다, 수정하다",
+  "group": "phrase",
+  "example": "A refactor touches 60 files.",
+  "example_ko": "리팩터링이 파일 60개를 수정한다.",
+  "tip": "'만지다'가 아니라 '변경 범위에 들어간다'는 뜻. 파일 수가 많다는 신호다"
+ },
+ {
+  "word": "diff",
+  "pos": "n.",
+  "ko": "변경분 (바뀐 줄만 모은 것)",
+  "group": "phrase",
+  "example": "A single reviewer instance given the entire diff at once",
+  "example_ko": "변경분 전체를 한꺼번에 받은 리뷰어 인스턴스 하나",
+  "tip": "difference 의 줄임말. PR 리뷰 문제에서 '검토할 대상'을 가리킨다"
+ },
+ {
+  "word": "findings",
+  "pos": "n.",
+  "ko": "(리뷰·조사의) 지적 사항, 발견 결과",
+  "group": "phrase",
+  "example": "produces contradictory findings between files",
+  "example_ko": "파일끼리 서로 모순되는 지적을 낸다",
+  "tip": "보통 복수형으로 쓴다. 리뷰 문제에서는 '리뷰 코멘트 목록'이라고 읽으면 된다"
+ },
+ {
+  "word": "pass",
+  "pos": "n.",
+  "ko": "(처음부터 끝까지) 한 번 훑기, 한 차례 검토",
+  "group": "phrase",
+  "example": "per-file passes for local issues, plus an integration pass",
+  "example_ko": "로컬 문제를 보는 파일별 검토와, 통합 검토 한 번",
+  "tip": "'통과'가 아니다. integration pass = 파일 사이 연결만 따로 보는 검토 한 차례"
+ },
+ {
+  "word": "per-file",
+  "pos": "adj.",
+  "ko": "파일마다 따로",
+  "group": "phrase",
+  "example": "Split the review into per-file passes",
+  "example_ko": "리뷰를 파일별 검토로 나눈다",
+  "tip": "per = ~마다. 한 번에 보는 파일을 줄여 주의가 흩어지지 않게 한다"
+ },
+ {
+  "word": "cross-file",
+  "pos": "adj.",
+  "ko": "여러 파일에 걸친, 파일 사이의",
+  "group": "phrase",
+  "example": "an integration pass for cross-file consistency",
+  "example_ko": "파일 사이가 서로 맞는지 보는 통합 검토",
+  "tip": "파일별 검토로는 못 보는 부분(함수 이름 변경이 다른 파일에 반영됐는지 등)을 가리킨다"
+ },
+ {
+  "word": "consistency",
+  "pos": "n.",
+  "ko": "일관성, 서로 맞음",
+  "group": "phrase",
+  "example": "an integration pass for cross-file consistency",
+  "example_ko": "파일 사이 일관성을 보는 통합 검토",
+  "tip": "inconsistently(들쭉날쭉하게)의 반대말 짝으로 외운다"
  }
 ]
