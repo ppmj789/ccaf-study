@@ -3614,5 +3614,23 @@
   "example": "data integrity checks",
   "example_ko": "데이터 무결성 검사",
   "tip": "'정직함'도 되지만 데이터 문맥에서는 '틀리거나 빠진 것 없이 온전함'"
+ },
+ {
+  "word": "compound command",
+  "pos": "n.",
+  "ko": "복합 명령 (&&, ;, | 로 이은 여러 명령)",
+  "group": "guide",
+  "example": "a rule like Bash(safe-cmd *) won't give it permission to run the command safe-cmd && other-cmd",
+  "example_ko": "Bash(safe-cmd *) 규칙은 safe-cmd && other-cmd 를 허용하지 않는다",
+  "tip": "Claude Code 는 &&, ||, ;, |, & 로 명령을 나눠서, 규칙이 조각마다 따로 맞아야 허용한다"
+ },
+ {
+  "word": "subcommand",
+  "pos": "n.",
+  "ko": "(복합 명령을 나눈) 조각 명령",
+  "group": "guide",
+  "example": "A rule must match each subcommand independently.",
+  "example_ko": "규칙은 조각 명령 하나하나에 따로 맞아야 한다.",
+  "tip": "npm run build && npm publish 는 조각 두 개. npm publish 규칙만 있으면 npm run build 는 승인을 묻는다"
  }
 ]
