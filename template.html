@@ -1,4 +1,5 @@
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>미지의 CCAF 카드</title>
 <meta name="description" content="CCAF 시나리오 공부 자료, 실제 시험 화면 같은 연습 문제, 시험 영어 단어장">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,7 +44,8 @@ code { font: .9em ui-monospace, Consolas, "Courier New", monospace; background: 
 .subbar { background: var(--panel); border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px; padding: 7px 16px; font-size: 13.5px; }
 .subbar .where { margin-right: auto; color: var(--muted); }
 .subbar .where b { color: var(--ink); }
-.subbar label { display: inline-flex; align-items: center; gap: 5px; cursor: pointer; }
+.subbar label { display: inline-flex; align-items: center; gap: 5px; cursor: pointer; white-space: nowrap; min-width: 0; max-width: 100%; }
+.subbar label select { min-width: 0; max-width: 100%; }
 
 main { padding-inline: 16px; padding-block: 20px 110px; }
 .page { max-width: 920px; margin: 0 auto; }
@@ -167,7 +169,7 @@ td .ex button { border: 0; background: none; padding: 0; color: var(--sel-line);
 .flash .frow { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 8px; }
 .flash .frow .btn { padding: 10px 20px; font-size: 15px; }
 .flash .fhint { font-size: 12.5px; color: var(--muted); }
-@media (max-width: 640px) { .flash { padding: 22px 12px; min-height: 58vh; align-content: center; } .bottombar .btn { padding: 9px 14px; font-size: 15px; } .flash .frow { width: 100%; } .flash .frow .btn { flex: 1 1 0; padding: 12px 10px; font-size: 15.5px; } }
+@media (max-width: 640px) { .bottombar.stack > :first-child, .bottombar.stack > :last-child { flex: 1 1 0; } .bottombar.stack .mid { order: 3; flex: 1 1 100%; } .bottombar.stack .mid .btn { width: 100%; } .flash { padding: 22px 12px; min-height: 58vh; align-content: center; } .bottombar .btn { padding: 9px 14px; font-size: 15px; } .flash .frow { width: 100%; } .flash .frow .btn { flex: 1 1 0; padding: 12px 10px; font-size: 15.5px; } }
 
 .pop { position: fixed; left: 50%; bottom: 70px; transform: translateX(-50%); width: min(420px, calc(100% - 32px)); background: #FFFFFF; border: 1px solid var(--ink); box-shadow: 0 6px 20px rgba(0,0,0,.18); padding: 12px 14px; display: grid; gap: 6px; z-index: 20; font-size: 14.5px; }
 .pop .pw { font-size: 18px; font-weight: 700; }
@@ -1031,6 +1033,7 @@ function render() {
   if (["q", "review", "result"].includes(ui.screen) && !s) ui.screen = "home";
   $("#subbar").hidden = ui.screen === "home";
   $("#bottombar").hidden = ui.screen === "home";
+  $("#bottombar").classList.toggle("stack", ui.screen === "study");
   $("#home-btn").hidden = ui.screen === "home";
   $("#meta").textContent = s && ["q", "review", "result"].includes(ui.screen) ? ({ exam: "모의고사", practice: "연습 모드", single: "문항 보기" }[s.mode]) : "";
   $("#pop").hidden = true;
