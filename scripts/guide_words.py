@@ -41,9 +41,17 @@ class P(HTMLParser):
         if self.mode:
             self.buf += d
 
+# 시험 문제 풀이와 상관없는 시험 운영·안내용 단어는 뺀다(2026-09-18 사용자 요청: "effective July 2026 이런 단어는 지워라")
+# 머리말(날짜·개정 문구), 3장 시험 정보, 4장 비중표, 10~16장 채점·접수·정책·서약·갱신·지원 절 전체, 그리고 가이드 자체를 설명하는 표현
+SKIP_SECS = re.compile(r"^(3|4|1[0-6])\. ")
+SKIP_WORDS = {"sit the exam", "validates that ~", "ideal candidate", "frames a set of questions", "task statement",
+              "measured against ~", "written against ~", "build ~", "in-scope", "out-of-scope"}
+
 p = P(); p.feed(open(sys.argv[1], encoding="utf-8").read())
 seen = {}
 for i, x in enumerate(p.out):
+    if not x["sec"] or SKIP_SECS.match(x["sec"]) or x["word"].lower() in SKIP_WORDS:
+        continue
     key = x["word"].lower()
     if key in seen:
         seen[key]["n"] += 1

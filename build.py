@@ -156,7 +156,7 @@ def guide_part(sec):
         return "6~8장 준비", label
     if n == 9:
         return "9장 샘플 문항", label
-    return "10~18장 시험 안내", label
+    return "17장 부록", label
 
 gwords = []
 gpath = os.path.join(ROOT, "words", "guide.json")

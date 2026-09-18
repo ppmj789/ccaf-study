@@ -771,7 +771,7 @@ function renderStudy() {
 /* ---------- 단어장 ---------- */
 // 탭 두 개: 가이드 단어(DATA.gwords, 가이드 대역본 순서) / 문제 단어(DATA.words, 지문·보기·질문 표현)
 const WGROUP = { card: "문제 속 단어", phrase: "시험 질문 표현", guide: "가이드 핵심어" };
-const GPARTS = ["1~5장 개요", "5장 시나리오", "도메인 1", "도메인 2", "도메인 3", "도메인 4", "도메인 5", "6~8장 준비", "9장 샘플 문항", "10~18장 시험 안내"];
+const GPARTS = ["1~5장 개요", "5장 시나리오", "도메인 1", "도메인 2", "도메인 3", "도메인 4", "도메인 5", "6~8장 준비", "9장 샘플 문항", "17장 부록"];
 const isGuideTab = () => ui.vtab !== "exam";
 function wordPool() {
   if (isGuideTab()) return DATA.gwords.filter(w => !ui.vpart || ui.vpart === "all" || w.part === ui.vpart);

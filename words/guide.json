@@ -1,3929 +1,3530 @@
 [
  {
-  "word": "effective July 2026",
-  "ko": "2026년 7월부터 효력이 생긴다. effective 는 '효과적인'이 아니라 '(그날부터) 적용되는'",
-  "sec": "",
-  "order": 0,
-  "n": 1
- },
- {
-  "word": "subject to change without notice",
-  "ko": "예고 없이 바뀔 수 있음. 공식 문서 상투 표현이라 통째로 외워 두면 좋다",
-  "sec": "",
-  "order": 1,
-  "n": 1
- },
- {
-  "word": "validates that ~",
-  "ko": "~라는 것을 검증한다. 자격증 문서의 핵심 동사",
-  "sec": "1. 이 자격증에 대하여",
-  "order": 2,
-  "n": 1
- },
- {
   "word": "informed decisions",
   "ko": "근거 있는 판단. '정보를 받은'이 아니라 '알 만큼 알고 내리는'",
   "sec": "1. 이 자격증에 대하여",
-  "order": 3,
+  "order": 0,
   "n": 1
  },
  {
   "word": "tradeoff",
   "ko": "무언가를 얻으려면 다른 것을 내주어야 하는 맞바꿈. 이 시험의 중심 주제",
   "sec": "1. 이 자격증에 대하여",
-  "order": 4,
+  "order": 1,
   "n": 1
  },
  {
   "word": "grounded in ~",
   "ko": "~에 뿌리를 둔, ~를 근거로 한",
   "sec": "1. 이 자격증에 대하여",
-  "order": 5,
+  "order": 2,
   "n": 1
  },
  {
   "word": "drawn from ~",
   "ko": "~에서 가져온",
   "sec": "1. 이 자격증에 대하여",
-  "order": 6,
+  "order": 3,
   "n": 2
  },
  {
   "word": "production-grade",
   "ko": "실제 서비스에 내놓을 수준의",
   "sec": "1. 이 자격증에 대하여",
-  "order": 7,
+  "order": 4,
   "n": 1
  },
  {
   "word": "not only A but B",
   "ko": "A뿐 아니라 B도",
   "sec": "1. 이 자격증에 대하여",
-  "order": 8,
-  "n": 1
- },
- {
-  "word": "sit the exam",
-  "ko": "시험을 치르다 (영국식 표현)",
-  "sec": "1. 이 자격증에 대하여",
-  "order": 9,
-  "n": 1
- },
- {
-  "word": "ideal candidate",
-  "ko": "가장 알맞은 응시자상. 자격 요건이 아니라 '이런 사람을 염두에 두고 만들었다'는 설명",
-  "sec": "2. 응시 대상",
-  "order": 10,
+  "order": 5,
   "n": 1
  },
  {
   "word": "hands-on experience",
   "ko": "직접 손으로 해 본 경험",
   "sec": "2. 응시 대상",
-  "order": 11,
+  "order": 6,
   "n": 1
  },
  {
   "word": "delegation",
   "ko": "위임. 일을 아래로 넘겨 맡기는 것",
   "sec": "2. 응시 대상",
-  "order": 12,
+  "order": 7,
   "n": 1
  },
  {
   "word": "lifecycle hooks",
   "ko": "실행 흐름의 정해진 시점에 끼워 넣는 코드. '잠금장치'처럼 쓰인다",
   "sec": "2. 응시 대상",
-  "order": 13,
+  "order": 8,
   "n": 1
  },
  {
   "word": "customize",
   "ko": "내 상황에 맞게 고쳐 쓰다",
   "sec": "2. 응시 대상",
-  "order": 14,
+  "order": 9,
   "n": 1
  },
  {
   "word": "interface",
   "ko": "두 시스템이 맞닿는 접점. 여기서는 tool 의 이름·인자·설명 전체를 뜻한다",
   "sec": "2. 응시 대상",
-  "order": 15,
+  "order": 10,
   "n": 1
  },
  {
   "word": "reliable",
   "ko": "믿을 만한, 매번 같은 결과가 나오는",
   "sec": "2. 응시 대상",
-  "order": 16,
+  "order": 11,
   "n": 1
  },
  {
   "word": "leverage",
   "ko": "지렛대 삼아 활용하다. 시험 지문에 자주 나온다",
   "sec": "2. 응시 대상",
-  "order": 17,
+  "order": 12,
   "n": 1
  },
  {
   "word": "multi-turn",
   "ko": "여러 차례 주고받는",
   "sec": "2. 응시 대상",
-  "order": 18,
+  "order": 13,
   "n": 1
  },
  {
   "word": "handoff",
   "ko": "인수인계. 한쪽이 하던 일을 다른 쪽에 넘기는 것",
   "sec": "2. 응시 대상",
-  "order": 19,
+  "order": 14,
   "n": 2
  },
  {
   "word": "sound",
   "ko": "(판단이) 타당한, 흠 없는. '소리'가 아니다",
   "sec": "2. 응시 대상",
-  "order": 20,
+  "order": 15,
   "n": 1
  },
  {
   "word": "human-in-the-loop",
   "ko": "중간에 사람이 끼어 확인하는 방식",
   "sec": "2. 응시 대상",
-  "order": 21,
+  "order": 16,
   "n": 1
  },
  {
   "word": "capabilities and limitations",
   "ko": "할 수 있는 것과 못 하는 것. 이 시험이 계속 묻는 짝",
   "sec": "2. 응시 대상",
-  "order": 22,
-  "n": 1
- },
- {
-  "word": "at a glance",
-  "ko": "한눈에",
-  "sec": "3. 시험 정보 한눈에 보기",
-  "order": 23,
-  "n": 1
- },
- {
-  "word": "item",
-  "ko": "문항. 시험 업계에서는 question 대신 item 을 쓴다",
-  "sec": "3. 시험 정보 한눈에 보기",
-  "order": 24,
-  "n": 1
- },
- {
-  "word": "multiple-response",
-  "ko": "여러 개를 고르는 문항. multiple-choice(하나 고르기)와 구분된다",
-  "sec": "3. 시험 정보 한눈에 보기",
-  "order": 25,
-  "n": 1
- },
- {
-  "word": "a bank of 6",
-  "ko": "6개짜리 문제 풀(pool). bank 는 '저장소'",
-  "sec": "3. 시험 정보 한눈에 보기",
-  "order": 26,
-  "n": 1
- },
- {
-  "word": "proctored",
-  "ko": "감독관이 지켜보는",
-  "sec": "3. 시험 정보 한눈에 보기",
-  "order": 27,
-  "n": 1
- },
- {
-  "word": "scaled score",
-  "ko": "원점수를 정해진 척도로 환산한 점수",
-  "sec": "3. 시험 정보 한눈에 보기",
-  "order": 28,
-  "n": 1
- },
- {
-  "word": "percent-correct by domain",
-  "ko": "영역별 정답률",
-  "sec": "3. 시험 정보 한눈에 보기",
-  "order": 29,
-  "n": 1
- },
- {
-  "word": "blueprint",
-  "ko": "설계도. 시험에서는 '출제 범위와 비중표'를 뜻한다",
-  "sec": "4. 시험 내용 구성 (Blueprint)",
-  "order": 30,
-  "n": 1
- },
- {
-  "word": "weight",
-  "ko": "비중. 몇 퍼센트가 그 영역에서 나오는가",
-  "sec": "4. 시험 내용 구성 (Blueprint)",
-  "order": 31,
-  "n": 1
- },
- {
-  "word": "job task analysis",
-  "ko": "직무 분석. 실무자가 실제로 하는 일을 조사해 출제 범위를 정하는 절차",
-  "sec": "4. 시험 내용 구성 (Blueprint)",
-  "order": 32,
-  "n": 1
- },
- {
-  "word": "scored items",
-  "ko": "채점에 들어가는 문항. 채점 안 되는 시범 문항이 섞일 수 있다는 뜻이 숨어 있다",
-  "sec": "4. 시험 내용 구성 (Blueprint)",
-  "order": 33,
-  "n": 1
- },
- {
-  "word": "frames a set of questions",
-  "ko": "여러 문항의 틀이 된다. frame 은 '테두리를 씌우다'",
-  "sec": "5. 시험 시나리오",
-  "order": 34,
+  "order": 17,
   "n": 1
  },
  {
   "word": "at random",
   "ko": "무작위로",
   "sec": "5. 시험 시나리오",
-  "order": 35,
+  "order": 18,
   "n": 1
  },
  {
   "word": "high-ambiguity",
   "ko": "애매함이 큰. 답이 딱 떨어지지 않는",
   "sec": "시나리오 1: 고객 지원 해결 에이전트",
-  "order": 36,
+  "order": 19,
   "n": 1
  },
  {
   "word": "billing dispute",
   "ko": "결제·청구 관련 이의 제기",
   "sec": "시나리오 1: 고객 지원 해결 에이전트",
-  "order": 37,
+  "order": 20,
   "n": 1
  },
  {
   "word": "first-contact resolution",
   "ko": "첫 상담에서 해결하는 비율. 고객센터 핵심 지표",
   "sec": "시나리오 1: 고객 지원 해결 에이전트",
-  "order": 38,
+  "order": 21,
   "n": 1
  },
  {
   "word": "escalate",
   "ko": "사람이나 상급자에게 넘기다",
   "sec": "시나리오 1: 고객 지원 해결 에이전트",
-  "order": 39,
+  "order": 22,
   "n": 1
  },
  {
   "word": "accelerate",
   "ko": "속도를 높이다",
   "sec": "시나리오 2: Claude Code 로 코드 생성하기",
-  "order": 40,
+  "order": 23,
   "n": 1
  },
  {
   "word": "plan mode vs direct execution",
   "ko": "먼저 계획을 세워 확인받는 방식과 바로 실행하는 방식. 이 갈림이 자주 출제된다",
   "sec": "시나리오 2: Claude Code 로 코드 생성하기",
-  "order": 41,
+  "order": 24,
   "n": 1
  },
  {
   "word": "coordinator",
   "ko": "여러 에이전트를 조율하는 역할",
   "sec": "시나리오 3: 멀티에이전트 리서치 시스템",
-  "order": 42,
+  "order": 25,
   "n": 1
  },
  {
   "word": "synthesize findings",
   "ko": "알아낸 것들을 하나로 엮다",
   "sec": "시나리오 3: 멀티에이전트 리서치 시스템",
-  "order": 43,
+  "order": 26,
   "n": 1
  },
  {
   "word": "comprehensive",
   "ko": "빠짐없이 두루 담은",
   "sec": "시나리오 3: 멀티에이전트 리서치 시스템",
-  "order": 44,
+  "order": 27,
   "n": 1
  },
  {
   "word": "cited",
   "ko": "출처가 붙은",
   "sec": "시나리오 3: 멀티에이전트 리서치 시스템",
-  "order": 45,
+  "order": 28,
   "n": 1
  },
  {
   "word": "unfamiliar",
   "ko": "낯선",
   "sec": "시나리오 4: Claude 로 개발자 생산성 높이기",
-  "order": 46,
+  "order": 29,
   "n": 1
  },
  {
   "word": "legacy systems",
   "ko": "오래돼서 손대기 어려운 기존 시스템",
   "sec": "시나리오 4: Claude 로 개발자 생산성 높이기",
-  "order": 47,
+  "order": 30,
   "n": 1
  },
  {
   "word": "boilerplate code",
   "ko": "매번 똑같이 들어가는 뼈대 코드",
   "sec": "시나리오 4: Claude 로 개발자 생산성 높이기",
-  "order": 48,
+  "order": 31,
   "n": 1
  },
  {
   "word": "repetitive",
   "ko": "반복되는",
   "sec": "시나리오 4: Claude 로 개발자 생산성 높이기",
-  "order": 49,
+  "order": 32,
   "n": 1
  },
  {
   "word": "actionable feedback",
   "ko": "읽고 바로 손을 움직일 수 있는 피드백",
   "sec": "시나리오 5: CI 파이프라인 속 Claude Code",
-  "order": 50,
+  "order": 33,
   "n": 1
  },
  {
   "word": "false positive",
   "ko": "문제가 없는데 문제라고 잡아내는 것. 헛경보",
   "sec": "시나리오 5: CI 파이프라인 속 Claude Code",
-  "order": 51,
+  "order": 34,
   "n": 2
  },
  {
   "word": "minimize",
   "ko": "최소로 줄이다",
   "sec": "시나리오 5: CI 파이프라인 속 Claude Code",
-  "order": 52,
+  "order": 35,
   "n": 1
  },
  {
   "word": "unstructured documents",
   "ko": "형식이 정해지지 않은 문서. 계약서, 이메일, 스캔본 같은 것",
   "sec": "시나리오 6: 구조화 데이터 추출",
-  "order": 53,
+  "order": 36,
   "n": 1
  },
  {
   "word": "validate",
   "ko": "규칙에 맞는지 검사하다",
   "sec": "시나리오 6: 구조화 데이터 추출",
-  "order": 54,
+  "order": 37,
   "n": 1
  },
  {
   "word": "handle ~ gracefully",
   "ko": "~을 무리 없이, 망가지지 않고 처리하다",
   "sec": "시나리오 6: 구조화 데이터 추출",
-  "order": 55,
+  "order": 38,
   "n": 1
  },
  {
   "word": "downstream",
   "ko": "이 단계 뒤에 이어지는 (시스템·공정)",
   "sec": "시나리오 6: 구조화 데이터 추출",
-  "order": 56,
+  "order": 39,
   "n": 3
- },
- {
-  "word": "task statement",
-  "ko": "그 도메인에서 할 줄 알아야 하는 일을 한 문장으로 적은 것. 출제 단위다",
-  "sec": "6. 도메인별 상세 목표",
-  "order": 57,
-  "n": 1
- },
- {
-  "word": "measured against ~",
-  "ko": "~를 기준으로 측정되는",
-  "sec": "6. 도메인별 상세 목표",
-  "order": 58,
-  "n": 1
- },
- {
-  "word": "written against ~",
-  "ko": "~를 근거로 작성된",
-  "sec": "6. 도메인별 상세 목표",
-  "order": 59,
-  "n": 1
  },
  {
   "word": "lifecycle",
   "ko": "시작부터 끝까지의 한살이. 여기서는 loop 한 바퀴가 도는 과정",
   "sec": "Task Statement 1.1: 자율 작업 수행을 위한 agentic loop 설계·구현",
-  "order": 60,
+  "order": 40,
   "n": 1
  },
  {
   "word": "stop_reason",
   "ko": "모델이 왜 말을 멈췄는지 알려 주는 값. tool_use 면 tool 을 부르려고 멈춘 것, end_turn 이면 할 말을 끝낸 것",
   "sec": "Task Statement 1.1: 자율 작업 수행을 위한 agentic loop 설계·구현",
-  "order": 61,
+  "order": 41,
   "n": 1
  },
  {
   "word": "iteration",
   "ko": "반복 한 번, 한 바퀴",
   "sec": "Task Statement 1.1: 자율 작업 수행을 위한 agentic loop 설계·구현",
-  "order": 62,
+  "order": 42,
   "n": 1
  },
  {
   "word": "append",
   "ko": "뒤에 덧붙이다",
   "sec": "Task Statement 1.1: 자율 작업 수행을 위한 agentic loop 설계·구현",
-  "order": 63,
+  "order": 43,
   "n": 2
  },
  {
   "word": "reason about ~",
   "ko": "~에 대해 따져 생각하다. '이유'가 아니라 동사 '추론하다'",
   "sec": "Task Statement 1.1: 자율 작업 수행을 위한 agentic loop 설계·구현",
-  "order": 64,
+  "order": 44,
   "n": 1
  },
  {
   "word": "distinction between A and B",
   "ko": "A와 B의 구별. 시험이 계속 묻는 틀",
   "sec": "Task Statement 1.1: 자율 작업 수행을 위한 agentic loop 설계·구현",
-  "order": 65,
+  "order": 45,
   "n": 1
  },
  {
   "word": "model-driven",
   "ko": "모델이 주도하는",
   "sec": "Task Statement 1.1: 자율 작업 수행을 위한 agentic loop 설계·구현",
-  "order": 66,
+  "order": 46,
   "n": 1
  },
  {
   "word": "pre-configured",
   "ko": "미리 정해 둔",
   "sec": "Task Statement 1.1: 자율 작업 수행을 위한 agentic loop 설계·구현",
-  "order": 67,
+  "order": 47,
   "n": 1
  },
  {
   "word": "control flow",
   "ko": "프로그램이 어느 길로 가는지를 정하는 흐름",
   "sec": "Task Statement 1.1: 자율 작업 수행을 위한 agentic loop 설계·구현",
-  "order": 68,
+  "order": 48,
   "n": 1
  },
  {
   "word": "terminate",
   "ko": "끝내다, 멈추다",
   "sec": "Task Statement 1.1: 자율 작업 수행을 위한 agentic loop 설계·구현",
-  "order": 69,
+  "order": 49,
   "n": 2
  },
  {
   "word": "incorporate A into B",
   "ko": "A를 B 안에 넣어 반영하다",
   "sec": "Task Statement 1.1: 자율 작업 수행을 위한 agentic loop 설계·구현",
-  "order": 70,
+  "order": 50,
   "n": 1
  },
  {
   "word": "anti-pattern",
   "ko": "흔히 쓰이지만 결국 문제를 일으키는 잘못된 방식",
   "sec": "Task Statement 1.1: 자율 작업 수행을 위한 agentic loop 설계·구현",
-  "order": 71,
+  "order": 51,
   "n": 1
  },
  {
   "word": "arbitrary",
   "ko": "임의의, 근거 없이 정한",
   "sec": "Task Statement 1.1: 자율 작업 수행을 위한 agentic loop 설계·구현",
-  "order": 72,
+  "order": 52,
   "n": 1
  },
  {
   "word": "cap",
   "ko": "상한",
   "sec": "Task Statement 1.1: 자율 작업 수행을 위한 agentic loop 설계·구현",
-  "order": 73,
+  "order": 53,
   "n": 1
  },
  {
   "word": "indicator",
   "ko": "무엇을 알려 주는 표시",
   "sec": "Task Statement 1.1: 자율 작업 수행을 위한 agentic loop 설계·구현",
-  "order": 74,
+  "order": 54,
   "n": 1
  },
  {
   "word": "hub-and-spoke",
   "ko": "바퀴 축(hub)과 살(spoke) 구조. 가운데를 거치지 않고는 서로 연결되지 않는다",
   "sec": "Task Statement 1.2: coordinator-subagent 패턴으로 멀티에이전트 시스템 오케스트레이션하기",
-  "order": 75,
+  "order": 55,
   "n": 1
  },
  {
   "word": "inter-subagent",
   "ko": "subagent 들 사이의. inter- 는 '~사이의'",
   "sec": "Task Statement 1.2: coordinator-subagent 패턴으로 멀티에이전트 시스템 오케스트레이션하기",
-  "order": 76,
+  "order": 56,
   "n": 1
  },
  {
   "word": "routing",
   "ko": "어디로 보낼지 정해 흘려보내는 것",
   "sec": "Task Statement 1.2: coordinator-subagent 패턴으로 멀티에이전트 시스템 오케스트레이션하기",
-  "order": 77,
+  "order": 57,
   "n": 2
  },
  {
   "word": "isolated",
   "ko": "격리된, 따로 떨어진",
   "sec": "Task Statement 1.2: coordinator-subagent 패턴으로 멀티에이전트 시스템 오케스트레이션하기",
-  "order": 78,
+  "order": 58,
   "n": 2
  },
  {
   "word": "inherit",
   "ko": "물려받다",
   "sec": "Task Statement 1.2: coordinator-subagent 패턴으로 멀티에이전트 시스템 오케스트레이션하기",
-  "order": 79,
+  "order": 59,
   "n": 1
  },
  {
   "word": "decomposition",
   "ko": "분해. 큰 일을 작은 일로 쪼개는 것",
   "sec": "Task Statement 1.2: coordinator-subagent 패턴으로 멀티에이전트 시스템 오케스트레이션하기",
-  "order": 80,
+  "order": 60,
   "n": 1
  },
  {
   "word": "aggregation",
   "ko": "취합. 흩어진 결과를 모으는 것",
   "sec": "Task Statement 1.2: coordinator-subagent 패턴으로 멀티에이전트 시스템 오케스트레이션하기",
-  "order": 81,
+  "order": 61,
   "n": 1
  },
  {
   "word": "invoke",
   "ko": "불러 실행하다",
   "sec": "Task Statement 1.2: coordinator-subagent 패턴으로 멀티에이전트 시스템 오케스트레이션하기",
-  "order": 82,
+  "order": 62,
   "n": 1
  },
  {
   "word": "overly",
   "ko": "지나치게",
   "sec": "Task Statement 1.2: coordinator-subagent 패턴으로 멀티에이전트 시스템 오케스트레이션하기",
-  "order": 83,
+  "order": 63,
   "n": 1
  },
  {
   "word": "coverage",
   "ko": "다루는 범위",
   "sec": "Task Statement 1.2: coordinator-subagent 패턴으로 멀티에이전트 시스템 오케스트레이션하기",
-  "order": 84,
+  "order": 64,
   "n": 2
  },
  {
   "word": "dynamically",
   "ko": "그때그때, 상황에 따라",
   "sec": "Task Statement 1.2: coordinator-subagent 패턴으로 멀티에이전트 시스템 오케스트레이션하기",
-  "order": 85,
+  "order": 65,
   "n": 1
  },
  {
   "word": "rather than ~",
   "ko": "~하는 대신",
   "sec": "Task Statement 1.2: coordinator-subagent 패턴으로 멀티에이전트 시스템 오케스트레이션하기",
-  "order": 86,
+  "order": 66,
   "n": 1
  },
  {
   "word": "partition",
   "ko": "칸을 나누듯 갈라 나누다",
   "sec": "Task Statement 1.2: coordinator-subagent 패턴으로 멀티에이전트 시스템 오케스트레이션하기",
-  "order": 87,
+  "order": 67,
   "n": 1
  },
  {
   "word": "duplication",
   "ko": "중복. 같은 일을 두 번 하는 것",
   "sec": "Task Statement 1.2: coordinator-subagent 패턴으로 멀티에이전트 시스템 오케스트레이션하기",
-  "order": 88,
+  "order": 68,
   "n": 1
  },
  {
   "word": "distinct",
   "ko": "서로 뚜렷이 다른",
   "sec": "Task Statement 1.2: coordinator-subagent 패턴으로 멀티에이전트 시스템 오케스트레이션하기",
-  "order": 89,
+  "order": 69,
   "n": 1
  },
  {
   "word": "iterative refinement",
   "ko": "한 번에 끝내지 않고 돌려 가며 다듬기",
   "sec": "Task Statement 1.2: coordinator-subagent 패턴으로 멀티에이전트 시스템 오케스트레이션하기",
-  "order": 90,
+  "order": 70,
   "n": 1
  },
  {
   "word": "gaps",
   "ko": "빠진 곳, 구멍",
   "sec": "Task Statement 1.2: coordinator-subagent 패턴으로 멀티에이전트 시스템 오케스트레이션하기",
-  "order": 91,
+  "order": 71,
   "n": 1
  },
  {
   "word": "targeted",
   "ko": "콕 집은, 겨냥한",
   "sec": "Task Statement 1.2: coordinator-subagent 패턴으로 멀티에이전트 시스템 오케스트레이션하기",
-  "order": 92,
+  "order": 72,
   "n": 3
  },
  {
   "word": "sufficient",
   "ko": "충분한",
   "sec": "Task Statement 1.2: coordinator-subagent 패턴으로 멀티에이전트 시스템 오케스트레이션하기",
-  "order": 93,
+  "order": 73,
   "n": 1
  },
  {
   "word": "observability",
   "ko": "밖에서 안이 들여다보이는 정도. 무슨 일이 일어났는지 추적할 수 있는가",
   "sec": "Task Statement 1.2: coordinator-subagent 패턴으로 멀티에이전트 시스템 오케스트레이션하기",
-  "order": 94,
+  "order": 74,
   "n": 1
  },
  {
   "word": "consistent",
   "ko": "일관된, 매번 같은",
   "sec": "Task Statement 1.2: coordinator-subagent 패턴으로 멀티에이전트 시스템 오케스트레이션하기",
-  "order": 95,
+  "order": 75,
   "n": 1
  },
  {
   "word": "spawn",
   "ko": "띄우다, 새로 생기게 하다",
   "sec": "Task Statement 1.3: subagent 호출·context 전달·생성 설정하기",
-  "order": 96,
+  "order": 76,
   "n": 1
  },
  {
   "word": "mechanism",
   "ko": "일이 이루어지는 수단·장치",
   "sec": "Task Statement 1.3: subagent 호출·context 전달·생성 설정하기",
-  "order": 97,
+  "order": 77,
   "n": 1
  },
  {
   "word": "explicitly",
   "ko": "명시적으로, 분명히 적어서",
   "sec": "Task Statement 1.3: subagent 호출·context 전달·생성 설정하기",
-  "order": 98,
+  "order": 78,
   "n": 1
  },
  {
   "word": "invocations",
   "ko": "호출 (여러 번의)",
   "sec": "Task Statement 1.3: subagent 호출·context 전달·생성 설정하기",
-  "order": 99,
+  "order": 79,
   "n": 1
  },
  {
   "word": "restriction",
   "ko": "제한. 무엇을 못 쓰게 막는 것",
   "sec": "Task Statement 1.3: subagent 호출·context 전달·생성 설정하기",
-  "order": 100,
+  "order": 80,
   "n": 1
  },
  {
   "word": "divergent",
   "ko": "갈라져 서로 달라지는",
   "sec": "Task Statement 1.3: subagent 호출·context 전달·생성 설정하기",
-  "order": 101,
+  "order": 81,
   "n": 1
  },
  {
   "word": "baseline",
   "ko": "기준선. 여기서 출발한다는 공통 바탕",
   "sec": "Task Statement 1.3: subagent 호출·context 전달·생성 설정하기",
-  "order": 102,
+  "order": 82,
   "n": 1
  },
  {
   "word": "findings",
   "ko": "조사해서 알아낸 것",
   "sec": "Task Statement 1.3: subagent 호출·context 전달·생성 설정하기",
-  "order": 103,
+  "order": 83,
   "n": 1
  },
  {
   "word": "prior",
   "ko": "앞선, 이전의",
   "sec": "Task Statement 1.3: subagent 호출·context 전달·생성 설정하기",
-  "order": 104,
+  "order": 84,
   "n": 1
  },
  {
   "word": "metadata",
   "ko": "내용 자체가 아니라 그 내용에 딸린 정보",
   "sec": "Task Statement 1.3: subagent 호출·context 전달·생성 설정하기",
-  "order": 105,
+  "order": 85,
   "n": 1
  },
  {
   "word": "attribution",
   "ko": "출처 표기. 누가·어디서 나온 말인지 밝히는 것",
   "sec": "Task Statement 1.3: subagent 호출·context 전달·생성 설정하기",
-  "order": 106,
+  "order": 86,
   "n": 2
  },
  {
   "word": "preserve",
   "ko": "그대로 지켜 두다",
   "sec": "Task Statement 1.3: subagent 호출·context 전달·생성 설정하기",
-  "order": 107,
+  "order": 87,
   "n": 2
  },
  {
   "word": "emit",
   "ko": "내보내다",
   "sec": "Task Statement 1.3: subagent 호출·context 전달·생성 설정하기",
-  "order": 108,
+  "order": 88,
   "n": 1
  },
  {
   "word": "in a single response",
   "ko": "응답 하나 안에서. 병렬 실행의 조건이다",
   "sec": "Task Statement 1.3: subagent 호출·context 전달·생성 설정하기",
-  "order": 109,
+  "order": 89,
   "n": 1
  },
  {
   "word": "criteria",
   "ko": "기준 (criterion 의 복수형)",
   "sec": "Task Statement 1.3: subagent 호출·context 전달·생성 설정하기",
-  "order": 110,
+  "order": 90,
   "n": 2
  },
  {
   "word": "procedural",
   "ko": "절차를 하나하나 정해 주는",
   "sec": "Task Statement 1.3: subagent 호출·context 전달·생성 설정하기",
-  "order": 111,
+  "order": 91,
   "n": 1
  },
  {
   "word": "adaptability",
   "ko": "상황에 맞게 바꿔 갈 수 있는 능력",
   "sec": "Task Statement 1.3: subagent 호출·context 전달·생성 설정하기",
-  "order": 112,
+  "order": 92,
   "n": 1
  },
  {
   "word": "programmatic enforcement",
   "ko": "코드가 확실히 막는 강제",
   "sec": "Task Statement 1.4: 강제와 인수인계 패턴을 갖춘 다단계 workflow 구현하기",
-  "order": 113,
+  "order": 93,
   "n": 1
  },
  {
   "word": "prerequisite gate",
   "ko": "앞 단계가 끝나야 열리는 문",
   "sec": "Task Statement 1.4: 강제와 인수인계 패턴을 갖춘 다단계 workflow 구현하기",
-  "order": 114,
+  "order": 94,
   "n": 1
  },
  {
   "word": "guidance",
   "ko": "안내. 강제가 아니다",
   "sec": "Task Statement 1.4: 강제와 인수인계 패턴을 갖춘 다단계 workflow 구현하기",
-  "order": 115,
+  "order": 95,
   "n": 1
  },
  {
   "word": "deterministic",
   "ko": "확정적인. 매번 반드시 그렇게 되는",
   "sec": "Task Statement 1.4: 강제와 인수인계 패턴을 갖춘 다단계 workflow 구현하기",
-  "order": 116,
+  "order": 96,
   "n": 1
  },
  {
   "word": "compliance",
   "ko": "규칙을 지킴",
   "sec": "Task Statement 1.4: 강제와 인수인계 패턴을 갖춘 다단계 workflow 구현하기",
-  "order": 117,
+  "order": 97,
   "n": 1
  },
  {
   "word": "non-zero failure rate",
   "ko": "실패율이 0은 아니다. 즉 가끔 어긴다",
   "sec": "Task Statement 1.4: 강제와 인수인계 패턴을 갖춘 다단계 workflow 구현하기",
-  "order": 118,
+  "order": 98,
   "n": 1
  },
  {
   "word": "mid-process",
   "ko": "일이 진행되는 도중의",
   "sec": "Task Statement 1.4: 강제와 인수인계 패턴을 갖춘 다단계 workflow 구현하기",
-  "order": 119,
+  "order": 99,
   "n": 1
  },
  {
   "word": "root cause",
   "ko": "겉으로 드러난 증상이 아닌 진짜 원인",
   "sec": "Task Statement 1.4: 강제와 인수인계 패턴을 갖춘 다단계 workflow 구현하기",
-  "order": 120,
+  "order": 100,
   "n": 1
  },
  {
   "word": "verified",
   "ko": "확인을 거친",
   "sec": "Task Statement 1.4: 강제와 인수인계 패턴을 갖춘 다단계 workflow 구현하기",
-  "order": 121,
+  "order": 101,
   "n": 1
  },
  {
   "word": "multi-concern",
   "ko": "걱정거리가 여러 개인. 한 요청에 안건이 여럿 섞인",
   "sec": "Task Statement 1.4: 강제와 인수인계 패턴을 갖춘 다단계 workflow 구현하기",
-  "order": 122,
+  "order": 102,
   "n": 2
  },
  {
   "word": "unified",
   "ko": "하나로 묶은",
   "sec": "Task Statement 1.4: 강제와 인수인계 패턴을 갖춘 다단계 workflow 구현하기",
-  "order": 123,
+  "order": 103,
   "n": 2
  },
  {
   "word": "compile",
   "ko": "이것저것 모아 하나로 엮다",
   "sec": "Task Statement 1.4: 강제와 인수인계 패턴을 갖춘 다단계 workflow 구현하기",
-  "order": 124,
+  "order": 104,
   "n": 1
  },
  {
   "word": "transcript",
   "ko": "대화를 그대로 받아 적은 기록",
   "sec": "Task Statement 1.4: 강제와 인수인계 패턴을 갖춘 다단계 workflow 구현하기",
-  "order": 125,
+  "order": 105,
   "n": 1
  },
  {
   "word": "lack access to ~",
   "ko": "~에 접근할 수 없다",
   "sec": "Task Statement 1.4: 강제와 인수인계 패턴을 갖춘 다단계 workflow 구현하기",
-  "order": 126,
+  "order": 106,
   "n": 1
  },
  {
   "word": "intercept",
   "ko": "가는 길목에서 가로채다",
   "sec": "Task Statement 1.5: tool 호출 가로채기와 데이터 정규화를 위해 Agent SDK hook 적용하기",
-  "order": 127,
+  "order": 107,
   "n": 1
  },
  {
   "word": "transformation",
   "ko": "모양을 바꾸는 것",
   "sec": "Task Statement 1.5: tool 호출 가로채기와 데이터 정규화를 위해 Agent SDK hook 적용하기",
-  "order": 128,
+  "order": 108,
   "n": 1
  },
  {
   "word": "outgoing",
   "ko": "밖으로 나가는",
   "sec": "Task Statement 1.5: tool 호출 가로채기와 데이터 정규화를 위해 Agent SDK hook 적용하기",
-  "order": 129,
+  "order": 109,
   "n": 1
  },
  {
   "word": "threshold",
   "ko": "넘으면 안 되는 기준값, 문턱",
   "sec": "Task Statement 1.5: tool 호출 가로채기와 데이터 정규화를 위해 Agent SDK hook 적용하기",
-  "order": 130,
+  "order": 110,
   "n": 2
  },
  {
   "word": "guarantee",
   "ko": "반드시 그렇게 된다는 보장",
   "sec": "Task Statement 1.5: tool 호출 가로채기와 데이터 정규화를 위해 Agent SDK hook 적용하기",
-  "order": 131,
+  "order": 111,
   "n": 2
  },
  {
   "word": "probabilistic",
   "ko": "확률적인. 대체로 지키지만 가끔 어긴다",
   "sec": "Task Statement 1.5: tool 호출 가로채기와 데이터 정규화를 위해 Agent SDK hook 적용하기",
-  "order": 132,
+  "order": 112,
   "n": 1
  },
  {
   "word": "rely on ~",
   "ko": "~에 기대다",
   "sec": "Task Statement 1.5: tool 호출 가로채기와 데이터 정규화를 위해 Agent SDK hook 적용하기",
-  "order": 133,
+  "order": 113,
   "n": 1
  },
  {
   "word": "normalize",
   "ko": "제각각인 것을 한 가지 기준에 맞추다",
   "sec": "Task Statement 1.5: tool 호출 가로채기와 데이터 정규화를 위해 Agent SDK hook 적용하기",
-  "order": 134,
+  "order": 114,
   "n": 1
  },
  {
   "word": "heterogeneous",
   "ko": "서로 종류가 다른, 뒤섞인",
   "sec": "Task Statement 1.5: tool 호출 가로채기와 데이터 정규화를 위해 Agent SDK hook 적용하기",
-  "order": 135,
+  "order": 115,
   "n": 1
  },
  {
   "word": "policy-violating",
   "ko": "정책을 어기는",
   "sec": "Task Statement 1.5: tool 호출 가로채기와 데이터 정규화를 위해 Agent SDK hook 적용하기",
-  "order": 136,
+  "order": 116,
   "n": 1
  },
  {
   "word": "exceed",
   "ko": "넘어서다",
   "sec": "Task Statement 1.5: tool 호출 가로채기와 데이터 정규화를 위해 Agent SDK hook 적용하기",
-  "order": 137,
+  "order": 117,
   "n": 2
  },
  {
   "word": "redirect",
   "ko": "방향을 돌리다",
   "sec": "Task Statement 1.5: tool 호출 가로채기와 데이터 정규화를 위해 Agent SDK hook 적용하기",
-  "order": 138,
+  "order": 118,
   "n": 1
  },
  {
   "word": "choose A over B",
   "ko": "B 대신 A를 고르다",
   "sec": "Task Statement 1.5: tool 호출 가로채기와 데이터 정규화를 위해 Agent SDK hook 적용하기",
-  "order": 139,
+  "order": 119,
   "n": 2
  },
  {
   "word": "sequential",
   "ko": "차례대로 이어지는",
   "sec": "Task Statement 1.6: 복잡한 workflow 를 위한 작업 분해 전략 설계하기",
-  "order": 140,
+  "order": 120,
   "n": 1
  },
  {
   "word": "adaptive",
   "ko": "상황에 맞춰 바뀌는",
   "sec": "Task Statement 1.6: 복잡한 workflow 를 위한 작업 분해 전략 설계하기",
-  "order": 141,
+  "order": 121,
   "n": 1
  },
  {
   "word": "intermediate",
   "ko": "중간의",
   "sec": "Task Statement 1.6: 복잡한 workflow 를 위한 작업 분해 전략 설계하기",
-  "order": 142,
+  "order": 122,
   "n": 1
  },
  {
   "word": "cross-file",
   "ko": "여러 파일에 걸친",
   "sec": "Task Statement 1.6: 복잡한 workflow 를 위한 작업 분해 전략 설계하기",
-  "order": 143,
+  "order": 123,
   "n": 1
  },
  {
   "word": "pass",
   "ko": "한 번 훑는 과정. '통과'가 아니다",
   "sec": "Task Statement 1.6: 복잡한 workflow 를 위한 작업 분해 전략 설계하기",
-  "order": 144,
+  "order": 124,
   "n": 1
  },
  {
   "word": "investigation",
   "ko": "파고들어 알아보는 일",
   "sec": "Task Statement 1.6: 복잡한 workflow 를 위한 작업 분해 전략 설계하기",
-  "order": 145,
+  "order": 125,
   "n": 2
  },
  {
   "word": "appropriate to ~",
   "ko": "~에 알맞은",
   "sec": "Task Statement 1.6: 복잡한 workflow 를 위한 작업 분해 전략 설계하기",
-  "order": 146,
+  "order": 126,
   "n": 1
  },
  {
   "word": "predictable",
   "ko": "미리 내다볼 수 있는",
   "sec": "Task Statement 1.6: 복잡한 workflow 를 위한 작업 분해 전략 설계하기",
-  "order": 147,
+  "order": 127,
   "n": 1
  },
  {
   "word": "open-ended",
   "ko": "끝이 정해져 있지 않은",
   "sec": "Task Statement 1.6: 복잡한 workflow 를 위한 작업 분해 전략 설계하기",
-  "order": 148,
+  "order": 128,
   "n": 1
  },
  {
   "word": "per-file",
   "ko": "파일마다",
   "sec": "Task Statement 1.6: 복잡한 workflow 를 위한 작업 분해 전략 설계하기",
-  "order": 149,
+  "order": 129,
   "n": 1
  },
  {
   "word": "attention dilution",
   "ko": "주의가 묽어짐. 한 번에 너무 많이 보면 집중이 흩어진다",
   "sec": "Task Statement 1.6: 복잡한 workflow 를 위한 작업 분해 전략 설계하기",
-  "order": 150,
+  "order": 130,
   "n": 1
  },
  {
   "word": "map (v.)",
   "ko": "지도를 그리듯 전체 구조를 파악하다",
   "sec": "Task Statement 1.6: 복잡한 workflow 를 위한 작업 분해 전략 설계하기",
-  "order": 151,
+  "order": 131,
   "n": 1
  },
  {
   "word": "high-impact",
   "ko": "영향이 큰",
   "sec": "Task Statement 1.6: 복잡한 workflow 를 위한 작업 분해 전략 설계하기",
-  "order": 152,
+  "order": 132,
   "n": 1
  },
  {
   "word": "prioritized",
   "ko": "우선순위를 매긴",
   "sec": "Task Statement 1.6: 복잡한 workflow 를 위한 작업 분해 전략 설계하기",
-  "order": 153,
+  "order": 133,
   "n": 1
  },
  {
   "word": "dependencies",
   "ko": "이것이 없으면 저것이 안 되는 의존 관계",
   "sec": "Task Statement 1.6: 복잡한 workflow 를 위한 작업 분해 전략 설계하기",
-  "order": 154,
+  "order": 134,
   "n": 2
  },
  {
   "word": "resumption",
   "ko": "중단된 것을 다시 이어 감",
   "sec": "Task Statement 1.7: session 상태·재개·fork 관리하기",
-  "order": 155,
+  "order": 135,
   "n": 1
  },
  {
   "word": "named",
   "ko": "이름을 붙여 둔",
   "sec": "Task Statement 1.7: session 상태·재개·fork 관리하기",
-  "order": 156,
+  "order": 136,
   "n": 1
  },
  {
   "word": "branch",
   "ko": "갈라져 나온 가지",
   "sec": "Task Statement 1.7: session 상태·재개·fork 관리하기",
-  "order": 157,
+  "order": 137,
   "n": 1
  },
  {
   "word": "independent",
   "ko": "서로 영향을 주지 않는",
   "sec": "Task Statement 1.7: session 상태·재개·fork 관리하기",
-  "order": 158,
+  "order": 138,
   "n": 2
  },
  {
   "word": "inform A about B",
   "ko": "A에게 B를 알리다",
   "sec": "Task Statement 1.7: session 상태·재개·fork 관리하기",
-  "order": 159,
+  "order": 139,
   "n": 1
  },
  {
   "word": "modification",
   "ko": "고침, 변경",
   "sec": "Task Statement 1.7: session 상태·재개·fork 관리하기",
-  "order": 160,
+  "order": 140,
   "n": 1
  },
  {
   "word": "stale",
   "ko": "오래돼서 지금과 안 맞는. 빵이 굳었다고 할 때 그 stale",
   "sec": "Task Statement 1.7: session 상태·재개·fork 관리하기",
-  "order": 161,
+  "order": 141,
   "n": 1
  },
  {
   "word": "across work sessions",
   "ko": "여러 번의 작업 시간에 걸쳐",
   "sec": "Task Statement 1.7: session 상태·재개·fork 관리하기",
-  "order": 162,
+  "order": 142,
   "n": 1
  },
  {
   "word": "parallel",
   "ko": "동시에 나란히 가는",
   "sec": "Task Statement 1.7: session 상태·재개·fork 관리하기",
-  "order": 163,
+  "order": 143,
   "n": 1
  },
  {
   "word": "valid",
   "ko": "아직 유효한, 여전히 들어맞는",
   "sec": "Task Statement 1.7: session 상태·재개·fork 관리하기",
-  "order": 164,
+  "order": 144,
   "n": 1
  },
  {
   "word": "inject",
   "ko": "밀어 넣다",
   "sec": "Task Statement 1.7: session 상태·재개·fork 관리하기",
-  "order": 165,
+  "order": 145,
   "n": 2
  },
  {
   "word": "re-exploration",
   "ko": "다시 탐색하기. re- 는 '다시'",
   "sec": "Task Statement 1.7: session 상태·재개·fork 관리하기",
-  "order": 166,
+  "order": 146,
   "n": 1
  },
  {
   "word": "primary mechanism",
   "ko": "가장 주된 수단. 모델이 tool 을 고르는 근거가 결국 설명이라는 뜻",
   "sec": "Task Statement 2.1: 설명과 경계가 분명한 tool 인터페이스 설계하기",
-  "order": 167,
+  "order": 147,
   "n": 1
  },
  {
   "word": "minimal",
   "ko": "최소한의, 빈약한",
   "sec": "Task Statement 2.1: 설명과 경계가 분명한 tool 인터페이스 설계하기",
-  "order": 168,
+  "order": 148,
   "n": 1
  },
  {
   "word": "boundary",
   "ko": "여기까지는 이 tool, 저기부터는 저 tool 이라는 경계",
   "sec": "Task Statement 2.1: 설명과 경계가 분명한 tool 인터페이스 설계하기",
-  "order": 169,
+  "order": 149,
   "n": 2
  },
  {
   "word": "overlapping",
   "ko": "서로 겹치는",
   "sec": "Task Statement 2.1: 설명과 경계가 분명한 tool 인터페이스 설계하기",
-  "order": 170,
+  "order": 150,
   "n": 1
  },
  {
   "word": "misrouting",
   "ko": "엉뚱한 곳으로 보내짐",
   "sec": "Task Statement 2.1: 설명과 경계가 분명한 tool 인터페이스 설계하기",
-  "order": 171,
+  "order": 151,
   "n": 1
  },
  {
   "word": "near-identical",
   "ko": "거의 똑같은",
   "sec": "Task Statement 2.1: 설명과 경계가 분명한 tool 인터페이스 설계하기",
-  "order": 172,
+  "order": 152,
   "n": 1
  },
  {
   "word": "wording",
   "ko": "어떤 낱말로 썼는가",
   "sec": "Task Statement 2.1: 설명과 경계가 분명한 tool 인터페이스 설계하기",
-  "order": 173,
+  "order": 153,
   "n": 1
  },
  {
   "word": "keyword-sensitive",
   "ko": "특정 낱말에 민감하게 반응하는",
   "sec": "Task Statement 2.1: 설명과 경계가 분명한 tool 인터페이스 설계하기",
-  "order": 174,
+  "order": 154,
   "n": 1
  },
  {
   "word": "unintended",
   "ko": "의도하지 않은",
   "sec": "Task Statement 2.1: 설명과 경계가 분명한 tool 인터페이스 설계하기",
-  "order": 175,
+  "order": 155,
   "n": 1
  },
  {
   "word": "association",
   "ko": "이 말이 나오면 저 tool, 하는 식의 연결",
   "sec": "Task Statement 2.1: 설명과 경계가 분명한 tool 인터페이스 설계하기",
-  "order": 176,
+  "order": 156,
   "n": 1
  },
  {
   "word": "differentiate",
   "ko": "서로 구별되게 하다",
   "sec": "Task Statement 2.1: 설명과 경계가 분명한 tool 인터페이스 설계하기",
-  "order": 177,
+  "order": 157,
   "n": 2
  },
  {
   "word": "alternatives",
   "ko": "대신 쓸 수 있는 다른 것들",
   "sec": "Task Statement 2.1: 설명과 경계가 분명한 tool 인터페이스 설계하기",
-  "order": 178,
+  "order": 158,
   "n": 1
  },
  {
   "word": "eliminate",
   "ko": "없애다",
   "sec": "Task Statement 2.1: 설명과 경계가 분명한 tool 인터페이스 설계하기",
-  "order": 179,
+  "order": 159,
   "n": 2
  },
  {
   "word": "functional overlap",
   "ko": "하는 일이 서로 겹침",
   "sec": "Task Statement 2.1: 설명과 경계가 분명한 tool 인터페이스 설계하기",
-  "order": 180,
+  "order": 160,
   "n": 1
  },
  {
   "word": "generic",
   "ko": "두루뭉술한, 무엇에나 쓰이는",
   "sec": "Task Statement 2.1: 설명과 경계가 분명한 tool 인터페이스 설계하기",
-  "order": 181,
+  "order": 161,
   "n": 2
  },
  {
   "word": "contract",
   "ko": "무엇을 받고 무엇을 돌려준다는 약속",
   "sec": "Task Statement 2.1: 설명과 경계가 분명한 tool 인터페이스 설계하기",
-  "order": 182,
+  "order": 162,
   "n": 1
  },
  {
   "word": "override",
   "ko": "위에서 덮어써 무효로 만들다",
   "sec": "Task Statement 2.1: 설명과 경계가 분명한 tool 인터페이스 설계하기",
-  "order": 183,
+  "order": 163,
   "n": 1
  },
  {
   "word": "flag",
   "ko": "켜고 끄는 표시값",
   "sec": "Task Statement 2.2: MCP tool 을 위한 구조화된 오류 응답 구현하기",
-  "order": 184,
+  "order": 164,
   "n": 1
  },
  {
   "word": "transient",
   "ko": "잠깐 있다 사라지는, 일시적인",
   "sec": "Task Statement 2.2: MCP tool 을 위한 구조화된 오류 응답 구현하기",
-  "order": 185,
+  "order": 165,
   "n": 2
  },
  {
   "word": "unavailability",
   "ko": "쓸 수 없는 상태",
   "sec": "Task Statement 2.2: MCP tool 을 위한 구조화된 오류 응답 구현하기",
-  "order": 186,
+  "order": 166,
   "n": 1
  },
  {
   "word": "violation",
   "ko": "어김, 위반",
   "sec": "Task Statement 2.2: MCP tool 을 위한 구조화된 오류 응답 구현하기",
-  "order": 187,
+  "order": 167,
   "n": 1
  },
  {
   "word": "uniform",
   "ko": "다 똑같이 생긴",
   "sec": "Task Statement 2.2: MCP tool 을 위한 구조화된 오류 응답 구현하기",
-  "order": 188,
+  "order": 168,
   "n": 2
  },
  {
   "word": "recovery",
   "ko": "되살아나기, 복구",
   "sec": "Task Statement 2.2: MCP tool 을 위한 구조화된 오류 응답 구현하기",
-  "order": 189,
+  "order": 169,
   "n": 1
  },
  {
   "word": "retryable",
   "ko": "다시 시도해도 될 만한",
   "sec": "Task Statement 2.2: MCP tool 을 위한 구조화된 오류 응답 구현하기",
-  "order": 190,
+  "order": 170,
   "n": 1
  },
  {
   "word": "wasted",
   "ko": "헛된, 낭비된",
   "sec": "Task Statement 2.2: MCP tool 을 위한 구조화된 오류 응답 구현하기",
-  "order": 191,
+  "order": 171,
   "n": 1
  },
  {
   "word": "human-readable",
   "ko": "사람이 읽어 알아볼 수 있는",
   "sec": "Task Statement 2.2: MCP tool 을 위한 구조화된 오류 응답 구현하기",
-  "order": 192,
+  "order": 172,
   "n": 1
  },
  {
   "word": "customer-friendly",
   "ko": "고객에게 그대로 보여 줘도 되는",
   "sec": "Task Statement 2.2: MCP tool 을 위한 구조화된 오류 응답 구현하기",
-  "order": 193,
+  "order": 173,
   "n": 1
  },
  {
   "word": "propagate",
   "ko": "위로 퍼뜨려 올리다",
   "sec": "Task Statement 2.2: MCP tool 을 위한 구조화된 오류 응답 구현하기",
-  "order": 194,
+  "order": 174,
   "n": 2
  },
  {
   "word": "locally",
   "ko": "그 자리에서, 자기 안에서",
   "sec": "Task Statement 2.2: MCP tool 을 위한 구조화된 오류 응답 구현하기",
-  "order": 195,
+  "order": 175,
   "n": 1
  },
  {
   "word": "partial results",
   "ko": "일부만 건진 결과",
   "sec": "Task Statement 2.2: MCP tool 을 위한 구조화된 오류 응답 구현하기",
-  "order": 196,
+  "order": 176,
   "n": 2
  },
  {
   "word": "valid empty result",
   "ko": "정상인데 아무것도 안 나온 결과. 실패가 아니다",
   "sec": "Task Statement 2.2: MCP tool 을 위한 구조화된 오류 응답 구현하기",
-  "order": 197,
+  "order": 177,
   "n": 2
  },
  {
   "word": "no matches",
   "ko": "조건에 맞는 것이 없음",
   "sec": "Task Statement 2.2: MCP tool 을 위한 구조화된 오류 응답 구현하기",
-  "order": 198,
+  "order": 178,
   "n": 1
  },
  {
   "word": "degrade",
   "ko": "질을 떨어뜨리다",
   "sec": "Task Statement 2.3: 에이전트마다 tool 을 알맞게 나눠 주고 tool choice 설정하기",
-  "order": 199,
+  "order": 179,
   "n": 1
  },
  {
   "word": "complexity",
   "ko": "복잡함의 정도",
   "sec": "Task Statement 2.3: 에이전트마다 tool 을 알맞게 나눠 주고 tool choice 설정하기",
-  "order": 200,
+  "order": 180,
   "n": 1
  },
  {
   "word": "specialization",
   "ko": "맡은 전문 분야",
   "sec": "Task Statement 2.3: 에이전트마다 tool 을 알맞게 나눠 주고 tool choice 설정하기",
-  "order": 201,
+  "order": 181,
   "n": 1
  },
  {
   "word": "tend to ~",
   "ko": "~하는 경향이 있다",
   "sec": "Task Statement 2.3: 에이전트마다 tool 을 알맞게 나눠 주고 tool choice 설정하기",
-  "order": 202,
+  "order": 182,
   "n": 1
  },
  {
   "word": "misuse",
   "ko": "잘못 쓰다",
   "sec": "Task Statement 2.3: 에이전트마다 tool 을 알맞게 나눠 주고 tool choice 설정하기",
-  "order": 203,
+  "order": 183,
   "n": 1
  },
  {
   "word": "scoped",
   "ko": "범위를 정해 좁힌",
   "sec": "Task Statement 2.3: 에이전트마다 tool 을 알맞게 나눠 주고 tool choice 설정하기",
-  "order": 204,
+  "order": 184,
   "n": 1
  },
  {
   "word": "cross-role",
   "ko": "역할 경계를 넘나드는",
   "sec": "Task Statement 2.3: 에이전트마다 tool 을 알맞게 나눠 주고 tool choice 설정하기",
-  "order": 205,
+  "order": 185,
   "n": 1
  },
  {
   "word": "high-frequency",
   "ko": "자주 일어나는",
   "sec": "Task Statement 2.3: 에이전트마다 tool 을 알맞게 나눠 주고 tool choice 설정하기",
-  "order": 206,
+  "order": 186,
   "n": 1
  },
  {
   "word": "forced",
   "ko": "강제된. 모델에게 선택의 여지를 주지 않는",
   "sec": "Task Statement 2.3: 에이전트마다 tool 을 알맞게 나눠 주고 tool choice 설정하기",
-  "order": 207,
+  "order": 187,
   "n": 2
  },
  {
   "word": "restrict A to B",
   "ko": "A를 B로 제한하다",
   "sec": "Task Statement 2.3: 에이전트마다 tool 을 알맞게 나눠 주고 tool choice 설정하기",
-  "order": 208,
+  "order": 188,
   "n": 1
  },
  {
   "word": "relevant to ~",
   "ko": "~와 관련 있는",
   "sec": "Task Statement 2.3: 에이전트마다 tool 을 알맞게 나눠 주고 tool choice 설정하기",
-  "order": 209,
+  "order": 189,
   "n": 1
  },
  {
   "word": "constrained",
   "ko": "제약이 걸린, 할 수 있는 일이 좁혀진",
   "sec": "Task Statement 2.3: 에이전트마다 tool 을 알맞게 나눠 주고 tool choice 설정하기",
-  "order": 210,
+  "order": 190,
   "n": 1
  },
  {
   "word": "replace A with B",
   "ko": "A를 B로 바꾸다",
   "sec": "Task Statement 2.3: 에이전트마다 tool 을 알맞게 나눠 주고 tool choice 설정하기",
-  "order": 211,
+  "order": 191,
   "n": 1
  },
  {
   "word": "route through ~",
   "ko": "~를 거쳐 가게 하다",
   "sec": "Task Statement 2.3: 에이전트마다 tool 을 알맞게 나눠 주고 tool choice 설정하기",
-  "order": 212,
+  "order": 192,
   "n": 1
  },
  {
   "word": "ensure",
   "ko": "반드시 그렇게 되게 하다",
   "sec": "Task Statement 2.3: 에이전트마다 tool 을 알맞게 나눠 주고 tool choice 설정하기",
-  "order": 213,
+  "order": 193,
   "n": 1
  },
  {
   "word": "enrichment",
   "ko": "가진 데이터에 살을 붙여 풍부하게 만드는 것",
   "sec": "Task Statement 2.3: 에이전트마다 tool 을 알맞게 나눠 주고 tool choice 설정하기",
-  "order": 214,
+  "order": 194,
   "n": 2
  },
  {
   "word": "subsequent",
   "ko": "그 뒤에 이어지는",
   "sec": "Task Statement 2.3: 에이전트마다 tool 을 알맞게 나눠 주고 tool choice 설정하기",
-  "order": 215,
+  "order": 195,
   "n": 2
  },
  {
   "word": "conversational text",
   "ko": "대화하듯 늘어놓는 글. tool 호출이 아닌 응답",
   "sec": "Task Statement 2.3: 에이전트마다 tool 을 알맞게 나눠 주고 tool choice 설정하기",
-  "order": 216,
+  "order": 196,
   "n": 1
  },
  {
   "word": "scoping",
   "ko": "어디까지 적용할지 범위를 정하는 것",
   "sec": "Task Statement 2.4: MCP 서버를 Claude Code 와 에이전트 workflow 에 연동하기",
-  "order": 217,
+  "order": 197,
   "n": 1
  },
  {
   "word": "experimental",
   "ko": "아직 시험 삼아 쓰는",
   "sec": "Task Statement 2.4: MCP 서버를 Claude Code 와 에이전트 workflow 에 연동하기",
-  "order": 218,
+  "order": 198,
   "n": 1
  },
  {
   "word": "expansion",
   "ko": "${...} 자리에 실제 값을 채워 넣는 것",
   "sec": "Task Statement 2.4: MCP 서버를 Claude Code 와 에이전트 workflow 에 연동하기",
-  "order": 219,
+  "order": 199,
   "n": 1
  },
  {
   "word": "credential",
   "ko": "자격 증명. 토큰·비밀번호 같은 것",
   "sec": "Task Statement 2.4: MCP 서버를 Claude Code 와 에이전트 workflow 에 연동하기",
-  "order": 220,
+  "order": 200,
   "n": 1
  },
  {
   "word": "commit secrets",
   "ko": "비밀값을 저장소에 올리는 것. 절대 하면 안 되는 일",
   "sec": "Task Statement 2.4: MCP 서버를 Claude Code 와 에이전트 workflow 에 연동하기",
-  "order": 221,
+  "order": 201,
   "n": 1
  },
  {
   "word": "at connection time",
   "ko": "연결하는 그 시점에",
   "sec": "Task Statement 2.4: MCP 서버를 Claude Code 와 에이전트 workflow 에 연동하기",
-  "order": 222,
+  "order": 202,
   "n": 1
  },
  {
   "word": "simultaneously",
   "ko": "동시에, 한꺼번에",
   "sec": "Task Statement 2.4: MCP 서버를 Claude Code 와 에이전트 workflow 에 연동하기",
-  "order": 223,
+  "order": 203,
   "n": 1
  },
  {
   "word": "expose",
   "ko": "밖에서 볼 수 있게 내놓다",
   "sec": "Task Statement 2.4: MCP 서버를 Claude Code 와 에이전트 workflow 에 연동하기",
-  "order": 224,
+  "order": 204,
   "n": 1
  },
  {
   "word": "catalog",
   "ko": "무엇이 있는지 적어 둔 목록",
   "sec": "Task Statement 2.4: MCP 서버를 Claude Code 와 에이전트 workflow 에 연동하기",
-  "order": 225,
+  "order": 205,
   "n": 1
  },
  {
   "word": "exploratory",
   "ko": "뭐가 있나 뒤져 보는",
   "sec": "Task Statement 2.4: MCP 서버를 Claude Code 와 에이전트 workflow 에 연동하기",
-  "order": 226,
+  "order": 206,
   "n": 2
  },
  {
   "word": "authentication",
   "ko": "누구인지 확인하는 인증",
   "sec": "Task Statement 2.4: MCP 서버를 Claude Code 와 에이전트 workflow 에 연동하기",
-  "order": 227,
+  "order": 207,
   "n": 1
  },
  {
   "word": "enhance",
   "ko": "더 낫게 보강하다",
   "sec": "Task Statement 2.4: MCP 서버를 Claude Code 와 에이전트 workflow 에 연동하기",
-  "order": 228,
+  "order": 208,
   "n": 1
  },
  {
   "word": "prefer A over B",
   "ko": "B보다 A를 더 좋아해 고르다",
   "sec": "Task Statement 2.4: MCP 서버를 Claude Code 와 에이전트 workflow 에 연동하기",
-  "order": 229,
+  "order": 209,
   "n": 1
  },
  {
   "word": "capable",
   "ko": "할 수 있는 일이 많은",
   "sec": "Task Statement 2.4: MCP 서버를 Claude Code 와 에이전트 workflow 에 연동하기",
-  "order": 230,
+  "order": 210,
   "n": 1
  },
  {
   "word": "custom implementation",
   "ko": "직접 만들어 쓰는 구현",
   "sec": "Task Statement 2.4: MCP 서버를 Claude Code 와 에이전트 workflow 에 연동하기",
-  "order": 231,
+  "order": 211,
   "n": 1
  },
  {
   "word": "reserve A for B",
   "ko": "A를 B를 위해 남겨 두다",
   "sec": "Task Statement 2.4: MCP 서버를 Claude Code 와 에이전트 workflow 에 연동하기",
-  "order": 232,
+  "order": 212,
   "n": 1
  },
  {
   "word": "visibility into ~",
   "ko": "~ 안이 들여다보임",
   "sec": "Task Statement 2.4: MCP 서버를 Claude Code 와 에이전트 workflow 에 연동하기",
-  "order": 233,
+  "order": 213,
   "n": 1
  },
  {
   "word": "content search",
   "ko": "파일 안의 내용을 찾는 검색",
   "sec": "Task Statement 2.5: 기본 제공 tool(Read, Write, Edit, Bash, Grep, Glob)을 골라 제대로 쓰기",
-  "order": 234,
+  "order": 214,
   "n": 1
  },
  {
   "word": "extension",
   "ko": "파일 확장자. .ts, .go 같은 것",
   "sec": "Task Statement 2.5: 기본 제공 tool(Read, Write, Edit, Bash, Grep, Glob)을 골라 제대로 쓰기",
-  "order": 235,
+  "order": 215,
   "n": 1
  },
  {
   "word": "unique text matching",
   "ko": "파일에 딱 한 번만 나오는 글자를 찾아 맞추는 것",
   "sec": "Task Statement 2.5: 기본 제공 tool(Read, Write, Edit, Bash, Grep, Glob)을 골라 제대로 쓰기",
-  "order": 236,
+  "order": 216,
   "n": 1
  },
  {
   "word": "non-unique",
   "ko": "하나뿐이 아닌, 여러 번 나오는",
   "sec": "Task Statement 2.5: 기본 제공 tool(Read, Write, Edit, Bash, Grep, Glob)을 골라 제대로 쓰기",
-  "order": 237,
+  "order": 217,
   "n": 1
  },
  {
   "word": "fallback",
   "ko": "안 될 때를 대비한 대안",
   "sec": "Task Statement 2.5: 기본 제공 tool(Read, Write, Edit, Bash, Grep, Glob)을 골라 제대로 쓰기",
-  "order": 238,
+  "order": 218,
   "n": 1
  },
  {
   "word": "caller",
   "ko": "그 함수를 불러 쓰는 쪽",
   "sec": "Task Statement 2.5: 기본 제공 tool(Read, Write, Edit, Bash, Grep, Glob)을 골라 제대로 쓰기",
-  "order": 239,
+  "order": 219,
   "n": 1
  },
  {
   "word": "locate",
   "ko": "어디 있는지 찾아내다",
   "sec": "Task Statement 2.5: 기본 제공 tool(Read, Write, Edit, Bash, Grep, Glob)을 골라 제대로 쓰기",
-  "order": 240,
+  "order": 220,
   "n": 1
  },
  {
   "word": "anchor text",
   "ko": "고칠 위치를 붙잡아 주는 기준 글자",
   "sec": "Task Statement 2.5: 기본 제공 tool(Read, Write, Edit, Bash, Grep, Glob)을 골라 제대로 쓰기",
-  "order": 241,
+  "order": 221,
   "n": 1
  },
  {
   "word": "followed by ~",
   "ko": "그다음에 ~가 이어지는",
   "sec": "Task Statement 2.5: 기본 제공 tool(Read, Write, Edit, Bash, Grep, Glob)을 골라 제대로 쓰기",
-  "order": 242,
+  "order": 222,
   "n": 1
  },
  {
   "word": "incrementally",
   "ko": "조금씩 쌓아 가며",
   "sec": "Task Statement 2.5: 기본 제공 tool(Read, Write, Edit, Bash, Grep, Glob)을 골라 제대로 쓰기",
-  "order": 243,
+  "order": 223,
   "n": 2
  },
  {
   "word": "entry point",
   "ko": "프로그램이 시작되는 지점, 들어가는 입구",
   "sec": "Task Statement 2.5: 기본 제공 tool(Read, Write, Edit, Bash, Grep, Glob)을 골라 제대로 쓰기",
-  "order": 244,
+  "order": 224,
   "n": 1
  },
  {
   "word": "trace",
   "ko": "자취를 따라가다",
   "sec": "Task Statement 2.5: 기본 제공 tool(Read, Write, Edit, Bash, Grep, Glob)을 골라 제대로 쓰기",
-  "order": 245,
+  "order": 225,
   "n": 1
  },
  {
   "word": "upfront",
   "ko": "미리, 처음에 한꺼번에",
   "sec": "Task Statement 2.5: 기본 제공 tool(Read, Write, Edit, Bash, Grep, Glob)을 골라 제대로 쓰기",
-  "order": 246,
+  "order": 226,
   "n": 1
  },
  {
   "word": "wrapper module",
   "ko": "다른 것을 감싸 한 겹 덧씌운 모듈",
   "sec": "Task Statement 2.5: 기본 제공 tool(Read, Write, Edit, Bash, Grep, Glob)을 골라 제대로 쓰기",
-  "order": 247,
+  "order": 227,
   "n": 1
  },
  {
   "word": "exported names",
   "ko": "밖에서 쓸 수 있게 내보낸 이름들",
   "sec": "Task Statement 2.5: 기본 제공 tool(Read, Write, Edit, Bash, Grep, Glob)을 골라 제대로 쓰기",
-  "order": 248,
+  "order": 228,
   "n": 1
  },
  {
   "word": "hierarchy",
   "ko": "위아래로 층이 진 구조",
   "sec": "Task Statement 3.1: 알맞은 계층·범위·모듈 구성으로 CLAUDE.md 파일 설정하기",
-  "order": 249,
+  "order": 229,
   "n": 1
  },
  {
   "word": "project-level",
   "ko": "프로젝트 단위로 적용되는",
   "sec": "Task Statement 3.1: 알맞은 계층·범위·모듈 구성으로 CLAUDE.md 파일 설정하기",
-  "order": 250,
+  "order": 230,
   "n": 1
  },
  {
   "word": "version control",
   "ko": "git 같은 버전 관리 시스템",
   "sec": "Task Statement 3.1: 알맞은 계층·범위·모듈 구성으로 CLAUDE.md 파일 설정하기",
-  "order": 251,
+  "order": 231,
   "n": 1
  },
  {
   "word": "apply to ~",
   "ko": "~에 적용되다",
   "sec": "Task Statement 3.1: 알맞은 계층·범위·모듈 구성으로 CLAUDE.md 파일 설정하기",
-  "order": 252,
+  "order": 232,
   "n": 1
  },
  {
   "word": "syntax",
   "ko": "문법. 어떻게 써야 하는지의 형식",
   "sec": "Task Statement 3.1: 알맞은 계층·범위·모듈 구성으로 CLAUDE.md 파일 설정하기",
-  "order": 253,
+  "order": 233,
   "n": 1
  },
  {
   "word": "modular",
   "ko": "모듈처럼 조각으로 나눈",
   "sec": "Task Statement 3.1: 알맞은 계층·범위·모듈 구성으로 CLAUDE.md 파일 설정하기",
-  "order": 254,
+  "order": 234,
   "n": 1
  },
  {
   "word": "monolithic",
   "ko": "통짜로 하나인. 쪼개지 않고 뭉쳐 있는",
   "sec": "Task Statement 3.1: 알맞은 계층·범위·모듈 구성으로 CLAUDE.md 파일 설정하기",
-  "order": 255,
+  "order": 235,
   "n": 2
  },
  {
   "word": "as an alternative to ~",
   "ko": "~를 대신하는 방법으로",
   "sec": "Task Statement 3.1: 알맞은 계층·범위·모듈 구성으로 CLAUDE.md 파일 설정하기",
-  "order": 256,
+  "order": 236,
   "n": 1
  },
  {
   "word": "diagnose",
   "ko": "무엇이 문제인지 짚어내다",
   "sec": "Task Statement 3.1: 알맞은 계층·범위·모듈 구성으로 CLAUDE.md 파일 설정하기",
-  "order": 257,
+  "order": 237,
   "n": 1
  },
  {
   "word": "selectively",
   "ko": "골라서",
   "sec": "Task Statement 3.1: 알맞은 계층·범위·모듈 구성으로 CLAUDE.md 파일 설정하기",
-  "order": 258,
+  "order": 238,
   "n": 1
  },
  {
   "word": "maintainer",
   "ko": "그 코드를 맡아 관리하는 사람",
   "sec": "Task Statement 3.1: 알맞은 계층·범위·모듈 구성으로 CLAUDE.md 파일 설정하기",
-  "order": 259,
+  "order": 239,
   "n": 1
  },
  {
   "word": "focused",
   "ko": "한 가지에 집중한",
   "sec": "Task Statement 3.1: 알맞은 계층·범위·모듈 구성으로 CLAUDE.md 파일 설정하기",
-  "order": 260,
+  "order": 240,
   "n": 1
  },
  {
   "word": "conventions",
   "ko": "팀에서 지키기로 한 관행·규약",
   "sec": "Task Statement 3.1: 알맞은 계층·범위·모듈 구성으로 CLAUDE.md 파일 설정하기",
-  "order": 261,
+  "order": 241,
   "n": 1
  },
  {
   "word": "verify",
   "ko": "실제로 그런지 확인하다",
   "sec": "Task Statement 3.1: 알맞은 계층·범위·모듈 구성으로 CLAUDE.md 파일 설정하기",
-  "order": 262,
+  "order": 242,
   "n": 2
  },
  {
   "word": "inconsistent",
   "ko": "들쭉날쭉한, 매번 다른",
   "sec": "Task Statement 3.1: 알맞은 계층·범위·모듈 구성으로 CLAUDE.md 파일 설정하기",
-  "order": 263,
+  "order": 243,
   "n": 1
  },
  {
   "word": "project-scoped",
   "ko": "그 프로젝트 안에서만 쓰이는",
   "sec": "Task Statement 3.2: 직접 만든 slash command 와 skill 만들고 설정하기",
-  "order": 264,
+  "order": 244,
   "n": 1
  },
  {
   "word": "frontmatter",
   "ko": "파일 맨 위 `---` 사이에 적는 설정 부분",
   "sec": "Task Statement 3.2: 직접 만든 slash command 와 skill 만들고 설정하기",
-  "order": 265,
+  "order": 245,
   "n": 1
  },
  {
   "word": "pollute",
   "ko": "더럽히다, 어지럽히다",
   "sec": "Task Statement 3.2: 직접 만든 slash command 와 skill 만들고 설정하기",
-  "order": 266,
+  "order": 246,
   "n": 1
  },
  {
   "word": "variant",
   "ko": "조금 달라진 다른 판",
   "sec": "Task Statement 3.2: 직접 만든 slash command 와 skill 만들고 설정하기",
-  "order": 267,
+  "order": 247,
   "n": 1
  },
  {
   "word": "avoid ~ing",
   "ko": "~하는 일이 없게 하다",
   "sec": "Task Statement 3.2: 직접 만든 slash command 와 skill 만들고 설정하기",
-  "order": 268,
+  "order": 248,
   "n": 1
  },
  {
   "word": "team-wide",
   "ko": "팀 전체에 걸친",
   "sec": "Task Statement 3.2: 직접 만든 slash command 와 skill 만들고 설정하기",
-  "order": 269,
+  "order": 249,
   "n": 1
  },
  {
   "word": "availability",
   "ko": "쓸 수 있는 상태",
   "sec": "Task Statement 3.2: 직접 만든 slash command 와 skill 만들고 설정하기",
-  "order": 270,
+  "order": 250,
   "n": 1
  },
  {
   "word": "verbose",
   "ko": "말이 많은, 장황한",
   "sec": "Task Statement 3.2: 직접 만든 slash command 와 skill 만들고 설정하기",
-  "order": 271,
+  "order": 251,
   "n": 2
  },
  {
   "word": "destructive",
   "ko": "되돌릴 수 없게 망가뜨리는",
   "sec": "Task Statement 3.2: 직접 만든 slash command 와 skill 만들고 설정하기",
-  "order": 272,
+  "order": 252,
   "n": 1
  },
  {
   "word": "limit A to B",
   "ko": "A를 B로 한정하다",
   "sec": "Task Statement 3.2: 직접 만든 slash command 와 skill 만들고 설정하기",
-  "order": 273,
+  "order": 253,
   "n": 1
  },
  {
   "word": "prompt (v.)",
   "ko": "무엇을 입력하라고 알려 주다",
   "sec": "Task Statement 3.2: 직접 만든 slash command 와 skill 만들고 설정하기",
-  "order": 274,
+  "order": 254,
   "n": 1
  },
  {
   "word": "parameter",
   "ko": "넘겨 주는 값",
   "sec": "Task Statement 3.2: 직접 만든 slash command 와 skill 만들고 설정하기",
-  "order": 275,
+  "order": 255,
   "n": 1
  },
  {
   "word": "on-demand",
   "ko": "필요할 때 불러 쓰는",
   "sec": "Task Statement 3.2: 직접 만든 slash command 와 skill 만들고 설정하기",
-  "order": 276,
+  "order": 256,
   "n": 1
  },
  {
   "word": "universal",
   "ko": "모든 경우에 두루 적용되는",
   "sec": "Task Statement 3.2: 직접 만든 slash command 와 skill 만들고 설정하기",
-  "order": 277,
+  "order": 257,
   "n": 1
  },
  {
   "word": "conditional",
   "ko": "조건이 맞을 때만",
   "sec": "Task Statement 3.3: 조건에 따라 규약을 불러오도록 경로별 rule 적용하기",
-  "order": 278,
+  "order": 258,
   "n": 2
  },
  {
   "word": "activation",
   "ko": "작동하게 켜지는 것",
   "sec": "Task Statement 3.3: 조건에 따라 규약을 불러오도록 경로별 rule 적용하기",
-  "order": 279,
+  "order": 259,
   "n": 1
  },
  {
   "word": "glob pattern",
   "ko": "**/*.ts 처럼 파일 경로를 가리키는 패턴",
   "sec": "Task Statement 3.3: 조건에 따라 규약을 불러오도록 경로별 rule 적용하기",
-  "order": 280,
+  "order": 260,
   "n": 1
  },
  {
   "word": "irrelevant",
   "ko": "지금 일과 상관없는",
   "sec": "Task Statement 3.3: 조건에 따라 규약을 불러오도록 경로별 rule 적용하기",
-  "order": 281,
+  "order": 261,
   "n": 1
  },
  {
   "word": "span",
   "ko": "여러 곳에 걸치다",
   "sec": "Task Statement 3.3: 조건에 따라 규약을 불러오도록 경로별 rule 적용하기",
-  "order": 282,
+  "order": 262,
   "n": 1
  },
  {
   "word": "spread throughout ~",
   "ko": "~ 전체에 흩어진",
   "sec": "Task Statement 3.3: 조건에 따라 규약을 불러오도록 경로별 rule 적용하기",
-  "order": 283,
+  "order": 263,
   "n": 1
  },
  {
   "word": "regardless of ~",
   "ko": "~와 상관없이",
   "sec": "Task Statement 3.3: 조건에 따라 규약을 불러오도록 경로별 rule 적용하기",
-  "order": 284,
+  "order": 264,
   "n": 1
  },
  {
   "word": "large-scale",
   "ko": "규모가 큰",
   "sec": "Task Statement 3.4: plan mode 를 쓸 때와 바로 실행할 때 가려내기",
-  "order": 285,
+  "order": 265,
   "n": 1
  },
  {
   "word": "architectural",
   "ko": "전체 구조에 관한",
   "sec": "Task Statement 3.4: plan mode 를 쓸 때와 바로 실행할 때 가려내기",
-  "order": 286,
+  "order": 266,
   "n": 1
  },
  {
   "word": "well-scoped",
   "ko": "어디까지 할지 범위가 또렷한",
   "sec": "Task Statement 3.4: plan mode 를 쓸 때와 바로 실행할 때 가려내기",
-  "order": 287,
+  "order": 267,
   "n": 1
  },
  {
   "word": "commit to ~",
   "ko": "~로 굳히다, 되돌리기 어렵게 확정하다",
   "sec": "Task Statement 3.4: plan mode 를 쓸 때와 바로 실행할 때 가려내기",
-  "order": 288,
+  "order": 268,
   "n": 1
  },
  {
   "word": "rework",
   "ko": "다시 해야 하는 일",
   "sec": "Task Statement 3.4: plan mode 를 쓸 때와 바로 실행할 때 가려내기",
-  "order": 289,
+  "order": 269,
   "n": 1
  },
  {
   "word": "discovery",
   "ko": "무엇이 있는지 찾아보는 단계",
   "sec": "Task Statement 3.4: plan mode 를 쓸 때와 바로 실행할 때 가려내기",
-  "order": 290,
+  "order": 270,
   "n": 1
  },
  {
   "word": "implications",
   "ko": "그로 인해 따라오는 영향",
   "sec": "Task Statement 3.4: plan mode 를 쓸 때와 바로 실행할 때 가려내기",
-  "order": 291,
+  "order": 271,
   "n": 1
  },
  {
   "word": "migration",
   "ko": "다른 것으로 옮겨 가기",
   "sec": "Task Statement 3.4: plan mode 를 쓸 때와 바로 실행할 때 가려내기",
-  "order": 292,
+  "order": 272,
   "n": 1
  },
  {
   "word": "stack trace",
   "ko": "오류가 난 지점까지의 호출 자취",
   "sec": "Task Statement 3.4: plan mode 를 쓸 때와 바로 실행할 때 가려내기",
-  "order": 293,
+  "order": 273,
   "n": 1
  },
  {
   "word": "exhaustion",
   "ko": "다 써서 바닥남",
   "sec": "Task Statement 3.4: plan mode 를 쓸 때와 바로 실행할 때 가려내기",
-  "order": 294,
+  "order": 274,
   "n": 1
  },
  {
   "word": "phase",
   "ko": "단계",
   "sec": "Task Statement 3.4: plan mode 를 쓸 때와 바로 실행할 때 가려내기",
-  "order": 295,
+  "order": 275,
   "n": 1
  },
  {
   "word": "implementation",
   "ko": "실제로 만들어 넣는 일",
   "sec": "Task Statement 3.4: plan mode 를 쓸 때와 바로 실행할 때 가려내기",
-  "order": 296,
+  "order": 276,
   "n": 1
  },
  {
   "word": "concrete",
   "ko": "손에 잡히는, 구체적인",
   "sec": "Task Statement 3.5: 조금씩 나아지게 만드는 반복 다듬기 기법 적용하기",
-  "order": 297,
+  "order": 277,
   "n": 1
  },
  {
   "word": "prose",
   "ko": "줄글. 예시가 아닌 서술",
   "sec": "Task Statement 3.5: 조금씩 나아지게 만드는 반복 다듬기 기법 적용하기",
-  "order": 298,
+  "order": 278,
   "n": 1
  },
  {
   "word": "interpreted",
   "ko": "해석되는",
   "sec": "Task Statement 3.5: 조금씩 나아지게 만드는 반복 다듬기 기법 적용하기",
-  "order": 299,
+  "order": 279,
   "n": 1
  },
  {
   "word": "test suite",
   "ko": "테스트 여러 개를 묶어 놓은 것",
   "sec": "Task Statement 3.5: 조금씩 나아지게 만드는 반복 다듬기 기법 적용하기",
-  "order": 300,
+  "order": 280,
   "n": 1
  },
  {
   "word": "progressive",
   "ko": "조금씩 나아지는",
   "sec": "Task Statement 3.5: 조금씩 나아지게 만드는 반복 다듬기 기법 적용하기",
-  "order": 301,
+  "order": 281,
   "n": 1
  },
  {
   "word": "surface (v.)",
   "ko": "수면 위로 끌어올리다, 드러내다",
   "sec": "Task Statement 3.5: 조금씩 나아지게 만드는 반복 다듬기 기법 적용하기",
-  "order": 302,
+  "order": 282,
   "n": 1
  },
  {
   "word": "anticipate",
   "ko": "미리 내다보다",
   "sec": "Task Statement 3.5: 조금씩 나아지게 만드는 반복 다듬기 기법 적용하기",
-  "order": 303,
+  "order": 283,
   "n": 1
  },
  {
   "word": "interacting",
   "ko": "서로 영향을 주고받는",
   "sec": "Task Statement 3.5: 조금씩 나아지게 만드는 반복 다듬기 기법 적용하기",
-  "order": 304,
+  "order": 284,
   "n": 1
  },
  {
   "word": "sequentially",
   "ko": "차례차례",
   "sec": "Task Statement 3.5: 조금씩 나아지게 만드는 반복 다듬기 기법 적용하기",
-  "order": 305,
+  "order": 285,
   "n": 1
  },
  {
   "word": "clarify",
   "ko": "또렷하게 하다",
   "sec": "Task Statement 3.5: 조금씩 나아지게 만드는 반복 다듬기 기법 적용하기",
-  "order": 306,
+  "order": 286,
   "n": 1
  },
  {
   "word": "cover",
   "ko": "빠짐없이 다루다",
   "sec": "Task Statement 3.5: 조금씩 나아지게 만드는 반복 다듬기 기법 적용하기",
-  "order": 307,
+  "order": 287,
   "n": 1
  },
  {
   "word": "invalidation",
   "ko": "더는 유효하지 않게 만들기",
   "sec": "Task Statement 3.5: 조금씩 나아지게 만드는 반복 다듬기 기법 적용하기",
-  "order": 308,
-  "n": 2
+  "order": 288,
+  "n": 1
  },
  {
   "word": "failure mode",
   "ko": "어떤 식으로 망가지는가 하는 양상",
   "sec": "Task Statement 3.5: 조금씩 나아지게 만드는 반복 다듬기 기법 적용하기",
-  "order": 309,
+  "order": 289,
   "n": 1
  },
  {
   "word": "address (v.)",
   "ko": "문제를 다루어 처리하다",
   "sec": "Task Statement 3.5: 조금씩 나아지게 만드는 반복 다듬기 기법 적용하기",
-  "order": 310,
+  "order": 290,
   "n": 2
  },
  {
   "word": "non-interactive",
   "ko": "사람과 주고받지 않는",
   "sec": "Task Statement 3.6: Claude Code 를 CI/CD 파이프라인에 연동하기",
-  "order": 311,
+  "order": 291,
   "n": 1
  },
  {
   "word": "enforce",
   "ko": "반드시 그렇게 되도록 강제하다",
   "sec": "Task Statement 3.6: Claude Code 를 CI/CD 파이프라인에 연동하기",
-  "order": 312,
+  "order": 292,
   "n": 1
  },
  {
   "word": "fixture",
   "ko": "테스트에 쓰려고 미리 만들어 둔 데이터",
   "sec": "Task Statement 3.6: Claude Code 를 CI/CD 파이프라인에 연동하기",
-  "order": 313,
+  "order": 293,
   "n": 1
  },
  {
   "word": "instance",
   "ko": "따로 띄워 돌아가는 하나하나",
   "sec": "Task Statement 3.6: Claude Code 를 CI/CD 파이프라인에 연동하기",
-  "order": 314,
+  "order": 294,
   "n": 1
  },
  {
   "word": "compared to ~",
   "ko": "~와 견주어",
   "sec": "Task Statement 3.6: Claude Code 를 CI/CD 파이프라인에 연동하기",
-  "order": 315,
+  "order": 295,
   "n": 1
  },
  {
   "word": "hang",
   "ko": "응답 없이 멈춰 서는 것",
   "sec": "Task Statement 3.6: Claude Code 를 CI/CD 파이프라인에 연동하기",
-  "order": 316,
+  "order": 296,
   "n": 1
  },
  {
   "word": "machine-parseable",
   "ko": "기계가 읽어 해석할 수 있는",
   "sec": "Task Statement 3.6: Claude Code 를 CI/CD 파이프라인에 연동하기",
-  "order": 317,
+  "order": 297,
   "n": 1
  },
  {
   "word": "inline",
   "ko": "그 줄에 바로 붙는",
   "sec": "Task Statement 3.6: Claude Code 를 CI/CD 파이프라인에 연동하기",
-  "order": 318,
+  "order": 298,
   "n": 1
  },
  {
   "word": "still-unaddressed",
   "ko": "아직 처리되지 않은",
   "sec": "Task Statement 3.6: Claude Code 를 CI/CD 파이프라인에 연동하기",
-  "order": 319,
+  "order": 299,
   "n": 1
  },
  {
   "word": "duplicate",
   "ko": "똑같은 것이 겹침",
   "sec": "Task Statement 3.6: Claude Code 를 CI/CD 파이프라인에 연동하기",
-  "order": 320,
+  "order": 300,
   "n": 1
  },
  {
   "word": "existing",
   "ko": "이미 있는",
   "sec": "Task Statement 3.6: Claude Code 를 CI/CD 파이프라인에 연동하기",
-  "order": 321,
+  "order": 301,
   "n": 1
  },
  {
   "word": "document (v.)",
   "ko": "글로 적어 남기다",
   "sec": "Task Statement 3.6: Claude Code 를 CI/CD 파이프라인에 연동하기",
-  "order": 322,
+  "order": 302,
   "n": 1
  },
  {
   "word": "low-value",
   "ko": "가치가 낮은",
   "sec": "Task Statement 3.6: Claude Code 를 CI/CD 파이프라인에 연동하기",
-  "order": 323,
+  "order": 303,
   "n": 1
  },
  {
   "word": "explicit",
   "ko": "분명히 적어 놓은",
   "sec": "Task Statement 4.1: 정확도를 높이고 헛경보를 줄이도록 명확한 기준을 담은 prompt 설계하기",
-  "order": 324,
+  "order": 304,
   "n": 1
  },
  {
   "word": "vague",
   "ko": "흐릿한, 두루뭉술한",
   "sec": "Task Statement 4.1: 정확도를 높이고 헛경보를 줄이도록 명확한 기준을 담은 prompt 설계하기",
-  "order": 325,
+  "order": 305,
   "n": 2
  },
  {
   "word": "contradict",
   "ko": "서로 어긋나다, 모순되다",
   "sec": "Task Statement 4.1: 정확도를 높이고 헛경보를 줄이도록 명확한 기준을 담은 prompt 설계하기",
-  "order": 326,
+  "order": 306,
   "n": 1
  },
  {
   "word": "flag (v.)",
   "ko": "표시해 두다, 짚어 올리다",
   "sec": "Task Statement 4.1: 정확도를 높이고 헛경보를 줄이도록 명확한 기준을 담은 prompt 설계하기",
-  "order": 327,
+  "order": 307,
   "n": 1
  },
  {
   "word": "conservative",
   "ko": "여기서는 '조심스럽게, 웬만하면 넘어가는'",
   "sec": "Task Statement 4.1: 정확도를 높이고 헛경보를 줄이도록 명확한 기준을 담은 prompt 설계하기",
-  "order": 328,
+  "order": 308,
   "n": 1
  },
  {
   "word": "precision",
   "ko": "짚어낸 것 중 진짜가 얼마나 되는가 (정밀도)",
   "sec": "Task Statement 4.1: 정확도를 높이고 헛경보를 줄이도록 명확한 기준을 담은 prompt 설계하기",
-  "order": 329,
+  "order": 309,
   "n": 1
  },
  {
   "word": "categorical",
   "ko": "종류별로 가른",
   "sec": "Task Statement 4.1: 정확도를 높이고 헛경보를 줄이도록 명확한 기준을 담은 prompt 설계하기",
-  "order": 330,
+  "order": 310,
   "n": 1
  },
  {
   "word": "undermine",
   "ko": "밑을 파내듯 서서히 무너뜨리다",
   "sec": "Task Statement 4.1: 정확도를 높이고 헛경보를 줄이도록 명확한 기준을 담은 prompt 설계하기",
-  "order": 331,
+  "order": 311,
   "n": 1
  },
  {
   "word": "filtering",
   "ko": "걸러 내기",
   "sec": "Task Statement 4.1: 정확도를 높이고 헛경보를 줄이도록 명확한 기준을 담은 prompt 설계하기",
-  "order": 332,
+  "order": 312,
   "n": 1
  },
  {
   "word": "temporarily",
   "ko": "잠시 동안",
   "sec": "Task Statement 4.1: 정확도를 높이고 헛경보를 줄이도록 명확한 기준을 담은 prompt 설계하기",
-  "order": 333,
+  "order": 313,
   "n": 1
  },
  {
   "word": "restore",
   "ko": "되돌려 놓다",
   "sec": "Task Statement 4.1: 정확도를 높이고 헛경보를 줄이도록 명확한 기준을 담은 prompt 설계하기",
-  "order": 334,
+  "order": 314,
   "n": 1
  },
  {
   "word": "severity",
   "ko": "얼마나 심각한가의 정도",
   "sec": "Task Statement 4.1: 정확도를 높이고 헛경보를 줄이도록 명확한 기준을 담은 prompt 설계하기",
-  "order": 335,
+  "order": 315,
   "n": 1
  },
  {
   "word": "classification",
   "ko": "분류",
   "sec": "Task Statement 4.1: 정확도를 높이고 헛경보를 줄이도록 명확한 기준을 담은 prompt 설계하기",
-  "order": 336,
+  "order": 316,
   "n": 1
  },
  {
   "word": "few-shot",
   "ko": "예시 몇 개를 보여 주는 방식",
   "sec": "Task Statement 4.2: 출력을 일관되고 좋게 만들도록 few-shot prompting 적용하기",
-  "order": 337,
+  "order": 317,
   "n": 1
  },
  {
   "word": "actionable",
   "ko": "읽고 바로 행동할 수 있는",
   "sec": "Task Statement 4.2: 출력을 일관되고 좋게 만들도록 few-shot prompting 적용하기",
-  "order": 338,
+  "order": 318,
   "n": 1
  },
  {
   "word": "demonstrate",
   "ko": "직접 보여 주다",
   "sec": "Task Statement 4.2: 출력을 일관되고 좋게 만들도록 few-shot prompting 적용하기",
-  "order": 339,
+  "order": 319,
   "n": 1
  },
  {
   "word": "branch-level",
   "ko": "코드의 if 분기 하나하나 단위의",
   "sec": "Task Statement 4.2: 출력을 일관되고 좋게 만들도록 few-shot prompting 적용하기",
-  "order": 340,
+  "order": 320,
   "n": 1
  },
  {
   "word": "generalize",
   "ko": "본 것을 넘어 더 넓게 적용하다",
   "sec": "Task Statement 4.2: 출력을 일관되고 좋게 만들도록 few-shot prompting 적용하기",
-  "order": 341,
+  "order": 321,
   "n": 1
  },
  {
   "word": "novel",
   "ko": "처음 보는, 새로운",
   "sec": "Task Statement 4.2: 출력을 일관되고 좋게 만들도록 few-shot prompting 적용하기",
-  "order": 342,
+  "order": 322,
   "n": 1
  },
  {
   "word": "pre-specified",
   "ko": "미리 정해 적어 둔",
   "sec": "Task Statement 4.2: 출력을 일관되고 좋게 만들도록 few-shot prompting 적용하기",
-  "order": 343,
+  "order": 323,
   "n": 1
  },
  {
   "word": "hallucination",
   "ko": "모델이 근거 없이 지어내는 것",
   "sec": "Task Statement 4.2: 출력을 일관되고 좋게 만들도록 few-shot prompting 적용하기",
-  "order": 344,
+  "order": 324,
   "n": 1
  },
  {
   "word": "informal",
   "ko": "격식을 갖추지 않은",
   "sec": "Task Statement 4.2: 출력을 일관되고 좋게 만들도록 few-shot prompting 적용하기",
-  "order": 345,
+  "order": 325,
   "n": 1
  },
  {
   "word": "varied",
   "ko": "제각각인",
   "sec": "Task Statement 4.2: 출력을 일관되고 좋게 만들도록 few-shot prompting 적용하기",
-  "order": 346,
+  "order": 326,
   "n": 1
  },
  {
   "word": "plausible",
   "ko": "그럴듯한. 틀렸지만 맞아 보이는",
   "sec": "Task Statement 4.2: 출력을 일관되고 좋게 만들도록 few-shot prompting 적용하기",
-  "order": 347,
+  "order": 327,
   "n": 1
  },
  {
   "word": "desired",
   "ko": "원하는",
   "sec": "Task Statement 4.2: 출력을 일관되고 좋게 만들도록 few-shot prompting 적용하기",
-  "order": 348,
+  "order": 328,
   "n": 1
  },
  {
   "word": "acceptable",
   "ko": "그냥 넘어가도 되는",
   "sec": "Task Statement 4.2: 출력을 일관되고 좋게 만들도록 few-shot prompting 적용하기",
-  "order": 349,
+  "order": 329,
   "n": 1
  },
  {
   "word": "genuine",
   "ko": "진짜의",
   "sec": "Task Statement 4.2: 출력을 일관되고 좋게 만들도록 few-shot prompting 적용하기",
-  "order": 350,
+  "order": 330,
   "n": 1
  },
  {
   "word": "inline citation",
   "ko": "본문 안에 바로 박아 넣은 출처 표시",
   "sec": "Task Statement 4.2: 출력을 일관되고 좋게 만들도록 few-shot prompting 적용하기",
-  "order": 351,
+  "order": 331,
   "n": 1
  },
  {
   "word": "bibliography",
   "ko": "문서 끝에 모아 둔 참고문헌 목록",
   "sec": "Task Statement 4.2: 출력을 일관되고 좋게 만들도록 few-shot prompting 적용하기",
-  "order": 352,
+  "order": 332,
   "n": 1
  },
  {
   "word": "embedded",
   "ko": "안에 파묻혀 있는",
   "sec": "Task Statement 4.2: 출력을 일관되고 좋게 만들도록 few-shot prompting 적용하기",
-  "order": 353,
+  "order": 333,
   "n": 1
  },
  {
   "word": "schema-compliant",
   "ko": "schema 를 그대로 지키는",
   "sec": "Task Statement 4.3: tool use 와 JSON schema 로 구조화 출력 강제하기",
-  "order": 354,
+  "order": 334,
   "n": 1
  },
  {
   "word": "syntax error",
   "ko": "문법이 틀려서 나는 오류",
   "sec": "Task Statement 4.3: tool use 와 JSON schema 로 구조화 출력 강제하기",
-  "order": 355,
+  "order": 335,
   "n": 1
  },
  {
   "word": "strict",
   "ko": "엄격한",
   "sec": "Task Statement 4.3: tool use 와 JSON schema 로 구조화 출력 강제하기",
-  "order": 356,
+  "order": 336,
   "n": 1
  },
  {
   "word": "semantic",
   "ko": "뜻·의미에 관한. 형식이 아니라 내용이 틀린 것",
   "sec": "Task Statement 4.3: tool use 와 JSON schema 로 구조화 출력 강제하기",
-  "order": 357,
+  "order": 337,
   "n": 1
  },
  {
   "word": "line item",
   "ko": "명세서의 한 줄짜리 항목",
   "sec": "Task Statement 4.3: tool use 와 JSON schema 로 구조화 출력 강제하기",
-  "order": 358,
+  "order": 338,
   "n": 1
  },
  {
   "word": "enum",
   "ko": "정해진 값 중에서만 고르게 하는 필드",
   "sec": "Task Statement 4.3: tool use 와 JSON schema 로 구조화 출력 강제하기",
-  "order": 359,
+  "order": 339,
   "n": 1
  },
  {
   "word": "extensible",
   "ko": "나중에 늘려 갈 수 있는",
   "sec": "Task Statement 4.3: tool use 와 JSON schema 로 구조화 출력 강제하기",
-  "order": 360,
+  "order": 340,
   "n": 1
  },
  {
   "word": "nullable",
   "ko": "값이 없음(null)을 넣을 수 있는",
   "sec": "Task Statement 4.3: tool use 와 JSON schema 로 구조화 출력 강제하기",
-  "order": 361,
+  "order": 341,
   "n": 1
  },
  {
   "word": "fabricate",
   "ko": "없는 것을 지어내다",
   "sec": "Task Statement 4.3: tool use 와 JSON schema 로 구조화 출력 강제하기",
-  "order": 362,
+  "order": 342,
   "n": 2
  },
  {
   "word": "satisfy",
   "ko": "요구 조건을 채우다",
   "sec": "Task Statement 4.3: tool use 와 JSON schema 로 구조화 출력 강제하기",
-  "order": 363,
+  "order": 343,
   "n": 1
  },
  {
   "word": "normalization",
   "ko": "제각각인 것을 한 기준으로 맞추기",
   "sec": "Task Statement 4.3: tool use 와 JSON schema 로 구조화 출력 강제하기",
-  "order": 364,
+  "order": 344,
   "n": 1
  },
  {
   "word": "alongside",
   "ko": "~와 나란히, 함께",
   "sec": "Task Statement 4.3: tool use 와 JSON schema 로 구조화 출력 강제하기",
-  "order": 365,
+  "order": 345,
   "n": 1
  },
  {
   "word": "correction",
   "ko": "고침",
   "sec": "Task Statement 4.4: 추출 품질을 위한 검증·재시도·피드백 loop 구현하기",
-  "order": 366,
+  "order": 346,
   "n": 1
  },
  {
   "word": "ineffective",
   "ko": "효과가 없는",
   "sec": "Task Statement 4.4: 추출 품질을 위한 검증·재시도·피드백 loop 구현하기",
-  "order": 367,
+  "order": 347,
   "n": 1
  },
  {
   "word": "absent from ~",
   "ko": "~에 아예 없는",
   "sec": "Task Statement 4.4: 추출 품질을 위한 검증·재시도·피드백 loop 구현하기",
-  "order": 368,
+  "order": 348,
   "n": 1
  },
  {
   "word": "construct (n.)",
   "ko": "언어가 제공하는 구문 구조",
   "sec": "Task Statement 4.4: 추출 품질을 위한 검증·재시도·피드백 loop 구현하기",
-  "order": 369,
+  "order": 349,
   "n": 1
  },
  {
   "word": "dismissal",
   "ko": "받아들이지 않고 물리침",
   "sec": "Task Statement 4.4: 추출 품질을 위한 검증·재시도·피드백 loop 구현하기",
-  "order": 370,
+  "order": 350,
   "n": 1
  },
  {
   "word": "systematic",
   "ko": "체계적인",
   "sec": "Task Statement 4.4: 추출 품질을 위한 검증·재시도·피드백 loop 구현하기",
-  "order": 371,
+  "order": 351,
   "n": 1
  },
  {
   "word": "placement",
   "ko": "어디에 놓였는가",
   "sec": "Task Statement 4.4: 추출 품질을 위한 검증·재시도·피드백 loop 구현하기",
-  "order": 372,
+  "order": 352,
   "n": 1
  },
  {
   "word": "follow-up",
   "ko": "뒤이어 보내는",
   "sec": "Task Statement 4.4: 추출 품질을 위한 검증·재시도·피드백 loop 구현하기",
-  "order": 373,
+  "order": 353,
   "n": 1
  },
  {
   "word": "self-correction",
   "ko": "스스로 고치기",
   "sec": "Task Statement 4.4: 추출 품질을 위한 검증·재시도·피드백 loop 구현하기",
-  "order": 374,
+  "order": 354,
   "n": 1
  },
  {
   "word": "mismatch",
   "ko": "서로 안 맞음",
   "sec": "Task Statement 4.4: 추출 품질을 위한 검증·재시도·피드백 loop 구현하기",
-  "order": 375,
+  "order": 355,
   "n": 1
  },
  {
   "word": "discrepancy",
   "ko": "서로 맞지 않고 어긋남",
   "sec": "Task Statement 4.4: 추출 품질을 위한 검증·재시도·피드백 loop 구현하기",
-  "order": 376,
+  "order": 356,
   "n": 1
  },
  {
   "word": "stated",
   "ko": "(문서에) 적혀 있는",
   "sec": "Task Statement 4.4: 추출 품질을 위한 검증·재시도·피드백 loop 구현하기",
-  "order": 377,
+  "order": 357,
   "n": 1
  },
  {
   "word": "calculated",
   "ko": "직접 계산해 낸",
   "sec": "Task Statement 4.4: 추출 품질을 위한 검증·재시도·피드백 loop 구현하기",
-  "order": 378,
+  "order": 358,
   "n": 1
  },
  {
   "word": "latency",
   "ko": "요청하고 답이 올 때까지 걸리는 시간",
   "sec": "Task Statement 4.5: 효율적인 batch 처리 전략 설계하기",
-  "order": 379,
+  "order": 359,
   "n": 1
  },
  {
   "word": "SLA",
   "ko": "service level agreement. 어느 수준까지 보장한다는 약속",
   "sec": "Task Statement 4.5: 효율적인 batch 처리 전략 설계하기",
-  "order": 380,
+  "order": 360,
   "n": 1
  },
  {
   "word": "non-blocking",
   "ko": "다른 일을 막아 세우지 않는",
   "sec": "Task Statement 4.5: 효율적인 batch 처리 전략 설계하기",
-  "order": 381,
+  "order": 361,
   "n": 1
  },
  {
   "word": "latency-tolerant",
   "ko": "느려도 견딜 수 있는",
   "sec": "Task Statement 4.5: 효율적인 batch 처리 전략 설계하기",
-  "order": 382,
+  "order": 362,
   "n": 1
  },
  {
   "word": "pre-merge",
   "ko": "코드를 합치기 전의",
   "sec": "Task Statement 4.5: 효율적인 batch 처리 전략 설계하기",
-  "order": 383,
+  "order": 363,
   "n": 1
  },
  {
   "word": "mid-request",
   "ko": "요청이 처리되는 도중에",
   "sec": "Task Statement 4.5: 효율적인 batch 처리 전략 설계하기",
-  "order": 384,
+  "order": 364,
   "n": 1
  },
  {
   "word": "correlate",
   "ko": "서로 짝을 지어 맞추다",
   "sec": "Task Statement 4.5: 효율적인 batch 처리 전략 설계하기",
-  "order": 385,
+  "order": 365,
   "n": 1
  },
  {
   "word": "synchronous",
   "ko": "요청하고 답이 올 때까지 기다리는 방식",
   "sec": "Task Statement 4.5: 효율적인 batch 처리 전략 설계하기",
-  "order": 386,
+  "order": 366,
   "n": 1
  },
  {
   "word": "submission",
   "ko": "제출, 넣어 보내기",
   "sec": "Task Statement 4.5: 효율적인 batch 처리 전략 설계하기",
-  "order": 387,
+  "order": 367,
   "n": 1
  },
  {
   "word": "constraint",
   "ko": "지켜야 하는 제약",
   "sec": "Task Statement 4.5: 효율적인 batch 처리 전략 설계하기",
-  "order": 388,
+  "order": 368,
   "n": 1
  },
  {
   "word": "resubmit",
   "ko": "다시 제출하다",
   "sec": "Task Statement 4.5: 효율적인 batch 처리 전략 설계하기",
-  "order": 389,
+  "order": 369,
   "n": 1
  },
  {
   "word": "chunk (v.)",
   "ko": "덩어리로 잘라 나누다",
   "sec": "Task Statement 4.5: 효율적인 batch 처리 전략 설계하기",
-  "order": 390,
+  "order": 370,
   "n": 1
  },
  {
   "word": "refinement",
   "ko": "다듬기",
   "sec": "Task Statement 4.5: 효율적인 batch 처리 전략 설계하기",
-  "order": 391,
+  "order": 371,
   "n": 1
  },
  {
   "word": "first-pass",
   "ko": "첫 번에 통과하는",
   "sec": "Task Statement 4.5: 효율적인 batch 처리 전략 설계하기",
-  "order": 392,
+  "order": 372,
   "n": 1
  },
  {
   "word": "volume",
   "ko": "처리해야 할 양",
   "sec": "Task Statement 4.5: 효율적인 batch 처리 전략 설계하기",
-  "order": 393,
+  "order": 373,
   "n": 1
  },
  {
   "word": "retain",
   "ko": "그대로 지니고 있다",
   "sec": "Task Statement 4.6: 여러 인스턴스·여러 차례 리뷰 구조 설계하기",
-  "order": 394,
+  "order": 374,
   "n": 1
  },
  {
   "word": "question (v.)",
   "ko": "의심하며 따져 묻다",
   "sec": "Task Statement 4.6: 여러 인스턴스·여러 차례 리뷰 구조 설계하기",
-  "order": 395,
+  "order": 375,
   "n": 1
  },
  {
   "word": "subtle",
   "ko": "눈에 잘 안 띄는, 미묘한",
   "sec": "Task Statement 4.6: 여러 인스턴스·여러 차례 리뷰 구조 설계하기",
-  "order": 396,
+  "order": 376,
   "n": 1
  },
  {
   "word": "pass (n.)",
   "ko": "한 번 훑는 과정",
   "sec": "Task Statement 4.6: 여러 인스턴스·여러 차례 리뷰 구조 설계하기",
-  "order": 397,
+  "order": 377,
   "n": 1
  },
  {
   "word": "dilution",
   "ko": "묽어짐",
   "sec": "Task Statement 4.6: 여러 인스턴스·여러 차례 리뷰 구조 설계하기",
-  "order": 398,
+  "order": 378,
   "n": 1
  },
  {
   "word": "contradictory",
   "ko": "서로 어긋나는",
   "sec": "Task Statement 4.6: 여러 인스턴스·여러 차례 리뷰 구조 설계하기",
-  "order": 399,
+  "order": 379,
   "n": 3
  },
  {
   "word": "data flow",
   "ko": "데이터가 어디서 어디로 흘러가는지",
   "sec": "Task Statement 4.6: 여러 인스턴스·여러 차례 리뷰 구조 설계하기",
-  "order": 400,
+  "order": 380,
   "n": 1
  },
  {
   "word": "verification",
   "ko": "맞는지 다시 확인하는 일",
   "sec": "Task Statement 4.6: 여러 인스턴스·여러 차례 리뷰 구조 설계하기",
-  "order": 401,
+  "order": 381,
   "n": 1
  },
  {
   "word": "calibrated",
   "ko": "기준에 맞게 눈금이 맞춰진",
   "sec": "Task Statement 4.6: 여러 인스턴스·여러 차례 리뷰 구조 설계하기",
-  "order": 402,
+  "order": 382,
   "n": 1
  },
  {
   "word": "progressive summarization",
   "ko": "대화가 길어질 때 요약을 계속 다시 하며 줄여 가는 것",
   "sec": "Task Statement 5.1: 긴 대화에서도 중요한 정보가 남도록 대화 context 관리하기",
-  "order": 403,
+  "order": 383,
   "n": 1
  },
  {
   "word": "condense",
   "ko": "졸여서 줄이다",
   "sec": "Task Statement 5.1: 긴 대화에서도 중요한 정보가 남도록 대화 context 관리하기",
-  "order": 404,
+  "order": 384,
   "n": 1
  },
  {
   "word": "omit",
   "ko": "빠뜨리다",
   "sec": "Task Statement 5.1: 긴 대화에서도 중요한 정보가 남도록 대화 context 관리하기",
-  "order": 405,
+  "order": 385,
   "n": 2
  },
  {
   "word": "reliably",
   "ko": "믿을 만하게, 매번 그렇게",
   "sec": "Task Statement 5.1: 긴 대화에서도 중요한 정보가 남도록 대화 context 관리하기",
-  "order": 406,
+  "order": 386,
   "n": 1
  },
  {
   "word": "accumulate",
   "ko": "쌓이다",
   "sec": "Task Statement 5.1: 긴 대화에서도 중요한 정보가 남도록 대화 context 관리하기",
-  "order": 407,
+  "order": 387,
   "n": 1
  },
  {
   "word": "disproportionately",
   "ko": "균형에 안 맞게 지나치게",
   "sec": "Task Statement 5.1: 긴 대화에서도 중요한 정보가 남도록 대화 context 관리하기",
-  "order": 408,
+  "order": 388,
   "n": 1
  },
  {
   "word": "relevance",
   "ko": "지금 일과 얼마나 상관있는가",
   "sec": "Task Statement 5.1: 긴 대화에서도 중요한 정보가 남도록 대화 context 관리하기",
-  "order": 409,
+  "order": 389,
   "n": 1
  },
  {
   "word": "coherence",
   "ko": "앞뒤가 맞고 하나로 이어짐",
   "sec": "Task Statement 5.1: 긴 대화에서도 중요한 정보가 남도록 대화 context 관리하기",
-  "order": 410,
+  "order": 390,
   "n": 1
  },
  {
   "word": "transactional facts",
   "ko": "거래에 관한 딱 떨어지는 사실들",
   "sec": "Task Statement 5.1: 긴 대화에서도 중요한 정보가 남도록 대화 context 관리하기",
-  "order": 411,
+  "order": 391,
   "n": 1
  },
  {
   "word": "persistent",
   "ko": "사라지지 않고 계속 남는",
   "sec": "Task Statement 5.1: 긴 대화에서도 중요한 정보가 남도록 대화 context 관리하기",
-  "order": 412,
+  "order": 392,
   "n": 1
  },
  {
   "word": "layer",
   "ko": "층. 요약과 따로 두는 별개의 자리",
   "sec": "Task Statement 5.1: 긴 대화에서도 중요한 정보가 남도록 대화 context 관리하기",
-  "order": 413,
+  "order": 393,
   "n": 1
  },
  {
   "word": "trim",
   "ko": "필요 없는 부분을 잘라내다",
   "sec": "Task Statement 5.1: 긴 대화에서도 중요한 정보가 남도록 대화 context 관리하기",
-  "order": 414,
+  "order": 394,
   "n": 1
  },
  {
   "word": "aggregated",
   "ko": "여러 곳에서 모아 합친",
   "sec": "Task Statement 5.1: 긴 대화에서도 중요한 정보가 남도록 대화 context 관리하기",
-  "order": 415,
+  "order": 395,
   "n": 1
  },
  {
   "word": "mitigate",
   "ko": "정도를 누그러뜨리다",
   "sec": "Task Statement 5.1: 긴 대화에서도 중요한 정보가 남도록 대화 context 관리하기",
-  "order": 416,
+  "order": 396,
   "n": 1
  },
  {
   "word": "position effects",
   "ko": "어디에 놓였느냐에 따라 달라지는 효과",
   "sec": "Task Statement 5.1: 긴 대화에서도 중요한 정보가 남도록 대화 context 관리하기",
-  "order": 417,
+  "order": 397,
   "n": 1
  },
  {
   "word": "methodological",
   "ko": "어떤 방법으로 얻었는가에 관한",
   "sec": "Task Statement 5.1: 긴 대화에서도 중요한 정보가 남도록 대화 context 관리하기",
-  "order": 418,
+  "order": 398,
   "n": 1
  },
  {
   "word": "upstream",
   "ko": "이 단계보다 앞선",
   "sec": "Task Statement 5.1: 긴 대화에서도 중요한 정보가 남도록 대화 context 관리하기",
-  "order": 419,
+  "order": 399,
   "n": 1
  },
  {
   "word": "reasoning chain",
   "ko": "생각이 이어진 사슬, 사고 과정",
   "sec": "Task Statement 5.1: 긴 대화에서도 중요한 정보가 남도록 대화 context 관리하기",
-  "order": 420,
+  "order": 400,
   "n": 1
  },
  {
   "word": "budget",
   "ko": "쓸 수 있는 몫",
   "sec": "Task Statement 5.1: 긴 대화에서도 중요한 정보가 남도록 대화 context 관리하기",
-  "order": 421,
+  "order": 401,
   "n": 1
  },
  {
   "word": "trigger",
   "ko": "그 일이 벌어지게 하는 방아쇠",
   "sec": "Task Statement 5.2: 효과적인 에스컬레이션과 애매함 해소 패턴 설계하기",
-  "order": 422,
+  "order": 402,
   "n": 1
  },
  {
   "word": "gap",
   "ko": "정책에 아무 말이 없는 빈 곳",
   "sec": "Task Statement 5.2: 효과적인 에스컬레이션과 애매함 해소 패턴 설계하기",
-  "order": 423,
+  "order": 403,
   "n": 1
  },
  {
   "word": "inability",
   "ko": "할 수 없음",
   "sec": "Task Statement 5.2: 효과적인 에스컬레이션과 애매함 해소 패턴 설계하기",
-  "order": 424,
+  "order": 404,
   "n": 1
  },
  {
   "word": "explicitly demand",
   "ko": "분명히 밝혀 요구하다",
   "sec": "Task Statement 5.2: 효과적인 에스컬레이션과 애매함 해소 패턴 설계하기",
-  "order": 425,
+  "order": 405,
   "n": 1
  },
  {
   "word": "straightforward",
   "ko": "간단한, 복잡하지 않은",
   "sec": "Task Statement 5.2: 효과적인 에스컬레이션과 애매함 해소 패턴 설계하기",
-  "order": 426,
+  "order": 406,
   "n": 1
  },
  {
   "word": "sentiment",
   "ko": "감정, 정서",
   "sec": "Task Statement 5.2: 효과적인 에스컬레이션과 애매함 해소 패턴 설계하기",
-  "order": 427,
+  "order": 407,
   "n": 1
  },
  {
   "word": "proxy",
   "ko": "직접 못 재는 것을 대신 재는 잣대",
   "sec": "Task Statement 5.2: 효과적인 에스컬레이션과 애매함 해소 패턴 설계하기",
-  "order": 428,
+  "order": 408,
   "n": 1
  },
  {
   "word": "unreliable",
   "ko": "믿기 어려운",
   "sec": "Task Statement 5.2: 효과적인 에스컬레이션과 애매함 해소 패턴 설계하기",
-  "order": 429,
+  "order": 409,
   "n": 1
  },
  {
   "word": "clarification",
   "ko": "분명하게 하기 위해 되묻는 것",
   "sec": "Task Statement 5.2: 효과적인 에스컬레이션과 애매함 해소 패턴 설계하기",
-  "order": 430,
+  "order": 410,
   "n": 1
  },
  {
   "word": "heuristic",
   "ko": "정확한 근거 없이 경험칙으로 어림하는",
   "sec": "Task Statement 5.2: 효과적인 에스컬레이션과 애매함 해소 패턴 설계하기",
-  "order": 431,
+  "order": 411,
   "n": 1
  },
  {
   "word": "autonomously",
   "ko": "스스로, 알아서",
   "sec": "Task Statement 5.2: 효과적인 에스컬레이션과 애매함 해소 패턴 설계하기",
-  "order": 432,
+  "order": 412,
   "n": 1
  },
  {
   "word": "honor (v.)",
   "ko": "요청·약속을 그대로 지키다",
   "sec": "Task Statement 5.2: 효과적인 에스컬레이션과 애매함 해소 패턴 설계하기",
-  "order": 433,
+  "order": 413,
   "n": 1
  },
  {
   "word": "acknowledge",
   "ko": "그렇다고 알아주고 인정하다",
   "sec": "Task Statement 5.2: 효과적인 에스컬레이션과 애매함 해소 패턴 설계하기",
-  "order": 434,
+  "order": 414,
   "n": 1
  },
  {
   "word": "reiterate",
   "ko": "다시 한번 말하다",
   "sec": "Task Statement 5.2: 효과적인 에스컬레이션과 애매함 해소 패턴 설계하기",
-  "order": 435,
+  "order": 415,
   "n": 1
  },
  {
   "word": "silent on ~",
   "ko": "~에 대해 아무 말이 없는",
   "sec": "Task Statement 5.2: 효과적인 에스컬레이션과 애매함 해소 패턴 설계하기",
-  "order": 436,
+  "order": 416,
   "n": 1
  },
  {
   "word": "price matching",
   "ko": "다른 곳 가격에 맞춰 주는 것",
   "sec": "Task Statement 5.2: 효과적인 에스컬레이션과 애매함 해소 패턴 설계하기",
-  "order": 437,
+  "order": 417,
   "n": 1
  },
  {
   "word": "identifier",
   "ko": "누구인지 가려내는 식별 정보",
   "sec": "Task Statement 5.2: 효과적인 에스컬레이션과 애매함 해소 패턴 설계하기",
-  "order": 438,
+  "order": 418,
   "n": 1
  },
  {
   "word": "alternative approaches",
   "ko": "대신 해 볼 만한 다른 방법",
   "sec": "Task Statement 5.3: 멀티에이전트 시스템 전반의 오류 전달 전략 구현하기",
-  "order": 439,
+  "order": 419,
   "n": 1
  },
  {
   "word": "suppress",
   "ko": "드러나지 않게 눌러 덮다",
   "sec": "Task Statement 5.3: 멀티에이전트 시스템 전반의 오류 전달 전략 구현하기",
-  "order": 440,
+  "order": 420,
   "n": 2
  },
  {
   "word": "silently",
   "ko": "알리지 않고 조용히",
   "sec": "Task Statement 5.3: 멀티에이전트 시스템 전반의 오류 전달 전략 구현하기",
-  "order": 441,
+  "order": 421,
   "n": 1
  },
  {
   "word": "potential",
   "ko": "가능성 있는",
   "sec": "Task Statement 5.3: 멀티에이전트 시스템 전반의 오류 전달 전략 구현하기",
-  "order": 442,
+  "order": 422,
   "n": 1
  },
  {
   "word": "annotation",
   "ko": "덧붙여 적는 표시",
   "sec": "Task Statement 5.3: 멀티에이전트 시스템 전반의 오류 전달 전략 구현하기",
-  "order": 443,
+  "order": 423,
   "n": 1
  },
  {
   "word": "well-supported",
   "ko": "근거가 잘 받쳐 주는",
   "sec": "Task Statement 5.3: 멀티에이전트 시스템 전반의 오류 전달 전략 구현하기",
-  "order": 444,
+  "order": 424,
   "n": 1
  },
  {
   "word": "degradation",
   "ko": "질이 떨어짐",
   "sec": "Task Statement 5.4: 큰 코드베이스를 살필 때 context 를 잘 관리하기",
-  "order": 445,
+  "order": 425,
   "n": 1
  },
  {
   "word": "extended",
   "ko": "길게 늘어진",
   "sec": "Task Statement 5.4: 큰 코드베이스를 살필 때 context 를 잘 관리하기",
-  "order": 446,
+  "order": 426,
   "n": 1
  },
  {
   "word": "reference (v.)",
   "ko": "가리켜 언급하다",
   "sec": "Task Statement 5.4: 큰 코드베이스를 살필 때 context 를 잘 관리하기",
-  "order": 447,
+  "order": 427,
   "n": 1
  },
  {
   "word": "scratchpad",
   "ko": "임시로 적어 두는 메모장",
   "sec": "Task Statement 5.4: 큰 코드베이스를 살필 때 context 를 잘 관리하기",
-  "order": 448,
+  "order": 428,
   "n": 1
  },
  {
   "word": "high-level",
   "ko": "세부가 아닌 큰 틀의",
   "sec": "Task Statement 5.4: 큰 코드베이스를 살필 때 context 를 잘 관리하기",
-  "order": 449,
+  "order": 429,
   "n": 1
  },
  {
   "word": "crash recovery",
   "ko": "뻗었을 때 되살리는 일",
   "sec": "Task Statement 5.4: 큰 코드베이스를 살필 때 context 를 잘 관리하기",
-  "order": 450,
+  "order": 430,
   "n": 1
  },
  {
   "word": "manifest",
   "ko": "무엇이 어디 있는지 적어 둔 목록 파일",
   "sec": "Task Statement 5.4: 큰 코드베이스를 살필 때 context 를 잘 관리하기",
-  "order": 451,
+  "order": 431,
   "n": 1
  },
  {
   "word": "export",
   "ko": "밖으로 내보내 저장하다",
   "sec": "Task Statement 5.4: 큰 코드베이스를 살필 때 context 를 잘 관리하기",
-  "order": 452,
+  "order": 432,
   "n": 1
  },
  {
   "word": "counteract",
   "ko": "반대로 작용해 막아 내다",
   "sec": "Task Statement 5.4: 큰 코드베이스를 살필 때 context 를 잘 관리하기",
-  "order": 453,
+  "order": 433,
   "n": 1
  },
  {
   "word": "compact (v.)",
   "ko": "눌러 압축하다",
   "sec": "Task Statement 5.4: 큰 코드베이스를 살필 때 context 를 잘 관리하기",
-  "order": 454,
+  "order": 434,
   "n": 1
  },
  {
   "word": "aggregate",
   "ko": "전부 합쳐 뭉뚱그린",
   "sec": "Task Statement 5.5: 사람 검토 workflow 와 확신도 보정 설계하기",
-  "order": 455,
+  "order": 435,
   "n": 1
  },
  {
   "word": "mask (v.)",
   "ko": "가려서 안 보이게 하다",
   "sec": "Task Statement 5.5: 사람 검토 workflow 와 확신도 보정 설계하기",
-  "order": 456,
+  "order": 436,
   "n": 1
  },
  {
   "word": "metric",
   "ko": "재서 나타낸 수치",
   "sec": "Task Statement 5.5: 사람 검토 workflow 와 확신도 보정 설계하기",
-  "order": 457,
+  "order": 437,
   "n": 1
  },
  {
   "word": "stratified",
   "ko": "층으로 나눈. 종류별로 갈라 각각에서 뽑는다",
   "sec": "Task Statement 5.5: 사람 검토 workflow 와 확신도 보정 설계하기",
-  "order": 458,
+  "order": 438,
   "n": 1
  },
  {
   "word": "sampling",
   "ko": "표본 뽑기",
   "sec": "Task Statement 5.5: 사람 검토 workflow 와 확신도 보정 설계하기",
-  "order": 459,
+  "order": 439,
   "n": 1
  },
  {
   "word": "calibrate",
   "ko": "실제와 맞도록 눈금을 맞추다",
   "sec": "Task Statement 5.5: 사람 검토 workflow 와 확신도 보정 설계하기",
-  "order": 460,
+  "order": 440,
   "n": 1
  },
  {
   "word": "labeled",
   "ko": "정답이 붙어 있는",
   "sec": "Task Statement 5.5: 사람 검토 workflow 와 확신도 보정 설계하기",
-  "order": 461,
+  "order": 441,
   "n": 1
  },
  {
   "word": "validation set",
   "ko": "성능을 재려고 따로 떼어 둔 자료",
   "sec": "Task Statement 5.5: 사람 검토 workflow 와 확신도 보정 설계하기",
-  "order": 462,
+  "order": 442,
   "n": 1
  },
  {
   "word": "segment",
   "ko": "갈라 놓은 한 구간",
   "sec": "Task Statement 5.5: 사람 검토 workflow 와 확신도 보정 설계하기",
-  "order": 463,
+  "order": 443,
   "n": 1
  },
  {
   "word": "ongoing",
   "ko": "계속 이어지는",
   "sec": "Task Statement 5.5: 사람 검토 workflow 와 확신도 보정 설계하기",
-  "order": 464,
+  "order": 444,
   "n": 1
  },
  {
   "word": "capacity",
   "ko": "감당할 수 있는 양",
   "sec": "Task Statement 5.5: 사람 검토 workflow 와 확신도 보정 설계하기",
-  "order": 465,
+  "order": 445,
   "n": 1
  },
  {
   "word": "claim-source mapping",
   "ko": "주장과 그 출처를 이어 둔 짝",
   "sec": "Task Statement 5.6: 여러 출처를 종합할 때 정보의 출처를 지키고 불확실성 다루기",
-  "order": 466,
+  "order": 446,
   "n": 1
  },
  {
   "word": "merge",
   "ko": "합쳐 하나로 만들다",
   "sec": "Task Statement 5.6: 여러 출처를 종합할 때 정보의 출처를 지키고 불확실성 다루기",
-  "order": 467,
+  "order": 447,
   "n": 1
  },
  {
   "word": "credible",
   "ko": "믿을 만한",
   "sec": "Task Statement 5.6: 여러 출처를 종합할 때 정보의 출처를 지키고 불확실성 다루기",
-  "order": 468,
+  "order": 448,
   "n": 1
  },
  {
   "word": "arbitrarily",
   "ko": "근거 없이 아무렇게나",
   "sec": "Task Statement 5.6: 여러 출처를 종합할 때 정보의 출처를 지키고 불확실성 다루기",
-  "order": 469,
+  "order": 449,
   "n": 1
  },
  {
   "word": "temporal",
   "ko": "시간·시점에 관한",
   "sec": "Task Statement 5.6: 여러 출처를 종합할 때 정보의 출처를 지키고 불확실성 다루기",
-  "order": 470,
+  "order": 450,
   "n": 1
  },
  {
   "word": "misinterpret",
   "ko": "잘못 해석하다",
   "sec": "Task Statement 5.6: 여러 출처를 종합할 때 정보의 출처를 지키고 불확실성 다루기",
-  "order": 471,
+  "order": 451,
   "n": 1
  },
  {
   "word": "excerpt",
   "ko": "원문에서 따온 대목",
   "sec": "Task Statement 5.6: 여러 출처를 종합할 때 정보의 출처를 지키고 불확실성 다루기",
-  "order": 472,
+  "order": 452,
   "n": 1
  },
  {
   "word": "well-established",
   "ko": "이미 널리 받아들여진",
   "sec": "Task Statement 5.6: 여러 출처를 종합할 때 정보의 출처를 지키고 불확실성 다루기",
-  "order": 473,
+  "order": 453,
   "n": 1
  },
  {
   "word": "contested",
   "ko": "아직 다툼이 있는",
   "sec": "Task Statement 5.6: 여러 출처를 종합할 때 정보의 출처를 지키고 불확실성 다루기",
-  "order": 474,
+  "order": 454,
   "n": 2
  },
  {
   "word": "characterization",
   "ko": "어떤 것으로 규정해 말했는가",
   "sec": "Task Statement 5.6: 여러 출처를 종합할 때 정보의 출처를 지키고 불확실성 다루기",
-  "order": 475,
+  "order": 455,
   "n": 1
  },
  {
   "word": "reconcile",
   "ko": "어긋난 것을 맞춰 화해시키다",
   "sec": "Task Statement 5.6: 여러 출처를 종합할 때 정보의 출처를 지키고 불확실성 다루기",
-  "order": 476,
+  "order": 456,
   "n": 1
  },
  {
   "word": "annotated",
   "ko": "표시가 달린",
   "sec": "Task Statement 5.6: 여러 출처를 종합할 때 정보의 출처를 지키고 불확실성 다루기",
-  "order": 477,
+  "order": 457,
   "n": 1
  },
  {
   "word": "render",
   "ko": "어떤 모양으로 나타내 보이다",
   "sec": "Task Statement 5.6: 여러 출처를 종합할 때 정보의 출처를 지키고 불확실성 다루기",
-  "order": 478,
-  "n": 1
- },
- {
-  "word": "Build ~",
-  "ko": "직접 만들어 보라. 이 장은 전부 명령문이다",
-  "sec": "7. 어떻게 준비할 것인가",
-  "order": 479,
+  "order": 458,
   "n": 1
  },
  {
   "word": "at least one",
   "ko": "적어도 하나",
   "sec": "7. 어떻게 준비할 것인가",
-  "order": 480,
+  "order": 459,
   "n": 1
  },
  {
   "word": "hands-on",
   "ko": "직접 손으로 해 보는",
   "sec": "8. 준비 연습 과제",
-  "order": 481,
+  "order": 460,
   "n": 1
  },
  {
   "word": "reinforce",
   "ko": "다져서 튼튼하게 하다",
   "sec": "8. 준비 연습 과제",
-  "order": 482,
+  "order": 461,
   "n": 1
  },
  {
   "word": "boundary conditions",
   "ko": "여기까지가 이 tool 의 몫이라는 경계 조건",
   "sec": "8. 준비 연습 과제",
-  "order": 483,
+  "order": 462,
   "n": 1
  },
  {
   "word": "functionality",
   "ko": "하는 일, 기능",
   "sec": "8. 준비 연습 과제",
-  "order": 484,
+  "order": 463,
   "n": 1
  },
  {
   "word": "varying",
   "ko": "저마다 다른",
   "sec": "8. 준비 연습 과제",
-  "order": 485,
+  "order": 464,
   "n": 1
  },
  {
   "word": "absent",
   "ko": "아예 없는",
   "sec": "8. 준비 연습 과제",
-  "order": 486,
+  "order": 465,
   "n": 1
  },
  {
   "word": "resolvable",
   "ko": "풀 수 있는",
   "sec": "8. 준비 연습 과제",
-  "order": 487,
+  "order": 466,
   "n": 1
  },
  {
   "word": "variety",
   "ko": "가지가지로 다름",
   "sec": "8. 준비 연습 과제",
-  "order": 488,
+  "order": 467,
   "n": 1
  },
  {
   "word": "oversized",
   "ko": "정해진 크기를 넘는",
   "sec": "8. 준비 연습 과제",
-  "order": 489,
+  "order": 468,
   "n": 1
  },
  {
   "word": "relative to ~",
   "ko": "~에 견주어",
   "sec": "8. 준비 연습 과제",
-  "order": 490,
+  "order": 469,
   "n": 1
  },
  {
   "word": "provenance",
   "ko": "그 정보가 어디서 왔는지의 내력",
   "sec": "8. 준비 연습 과제",
-  "order": 491,
+  "order": 470,
   "n": 1
  },
  {
   "word": "inheritance",
   "ko": "물려받음",
   "sec": "8. 준비 연습 과제",
-  "order": 492,
+  "order": 471,
   "n": 1
  },
  {
   "word": "evidence excerpt",
   "ko": "근거로 삼은 원문 대목",
   "sec": "8. 준비 연습 과제",
-  "order": 493,
+  "order": 472,
   "n": 1
  },
  {
   "word": "simulate",
   "ko": "실제인 것처럼 흉내 내다",
   "sec": "8. 준비 연습 과제",
-  "order": 494,
+  "order": 473,
   "n": 1
  },
  {
   "word": "illustrate",
   "ko": "예를 들어 보여 주다",
   "sec": "9. 샘플 문항",
-  "order": 495,
+  "order": 474,
   "n": 1
  },
  {
   "word": "aid learning",
   "ko": "공부를 돕다",
   "sec": "9. 샘플 문항",
-  "order": 496,
+  "order": 475,
   "n": 1
  },
  {
   "word": "deterministic guarantees",
   "ko": "반드시 그렇게 된다는 확정적 보장",
   "sec": "9. 샘플 문항",
-  "order": 497,
+  "order": 476,
   "n": 1
  },
  {
   "word": "insufficient",
   "ko": "충분하지 않은",
   "sec": "9. 샘플 문항",
-  "order": 498,
+  "order": 477,
   "n": 1
  },
  {
   "word": "high-leverage",
   "ko": "적은 힘으로 큰 효과를 내는",
   "sec": "9. 샘플 문항",
-  "order": 499,
+  "order": 478,
   "n": 1
  },
  {
   "word": "over-engineered",
   "ko": "필요 이상으로 복잡하게 만든",
   "sec": "9. 샘플 문항",
-  "order": 500,
+  "order": 479,
   "n": 1
  },
  {
   "word": "warrant (v.)",
   "ko": "그럴 만한 값어치가 있다",
   "sec": "9. 샘플 문항",
-  "order": 501,
+  "order": 480,
   "n": 1
  },
  {
   "word": "proportionate",
   "ko": "크기가 알맞은, 과하지 않은",
   "sec": "9. 샘플 문항",
-  "order": 502,
+  "order": 481,
   "n": 1
  },
  {
   "word": "poorly calibrated",
   "ko": "실제와 눈금이 안 맞는",
   "sec": "9. 샘플 문항",
-  "order": 503,
+  "order": 482,
   "n": 1
  },
  {
   "word": "correlate with ~",
   "ko": "~와 함께 움직이다, 상관관계가 있다",
   "sec": "9. 샘플 문항",
-  "order": 504,
+  "order": 483,
   "n": 1
  },
  {
   "word": "emerge",
   "ko": "나중에 드러나다",
   "sec": "9. 샘플 문항",
-  "order": 505,
+  "order": 484,
   "n": 1
  },
  {
   "word": "maintainable",
   "ko": "나중에 손보기 쉬운",
   "sec": "9. 샘플 문항",
-  "order": 506,
+  "order": 485,
   "n": 1
  },
  {
   "word": "infer",
   "ko": "겉에 없는 것을 미루어 짐작하다",
   "sec": "9. 샘플 문항",
-  "order": 507,
+  "order": 486,
   "n": 1
  },
  {
   "word": "directory-bound",
   "ko": "그 디렉터리에 매여 있는",
   "sec": "9. 샘플 문항",
-  "order": 508,
+  "order": 487,
   "n": 1
  },
  {
   "word": "coherent",
   "ko": "앞뒤가 맞고 하나로 이어지는",
   "sec": "9. 샘플 문항",
-  "order": 509,
+  "order": 488,
   "n": 1
  },
  {
   "word": "blame",
   "ko": "탓하다",
   "sec": "9. 샘플 문항",
-  "order": 510,
+  "order": 489,
   "n": 1
  },
  {
   "word": "exhausted",
   "ko": "다 써서 남지 않은",
   "sec": "9. 샘플 문항",
-  "order": 511,
+  "order": 490,
   "n": 1
  },
  {
   "word": "round trip",
   "ko": "갔다 오는 왕복",
   "sec": "9. 샘플 문항",
-  "order": 512,
+  "order": 491,
   "n": 1
  },
  {
   "word": "overhead",
   "ko": "본래 일 외에 더 드는 부담",
   "sec": "9. 샘플 문항",
-  "order": 513,
+  "order": 492,
   "n": 1
  },
  {
   "word": "principle of least privilege",
   "ko": "최소 권한 원칙. 필요한 만큼만 권한을 준다",
   "sec": "9. 샘플 문항",
-  "order": 514,
+  "order": 493,
   "n": 1
  },
  {
   "word": "separation of concerns",
   "ko": "관심사 분리. 서로 다른 일은 서로 다른 곳이 맡는다",
   "sec": "9. 샘플 문항",
-  "order": 515,
+  "order": 494,
   "n": 1
  },
  {
   "word": "speculative",
   "ko": "짐작에 기댄",
   "sec": "9. 샘플 문항",
-  "order": 516,
+  "order": 495,
   "n": 1
  },
  {
   "word": "hang indefinitely",
   "ko": "끝없이 멈춰 있다",
   "sec": "9. 샘플 문항",
-  "order": 517,
+  "order": 496,
   "n": 1
  },
  {
   "word": "workaround",
   "ko": "정공법이 아닌 우회책",
   "sec": "9. 샘플 문항",
-  "order": 518,
+  "order": 497,
   "n": 1
  },
  {
   "word": "technical debt",
   "ko": "기술 부채. 당장 빨리 가려고 미뤄 둔 정리 작업",
   "sec": "9. 샘플 문항",
-  "order": 519,
+  "order": 498,
   "n": 1
  },
  {
   "word": "misconception",
   "ko": "잘못 알고 있는 것",
   "sec": "9. 샘플 문항",
-  "order": 520,
+  "order": 499,
   "n": 1
  },
  {
   "word": "superficial",
   "ko": "겉만 훑는",
   "sec": "9. 샘플 문항",
-  "order": 521,
+  "order": 500,
   "n": 1
  },
  {
   "word": "consensus",
   "ko": "여럿의 의견이 모임",
   "sec": "9. 샘플 문항",
-  "order": 522,
+  "order": 501,
   "n": 1
  },
  {
   "word": "intermittently",
   "ko": "이따금씩, 들쑥날쑥하게",
   "sec": "9. 샘플 문항",
-  "order": 523,
-  "n": 1
- },
- {
-  "word": "criterion-referenced",
-  "ko": "준거 참조. 정해진 기준에 견주어 평가하는 방식",
-  "sec": "10. 시험은 어떻게 채점되는가",
-  "order": 524,
-  "n": 1
- },
- {
-  "word": "outperform",
-  "ko": "남보다 더 잘하다",
-  "sec": "10. 시험은 어떻게 채점되는가",
-  "order": 525,
-  "n": 1
- },
- {
-  "word": "peers",
-  "ko": "같은 처지의 다른 사람들",
-  "sec": "10. 시험은 어떻게 채점되는가",
-  "order": 526,
-  "n": 1
- },
- {
-  "word": "standard-setting study",
-  "ko": "합격선을 정하기 위한 공식 연구 절차",
-  "sec": "10. 시험은 어떻게 채점되는가",
-  "order": 527,
-  "n": 1
- },
- {
-  "word": "subject matter expert",
-  "ko": "그 분야를 잘 아는 전문가",
-  "sec": "10. 시험은 어떻게 채점되는가",
-  "order": 528,
-  "n": 1
- },
- {
-  "word": "minimally qualified",
-  "ko": "겨우 자격을 갖춘, 최소 수준을 넘긴",
-  "sec": "10. 시험은 어떻게 채점되는가",
-  "order": 529,
-  "n": 1
- },
- {
-  "word": "cut score",
-  "ko": "합격선",
-  "sec": "10. 시험은 어떻게 채점되는가",
-  "order": 530,
-  "n": 1
- },
- {
-  "word": "equate",
-  "ko": "서로 견줄 수 있도록 같은 잣대로 맞추다",
-  "sec": "10. 시험은 어떻게 채점되는가",
-  "order": 531,
-  "n": 1
- },
- {
-  "word": "checkout",
-  "ko": "결제 절차",
-  "sec": "11. 접수와 일정 잡기",
-  "order": 532,
-  "n": 1
- },
- {
-  "word": "tier",
-  "ko": "등급",
-  "sec": "11. 접수와 일정 잡기",
-  "order": 533,
-  "n": 1
- },
- {
-  "word": "proctoring",
-  "ko": "감독",
-  "sec": "11. 접수와 일정 잡기",
-  "order": 534,
-  "n": 1
- },
- {
-  "word": "forfeit",
-  "ko": "권리를 잃다, 몰수당하다",
-  "sec": "11. 접수와 일정 잡기",
-  "order": 535,
-  "n": 1
- },
- {
-  "word": "unexpired",
-  "ko": "유효기간이 지나지 않은",
-  "sec": "12. 시험 정책",
-  "order": 536,
-  "n": 1
- },
- {
-  "word": "accommodations",
-  "ko": "편의 제공. '숙소'가 아니다",
-  "sec": "12. 시험 정책",
-  "order": 537,
-  "n": 1
- },
- {
-  "word": "in accordance with ~",
-  "ko": "~에 따라",
-  "sec": "12. 시험 정책",
-  "order": 538,
-  "n": 1
- },
- {
-  "word": "rolling twelve-month period",
-  "ko": "오늘을 기준으로 거슬러 센 12개월. 달력상의 해가 아니다",
-  "sec": "12. 시험 정책",
-  "order": 539,
-  "n": 1
- },
- {
-  "word": "no-show",
-  "ko": "예약해 놓고 나타나지 않음",
-  "sec": "12. 시험 정책",
-  "order": 540,
-  "n": 1
- },
- {
-  "word": "administered",
-  "ko": "시행되는",
-  "sec": "13. 시험 당일과 행동 규칙",
-  "order": 541,
-  "n": 1
- },
- {
-  "word": "integrity",
-  "ko": "흠 없이 온전함. 자격증의 신뢰성",
-  "sec": "13. 시험 당일과 행동 규칙",
-  "order": 542,
-  "n": 1
- },
- {
-  "word": "refrain from ~",
-  "ko": "~하지 않고 참다",
-  "sec": "13. 시험 당일과 행동 규칙",
-  "order": 543,
-  "n": 1
- },
- {
-  "word": "reproduce",
-  "ko": "그대로 옮겨 만들다",
-  "sec": "13. 시험 당일과 행동 규칙",
-  "order": 544,
-  "n": 1
- },
- {
-  "word": "prohibited",
-  "ko": "금지된",
-  "sec": "13. 시험 당일과 행동 규칙",
-  "order": 545,
-  "n": 1
- },
- {
-  "word": "misconduct",
-  "ko": "해서는 안 될 행동",
-  "sec": "13. 시험 당일과 행동 규칙",
-  "order": 546,
-  "n": 1
- },
- {
-  "word": "revocation",
-  "ko": "이미 준 것을 거두어들임",
-  "sec": "13. 시험 당일과 행동 규칙",
-  "order": 547,
-  "n": 1
- },
- {
-  "word": "non-disclosure agreement",
-  "ko": "밖에 알리지 않겠다는 서약(NDA)",
-  "sec": "14. 비밀 유지 서약",
-  "order": 548,
-  "n": 1
- },
- {
-  "word": "proprietary",
-  "ko": "그 회사에 속한, 독점적인",
-  "sec": "14. 비밀 유지 서약",
-  "order": 549,
-  "n": 1
- },
- {
-  "word": "distribute",
-  "ko": "퍼뜨리다",
-  "sec": "14. 비밀 유지 서약",
-  "order": 550,
-  "n": 1
- },
- {
-  "word": "awarded",
-  "ko": "수여된",
-  "sec": "15. 자격 유지와 갱신",
-  "order": 551,
-  "n": 1
- },
- {
-  "word": "evolve",
-  "ko": "발전하며 바뀌다",
-  "sec": "15. 자격 유지와 갱신",
-  "order": 552,
-  "n": 1
- },
- {
-  "word": "lapse",
-  "ko": "기한이 지나 효력을 잃다",
-  "sec": "15. 자격 유지와 갱신",
-  "order": 553,
-  "n": 1
- },
- {
-  "word": "subject to ~",
-  "ko": "~의 적용을 받는",
-  "sec": "15. 자격 유지와 갱신",
-  "order": 554,
-  "n": 1
- },
- {
-  "word": "appeal",
-  "ko": "결정에 다시 판단해 달라고 제기하는 이의",
-  "sec": "16. 응시자 지원, 이의 제기, 개인정보",
-  "order": 555,
-  "n": 1
- },
- {
-  "word": "notified",
-  "ko": "통보받은",
-  "sec": "16. 응시자 지원, 이의 제기, 개인정보",
-  "order": 556,
-  "n": 1
- },
- {
-  "word": "not subject to appeal",
-  "ko": "이의 제기 대상이 아닌",
-  "sec": "16. 응시자 지원, 이의 제기, 개인정보",
-  "order": 557,
-  "n": 1
- },
- {
-  "word": "in-scope",
-  "ko": "범위 안에 드는",
-  "sec": "17. 부록",
-  "order": 558,
+  "order": 502,
   "n": 1
  },
  {
   "word": "adoption",
   "ko": "실제로 받아들여 쓰게 되는 것",
   "sec": "17. 부록",
-  "order": 559,
-  "n": 1
- },
- {
-  "word": "out-of-scope",
-  "ko": "범위 밖의",
-  "sec": "17. 부록",
-  "order": 560,
+  "order": 503,
   "n": 1
  }
 ]
