@@ -3092,5 +3092,14 @@
   "example": "the matcher value \"*\", \"\", or omitted matches all",
   "example_ko": "matcher 값이 \"*\" 이거나 빈칸이거나 아예 빠져 있으면 모두에 걸린다",
   "tip": "emit(내보내다)와 한 글자 차이. o-mit = 빠뜨림 → 무언가가 '없어진다'. omitted = 적지 않은, 생략된"
+ },
+ {
+  "word": "concurrently",
+  "pos": "adv.",
+  "ko": "동시에 (여러 개를 한꺼번에 나란히)",
+  "group": "phrase",
+  "example": "you can run the calls concurrently, sequentially in the order they appear, or in any combination",
+  "example_ko": "호출들을 동시에 돌려도 되고, 나온 순서대로 하나씩 돌려도 되고, 섞어도 된다",
+  "tip": "sequentially(하나씩 차례로)의 반대. in parallel(병렬로)과 거의 같은 뜻. 서로 상관없는 읽기 작업은 동시에, 순서가 중요한 작업은 차례로"
  }
 ]
