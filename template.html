@@ -256,7 +256,7 @@ a.lnk, button.lnk { color: var(--sel-line); background: none; border: 0; padding
   <span class="name">Claude Certified Architect – Foundations 연습</span>
   <span class="meta" id="meta"></span>
   <span class="timer" id="timer" hidden></span>
-  <span class="sync-pill" id="sync-pill" hidden></span>
+  <button class="sync-pill" id="sync-pill" data-sync-now hidden></button>
   <button id="home-btn" data-home>처음 화면</button>
 </header>
 <div class="subbar" id="subbar" hidden></div>
@@ -449,10 +449,10 @@ function renderHome() {
         <div class="row"><button class="btn primary" data-drill="guide">가이드 단어 암기 카드</button><button class="btn" data-drill="exam">문제 단어 암기 카드</button></div>
         <div class="row"><button class="btn" data-screen="words">단어장 전체 표</button></div>
       </section>
-      <section class="mode sync-box">
+      ${CLOUD_OK && (!syncHash || cloudErr) ? `<section class="mode sync-box" id="sync-box">
         <h3>기록 저장 (DB)</h3>
         ${syncBoxHtml()}
-      </section>
+      </section>` : ""}
     </div>
 
     <h2>시나리오별</h2>
@@ -970,13 +970,15 @@ async function cloudSync(quiet) {
     lastSync = new Date(); cloudErr = "";
     return r;
   } catch (e) {
-    cloudErr = "저장소에 연결하지 못했어요. 이 기기에만 저장 중이에요.";
+    cloudErr = "DB 에 연결하지 못했어요. 이 기기에만 저장 중이에요.";
     if (!quiet) toast(cloudErr);
     return null;
   } finally {
     cloudBusy = false;
     const box = $("#sync-status"); if (box) box.textContent = syncStatusText();
     updatePill();
+    // 연결 실패·복구로 처음 화면의 DB 칸이 나타나거나 사라져야 하면 다시 그린다
+    if (ui.screen === "home" && !!$("#sync-box") !== (!syncHash || !!cloudErr) && !document.activeElement?.matches("textarea, input")) render();
   }
 }
 function updatePill() {
@@ -999,7 +1001,7 @@ function syncStatusText() {
 function syncBoxHtml() {
   if (!CLOUD_OK) return `<p>지금은 이 브라우저에만 저장돼요.</p>`;
   if (syncHash) return `<p id="sync-status">${syncStatusText()}</p>
-    <div class="row"><button class="btn" data-sync-now>지금 동기화</button><button class="btn" data-sync-off>이 기기 연결 끊기</button></div>`;
+    <div class="row"><button class="btn primary" data-sync-now>다시 시도</button><button class="btn" data-sync-off>이 기기 연결 끊기</button></div>`;
   return `<p>이 기기는 아직 DB 에 연결되지 않아 이 브라우저에만 저장돼요. 다른 기기에서 쓰던 <b>동기화 암호</b>를 한 번 넣으면 DB 에 저장되고 기록이 이어져요.</p>
     <label for="sync-pass" class="lead" style="margin:0">동기화 암호 (8자 이상)</label>
     <div class="row"><input id="sync-pass" type="password" autocomplete="off" style="flex:1 1 0;min-width:0;border:1px solid #9AA3AF;padding:5px 8px"><button class="btn primary" data-sync-on>연결</button></div>`;
@@ -1080,14 +1082,19 @@ document.addEventListener("click", e => {
       syncHash = h;
       try { localStorage.setItem(SYNC_LS, h); } catch (e) {}
       const r = await cloudSync();
-      if (r) toast(`연결했어요. 저장소에서 푼 문제 ${r.na}개, 단어 ${r.nw}개를 합쳤어요`);
+      if (r) toast(`DB 에 연결했어요. DB 에서 푼 문제 ${r.na}개, 단어 ${r.nw}개를 합쳤어요`);
       render();
     });
     return;
   }
+  if ("syncNow" in d && !syncHash) {
+    if (ui.screen !== "home") return toast("처음 화면의 '기록 저장 (DB)' 칸에 동기화 암호를 넣으면 DB 에 저장돼요");
+    const box = $("#sync-box"); if (box) { box.scrollIntoView({ block: "center" }); $("#sync-pass")?.focus(); }
+    return;
+  }
   if ("syncNow" in d) { cloudSync().then(r => { if (r) { toast(`동기화했어요. 새로 들어온 푼 문제 ${r.na}개, 단어 ${r.nw}개`); render(); } }); return; }
   if ("syncOff" in d) {
-    if (!confirm("이 기기의 연결만 끊어요. 저장소와 이 기기의 기록은 그대로 남아요. 끊을까요?")) return;
+    if (!confirm("이 기기의 DB 연결만 끊어요. DB 와 이 기기의 기록은 그대로 남아요. 끊을까요?")) return;
     syncHash = null; lastSync = null; cloudErr = "";
     try { localStorage.removeItem(SYNC_LS); } catch (e) {}
     updatePill();
