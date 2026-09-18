@@ -3560,5 +3560,59 @@
   "example": "processing may be slowed down based on current demand and your request volume",
   "example_ko": "현재 수요와 요청량에 따라 처리가 느려질 수 있다",
   "tip": "batch 가 1시간을 넘기는 대표적인 이유. 공식 문서도 이때 24시간 뒤 만료되는 요청이 늘 수 있다고 한다"
+ },
+ {
+  "word": "at hand",
+  "pos": "phr.",
+  "ko": "지금 다루고 있는, 당면한",
+  "group": "phrase",
+  "example": "describing the specific table and migration at hand",
+  "example_ko": "지금 다룰 특정 테이블과 마이그레이션을 설명하는",
+  "tip": "'손에 있는'이 아니라 '이번에 처리할'이라는 뜻. 호출마다 바뀌는 정보라는 신호"
+ },
+ {
+  "word": "supply",
+  "pos": "v.",
+  "ko": "(필요한 것을) 주다, 제공하다",
+  "group": "phrase",
+  "example": "the coordinator supplies a different per-call prompt",
+  "example_ko": "coordinator 가 호출할 때마다 다른 프롬프트를 준다",
+  "tip": "provide 와 같은 뜻"
+ },
+ {
+  "word": "per-call",
+  "pos": "adj.",
+  "ko": "호출할 때마다 (한 번 부를 때마다 따로)",
+  "group": "phrase",
+  "example": "a different per-call prompt describing the specific table",
+  "example_ko": "특정 테이블을 설명하는, 호출마다 다른 프롬프트",
+  "tip": "per = ~마다. AgentDefinition.prompt(고정)와 대비되는, 매번 바뀌는 작업 지시"
+ },
+ {
+  "word": "expertise",
+  "pos": "n.",
+  "ko": "전문 지식, 전문성",
+  "group": "phrase",
+  "example": "sets the subagent's persistent system prompt and expertise",
+  "example_ko": "subagent 의 고정된 system prompt 와 전문 지식을 정한다",
+  "tip": "expert(전문가)의 명사. 고정된 역할·지식은 AgentDefinition.prompt 에 둔다"
+ },
+ {
+  "word": "rollback",
+  "pos": "n.",
+  "ko": "되돌리기 (바꾸기 전 상태로 복구)",
+  "group": "phrase",
+  "example": "SQL best practices, rollback strategy, and data integrity checks",
+  "example_ko": "SQL 모범 사례, 되돌리기 전략, 데이터 무결성 검사",
+  "tip": "roll back(v.) = 되돌리다. 마이그레이션이 실패하면 원래대로 돌려놓는 방법"
+ },
+ {
+  "word": "integrity",
+  "pos": "n.",
+  "ko": "무결성 (데이터가 깨지지 않고 올바른 상태)",
+  "group": "phrase",
+  "example": "data integrity checks",
+  "example_ko": "데이터 무결성 검사",
+  "tip": "'정직함'도 되지만 데이터 문맥에서는 '틀리거나 빠진 것 없이 온전함'"
  }
 ]
