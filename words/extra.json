@@ -3506,5 +3506,14 @@
   "example": "after a dozen lookups the raw payloads dominate the context window",
   "example_ko": "조회를 열두 번쯤 하고 나면 데이터가 context 를 가득 채운다",
   "tip": "한 번은 괜찮아도 쌓이면 문제가 된다는 뜻. 'accumulate(쌓이다)'와 같은 신호"
+ },
+ {
+  "word": "sequentially",
+  "pos": "adv.",
+  "ko": "하나씩 차례로",
+  "group": "phrase",
+  "example": "When to provide all issues in a single message (interacting problems) versus fixing them sequentially (independent problems)",
+  "example_ko": "문제들을 한 메시지에 모두 줄 때(서로 얽힌 문제)와 하나씩 차례로 고칠 때(서로 상관없는 문제)",
+  "tip": "공식 가이드 Task 3.5: 서로 얽힌 문제는 한 메시지에, 서로 상관없는 문제는 하나씩 차례로"
  }
 ]
