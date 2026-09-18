@@ -3461,5 +3461,50 @@
   "example": "a second that reformats them into the target schema",
   "example_ko": "두 번째 호출이 그것을 목표 형식으로 다시 맞춘다",
   "tip": "JSON 칸 이름과 종류를 정한 틀. input_schema, JSON schema 로 자주 나온다"
+ },
+ {
+  "word": "payload",
+  "pos": "n.",
+  "ko": "(도구·API 가 돌려준) 데이터 본문",
+  "group": "phrase",
+  "example": "returns a JSON payload with 40+ fields",
+  "example_ko": "칸이 40개 넘는 JSON 데이터를 돌려준다",
+  "tip": "'짐, 적재물'에서 온 말. 응답에 실려 오는 실제 내용이라는 뜻"
+ },
+ {
+  "word": "dominate",
+  "pos": "v.",
+  "ko": "(대부분을) 차지하다, 압도하다",
+  "group": "phrase",
+  "example": "the raw payloads dominate the context window",
+  "example_ko": "가공 안 된 데이터가 context 공간을 대부분 차지한다",
+  "tip": "context 문제에서 나오면 '쓸데없는 것이 자리를 다 먹는다' → 필요한 칸만 남기라는 신호"
+ },
+ {
+  "word": "eligibility",
+  "pos": "n.",
+  "ko": "자격, 해당 여부",
+  "group": "phrase",
+  "example": "only 5 fields matter for return eligibility",
+  "example_ko": "반품 가능 여부에는 칸 5개만 중요하다",
+  "tip": "eligible(자격이 있는)의 명사. 무엇을 판단하는지 알려 주는 말이라, 그 판단에 필요한 칸만 남기면 된다"
+ },
+ {
+  "word": "metadata",
+  "pos": "n.",
+  "ko": "부가 정보 (데이터에 딸린 설명 정보)",
+  "group": "phrase",
+  "example": "shipping carrier metadata, internal warehouse codes, marketing tags",
+  "example_ko": "택배사 부가 정보, 내부 창고 코드, 마케팅 태그",
+  "tip": "문제에서 이렇게 나열된 것들은 '지금 판단에 필요 없는 칸'이라는 힌트다"
+ },
+ {
+  "word": "a dozen",
+  "pos": "phr.",
+  "ko": "열두 개쯤, 여남은 개",
+  "group": "phrase",
+  "example": "after a dozen lookups the raw payloads dominate the context window",
+  "example_ko": "조회를 열두 번쯤 하고 나면 데이터가 context 를 가득 채운다",
+  "tip": "한 번은 괜찮아도 쌓이면 문제가 된다는 뜻. 'accumulate(쌓이다)'와 같은 신호"
  }
 ]
