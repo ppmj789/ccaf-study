@@ -105,6 +105,8 @@ mark.clue { background: var(--mark); color: inherit; padding: 0 1px; }
 .bottombar .mid { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .btn { border: 1px solid #9AA3AF; background: linear-gradient(#FFFFFF, #E9ECF0); padding: 6px 14px; border-radius: 2px; cursor: pointer; font-size: 14px; white-space: nowrap; }
 .btn:hover { border-color: var(--sel-line); }
+a.btn { display: inline-block; text-decoration: none; color: inherit; }
+a.btn.primary { color: #FFFFFF; }
 .btn:disabled { opacity: .45; cursor: default; }
 .btn.primary { background: var(--bar); border-color: var(--bar); color: #FFFFFF; }
 .btn.flag[aria-pressed="true"] { border-color: var(--flag); color: var(--flag); font-weight: 700; }
@@ -401,6 +403,11 @@ function renderHome() {
     <p class="lead">문제 ${pool.length}개 · 풀어 본 문제 ${done}개 · 맞힌 문제 ${ok}개 · 틀린 문제 ${wrong}개${w != null ? ` · 환산 점수 <b>${scaled(w)}</b> / 1000 (합격 720)` : ""}</p>
     ${s && !s.submitted && s.mode !== "single" ? `<p><button class="btn primary" data-resume>이어서 풀기 — ${s.mode === "exam" ? "모의고사" : "연습"} ${s.i + 1}번 문항</button></p>` : ""}
     <div class="modes">
+      <section class="mode">
+        <h3>가이드 대역본</h3>
+        <p>공식 시험 가이드 영어 원문과 한국어 대역, 단어 풀이. 새 창에서 열리고 비밀번호를 넣어야 보여요.</p>
+        <div class="row"><a class="btn primary" href="https://ppmj789.github.io/ccaf-study/guide.html" target="_blank" rel="noopener">가이드 대역본 열기</a></div>
+      </section>
       <section class="mode">
         <h3>시나리오 공부</h3>
         <p>시험에 나오는 6개 상황을 공식 가이드 영어 원문·한국어·흐름 그림·정답 공식으로 정리했어요. 보고 싶은 시나리오를 누르세요.</p>
