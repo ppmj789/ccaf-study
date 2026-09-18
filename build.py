@@ -140,11 +140,39 @@ if os.path.exists(extra_path):
                       "ids": [], "tip": x.get("tip", ""), "freq": max(x.get("freq", 0), count(key))}
 wordlist = sorted(words.values(), key=lambda e: (-e["freq"], e["word"]))
 
+# 가이드 단어: 가이드 대역본의 단어 풀이(scripts/guide_words.py 로 뽑음). 가이드에 나오는 순서 그대로.
+def guide_part(sec):
+    m = re.match(r"Task Statement (\d)\.(\d)", sec)
+    if m:
+        return f"도메인 {m.group(1)}", f"Task {m.group(1)}.{m.group(2)}"
+    if sec.startswith("시나리오"):
+        return "5장 시나리오", sec.split(":")[0]
+    m = re.match(r"(\d+)\.", sec)
+    n = int(m.group(1)) if m else 0
+    label = sec.split(". ", 1)[1] if m else "머리말"
+    if n <= 5:
+        return "1~5장 개요", label
+    if n <= 8:
+        return "6~8장 준비", label
+    if n == 9:
+        return "9장 샘플 문항", label
+    return "10~18장 시험 안내", label
+
+gwords = []
+gpath = os.path.join(ROOT, "words", "guide.json")
+if os.path.exists(gpath):
+    for x in json.load(open(gpath, encoding="utf-8")):
+        part, where = guide_part(x["sec"])
+        gwords.append({"word": x["word"], "ko": x["ko"], "pos": "", "part": part, "where": where,
+                       "order": x["order"], "n": x["n"], "examples": []})
+    if len({w["word"] for w in gwords}) != len(gwords):
+        warn.append("words/guide.json: 같은 단어가 두 번 있음")
+
 site = {}
 if os.path.exists(os.path.join(ROOT, "site.json")):
     site = json.load(open(os.path.join(ROOT, "site.json"), encoding="utf-8"))
 
-data = {"site": site, "domains": DOMAINS, "scenarios": SCENARIOS, "cards": cards, "words": wordlist, "guide": guide,
+data = {"site": site, "domains": DOMAINS, "scenarios": SCENARIOS, "cards": cards, "words": wordlist, "gwords": gwords, "guide": guide,
         "source": {"name": "hamzafarooq/claude-certified-architect", "url": "https://github.com/hamzafarooq/claude-certified-architect", "license": "MIT"}}
 
 tpl = open(os.path.join(ROOT, "template.html"), encoding="utf-8").read()
@@ -159,7 +187,7 @@ multi = sum(1 for c in cards if c.get("select", 1) > 1)
 ai_n = sum(1 for c in cards if c["ai"])
 doubts = [c["id"] for c in cards if c.get("check") == "doubt"]
 by_wg = {g: sum(1 for w in wordlist if w["group"] == g) for g in ("card", "phrase", "guide")}
-print(f"카드 {len(cards)}장 (시나리오별 {by_sc}, 출처 {by_src}, 복수 선택 {multi}, AI 문제 {ai_n}) · 단어 {len(wordlist)}개 {by_wg} · 공부 자료 {len(guide)}편 · 정답 확인 필요 {doubts or '없음'}")
+print(f"카드 {len(cards)}장 (시나리오별 {by_sc}, 출처 {by_src}, 복수 선택 {multi}, AI 문제 {ai_n}) · 단어 {len(wordlist)}개 {by_wg} · 가이드 단어 {len(gwords)}개 · 공부 자료 {len(guide)}편 · 정답 확인 필요 {doubts or '없음'}")
 for w in warn:
     print("경고:", w)
 sys.exit(1 if warn else 0)

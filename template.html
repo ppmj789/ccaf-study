@@ -149,6 +149,7 @@ select { border: 1px solid #9AA3AF; padding: 5px 8px; background: #FFFFFF; borde
 .vtools { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin-bottom: 12px; font-size: 14px; }
 .vtools .count { margin-right: auto; color: var(--muted); font-variant-numeric: tabular-nums; }
 td.word { font-weight: 700; white-space: nowrap; }
+td.word.wrap { white-space: normal; width: 38%; min-width: 8em; }
 td.word small { font-weight: 400; color: var(--muted); margin-left: 4px; }
 td .ex { color: var(--muted); font-size: 13px; }
 td .ex mark { background: var(--mark); color: var(--ink); }
@@ -285,7 +286,7 @@ const need = c => c.select || 1;
 const complete = (c, p) => arr(p).length === need(c);
 
 let state = { answers: {}, words: {}, wordsAt: {}, tries: {}, exams: [], wrongs: {}, notes: {}, reviews: {} };
-let ui = { screen: "home", ko: false, wordsOn: true, filter: "todo", domain: "all", scen: "all", study: 1, vmode: "list", vfilter: "all", vsort: "freq", fi: 0, flip: false, session: null };
+let ui = { screen: "home", ko: false, wordsOn: true, filter: "todo", domain: "all", scen: "all", study: 1, vmode: "list", vtab: "guide", vpart: "all", vfilter: "all", vsort: "freq", fi: 0, flip: false, session: null };
 try { Object.assign(state, JSON.parse(localStorage.getItem(LS)) || {}); } catch (e) {}
 try { Object.assign(ui, JSON.parse(localStorage.getItem(LS + "-ui")) || {}, { flip: false }); } catch (e) {}
 if (ui.session && ui.session.ids.some(id => !byId[id])) ui.session = null;
@@ -437,9 +438,8 @@ function renderHome() {
       </section>
       <section class="mode">
         <h3>단어장</h3>
-        <p>지문과 보기에서 뽑은 시험 영어 ${DATA.words.length}개. 외운 단어 ${DATA.words.filter(x => state.words[x.word] === "known").length}개.</p>
-        <div class="row"><button class="btn primary" data-drill="all">외울 단어 전체 암기 카드</button></div>
-        <div class="row"><button class="btn" data-drill="phrase">시험 질문 표현</button><button class="btn" data-drill="guide">가이드 핵심어</button><button class="btn" data-drill="card">문제 속 단어</button></div>
+        <p>가이드 단어 ${DATA.gwords.length}개 중 외운 단어 <b>${DATA.gwords.filter(x => state.words[x.word] === "known").length}개</b> · 문제 단어 ${DATA.words.length}개 중 ${DATA.words.filter(x => state.words[x.word] === "known").length}개. 가이드 단어는 가이드 대역본에 나오는 순서대로예요.</p>
+        <div class="row"><button class="btn primary" data-drill="guide">가이드 단어 암기 카드</button><button class="btn" data-drill="exam">문제 단어 암기 카드</button></div>
         <div class="row"><button class="btn" data-screen="words">단어장 전체 표</button></div>
       </section>
       <section class="mode sync-box">
@@ -834,15 +834,22 @@ function renderStudy() {
 }
 
 /* ---------- 단어장 ---------- */
+// 탭 두 개: 가이드 단어(DATA.gwords, 가이드 대역본 순서) / 문제 단어(DATA.words, 지문·보기·질문 표현)
 const WGROUP = { card: "문제 속 단어", phrase: "시험 질문 표현", guide: "가이드 핵심어" };
+const GPARTS = ["1~5장 개요", "5장 시나리오", "도메인 1", "도메인 2", "도메인 3", "도메인 4", "도메인 5", "6~8장 준비", "9장 샘플 문항", "10~18장 시험 안내"];
+const isGuideTab = () => ui.vtab !== "exam";
+function wordPool() {
+  if (isGuideTab()) return DATA.gwords.filter(w => !ui.vpart || ui.vpart === "all" || w.part === ui.vpart);
+  return DATA.words.filter(w => !ui.vgroup || ui.vgroup === "all" || (w.group || "card") === ui.vgroup);
+}
 function wordList() {
-  let ws = DATA.words.slice();
-  if (ui.vgroup && ui.vgroup !== "all") ws = ws.filter(w => (w.group || "card") === ui.vgroup);
+  let ws = wordPool();
   if (ui.vfilter === "learn") ws = ws.filter(w => state.words[w.word] !== "known");
   if (ui.vfilter === "known") ws = ws.filter(w => state.words[w.word] === "known");
   if (ui.vsort === "abc") ws.sort((a, b) => a.word.localeCompare(b.word));
   return ws;
 }
+const wordSub = w => w.part ? `${w.part} · ${w.where}${w.n > 1 ? ` · ${w.n}번 나옴` : ""}` : WGROUP[w.group || "card"];
 function exHtml(w, links) {
   return w.examples.slice(0, 2).map(ex => {
     const t = ex.text.replace(/`/g, "");
@@ -852,34 +859,37 @@ function exHtml(w, links) {
   }).join("");
 }
 function renderWords() {
-  const pool = DATA.words.filter(w => !ui.vgroup || ui.vgroup === "all" || (w.group || "card") === ui.vgroup);
+  const g = isGuideTab(), pool = wordPool();
   const all = pool.length, known = pool.filter(w => state.words[w.word] === "known").length;
   const ws = wordList();
-  $("#subbar").innerHTML = `<span class="where"><b>단어장</b>${ui.vgroup && ui.vgroup !== "all" ? " · " + WGROUP[ui.vgroup] : ""} · 전체 ${all} · 외운 단어 ${known} · 남은 단어 ${all - known}</span>`;
+  $("#subbar").innerHTML = `<span class="where"><b>단어장</b> · ${g ? "가이드 단어" + (ui.vpart && ui.vpart !== "all" ? " · " + ui.vpart : "") : "문제 단어" + (ui.vgroup && ui.vgroup !== "all" ? " · " + WGROUP[ui.vgroup] : "")} · 전체 ${all} · 외운 단어 ${known} · 남은 단어 ${all - known}</span>`;
   const tools = `
+    <div class="vtools"><div class="seg-row" role="group" aria-label="단어장 고르기">${[["guide", `가이드 단어 ${DATA.gwords.length}`], ["exam", `문제 단어 ${DATA.words.length}`]].map(([k, l]) => `<button class="btn ${(g ? "guide" : "exam") === k ? "primary" : ""}" data-vtab="${k}" aria-pressed="${(g ? "guide" : "exam") === k}">${l}</button>`).join("")}</div></div>
     <div class="vtools">
       <span class="count">${ws.length}개 표시</span>
       <label>보기 <select id="v-mode"><option value="list" ${ui.vmode === "list" ? "selected" : ""}>표</option><option value="flash" ${ui.vmode === "flash" ? "selected" : ""}>암기 카드</option></select></label>
-      <label>종류 <select id="v-group">${[["all", "전체"], ["card", "문제 속 단어"], ["phrase", "시험 질문 표현"], ["guide", "가이드 핵심어"]].map(([k, l]) => `<option value="${k}" ${(ui.vgroup || "all") === k ? "selected" : ""}>${l}</option>`).join("")}</select></label>
+      ${g
+        ? `<label>부분 <select id="v-part">${[["all", "전체"], ...GPARTS.map(p => [p, p])].map(([k, l]) => `<option value="${k}" ${(ui.vpart || "all") === k ? "selected" : ""}>${l}</option>`).join("")}</select></label>`
+        : `<label>종류 <select id="v-group">${[["all", "전체"], ["card", "문제 속 단어"], ["phrase", "시험 질문 표현"], ["guide", "가이드 핵심어"]].map(([k, l]) => `<option value="${k}" ${(ui.vgroup || "all") === k ? "selected" : ""}>${l}</option>`).join("")}</select></label>`}
       <label>거르기 <select id="v-filter">${[["all", "전체"], ["learn", "외울 것"], ["known", "외운 것"]].map(([k, l]) => `<option value="${k}" ${ui.vfilter === k ? "selected" : ""}>${l}</option>`).join("")}</select></label>
-      <label>정렬 <select id="v-sort"><option value="freq" ${ui.vsort === "freq" ? "selected" : ""}>빈출순</option><option value="abc" ${ui.vsort === "abc" ? "selected" : ""}>ABC순</option></select></label>
+      <label>정렬 <select id="v-sort"><option value="freq" ${ui.vsort === "freq" ? "selected" : ""}>${g ? "가이드 순서" : "빈출순"}</option><option value="abc" ${ui.vsort === "abc" ? "selected" : ""}>ABC순</option></select></label>
     </div>`;
   let body;
   if (!ws.length) body = `<p class="lead">${ui.vfilter === "known" ? "아직 외운 단어가 없어요." : "남은 단어가 없어요."}</p>`;
   else if (ui.vmode === "list") {
     body = `<div class="tbl-wrap"><table>
-      <thead><tr><th>외움</th><th>단어</th><th>뜻과 예문</th><th class="num">빈출</th></tr></thead>
+      <thead><tr><th>외움</th><th>단어</th><th>뜻과 예문</th>${g ? "" : `<th class="num">빈출</th>`}</tr></thead>
       <tbody>${ws.map(w => `<tr>
         <td><input type="checkbox" id="k-${esc(w.word).replace(/\s/g, "_")}" data-know="${esc(w.word)}" ${state.words[w.word] === "known" ? "checked" : ""} aria-label="${esc(w.word)} 외움"></td>
-        <td class="word">${esc(w.word)}<small>${esc(w.pos)}</small><span class="wgroup">${WGROUP[w.group || "card"]}</span></td>
+        <td class="word wrap">${esc(w.word)}<small>${esc(w.pos)}</small><span class="wgroup">${esc(wordSub(w))}</span></td>
         <td>${esc(w.ko)}${exHtml(w, true)}${w.tip ? `<div class="tip">${esc(w.tip)}</div>` : ""}</td>
-        <td class="num">${w.freq ? w.freq + "회" : "—"}</td></tr>`).join("")}</tbody>
+        ${g ? "" : `<td class="num">${w.freq ? w.freq + "회" : "—"}</td>`}</tr>`).join("")}</tbody>
     </table></div>`;
   } else {
     ui.fi = Math.min(ui.fi, ws.length - 1);
     const w = ws[ui.fi];
     body = `<div class="flash">
-      <div class="fp">${ui.fi + 1} / ${ws.length} · ${WGROUP[w.group || "card"]}${w.freq ? ` · 빈출 ${w.freq}회` : ""}</div>
+      <div class="fp">${ui.fi + 1} / ${ws.length} · ${esc(wordSub(w))}${w.freq ? ` · 빈출 ${w.freq}회` : ""}</div>
       <div class="fw">${esc(w.word)}</div><div class="fp">${esc(w.pos)}</div>
       ${ui.flip
         ? `<div class="fk">${esc(w.ko)}</div>${exHtml(w, false)}${w.tip ? `<div class="tip">${esc(w.tip)}</div>` : ""}
@@ -1117,8 +1127,9 @@ document.addEventListener("click", e => {
       return render();
     } catch (err) { return toast("코드를 읽지 못했어요. CCAF1: 로 시작하는 코드 전체를 붙여 넣었는지 확인하세요"); }
   }
-  if ("drill" in d) { ui.vmode = "flash"; ui.vfilter = "learn"; ui.vgroup = d.drill || "all"; ui.fi = 0; ui.flip = false; return go("words"); }
-  if (d.screen === "words" && el.closest(".mode")) { ui.vmode = "list"; ui.vfilter = "all"; ui.vgroup = "all"; }
+  if ("drill" in d) { ui.vmode = "flash"; ui.vfilter = "learn"; ui.vtab = d.drill === "exam" ? "exam" : "guide"; ui.vgroup = "all"; ui.vpart = "all"; ui.vsort = "freq"; ui.fi = 0; ui.flip = false; return go("words"); }
+  if (d.screen === "words" && el.closest(".mode")) { ui.vmode = "list"; ui.vfilter = "all"; ui.vgroup = "all"; ui.vpart = "all"; }
+  if (d.vtab) { ui.vtab = d.vtab; ui.fi = 0; ui.flip = false; saveLocal(); return render(); }
   if ("resume" in d) return go("q");
   if (d.study) { ui.study = Math.max(1, Math.min(6, +d.study)); return go("study"); }
   if (d.scenarioPractice) { ui.scen = d.scenarioPractice; ui.domain = "all"; ui.filter = "all"; return start("practice"); }
@@ -1209,6 +1220,7 @@ document.addEventListener("change", e => {
   if (t.id === "n-scen") { ui.nscen = t.value; saveLocal(); return render(); }
   if (t.id === "s-pick") { ui.study = +t.value; return go("study"); }
   if (t.id === "v-mode") { ui.vmode = t.value; ui.fi = 0; ui.flip = false; saveLocal(); return render(); }
+  if (t.id === "v-part") { ui.vpart = t.value; ui.fi = 0; ui.flip = false; saveLocal(); return render(); }
   if (t.id === "v-group") { ui.vgroup = t.value; ui.fi = 0; ui.flip = false; saveLocal(); return render(); }
   if (t.id === "v-filter") { ui.vfilter = t.value; ui.fi = 0; ui.flip = false; saveLocal(); return render(); }
   if (t.id === "v-sort") { ui.vsort = t.value; saveLocal(); return render(); }

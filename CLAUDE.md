@@ -9,6 +9,8 @@
 - `cards/*.json` — 문제 카드. `d1~d5.json` 커뮤니티(MIT) 문제, `official.json` 공식 가이드 9장 샘플 G-01~12, `new-sN.json` Claude 가 가이드 Task Statement 근거로 쓴 문제(C{시나리오}-nn). 공식 샘플과 겹치는 커뮤니티 문제 6개는 build.py 의 `REPLACED` 로 뺀다.
 - `cards/ai-dN.json` — AI 문제(A{도메인}-nn, Task Statement마다 2개). `source: "claude"` 인 문제(C·A 접두)는 모두 `AI 문제 검수` 칸에만 나오고, 사용자가 `괜찮아요` 한 것만 일반 연습·모의고사에 들어간다. 검수 결과는 진도의 `reviews{id:{v:"ok"|"bad", reason, at}}`. 사용자가 "이상해요 고쳐줘"라고 하면 Supabase 행(동기화 암호 해시)을 읽어 bad 사유를 보고 카드를 고친다. 새 AI 문제는 작성 에이전트와 별도의 검증 에이전트(정답을 가린 blind 풀이 → 비교 → 보정)를 거친다. 오답노트는 `wrongs{id:{n,at,first,fixedAt}}`, 메모는 `notes{id:{text,at}}`.
 - `words/extra.json` — 추가 단어장(시험 질문 표현 phrase, 가이드 핵심어 guide). `freq` 는 가이드 원문 기준으로 미리 계산해 둔 값(가이드 전문은 저장소에 두지 않는다).
+- `words/guide.json` — 단어장 `가이드 단어` 탭(기본 탭). 바탕화면 `CCAR-F 가이드 대역본.html` 의 단어 풀이(`ul.notes`)를 `python3 scripts/guide_words.py "/mnt/c/Users/JeKim/Desktop/CCAR-F 가이드 대역본.html"` 로 뽑은 것(단어·뜻·나오는 절·순서만, 원문 문장은 저장하지 않음). 가이드 순서로 외우고 부분(도메인 1~5 등)으로 거른다. 기존 카드·phrase·guide 단어는 `문제 단어` 탭. 외움 표시는 두 탭이 `words{}` 를 같이 쓴다.
+- 가이드 대역본 원본 HTML 은 공개 저장소·GitHub Pages 에 올리지 않는다. 개인용 비공개 claude.ai 아티팩트로만 둔다: https://claude.ai/artifact/SGChedYGunF7VYyZR8GEF4 (사용자가 주말 뒤 지울 수 있음).
 - `guide/sN.json` — 시나리오 1~6 공부 자료(공식 설명 영어 원문·한국어, 쉽게 풀기, 흐름, 용어, 판단 포인트와 가이드 원문 근거, 비교표, 체크리스트). 앱의 `시나리오 공부` 화면이 그린다. 근거 원문은 공식 시험 가이드 PDF(CCAR-F, 2026-07).
 - `template.html` — 앱 화면. **실제 컴퓨터 시험(CBT) 화면처럼**: 지문과 보기를 한 화면에, 상단 바(문항 번호·남은 시간), 하단 바(이전·검토 표시·검토 화면·다음). 처음 화면에서 연습 모드(바로 채점, 풀이·보기별 해설·토론 거리가 아래에) / 모의고사(문항당 2분, 끝나고 성적표·환산 점수) / 단어장(표·암기 카드). 사용자가 카드뉴스·OMR 같은 꾸밈 디자인은 불편하다고 해서 뺐으니 다시 넣지 않는다. 디자인은 여기서만 고친다.
 - `build.py` — 카드를 모아 검증(빠진 필드, 단서가 지문에 있는지), 보기 순서를 id 기준으로 섞고(원본 정답이 B·C 에 몰려 있음), 단어 빈도(전체 지문·보기에서 몇 번 나오는지)를 세어 `dist/index.html` 을 만든다.
