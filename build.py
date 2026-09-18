@@ -180,6 +180,10 @@ payload = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
 out = tpl.replace("/*__DATA__*/null", payload)
 os.makedirs(os.path.join(ROOT, "dist"), exist_ok=True)
 open(os.path.join(ROOT, "dist", "index.html"), "w", encoding="utf-8").write(out)
+# 비밀번호로 잠근 페이지(locked/, 암호문만 저장)는 그대로 복사해 같이 배포한다
+import shutil
+for f in sorted(os.listdir(os.path.join(ROOT, "locked"))) if os.path.isdir(os.path.join(ROOT, "locked")) else []:
+    shutil.copy(os.path.join(ROOT, "locked", f), os.path.join(ROOT, "dist", f))
 
 by_sc = {s["no"]: sum(1 for c in cards if c["sc"] == s["no"]) for s in SCENARIOS}
 by_src = {k: sum(1 for c in cards if c["source"] == k) for k in SRC_ORDER}
