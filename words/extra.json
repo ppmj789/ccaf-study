@@ -3317,5 +3317,23 @@
   "example": "pursue the most promising leads",
   "example_ko": "가장 가능성 있어 보이는 단서를 쫓는다",
   "tip": "lead 는 여기서 '이끌다'가 아니라 명사 '단서, 실마리'. promising = 가망 있는"
+ },
+ {
+  "word": "take precedence",
+  "pos": "phr.",
+  "ko": "우선하다, 먼저 적용되다",
+  "group": "phrase",
+  "example": "updatedMCPToolOutput takes precedence for MCP tools",
+  "example_ko": "MCP tool 에서는 updatedMCPToolOutput 이 먼저 적용된다",
+  "tip": "precedence = 우선순위. 두 설정이 겹칠 때 어느 쪽이 이기는지 묻는 문제에 나온다"
+ },
+ {
+  "word": "shape",
+  "pos": "n.",
+  "ko": "(데이터의) 모양, 구조",
+  "group": "phrase",
+  "example": "The value must match the tool's output shape",
+  "example_ko": "넣는 값은 그 tool 출력의 모양(필드 구성)과 맞아야 한다",
+  "tip": "output shape = 출력에 어떤 필드가 어떤 형태로 들어 있는지. '형태'로 읽으면 된다"
  }
 ]
