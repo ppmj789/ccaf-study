@@ -3236,5 +3236,50 @@
   "example": "tool_choice cannot influence which tool Claude ultimately calls",
   "example_ko": "tool_choice 는 Claude 가 결국 어떤 도구를 부를지에 영향을 줄 수 없다",
   "tip": "보기에 'cannot'과 함께 나오면 기능을 과소평가하는 틀린 단정일 수 있다. tool_choice 는 도구 선택을 직접 정한다"
+ },
+ {
+  "word": "dosage",
+  "pos": "n.",
+  "ko": "(약의) 복용량, 용량",
+  "group": "phrase",
+  "example": "the 'medication dosage' field is only 81% accurate on handwritten prescription forms",
+  "example_ko": "'약 복용량' 칸은 손글씨 처방전에서 정확도가 81%밖에 안 된다",
+  "tip": "틀리면 환자가 다칠 수 있는 칸이다. 위험이 큰 칸이 약하면 사람 검토를 줄이지 않는 쪽이 정답"
+ },
+ {
+  "word": "prescription",
+  "pos": "n.",
+  "ko": "처방전",
+  "group": "phrase",
+  "example": "handwritten prescription forms",
+  "example_ko": "손글씨 처방전 양식",
+  "tip": "prescribe(처방하다)의 명사. prescriptive(규정하는, 지시하는)와 헷갈리지 말 것"
+ },
+ {
+  "word": "handwritten",
+  "pos": "adj.",
+  "ko": "손으로 쓴, 손글씨의",
+  "group": "phrase",
+  "example": "only 81% accurate on handwritten prescription forms",
+  "example_ko": "손글씨 처방전에서는 정확도가 81%뿐이다",
+  "tip": "인쇄된(typed, printed) 문서와 대비되는 문서 종류. 추출 정확도가 낮아지기 쉬운 edge case 로 자주 나온다"
+ },
+ {
+  "word": "overall",
+  "pos": "adj./adv.",
+  "ko": "전체의, 전체적으로",
+  "group": "phrase",
+  "example": "reports 96% overall field accuracy",
+  "example_ko": "전체 칸 정확도가 96%라고 보고한다",
+  "tip": "aggregate 와 같은 편. overall 숫자가 보이면 '쪼개 보면 약한 구간이 숨어 있다'는 문제일 가능성이 크다"
+ },
+ {
+  "word": "unreliable",
+  "pos": "adj.",
+  "ko": "믿을 수 없는",
+  "group": "phrase",
+  "example": "treating the entire document type as unreliable rather than isolating the specific field",
+  "example_ko": "특정 칸을 따로 떼어 보지 않고 문서 종류 전체를 믿을 수 없다고 취급한다",
+  "tip": "reliable(믿을 만한)의 반대. 문제가 '칸 하나'인데 '문서 종류 전체'로 넓혀 판단하면 범위가 어긋난 보기다"
  }
 ]
