@@ -3515,5 +3515,50 @@
   "example": "When to provide all issues in a single message (interacting problems) versus fixing them sequentially (independent problems)",
   "example_ko": "문제들을 한 메시지에 모두 줄 때(서로 얽힌 문제)와 하나씩 차례로 고칠 때(서로 상관없는 문제)",
   "tip": "공식 가이드 Task 3.5: 서로 얽힌 문제는 한 메시지에, 서로 상관없는 문제는 하나씩 차례로"
+ },
+ {
+  "word": "turnaround",
+  "pos": "n.",
+  "ko": "처리 완료까지 걸리는 시간",
+  "group": "phrase",
+  "example": "promise customers a fixed 90-minute turnaround",
+  "example_ko": "고객에게 90분 안에 처리해 준다고 고정해서 약속한다",
+  "tip": "turnaround time 이라고도 한다. 약속한 시간이 batch 의 최대 24시간보다 짧으면 지킬 수 없다"
+ },
+ {
+  "word": "push back",
+  "pos": "phr. v.",
+  "ko": "반대하다, 이의를 제기하다",
+  "group": "phrase",
+  "example": "A colleague pushes back on this plan.",
+  "example_ko": "동료가 이 계획에 반대한다.",
+  "tip": "'뒤로 밀다'가 아니다. 뒤에 나오는 반대 이유 중 가장 강한 것을 고르라는 문제의 신호"
+ },
+ {
+  "word": "objection",
+  "pos": "n.",
+  "ko": "반대 이유, 이의",
+  "group": "phrase",
+  "example": "What is the strongest technical objection to the promise?",
+  "example_ko": "그 약속에 대한 가장 강한 기술적 반대 이유는?",
+  "tip": "strongest objection = 문서로 뒷받침되는 확실한 이유를 고르라는 뜻"
+ },
+ {
+  "word": "legitimately",
+  "pos": "adv.",
+  "ko": "정상적으로, (규칙상) 당연히 그럴 수 있게",
+  "group": "phrase",
+  "example": "a batch can legitimately take up to 24 hours under heavy demand",
+  "example_ko": "수요가 몰리면 batch 가 최대 24시간 걸리는 것도 정상이다",
+  "tip": "'오류가 아니라 원래 허용된 범위'라는 뜻. batch 가 24시간 걸려도 고장이 아니다"
+ },
+ {
+  "word": "under heavy demand",
+  "pos": "phr.",
+  "ko": "(사용자가 몰려) 수요가 많을 때",
+  "group": "phrase",
+  "example": "processing may be slowed down based on current demand and your request volume",
+  "example_ko": "현재 수요와 요청량에 따라 처리가 느려질 수 있다",
+  "tip": "batch 가 1시간을 넘기는 대표적인 이유. 공식 문서도 이때 24시간 뒤 만료되는 요청이 늘 수 있다고 한다"
  }
 ]
