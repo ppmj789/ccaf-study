@@ -3416,5 +3416,50 @@
   "example": "a non-parameterized SQL query is marked critical in one PR and minor in another",
   "example_ko": "같은 SQL 문제가 어떤 PR 에서는 critical, 다른 PR 에서는 minor 로 표시된다",
   "tip": "critical, major, minor 같은 등급. 등급이 들쭉날쭉하면 등급마다 구체적인 코드 예시로 기준을 잡는다"
+ },
+ {
+  "word": "spell out",
+  "pos": "phr. v.",
+  "ko": "하나하나 자세히 적다, 분명히 밝히다",
+  "group": "phrase",
+  "example": "the prompt already spells out an exhaustive, itemized rubric",
+  "example_ko": "프롬프트에 이미 빠짐없는 항목별 기준표가 자세히 적혀 있다",
+  "tip": "'철자를 말하다'가 아니다. 'already spells out'이 보이면 '지시는 충분히 했다 → 지시를 더 쓰는 보기는 오답'이라는 신호"
+ },
+ {
+  "word": "itemized",
+  "pos": "adj.",
+  "ko": "항목별로 나눈",
+  "group": "phrase",
+  "example": "an exhaustive, itemized rubric for flagging issues",
+  "example_ko": "문제를 지적하는 빠짐없는 항목별 기준표",
+  "tip": "item(항목) + ized. 목록으로 잘 정리돼 있다는 뜻"
+ },
+ {
+  "word": "worked example",
+  "pos": "n.",
+  "ko": "(처음부터 끝까지) 풀어 보인 예시, 모범 답안",
+  "group": "phrase",
+  "example": "Add three to five worked examples in example tags",
+  "example_ko": "example 태그 안에 풀어 보인 예시를 3~5개 넣는다",
+  "tip": "few-shot 예시와 같은 뜻. 공식 문서는 3~5개를 <example> 태그로 감싸라고 권한다"
+ },
+ {
+  "word": "across runs",
+  "pos": "phr.",
+  "ko": "실행할 때마다 (여러 번 돌릴 때)",
+  "group": "phrase",
+  "example": "reviewers still receive inconsistently formatted findings across runs",
+  "example_ko": "리뷰어는 실행할 때마다 형식이 제각각인 지적을 받는다",
+  "tip": "inconsistently 와 함께 나오면 '매번 결과 모양이 다르다' = 형식 일관성 문제 → few-shot 예시"
+ },
+ {
+  "word": "schema",
+  "pos": "n.",
+  "ko": "(데이터의) 정해진 형식, 틀",
+  "group": "guide",
+  "example": "a second that reformats them into the target schema",
+  "example_ko": "두 번째 호출이 그것을 목표 형식으로 다시 맞춘다",
+  "tip": "JSON 칸 이름과 종류를 정한 틀. input_schema, JSON schema 로 자주 나온다"
  }
 ]
