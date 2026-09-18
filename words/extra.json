@@ -3101,5 +3101,50 @@
   "example": "you can run the calls concurrently, sequentially in the order they appear, or in any combination",
   "example_ko": "호출들을 동시에 돌려도 되고, 나온 순서대로 하나씩 돌려도 되고, 섞어도 된다",
   "tip": "sequentially(하나씩 차례로)의 반대. in parallel(병렬로)과 거의 같은 뜻. 서로 상관없는 읽기 작업은 동시에, 순서가 중요한 작업은 차례로"
+ },
+ {
+  "word": "one after another",
+  "pos": "phr.",
+  "ko": "하나씩 차례로, 잇달아",
+  "group": "phrase",
+  "example": "the team wants all three to run concurrently rather than one after another",
+  "example_ko": "팀은 셋이 하나씩 차례로가 아니라 동시에 돌기를 원한다",
+  "tip": "sequentially 와 같은 뜻. concurrently(동시에)와 짝으로 나온다"
+ },
+ {
+  "word": "turn",
+  "pos": "n.",
+  "ko": "(대화에서) 한 차례, 한 번의 응답",
+  "group": "phrase",
+  "example": "then emits the next Task call in a following turn",
+  "example_ko": "그다음 Task 호출은 다음 차례의 응답에서 내보낸다",
+  "tip": "'돌다'가 아니다. 모델이 응답 하나를 내는 것이 turn 하나. 병렬로 돌리려면 호출들이 같은 turn 에 있어야 한다"
+ },
+ {
+  "word": "wall-clock time",
+  "pos": "n.",
+  "ko": "실제로 흐른 시간 (벽시계 기준 시간)",
+  "group": "phrase",
+  "example": "so they can each finish faster and thereby appear to overlap more in wall-clock time",
+  "example_ko": "각자 더 빨리 끝나서 실제 시간상 더 겹쳐 보이도록",
+  "tip": "계산량(토큰, 턴 수)이 아니라 사람이 기다리는 실제 시간. 병렬 실행은 전체를 '가장 느린 것 하나'의 시간으로 줄인다"
+ },
+ {
+  "word": "thereby",
+  "pos": "adv.",
+  "ko": "그렇게 함으로써, 그 결과",
+  "group": "phrase",
+  "example": "finish faster and thereby appear to overlap more",
+  "example_ko": "더 빨리 끝나고, 그 결과 더 겹쳐 보인다",
+  "tip": "앞의 행동이 뒤의 결과를 낳는다는 연결어. 보기에서 이 연결이 억지면 오답 신호다"
+ },
+ {
+  "word": "appear to",
+  "pos": "phr.",
+  "ko": "~처럼 보이다 (실제로는 아닐 수 있음)",
+  "group": "phrase",
+  "example": "thereby appear to overlap more in wall-clock time",
+  "example_ko": "그 결과 실제 시간상 더 겹치는 것처럼 보인다",
+  "tip": "'true(진짜) parallel'을 묻는 문제에서 'appear to(그렇게 보인다)'는 진짜가 아니라는 뜻이라 오답 신호다"
  }
 ]
