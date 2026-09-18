@@ -3281,5 +3281,41 @@
   "example": "treating the entire document type as unreliable rather than isolating the specific field",
   "example_ko": "특정 칸을 따로 떼어 보지 않고 문서 종류 전체를 믿을 수 없다고 취급한다",
   "tip": "reliable(믿을 만한)의 반대. 문제가 '칸 하나'인데 '문서 종류 전체'로 넓혀 판단하면 범위가 어긋난 보기다"
+ },
+ {
+  "word": "abandonment",
+  "pos": "n.",
+  "ko": "중도 포기, 이탈",
+  "group": "phrase",
+  "example": "What is causing the 15% increase in checkout abandonment over the last month?",
+  "example_ko": "지난 한 달 동안 결제 중도 이탈이 15% 늘어난 원인은 무엇인가?",
+  "tip": "abandon(버리다)의 명사. checkout abandonment = 장바구니에 담고 결제 직전에 나가 버리는 것"
+ },
+ {
+  "word": "specify",
+  "pos": "v.",
+  "ko": "(구체적으로) 정해 두다, 명시하다",
+  "group": "phrase",
+  "example": "The relevant data sources ... are not specified in advance",
+  "example_ko": "관련 데이터 출처는 미리 정해져 있지 않다",
+  "tip": "not specified in advance = 미리 정해져 있지 않다. 이 말이 나오면 하위 작업을 미리 쪼갤 수 없다는 단서라 dynamic decomposition 쪽이다"
+ },
+ {
+  "word": "pursue",
+  "pos": "v.",
+  "ko": "(단서·목표를) 뒤쫓다, 파고들다",
+  "group": "phrase",
+  "example": "dynamically generate follow-up subtasks that pursue the most promising leads",
+  "example_ko": "가장 유망한 단서를 파고드는 후속 하위 작업을 그때그때 만든다",
+  "tip": "pursue a lead = 단서를 쫓아 조사하다"
+ },
+ {
+  "word": "promising lead",
+  "pos": "phr.",
+  "ko": "유망한 단서",
+  "group": "phrase",
+  "example": "pursue the most promising leads",
+  "example_ko": "가장 가능성 있어 보이는 단서를 쫓는다",
+  "tip": "lead 는 여기서 '이끌다'가 아니라 명사 '단서, 실마리'. promising = 가망 있는"
  }
 ]
