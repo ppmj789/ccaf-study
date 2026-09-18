@@ -3074,5 +3074,23 @@
   "example": "the system prompt already tells Claude to verify first, so a hook is redundant engineering effort",
   "example_ko": "system prompt 에 이미 먼저 확인하라고 적혀 있으니, hook 은 쓸데없는 개발 작업이다",
   "tip": "'이미 있으니 또 만들 필요 없다'는 주장에 나온다. 돈·보안이 걸린 일이면 프롬프트와 hook 이 겹쳐도 redundant 가 아니다(프롬프트는 가끔 어긴다)"
+ },
+ {
+  "word": "emit",
+  "pos": "v.",
+  "ko": "내보내다, 출력하다 (응답에 담아 내놓다)",
+  "group": "phrase",
+  "example": "Spawning parallel subagents by emitting multiple Task tool calls in a single coordinator response",
+  "example_ko": "coordinator 가 응답 하나에 Task 호출을 여러 개 내보내서 subagent 를 병렬로 띄운다",
+  "tip": "omit(빼다)와 한 글자 차이. e-mit = 밖으로(e) 내보냄 → 무언가가 '생긴다'. 모델이 tool_use 블록을 '내놓는다'는 뜻으로 자주 나온다"
+ },
+ {
+  "word": "omit",
+  "pos": "v.",
+  "ko": "빼다, 생략하다, 빠뜨리다",
+  "group": "phrase",
+  "example": "the matcher value \"*\", \"\", or omitted matches all",
+  "example_ko": "matcher 값이 \"*\" 이거나 빈칸이거나 아예 빠져 있으면 모두에 걸린다",
+  "tip": "emit(내보내다)와 한 글자 차이. o-mit = 빠뜨림 → 무언가가 '없어진다'. omitted = 적지 않은, 생략된"
  }
 ]
