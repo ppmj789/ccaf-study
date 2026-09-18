@@ -3146,5 +3146,50 @@
   "example": "thereby appear to overlap more in wall-clock time",
   "example_ko": "그 결과 실제 시간상 더 겹치는 것처럼 보인다",
   "tip": "'true(진짜) parallel'을 묻는 문제에서 'appear to(그렇게 보인다)'는 진짜가 아니라는 뜻이라 오답 신호다"
+ },
+ {
+  "word": "reserved",
+  "pos": "adj.",
+  "ko": "(이미 정해진 용도로) 예약된, 따로 떼어 둔",
+  "group": "phrase",
+  "example": "`computer-use` is a reserved built-in name",
+  "example_ko": "`computer-use` 는 기본 내장 기능이 쓰려고 예약해 둔 이름이다",
+  "tip": "예약된 이름은 사용자가 쓸 수 없다. 보기에서 '다른 이름을 골라야 한다'가 정답 쪽이다"
+ },
+ {
+  "word": "strip",
+  "pos": "v.",
+  "ko": "(일부를) 떼어 내다, 벗겨 내다",
+  "group": "phrase",
+  "example": "silently strips its screenshot tool",
+  "example_ko": "스크린샷 도구만 조용히 떼어 낸다",
+  "tip": "'silently strips'처럼 몰래 일부만 없앤다는 보기는 문서 근거가 없으면 오답일 때가 많다"
+ },
+ {
+  "word": "presume",
+  "pos": "v.",
+  "ko": "(근거 없이) ~라고 여기다, 추정하다",
+  "group": "phrase",
+  "example": "that capability is presumed reserved for the built-in server",
+  "example_ko": "그 기능은 기본 내장 서버 전용이라고 여겨진다",
+  "tip": "assume 과 비슷하다. 보기에 presumed 가 있으면 '문서가 아니라 추측'이라는 신호일 수 있다"
+ },
+ {
+  "word": "skip",
+  "pos": "v.",
+  "ko": "건너뛰다 (불러오지 않고 넘어가다)",
+  "group": "phrase",
+  "example": "Claude Code skips it at load time and shows a warning asking you to rename it.",
+  "example_ko": "Claude Code 는 불러올 때 그 서버를 건너뛰고 이름을 바꾸라는 경고를 띄운다.",
+  "tip": "reject(거부, 에러)와 짝. 설정 파일에 있으면 skip + 경고, `claude mcp add` 로 넣으면 reject + 에러"
+ },
+ {
+  "word": "rename",
+  "pos": "v.",
+  "ko": "이름을 바꾸다",
+  "group": "phrase",
+  "example": "shows a warning asking you to rename it",
+  "example_ko": "이름을 바꾸라는 경고를 보여 준다",
+  "tip": "예약된 이름과 부딪혔을 때 해결책은 기능 변경이 아니라 이름 변경이다"
  }
 ]
