@@ -3380,5 +3380,41 @@
   "example": "A fresh context improves code review since Claude won't be biased toward code it just wrote.",
   "example_ko": "깨끗한 context 에서 리뷰하면 Claude 가 방금 쓴 코드를 편들지 않아 리뷰가 좋아진다",
   "tip": "독립 리뷰 인스턴스, 별도 세션, 일반 subagent 가 여기에 해당한다. 부모 대화를 물려받는 fork 는 fresh context 가 아니다"
+ },
+ {
+  "word": "inconsistently",
+  "pos": "adv.",
+  "ko": "들쭉날쭉하게, 매번 다르게",
+  "group": "phrase",
+  "example": "In practice it inconsistently flags newly introduced branches",
+  "example_ko": "실제로는 새로 생긴 분기를 지적했다 안 했다 들쭉날쭉하다",
+  "tip": "'가끔 맞고 가끔 틀린다' = 판단 기준이 흔들린다는 신호. 자세한 지시로도 안 고쳐지면 few-shot 예시가 답"
+ },
+ {
+  "word": "exhaustive",
+  "pos": "adj.",
+  "ko": "빠짐없는, 모든 경우를 다 담은",
+  "group": "phrase",
+  "example": "list every possible case as an exhaustive set of rules",
+  "example_ko": "가능한 경우를 빠짐없는 규칙 목록으로 전부 적는다",
+  "tip": "exhausted(지친)와 다르다. 규칙을 '빠짐없이 다 나열'하는 보기는 새 패턴에 일반화하지 못해서 오답일 때가 많다"
+ },
+ {
+  "word": "rubric",
+  "pos": "n.",
+  "ko": "채점 기준표, 평가 기준",
+  "group": "phrase",
+  "example": "grade each response against a detailed rubric",
+  "example_ko": "응답마다 자세한 채점 기준표에 대 보며 점수를 매긴다",
+  "tip": "LLM 으로 채점(LLM-graded)할 때 '무엇을 몇 점으로 볼지' 적어 둔 표. 막연한 '좋은지 봐'보다 기준표가 일관된 결과를 낸다"
+ },
+ {
+  "word": "severity",
+  "pos": "n.",
+  "ko": "심각도 (문제가 얼마나 심각한지)",
+  "group": "phrase",
+  "example": "a non-parameterized SQL query is marked critical in one PR and minor in another",
+  "example_ko": "같은 SQL 문제가 어떤 PR 에서는 critical, 다른 PR 에서는 minor 로 표시된다",
+  "tip": "critical, major, minor 같은 등급. 등급이 들쭉날쭉하면 등급마다 구체적인 코드 예시로 기준을 잡는다"
  }
 ]
