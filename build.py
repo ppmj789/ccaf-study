@@ -128,6 +128,12 @@ if os.path.exists(extra_path):
     for x in json.load(open(extra_path, encoding="utf-8")):
         key = x["word"].strip().lower()
         if key in words:
+            # 카드에 이미 있는 단어는 추가 단어장의 예문·팁만 덧붙인다
+            e = words[key]
+            if x.get("example") and all(ex["text"] != x["example"] for ex in e["examples"]):
+                e["examples"].insert(0, {"id": None, "text": x["example"], "ko": x.get("example_ko", "")})
+            if x.get("tip") and not e.get("tip"):
+                e["tip"] = x["tip"]
             continue
         words[key] = {"word": key, "pos": x.get("pos", ""), "ko": x["ko"], "group": x.get("group", "guide"),
                       "examples": [{"id": None, "text": x.get("example", ""), "ko": x.get("example_ko", "")}],

@@ -3065,5 +3065,14 @@
   "example": "`Edit.*` matches both `Edit` and `NotebookEdit`",
   "example_ko": "`Edit.*` 는 `Edit` 과 `NotebookEdit` 둘 다에 걸린다",
   "tip": "이름 전체가 딱 맞아야 하면 ^ 와 $ 로 감싼다. 예: ^Edit$"
+ },
+ {
+  "word": "redundant",
+  "pos": "adj.",
+  "ko": "불필요하게 중복된, 쓸데없는",
+  "group": "phrase",
+  "example": "the system prompt already tells Claude to verify first, so a hook is redundant engineering effort",
+  "example_ko": "system prompt 에 이미 먼저 확인하라고 적혀 있으니, hook 은 쓸데없는 개발 작업이다",
+  "tip": "'이미 있으니 또 만들 필요 없다'는 주장에 나온다. 돈·보안이 걸린 일이면 프롬프트와 hook 이 겹쳐도 redundant 가 아니다(프롬프트는 가끔 어긴다)"
  }
 ]
