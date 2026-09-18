@@ -3191,5 +3191,50 @@
   "example": "shows a warning asking you to rename it",
   "example_ko": "이름을 바꾸라는 경고를 보여 준다",
   "tip": "예약된 이름과 부딪혔을 때 해결책은 기능 변경이 아니라 이름 변경이다"
+ },
+ {
+  "word": "misclassify",
+  "pos": "v.",
+  "ko": "잘못 분류하다",
+  "group": "phrase",
+  "example": "the regex misclassifies many tickets",
+  "example_ko": "정규식이 티켓을 많이 잘못 분류한다",
+  "tip": "mis- = 잘못. 키워드 규칙이 문장의 뜻을 못 읽을 때 생긴다. 해결책은 규칙을 더 다듬기보다 Claude 가 읽고 고르게 하는 쪽"
+ },
+ {
+  "word": "inspect",
+  "pos": "v.",
+  "ko": "살펴보다, 검사하다",
+  "group": "phrase",
+  "example": "The routing logic currently inspects keywords in the ticket text with regex",
+  "example_ko": "지금 라우팅 로직은 정규식으로 티켓 글의 키워드를 살펴본다",
+  "tip": "examine, check 와 비슷하다"
+ },
+ {
+  "word": "register",
+  "pos": "v.",
+  "ko": "(도구를) 등록하다, 목록에 올리다",
+  "group": "phrase",
+  "example": "Register all three extraction tools in the same request",
+  "example_ko": "추출 도구 세 개를 모두 같은 요청에 등록한다",
+  "tip": "API 에서는 요청의 tools 목록에 넣는다는 뜻. 목록에 있어야 Claude 가 고를 수 있다"
+ },
+ {
+  "word": "depending on",
+  "pos": "phr.",
+  "ko": "~에 따라",
+  "group": "phrase",
+  "example": "routes incoming tickets to one of several extraction tools depending on ticket type",
+  "example_ko": "들어오는 티켓을 종류에 따라 추출 도구 중 하나로 보낸다",
+  "tip": "어느 기준으로 갈라지는지 알려 주는 표현. 그 기준을 누가 판단하는지(코드냐 Claude 냐)가 문제의 핵심일 때가 많다"
+ },
+ {
+  "word": "ultimately",
+  "pos": "adv.",
+  "ko": "결국, 최종적으로",
+  "group": "phrase",
+  "example": "tool_choice cannot influence which tool Claude ultimately calls",
+  "example_ko": "tool_choice 는 Claude 가 결국 어떤 도구를 부를지에 영향을 줄 수 없다",
+  "tip": "보기에 'cannot'과 함께 나오면 기능을 과소평가하는 틀린 단정일 수 있다. tool_choice 는 도구 선택을 직접 정한다"
  }
 ]
