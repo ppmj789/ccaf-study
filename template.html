@@ -293,6 +293,7 @@ let state = { answers: {}, words: {}, wordsAt: {}, tries: {}, exams: [], wrongs:
 let ui = { screen: "home", ko: false, wordsOn: true, filter: "todo", domain: "all", scen: "all", study: 1, vmode: "list", vtab: "guide", vpart: "all", vfilter: "all", vsort: "freq", fi: 0, flip: false, session: null };
 try { Object.assign(state, JSON.parse(localStorage.getItem(LS)) || {}); } catch (e) {}
 try { Object.assign(ui, JSON.parse(localStorage.getItem(LS + "-ui")) || {}, { flip: false }); } catch (e) {}
+if (ui.screen !== "words") { ui.screen = "home"; ui.session = null; }
 if (ui.session && ui.session.ids.some(id => !byId[id])) ui.session = null;
 // 오답노트가 생기기 전에 틀린 기록도 오답노트에 넣는다
 function backfillWrongs() {
@@ -387,19 +388,12 @@ const rate = x => x.done ? `<span class="${x.ok / x.done >= PASS ? "pass-ok" : "
 
 /* ---------- 처음 화면 ---------- */
 function renderHome() {
-  const pick = c => state.answers[c.id]?.pick;
-  const pool = mainCards();
-  const per = domainStats(pool, pick);
-  const perSc = groupStats(pool, c => c.sc, DATA.scenarios.map(s => s.no), pick);
-  const aiAll = cards.filter(c => c.ai), aiTodo = aiAll.filter(c => !reviewOf(c.id)), aiBad = aiAll.filter(c => reviewOf(c.id)?.v === "bad");
-  const w = weighted(per);
-  const done = per.reduce((a, x) => a + x.done, 0), ok = per.reduce((a, x) => a + x.ok, 0);
-  const wrong = pool.filter(c => state.answers[c.id] && !state.answers[c.id].ok).length;
-  const s = ui.session;
+  // 처음 화면은 가이드 대역본·단어장만 둔다(2026-09-18 사용자 요청). 문제 풀이·모의고사·AI 검수·오답노트 화면 코드는 남아 있지만 여기서 열지 않는다.
+  const gKnown = DATA.gwords.filter(x => state.words[x.word] === "known").length;
+  const eKnown = DATA.words.filter(x => state.words[x.word] === "known").length;
   $("#app").innerHTML = `
-    <h1 class="title">CCAF 연습 시험</h1>
-    <p class="lead">문제 ${pool.length}개 · 풀어 본 문제 ${done}개 · 맞힌 문제 ${ok}개 · 틀린 문제 ${wrong}개${w != null ? ` · 환산 점수 <b>${scaled(w)}</b> / 1000 (합격 720)` : ""}</p>
-    ${s && !s.submitted && s.mode !== "single" ? `<p><button class="btn primary" data-resume>이어서 풀기 — ${s.mode === "exam" ? "모의고사" : "연습"} ${s.i + 1}번 문항</button></p>` : ""}
+    <h1 class="title">CCAF 공부</h1>
+    <p class="lead">가이드 단어 ${DATA.gwords.length}개 중 외운 단어 <b>${gKnown}개</b> · 문제 단어 ${DATA.words.length}개 중 ${eKnown}개</p>
     <div class="modes">
       <section class="mode">
         <h3>가이드 대역본</h3>
@@ -407,45 +401,8 @@ function renderHome() {
         <div class="row"><a class="btn primary" href="https://ppmj789.github.io/ccaf-study/guide.html" target="_blank" rel="noopener">가이드 대역본 열기</a></div>
       </section>
       <section class="mode">
-        <h3>시나리오 공부</h3>
-        <p>시험에 나오는 6개 상황을 공식 가이드 영어 원문·한국어·흐름 그림·정답 공식으로 정리했어요. 보고 싶은 시나리오를 누르세요.</p>
-        <ul class="sc-links">${perSc.map(x => { const sc = scen(x.k); return `<li><button data-study="${sc.no}" ${guideOf(sc.no) ? "" : "disabled"}><b>${sc.no}</b><span class="nm">${esc(sc.en)}<small>${esc(sc.ko)}</small></span><span class="rt">${x.done}/${x.total}</span></button></li>`; }).join("")}</ul>
-      </section>
-      <section class="mode">
-        <h3>연습 모드</h3>
-        <p>한 문항씩 풀고 바로 채점해요. 정답·풀이·보기별 해설·토론 거리가 같은 화면 아래에 나와요.</p>
-        <div class="row">
-          <label for="f-filter">문제</label>
-          <select id="f-filter">${[["todo", "안 푼 문제"], ["wrong", "틀린 문제"], ["all", "전체"], ["official", "공식 샘플만"], ["multi", "여러 개 고르는 문항"], ["doubt", "정답 확인 필요"]].map(([k, l]) => `<option value="${k}" ${ui.filter === k ? "selected" : ""}>${l}</option>`).join("")}</select>
-        </div>
-        <div class="row">
-          <label for="f-scen">시나리오</label>
-          <select id="f-scen"><option value="all">전체</option>${DATA.scenarios.map(x => `<option value="${x.no}" ${String(ui.scen) === String(x.no) ? "selected" : ""}>${x.no}. ${esc(x.ko)}</option>`).join("")}</select>
-        </div>
-        <div class="row">
-          <label for="f-domain">영역</label>
-          <select id="f-domain"><option value="all">전체</option>${DATA.domains.map(d => `<option value="${d.id}" ${String(ui.domain) === String(d.id) ? "selected" : ""}>D${d.id} ${esc(d.ko)}</option>`).join("")}</select>
-        </div>
-        <div class="row"><button class="btn primary" data-start="practice">연습 시작</button></div>
-      </section>
-      <section class="mode">
-        <h3>AI 문제 검수</h3>
-        <p>Claude가 공식 가이드를 근거로 만든 문제 ${aiAll.length}개 · 검수 전 <b>${aiTodo.length}개</b>${aiBad.length ? ` · 이상해요 ${aiBad.length}개` : ""}. 풀어 보고 '괜찮아요'를 누른 문제만 일반 연습·모의고사에 들어가요.</p>
-        <div class="row"><button class="btn primary" data-screen="ai">AI 문제 열기</button></div>
-      </section>
-      <section class="mode">
-        <h3>오답노트</h3>
-        <p>틀린 문제 ${Object.keys(state.wrongs).filter(id => byId[id]).length}개 · 아직 못 맞힌 문제 <b class="${Object.keys(state.wrongs).some(id => byId[id] && isUnfixed(id)) ? "pass-no" : ""}">${Object.keys(state.wrongs).filter(id => byId[id] && isUnfixed(id)).length}개</b>. 왜 틀렸는지 메모하고 다시 풀어요.</p>
-        <div class="row"><button class="btn primary" data-screen="note">오답노트 열기</button></div>
-      </section>
-      <section class="mode">
-        <h3>모의고사</h3>
-        <p>실제 시험처럼 ${EXAM_Q}문항 · ${EXAM_MIN}분. 영역 비중(27·18·20·20·15)대로 뽑아요. 끝날 때까지 정답을 보여 주지 않고, 검토 표시와 검토 화면을 쓸 수 있어요.</p>
-        <div class="row"><button class="btn primary" data-start="exam">모의고사 시작</button></div>
-      </section>
-      <section class="mode">
         <h3>단어장</h3>
-        <p>가이드 단어 ${DATA.gwords.length}개 중 외운 단어 <b>${DATA.gwords.filter(x => state.words[x.word] === "known").length}개</b> · 문제 단어 ${DATA.words.length}개 중 ${DATA.words.filter(x => state.words[x.word] === "known").length}개. 가이드 단어는 가이드 대역본에 나오는 순서대로예요.</p>
+        <p>가이드 단어는 가이드 대역본에 나오는 순서대로예요. 문제 단어는 시험 문제 지문·보기에서 뽑았어요.</p>
         <div class="row"><button class="btn primary" data-drill="guide">가이드 단어 암기 카드</button><button class="btn" data-drill="exam">문제 단어 암기 카드</button></div>
         <div class="row"><button class="btn" data-screen="words">단어장 전체 표</button></div>
       </section>
@@ -454,28 +411,7 @@ function renderHome() {
         ${syncBoxHtml()}
       </section>` : ""}
     </div>
-
-    <h2>시나리오별</h2>
-    <p class="lead">시험에는 이 6개 중 4개가 무작위로 나와요.</p>
-    <div class="tbl-wrap"><table class="sc-table">
-      <thead><tr><th>번호</th><th>시나리오</th><th class="num">문제</th><th class="num">정답률</th><th>공부</th></tr></thead>
-      <tbody>${perSc.map(x => { const sc = scen(x.k); return `<tr><td>${sc.no}</td><td>${esc(sc.en)}<br><span class="ko-name" style="color:var(--muted);font-size:13px">${esc(sc.ko)}</span></td><td class="num">${x.done} / ${x.total}</td><td class="num">${rate(x)}</td><td>${guideOf(sc.no) ? `<button class="lnk" data-study="${sc.no}">자료 보기</button>` : "준비 중"}</td></tr>`; }).join("")}</tbody>
-    </table></div>
-
-    <h2>영역별 정답률</h2>
-    <div class="tbl-wrap"><table>
-      <thead><tr><th>영역</th><th class="num">시험 비중</th><th class="num">푼 문제</th><th class="num">정답률</th></tr></thead>
-      <tbody>${per.map(x => `<tr><td>D${x.d.id} ${esc(x.d.ko)}</td><td class="num">${x.d.weight}%</td><td class="num">${x.done} / ${x.total}</td><td class="num">${rate(x)}</td></tr>`).join("")}</tbody>
-    </table></div>
-
-    ${state.exams.length ? `
-    <h2>모의고사 기록</h2>
-    <div class="tbl-wrap"><table>
-      <thead><tr><th>날짜</th><th class="num">맞힌 문제</th><th class="num">환산 점수</th><th>결과</th><th class="num">걸린 시간</th></tr></thead>
-      <tbody>${state.exams.slice().reverse().map(x => `<tr><td>${esc(x.at.slice(0, 16).replace("T", " "))}</td><td class="num">${x.ok} / ${x.total}</td><td class="num">${x.score}</td><td>${x.score >= 720 ? `<span class="pass-ok">합격선 넘음</span>` : `<span class="pass-no">합격선 미달</span>`}</td><td class="num">${Math.round(x.secs / 60)}분</td></tr>`).join("")}</tbody>
-    </table></div>` : ""}
-
-    <p class="src">문제 출처: <b>공식 가이드 샘플</b>은 Anthropic CCAF 시험 가이드(2026-07) 9장, <b>커뮤니티 연습 문제</b>는 <a href="${DATA.source.url}" target="_blank" rel="noopener">${DATA.source.name}</a> (${DATA.source.license}), <b>Claude 작성</b>은 가이드 6장 Task Statement를 근거로 새로 쓴 문제예요. 실제 시험 문항은 없어요. 한국어 해석·풀이·단어장은 Claude가 만들었어요.</p>`;
+    <p class="src">단어 뜻·풀이는 Claude 가 만들었어요.</p>`;
 }
 
 function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
