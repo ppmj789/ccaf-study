@@ -3020,5 +3020,50 @@
   "example": "Claude Code treats a symlink whose target is outside your working directory like an external import.",
   "example_ko": "작업 폴더 밖을 가리키는 symlink 는 외부 import 처럼 취급한다.",
   "tip": "처음 한 번 승인 창이 뜬다. 승인 뒤에도 paths 가 없는 rule 만 불러온다"
+ },
+ {
+  "word": "matcher",
+  "pos": "n.",
+  "ko": "(hook 을 걸) 도구 이름 조건",
+  "group": "guide",
+  "example": "Which matcher achieves this?",
+  "example_ko": "어떤 matcher 가 이것을 해내는가?",
+  "tip": "hook 설정의 matcher 칸. 글자·숫자·_·-·|·, 만 있으면 정확히 같은 이름, 그 밖의 문자(. * ^ 등)가 있으면 정규식으로 본다"
+ },
+ {
+  "word": "built-in",
+  "pos": "adj.",
+  "ko": "기본으로 들어 있는 (내장된)",
+  "group": "phrase",
+  "example": "any built-in tool like Bash or Read",
+  "example_ko": "Bash 나 Read 같은 기본 내장 도구",
+  "tip": "MCP 로 따로 붙인 도구와 반대. 내장 도구 이름에는 mcp__ 가 붙지 않는다"
+ },
+ {
+  "word": "achieve",
+  "pos": "v.",
+  "ko": "(목표를) 이루다, 해내다",
+  "group": "phrase",
+  "example": "Which matcher achieves this?",
+  "example_ko": "어떤 matcher 가 이것을 해내는가?",
+  "tip": "질문 끝의 this 는 앞 문장의 조건 전부(포함할 것 + 제외할 것)를 가리킨다. 조건을 하나씩 대 본다"
+ },
+ {
+  "word": "regular expression",
+  "pos": "n.",
+  "ko": "정규식 (글자 패턴 규칙)",
+  "group": "guide",
+  "example": "Contains any other character: JavaScript regular expression, unanchored",
+  "example_ko": "다른 문자가 들어 있으면 JavaScript 정규식으로 보고, 앞뒤를 고정하지 않는다",
+  "tip": "regex 라고 줄여 쓴다. .* 는 '아무 글자나 몇 개든'이라는 뜻"
+ },
+ {
+  "word": "unanchored",
+  "pos": "adj.",
+  "ko": "(정규식이) 앞뒤가 고정되지 않은, 중간에 있어도 맞는",
+  "group": "guide",
+  "example": "`Edit.*` matches both `Edit` and `NotebookEdit`",
+  "example_ko": "`Edit.*` 는 `Edit` 과 `NotebookEdit` 둘 다에 걸린다",
+  "tip": "이름 전체가 딱 맞아야 하면 ^ 와 $ 로 감싼다. 예: ^Edit$"
  }
 ]
